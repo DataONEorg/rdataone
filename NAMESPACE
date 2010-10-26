@@ -1,0 +1,23 @@
+import("rJava")
+
+# Classes
+exportClasses(D1Client, DataPackage)
+
+# constructor methods
+exportMethods(D1Client, DataPackage)
+
+# D1Client methods
+exportMethods(login, getPackage, getEndpoint, addData, getData, getDataCount)
+
+# DataPackage methods
+#exportMethods(addData)
+
+# Misc testing methods
+export("d1.go")
+export("d1.test")
+export("d1.get")
+export("d1.login")
+export("d1.hello")
+export("d1.javaversion")
+export("d1.cp")
+export("d1.inttest")
