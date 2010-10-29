@@ -40,13 +40,13 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    # Resolve the ID to find the MN to use
    cnode <- cli$getCN()
    oll <- cnode$resolve(token, guid)
-   olist <- oll$getLocations()
-   objloc <- olist$first()
-   node <- objloc$getNode()
-   nodeid <- node$getValue()
+   olist <- oll$getObjectLocationList()
+   objloc <- olist$get(as.integer(0))
+   node <- objloc$getNodeIdentifier()
+   #nodeid <- node$getValue()
    #print(nodeid)
-   nodeurl <- objloc$getUrl()
-   #print(nodeurl)
+   nodeurl <- objloc$getBaseURL()
+   print(nodeurl)
 
    # Get the sysmeta for this GUID to decide how to handle it
    sysmeta <- cnode$getSystemMetadata(token, guid)
@@ -55,7 +55,7 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    #print(oformat$toString())
 
    # Now get the object from the correct MN
-   mnode <- cli$getMN(nodeid)
+   mnode <- cli$getMN(nodeurl)
    datastream <- mnode$get(token, guid) 
    .jcheck(silent = FALSE)
    iou <-  .jnew("org/apache/commons/io/IOUtils") 

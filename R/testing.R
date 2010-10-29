@@ -4,7 +4,8 @@ d1.go <- function() {
    #id <- "kgordon.22.3"
    #id <- "kgordon.21.3"
    #id <- "connolly.260.1"
-   id <- "kgordon.25.3"
+   #id <- "kgordon.25.3"
+   id <- "knb:testid:2010302125029284"
    d1 <- D1Client(uri)
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
