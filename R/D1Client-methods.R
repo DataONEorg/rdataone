@@ -39,6 +39,7 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
 
    # Resolve the ID to find the MN to use
    cnode <- cli$getCN()
+   print("Trying resolve operation....")
    oll <- cnode$resolve(token, guid)
    olist <- oll$getObjectLocationList()
    objloc <- olist$get(as.integer(0))
@@ -49,12 +50,14 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    print(nodeurl)
 
    # Get the sysmeta for this GUID to decide how to handle it
+   print("Trying sysmeta operation....")
    sysmeta <- cnode$getSystemMetadata(token, guid)
    .jcheck(silent = FALSE)
    oformat = sysmeta$getObjectFormat()
    #print(oformat$toString())
 
    # Now get the object from the correct MN
+   print("Trying read operation....")
    mnode <- cli$getMN(nodeurl)
    datastream <- mnode$get(token, guid) 
    .jcheck(silent = FALSE)

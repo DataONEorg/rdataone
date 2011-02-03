@@ -1,5 +1,5 @@
-d1-r
-----
+dataone
+-------
 A client for DataONE, written in R. Uses the Java DataONE client lib for
 accessing DataONE services.
 
@@ -16,13 +16,13 @@ version 0.8-5 because prior versions have a classpath bug
 Build notes
 -----------
 1. Include Java jars and classes in d1r/inst/java
-2. use "R CMD INSTALL d1r" to install in the local R env
-3. use "R CMD check d1r" to check package validity
-4. use "R CMD build d1r" to build a distribution
+2. use "R CMD INSTALL d1_client_r" to install in the local R env
+3. use "R CMD check d1_client_r" to check package validity
+4. use "R CMD build d1_client_r" to build a distribution
 
 Once installed, the package can be run n R using:
 $ R
-> library(d1r)
+> library(dataone)
 Loading required package: rJava
 > d1.get("knb:testid:201017503654464")
 restURL: http://localhost:8080/knb/session/?username=uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org&password=kepler&qformat=xml&op=login
