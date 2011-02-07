@@ -20,7 +20,7 @@ setMethod("D1Client", "character",
     res <- new("D1Client")
     res@endpoint <- uri
     ## Create a Java D1Client object to use for contacting the server
-    cli <-  .jnew("org/dataone/client/D1Client") 
+    cli <-  .jnew("org/dataone/client/D1Client", res@endpoint) 
     res@cli <- cli
 
     return(res)

@@ -1,12 +1,14 @@
 d1.go <- function() {
-   uri <- "http://cn-dev.dataone.org/cn/"
+   #uri <- "http://cn-dev.dataone.org/cn/"
+   uri <- "http://cn.dataone.org/cn/"
    #id <- "pisco_subtidal.82.1"
    #id <- "kgordon.22.3"
    #id <- "kgordon.21.3"
    #id <- "connolly.260.1"
    #id <- "kgordon.25.3"
    #id <- "knb:testid:2010302125029284"
-   id <- "repl:testID201120161032499"
+   #id <- "repl:testID20113514424239"
+   id <- "knb:testid:201135125627107"
    d1 <- D1Client(uri)
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
