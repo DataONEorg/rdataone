@@ -1,5 +1,6 @@
 #!/bin/sh
-cd ..
+cd ../..
 pwd
+# aptitude install r-recommended
 R --version
 
