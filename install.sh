@@ -6,7 +6,10 @@
 # R CMD javareconf
 # R> install.packages("rJava")
 # ln -s /usr/local/lib/R/site-library/rJava/jri/libjri.so /usr/lib
+cat $0
 umask 002
+env
+ps -ef
 R --version
 #source /etc/R/ldpaths
 R CMD INSTALL d1_client_r
