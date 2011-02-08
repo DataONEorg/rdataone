@@ -3,8 +3,9 @@ pwd
 # aptitude install r-recommended r-cran-rjava
 # R CMD javareconf
 # R> install.packages("rJava")
+# ln -s /usr/local/lib/R/site-library/rJava/jri/libjri.so /usr/lib
 R --version
-#R CMD INSTALL d1_client_r
+R CMD INSTALL d1_client_r
 
 # The following NEW packages will be installed:
   #ca-certificates-java{a} hicolor-icon-theme{a} icedtea-6-jre-cacao{a} 
