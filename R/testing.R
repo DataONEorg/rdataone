@@ -1,3 +1,13 @@
+d1.t1 <- function() {
+   CN_URI <- "http://cn.dataone.org/cn/"
+   id <- "jones.357.1"
+   d1 <- D1Client(CN_URI)
+   dp <- getD1Object(d1, id)
+   print(c("Count of data objects: ", getDataCount(dp)))
+   mydf <- asDataFrame(dp,1)
+   print(summary(mydf))
+}
+
 d1.go <- function() {
    #uri <- "http://cn-dev.dataone.org/cn/"
    uri <- "http://cn.dataone.org/cn/"

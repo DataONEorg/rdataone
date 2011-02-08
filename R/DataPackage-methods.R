@@ -30,3 +30,13 @@ setGeneric("getDataCount", function(x, ...) { standardGeneric("getDataCount")} )
 setMethod("getDataCount", "DataPackage", function(x) {
     return(length(x@dataList))
 })
+
+## getData, returns data object at index
+setGeneric("asDataFrame", function(x, index, ...) { standardGeneric("asDataFrame")} )
+
+setMethod("asDataFrame", "DataPackage", function(x, index) {
+   # Load the data into a dataframe
+   #df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
+   df <- read.csv(textConnection(x@dataList[[index]]))
+   return(df)
+})

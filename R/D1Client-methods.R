@@ -76,6 +76,40 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
 })
 
 
+## getD1Object
+setGeneric("getD1Object", function(x, identifier, ...) { 
+    standardGeneric("getD1Object")
+})
+
+setMethod("getD1Object", "D1Client", function(x, identifier) {
+   cli <- x@cli
+   token <- x@token
+   guid <- .jnew("org/dataone/service/types/Identifier")
+   guid$setValue(identifier)
+
+   nodeurl <- "http://knb-mn.ecoinformatics.org/knb/d1"
+
+   # Now get the object from the correct MN
+   print("Trying read operation....")
+   mnode <- cli$getMN(nodeurl)
+   datastream <- mnode$get(token, guid) 
+   .jcheck(silent = FALSE)
+   iou <-  .jnew("org/apache/commons/io/IOUtils") 
+   .jcheck(silent = FALSE)
+   rdata <- iou$toString(datastream)
+
+   # Load the data into a dataframe
+   #df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
+   #df <- read.table(textConnection(rdata), header = FALSE, skip=27)
+
+   sysmeta <- mnode$getSystemMetadata(token, guid)
+   scimeta <- "Placeholder string for science metadata, waiting to implement lookup of sci metadata from describedBy field in sysmeta"
+   dp <- DataPackage(identifier, sysmeta, scimeta)
+   dp <- addData(dp, rdata)
+   return(dp)
+})
+
+
 #########################################################
 ### Accessor methods
 #########################################################
