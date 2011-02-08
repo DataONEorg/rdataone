@@ -5,6 +5,7 @@ pwd
 # R> install.packages("rJava")
 # ln -s /usr/local/lib/R/site-library/rJava/jri/libjri.so /usr/lib
 R --version
+source /etc/R/ldpaths
 R CMD INSTALL d1_client_r
 
 # The following NEW packages will be installed:
