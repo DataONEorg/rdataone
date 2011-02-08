@@ -1,6 +1,6 @@
 d1.t1 <- function() {
    CN_URI <- "http://cn.dataone.org/cn/"
-   id <- "jones.357.1"
+   id <- "jones.357.4"
    d1 <- D1Client(CN_URI)
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
