@@ -15,7 +15,7 @@ version 0.8-5 because prior versions have a classpath bug
 
 Build notes
 -----------
-1. Include Java jars and classes in d1r/inst/java
+1. Include Java jars and classes in d1_client_r/inst/java
 2. use "R CMD INSTALL d1_client_r" to install in the local R env
 3. use "R CMD check d1_client_r" to check package validity
 4. use "R CMD build d1_client_r" to build a distribution
