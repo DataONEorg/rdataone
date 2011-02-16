@@ -103,7 +103,8 @@ d1.t5 <- function() {
    d1 <- login(d1, username, pw, mn_uri)
 
    # Read a text file from disk
-   tfiles.directory <- file.path(.Library, .packageName, "testfiles", fsep=.Platform$file.sep)
+   libPath <- .libPaths()
+   tfiles.directory <- file.path(libPath[1], .packageName, "testfiles", fsep=.Platform$file.sep)
    filenames <- list.files(tfiles.directory)
    tfname <- file.path(tfiles.directory, filenames[[1]], fsep=.Platform$file.sep)
    info <- file.info(tfname)
