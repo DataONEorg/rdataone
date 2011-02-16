@@ -7,13 +7,14 @@ d1.test <- function() {
     d1.t1()
     d1.t2()
     d1.t3()
+    d1.t4()
     print("####### End Testing ######################")
 }
 
 d1.t1 <- function() {
-   print("\n####### Test 1 ######################")
+   print(" ")
+   print("####### Test 1: getD1Object ######################")
    CN_URI <- "http://cn-dev.dataone.org/cn/"
-   #id <- "jones.357.4"
    id <- "erd.365.1"
    d1 <- D1Client(CN_URI)
    dp <- getD1Object(d1, id)
@@ -23,7 +24,8 @@ d1.t1 <- function() {
 }
 
 d1.t2 <- function() {
-   print("\n####### Test 2 ######################")
+   print(" ")
+   print("####### Test 2: getPackage ######################")
    uri <- "http://cn-dev.dataone.org/cn/"
    #uri <- "http://cn.dataone.org/cn/"
    id <- "erd.365.1"
@@ -35,7 +37,20 @@ d1.t2 <- function() {
 }
 
 d1.t3 <- function() {
-   print("\n####### Test 3 ######################")
+   print(" ")
+   print("####### Test 3: convert.csv ######################")
+   uri <- "http://cn-dev.dataone.org/cn/"
+   d1 <- D1Client(uri)
+   # Create a data table, and convert it to csv format
+   testdf <- data.frame(x=1:10,y=11:20)
+   print(testdf)
+   csv <- convert.csv(d1, testdf)
+   print(csv)
+}
+
+d1.t4 <- function() {
+   print(" ")
+   print("####### Test 4: createD1Object ######################")
    uri <- "http://cn-dev.dataone.org/cn/"
    mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
    #uri <- "http://cn.dataone.org/cn/"
@@ -43,22 +58,18 @@ d1.t3 <- function() {
    pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
-
-   # Create a data table, and write it to csv format
-   testdf <- data.frame(x=1:10,y=11:20)
-   print(testdf)
-   con <- textConnection("data", "w")
-   write.csv(testdf, file=con, row.names = FALSE)
-   close(con)
-   print("Data from connection is:")
-   print(data)
-
+   
    # Create a DataONE client, and login
    d1 <- D1Client(uri)
    d1 <- login(d1, username, pw, mn_uri)
 
+   # Create a data table, and write it to csv format
+   testdf <- data.frame(x=1:10,y=11:20)
+   print(testdf)
+   csvdata <- convert.csv(d1, testdf)
+
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, data)
+   d1object <- createD1Object(d1, id, csvdata)
    print(d1object$getData())
    d1object$create(d1@token)
    print("Finished object upload.")
@@ -109,7 +120,8 @@ d1.analyze <- function() {
 }
 
 d1.login <- function(username, pw, mn_uri) {
-   print("\n####### Test 0.5 ######################")
+   print(" ")
+   print("####### Test 0.5: Login ######################")
    d1 <- D1Client(uri)
    d1 <- login(d1, username, pw, mn_uri)
    token <- d1@token
@@ -117,29 +129,33 @@ d1.login <- function(username, pw, mn_uri) {
 }
 
 d1.hello <- function() {
-   print("\n####### Test 0.4 ######################")
+   print(" ")
+   print("####### Test 0.4: Hello World ######################")
    hjw <- .jnew("HelloJavaWorld") # create instance of HelloJavaWorld class
    out <- .jcall(hjw, "S", "sayHello") # invoke sayHello method
-   return(out)
+   print(out)
 }
 
 d1.javaversion <- function() {
-   print("\n####### Test 0.3 ######################")
+   print(" ")
+   print("####### Test 0.3: Java Version ######################")
    sys <- .jnew("java/lang/System")
    print(.jcall(sys, "S", "getProperty", "java.version"))
    print(.jcall(sys, "S", "getProperty", "java.runtime.version"))
 }
 
 d1.cp <- function() {
-   print("\n####### Test 0.2 ######################")
+   print(" ")
+   print("####### Test 0.2: Java Classpath ######################")
    cp <- .jclassPath()
-   return(cp)
+   print(cp)
 }
 
 d1.inttest <- function() {
-   print("\n####### Test 0.1 ######################")
+   print(" ")
+   print("####### Test 0.1: rJava Accessible ######################")
    myint <- .jnew("java/lang/Integer", "7")
    value <- .jcall(myint, "I", "intValue")
-   return(value)
+   print(value)
 }
 

@@ -127,10 +127,8 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data) {
    guid <- .jnew("org/dataone/service/types/Identifier")
    guid$setValue(identifier)
 
-   #dataArray <- .jarray(unlist(sapply(data, charToRaw), use.names=FALSE))
-   #print(str(dataArray))
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
-   barr <- iou$toByteArray(toString(data))
+   barr <- iou$toByteArray(data)
    print(str(barr))
 
    format <- "text/csv"
@@ -170,4 +168,21 @@ setGeneric("getEndpoint", function(x, ...) { standardGeneric("getEndpoint")} )
 setMethod("getEndpoint", "D1Client", function(x) {
     res <- x@endpoint
     return(res)
+})
+
+#########################################################
+### Utility methods
+#########################################################
+
+## convert.csv
+setGeneric("convert.csv", function(x, ...) {
+    standardGeneric("convert.csv")} 
+)
+
+setMethod("convert.csv", signature(x="D1Client"), function(x, df) {
+    con <- textConnection("data", "w")
+    write.csv(df, file=con, row.names = FALSE)
+    close(con)
+    csvdata <- paste(data, collapse="\n")
+    return(csvdata)
 })
