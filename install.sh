@@ -10,4 +10,4 @@
 unset JAVA_HOME
 R --version
 R CMD INSTALL d1_client_r
-R --no-save -e 'library(dataone); d1.t1();'
+R --no-save -e 'library(dataone); d1.test();'

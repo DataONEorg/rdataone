@@ -9,12 +9,13 @@ setGeneric("login", function(x, username, password, ...) {
     standardGeneric("login")
 })
 
-setMethod("login", "D1Client", function(x, username, password) {
+setMethod("login", "D1Client", function(x, username, password, mnUrl) {
     nodeurl <- getEndpoint(x)
     x@username <- username 
     cli <-  x@cli
     print("Attempting login...")
-    token <- cli$login(username, password) 
+    mn <- cli$getMN(mnUrl)
+    token <- mn$login(username, password) 
     .jcheck(silent = FALSE)
     print("login succeeded.")
     x@token <- token
@@ -87,7 +88,8 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    guid <- .jnew("org/dataone/service/types/Identifier")
    guid$setValue(identifier)
 
-   nodeurl <- "http://knb-mn.ecoinformatics.org/knb/d1"
+   #nodeurl <- "http://knb-mn.ecoinformatics.org/knb/d1"
+   nodeurl <- "http://knb-test-1.dataone.org/knb/d1"
 
    # Now get the object from the correct MN
    print("Trying read operation....")
@@ -109,6 +111,54 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    return(dp)
 })
 
+## createD1Object
+setGeneric("createD1Object", function(x, identifier, ...) { 
+    standardGeneric("createD1Object")
+})
+
+setMethod("createD1Object", "D1Client", function(x, identifier, data) {
+   cli <- x@cli
+   token <- x@token
+   nodeurl <- "http://knb-test-1.dataone.org/knb/d1"
+
+   # Create system metadata
+   #Identifier id, byte[] data, ObjectFormat format, String submitter, String
+   #nodeId, String[] describes, String[] describedBy
+   guid <- .jnew("org/dataone/service/types/Identifier")
+   guid$setValue(identifier)
+
+   #dataArray <- .jarray(unlist(sapply(data, charToRaw), use.names=FALSE))
+   #print(str(dataArray))
+   iou <-  .jnew("org/apache/commons/io/IOUtils") 
+   barr <- iou$toByteArray(toString(data))
+   print(str(barr))
+
+   format <- "text/csv"
+   #submitter <- x@username
+   submitter <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
+   nodeId <- "http://knb-test-1.dataone.org"
+   describes <- .jarray(c("foo.1.1"))
+   describedBy <- .jarray(c("foo.2.1"))
+
+   # Now create the object with the sysmeta values
+   #print(.jconstructors("org/dataone/client/D1Object"))
+   d1object <- .jnew("org/dataone/client/D1Object", guid, barr, format, submitter, nodeId, describes, describedBy, check=FALSE)
+   if (!is.null(e<-.jgetEx())) {
+       print("Java exception was raised")
+       print(.jcheck(silent=TRUE))
+       print(.jcheck(silent=TRUE))
+       print(e)
+   }
+   print(show(d1object))
+   newId <- d1object$getIdentifier()
+   print("ID of d1object:")
+   print(newId$getValue())
+
+   #dp <- DataPackage(identifier, sysmeta, scimeta)
+   #dp <- addData(dp, rdata)
+   #return(dp)
+   return(d1object)
+})
 
 #########################################################
 ### Accessor methods

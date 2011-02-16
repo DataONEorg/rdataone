@@ -1,6 +1,20 @@
+d1.test <- function() {
+    print("####### Start Testing ######################")
+    d1.inttest()
+    d1.cp()
+    d1.javaversion()
+    d1.hello()
+    d1.t1()
+    d1.t2()
+    d1.t3()
+    print("####### End Testing ######################")
+}
+
 d1.t1 <- function() {
-   CN_URI <- "http://cn.dataone.org/cn/"
-   id <- "jones.357.4"
+   print("\n####### Test 1 ######################")
+   CN_URI <- "http://cn-dev.dataone.org/cn/"
+   #id <- "jones.357.4"
+   id <- "erd.365.1"
    d1 <- D1Client(CN_URI)
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -8,22 +22,49 @@ d1.t1 <- function() {
    print(summary(mydf))
 }
 
-d1.go <- function() {
-   #uri <- "http://cn-dev.dataone.org/cn/"
-   uri <- "http://cn.dataone.org/cn/"
-   #id <- "pisco_subtidal.82.1"
-   #id <- "kgordon.22.3"
-   #id <- "kgordon.21.3"
-   #id <- "connolly.260.1"
-   #id <- "kgordon.25.3"
-   #id <- "knb:testid:2010302125029284"
-   #id <- "repl:testID20113514424239"
-   id <- "knb:testid:201135125627107"
+d1.t2 <- function() {
+   print("\n####### Test 2 ######################")
+   uri <- "http://cn-dev.dataone.org/cn/"
+   #uri <- "http://cn.dataone.org/cn/"
+   id <- "erd.365.1"
    d1 <- D1Client(uri)
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
    mydf <- getData(dp,1)
    print(summary(mydf))
+}
+
+d1.t3 <- function() {
+   print("\n####### Test 3 ######################")
+   uri <- "http://cn-dev.dataone.org/cn/"
+   mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
+   #uri <- "http://cn.dataone.org/cn/"
+   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
+   pw <- "kepler"
+   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
+   id <- paste("r:test", cur_time, "1", sep=".")
+
+   # Create a data table, and write it to csv format
+   testdf <- data.frame(x=1:10,y=11:20)
+   print(testdf)
+   con <- textConnection("data", "w")
+   write.csv(testdf, file=con, row.names = FALSE)
+   close(con)
+   print("Data from connection is:")
+   print(data)
+
+   # Create a DataONE client, and login
+   d1 <- D1Client(uri)
+   d1 <- login(d1, username, pw, mn_uri)
+
+   # Create a D1Object for the table, and upload it to the MN
+   d1object <- createD1Object(d1, id, data)
+   print(d1object$getData())
+   d1object$create(d1@token)
+   print("Finished object upload.")
+   d1object$setPublicAccess(d1@token)
+   print("Finished setting access.")
+   print("Test 3 passed.")
 }
 
 a.kgordon <- function(mydf) {
@@ -34,7 +75,7 @@ a.kgordon <- function(mydf) {
    title(ylab="Density")
 }
 
-d1.test <- function() {
+d1.test_old <- function() {
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
    uri <- "http://localhost:8080/knb/"
@@ -67,50 +108,36 @@ d1.analyze <- function() {
    boxplot(reprod_state ~ pisco.code, data=bfdata[[1]])
 }
 
-d1.get <- function(identifier) {
-   nodeurl <- "http://localhost:8080/knb/"
-   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
-   pw <- "kepler"
-
-   cli <- .jnew("org/dataone/client/D1Client", nodeurl) 
-   token <- d1.login(username, pw)
-   guid <- .jnew("org/dataone/service/types/Identifier")
-   .jcall(guid, "V", "setValue", identifier)
-   istream <- cli$get(token, guid) 
-   .jcheck(silent = FALSE)
-   iou <-  .jnew("org/apache/commons/io/IOUtils") 
-   .jcheck(silent = FALSE)
-   rdata <- iou$toString(istream)
-   .jcheck(silent = FALSE)
-   return(rdata)
+d1.login <- function(username, pw, mn_uri) {
+   print("\n####### Test 0.5 ######################")
+   d1 <- D1Client(uri)
+   d1 <- login(d1, username, pw, mn_uri)
+   token <- d1@token
+   return(d1)
 }
 
-d1.login <- function(username, pw) {
-   nodeurl <- "http://localhost:8080/knb/"
-   cli <-  .jnew("org/dataone/client/D1Client", nodeurl) 
-   token <- cli$login(username, pw) 
-   .jcheck(silent = FALSE)
-   return(token)
-}
-
-d1.hello <- function(){
+d1.hello <- function() {
+   print("\n####### Test 0.4 ######################")
    hjw <- .jnew("HelloJavaWorld") # create instance of HelloJavaWorld class
    out <- .jcall(hjw, "S", "sayHello") # invoke sayHello method
    return(out)
 }
 
-d1.javaversion <- function(){
+d1.javaversion <- function() {
+   print("\n####### Test 0.3 ######################")
    sys <- .jnew("java/lang/System")
    print(.jcall(sys, "S", "getProperty", "java.version"))
    print(.jcall(sys, "S", "getProperty", "java.runtime.version"))
 }
 
-d1.cp <- function(){
+d1.cp <- function() {
+   print("\n####### Test 0.2 ######################")
    cp <- .jclassPath()
    return(cp)
 }
 
-d1.inttest <- function(){
+d1.inttest <- function() {
+   print("\n####### Test 0.1 ######################")
    myint <- .jnew("java/lang/Integer", "7")
    value <- .jcall(myint, "I", "intValue")
    return(value)

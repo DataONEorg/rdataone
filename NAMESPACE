@@ -7,16 +7,15 @@ exportClasses(D1Client, DataPackage)
 exportMethods(D1Client, DataPackage)
 
 # D1Client methods
-exportMethods(login, getPackage, getD1Object, getEndpoint, addData, getData, getDataCount)
+exportMethods(login, getPackage, getD1Object, createD1Object, getEndpoint, addData, getData, getDataCount)
 
 # DataPackage methods
 exportMethods(asDataFrame)
 
 # Misc testing methods
-export("d1.t1")
-export("d1.go")
 export("d1.test")
-export("d1.get")
+export("d1.t1")
+export("d1.t2")
 export("d1.login")
 export("d1.hello")
 export("d1.javaversion")
