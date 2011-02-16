@@ -128,7 +128,6 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
    # Convert incoming data to byte array (byte[])
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
    barr <- iou$toByteArray(data)
-   print(str(barr))
 
    # Set up/convert additional system metadata fields
    submitter <- x@username
@@ -144,10 +143,6 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
        print(.jcheck(silent=TRUE))
        print(e)
    }
-   print(show(d1object))
-   newId <- d1object$getIdentifier()
-   print("ID of d1object:")
-   print(newId$getValue())
 
    #dp <- DataPackage(identifier, sysmeta, scimeta)
    #dp <- addData(dp, rdata)

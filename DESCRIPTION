@@ -1,6 +1,6 @@
 Package: dataone
-Version: 0.0-5
-Date: 2010-06-21
+Version: 0.0-6
+Date: 2011-0216
 Title: DataONE R Client
 Author: Matthew Jones
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
@@ -11,4 +11,4 @@ SystemRequirements: Java (>= 1.5)
 License: Apache2
 Packaged: 2010-06-21 20:54:27 UTC; jones
 Repository: CRAN
-Date/Publication: 2010-06-21 20:49:45
+Date/Publication: 2011-02-16 20:49:45

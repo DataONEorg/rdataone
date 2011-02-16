@@ -1,0 +1,1839 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml packageId="foo.1.1" system="knb" xmlns:eml="eml://ecoinformatics.org/eml-2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.0 eml.xsd"> <access authSystem="knb" order="allowFirst"> <allow><principal>public</principal>
+ <permission>read</permission>
+ </allow>
+ </access>
+ <dataset> <title>eBird Reference Data Set Subsampled Demonstration Data</title>
+ <creator id="1294883795094"> <individualName><givenName>Daniel</givenName>
+ <surName>Fink</surName>
+ </individualName>
+ <organizationName>Cornell Lab of Ornithology</organizationName>
+ </creator>
+ <associatedParty id="1294883843478"><individualName><givenName>Matthew</givenName>
+ <surName>Jones</surName>
+ </individualName>
+ <organizationName>National Center for Ecological Analysis and Synthesis (NCEAS)</organizationName>
+ <role>Metadata Provider</role>
+ </associatedParty>
+ <abstract><para>Data used by the DataONE Exploration, Visualization, and Analysis working group for predicting spatially and temporally explicit bird migration patterns.  This is a subset of the eBird Reference Data set, and has been subsetted and downsampled to provide a reasonable corpus for a technology demonstration.  See the eBird Reference Dataset for the complete data.</para>
+ </abstract>
+ <intellectualRights><para>Attribution of data usage and distribution are expected in most circumstances, and any research papers that use the data should cite this dat apackage as a source.  All data are released under CC-0 provisions (see  http://creativecommons.org/publicdomain/zero/1.0/ ).</para>
+ </intellectualRights>
+<coverage><geographicCoverage><geographicDescription>New England</geographicDescription>
+<boundingCoordinates><westBoundingCoordinate>-83.25</westBoundingCoordinate>
+<eastBoundingCoordinate>-69.125</eastBoundingCoordinate>
+<northBoundingCoordinate>46.75</northBoundingCoordinate>
+<southBoundingCoordinate>35.875</southBoundingCoordinate>
+</boundingCoordinates>
+</geographicCoverage>
+</coverage>
+ <contact><references>1294883795094</references>
+ </contact>
+ <dataTable id="1294884943262"><entityName>erd.train-locs.csv</entityName>
+ <entityDescription>Location data in latitude and longitude coordinates.</entityDescription>
+ <physical id="1294884802348"><objectName>erd.train-locs.csv</objectName>
+ <size unit="byte">222698</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.362.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList> <attribute id="1294884943264"><attributeName>x</attributeName>
+ <attributeLabel>Latitude</attributeLabel>
+ <attributeDefinition>Latitude of the point</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1294884943265"><attributeName>y</attributeName>
+ <attributeLabel>Longitude</attributeLabel>
+ <attributeDefinition>Longitude of the point.</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>10001</numberOfRecords>
+ </dataTable>
+ <dataTable id="1296267532260"><entityName>erd.train-jdates.csv</entityName>
+ <physical id="1296267442952"><objectName>erd.train-jdates.csv</objectName>
+ <size unit="byte">35083</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.363.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList> <attribute id="1296267532262"><attributeName>x</attributeName>
+ <attributeDefinition>X</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>natural</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>10001</numberOfRecords>
+ </dataTable>
+ <dataTable id="1296267648455"><entityName>erd.train-y.csv</entityName>
+ <physical id="1296267574655"><objectName>erd.train-y.csv</objectName>
+ <size unit="byte">79167</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.364.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList> <attribute id="1296267648457"><attributeName>x</attributeName>
+ <attributeDefinition>X</attributeDefinition>
+ <storageType typeSystem="Java">boolean</storageType>
+ <measurementScale><nominal><nonNumericDomain><enumeratedDomain><codeDefinition><code>FALSE</code>
+ <definition>false</definition>
+ </codeDefinition>
+ <codeDefinition><code>TRUE</code>
+ <definition>true</definition>
+ </codeDefinition>
+ </enumeratedDomain>
+ </nonNumericDomain>
+ </nominal>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>10001</numberOfRecords>
+ </dataTable>
+ <dataTable id="1296268652724"><entityName>erd.train-X.csv</entityName>
+ <physical id="1296267723817"><objectName>erd.train-X.csv</objectName>
+ <size unit="byte">1207269</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.365.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList> <attribute id="1296268652726"><attributeName>I.STATIONARY</attributeName>
+ <attributeDefinition>I.STATIONARY</attributeDefinition>
+ <measurementScale><nominal><nonNumericDomain><enumeratedDomain><codeDefinition><code>1</code>
+ <definition>TRUE</definition>
+ </codeDefinition>
+ <codeDefinition><code>0</code>
+ <definition>FALSE</definition>
+ </codeDefinition>
+ </enumeratedDomain>
+ </nonNumericDomain>
+ </nominal>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652727"><attributeName>YEAR</attributeName>
+ <attributeDefinition>Year data were collected</attributeDefinition>
+ <measurementScale><dateTime><formatString>YYYY</formatString>
+ </dateTime>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652728"><attributeName>DAY</attributeName>
+ <attributeDefinition>Julian day of the year data were collected</attributeDefinition>
+ <measurementScale><dateTime><formatString>DDD</formatString>
+ </dateTime>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652729"><attributeName>TIME</attributeName>
+ <attributeDefinition>Time</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>nominalHour</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652730"><attributeName>EFFORT_HRS</attributeName>
+ <attributeDefinition>Effort in hours</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>nominalHour</standardUnit>
+ </unit>
+ <numericDomain><numberType>natural</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652731"><attributeName>EFFORT_DISTANCE_KM</attributeName>
+ <attributeDefinition>Effort reflecting the distance</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>kilometer</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652732"><attributeName>NUMBER_OBSERVERS</attributeName>
+ <attributeDefinition>Number of observers for the sample</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>natural</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652733"><attributeName>HOUSING_DENSITY</attributeName>
+ <attributeDefinition>Housing density</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>numberPerKilometerSquared</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652734"><attributeName>ELEV_NED</attributeName>
+ <attributeDefinition>Elevation</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>meter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ <missingValueCode><code>NA</code>
+ <codeExplanation>Not available</codeExplanation>
+ </missingValueCode>
+ </attribute>
+ <attribute id="1296268652735"><attributeName>OMERNIK_L3_ECOREGION</attributeName>
+ <attributeDefinition>OMERNIK_L3_ECOREGION</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652736"><attributeName>NLCD01_CANOPYMEAN_RAD750</attributeName>
+ <attributeDefinition>NLCD01_CANOPYMEAN_RAD750</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652737"><attributeName>NLCD01_IMPERVMEAN_RAD750</attributeName>
+ <attributeDefinition>NLCD01_IMPERVMEAN_RAD750</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652738"><attributeName>NLCD2001_FS_C11_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C11_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652739"><attributeName>NLCD2001_FS_C12_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C12_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652740"><attributeName>NLCD2001_FS_C21_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C21_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652741"><attributeName>NLCD2001_FS_C22_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C22_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652742"><attributeName>NLCD2001_FS_C23_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C23_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652743"><attributeName>NLCD2001_FS_C24_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C24_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652744"><attributeName>NLCD2001_FS_C31_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C31_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652745"><attributeName>NLCD2001_FS_C41_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C41_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652746"><attributeName>NLCD2001_FS_C42_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C42_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652747"><attributeName>NLCD2001_FS_C43_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C43_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652748"><attributeName>NLCD2001_FS_C52_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C52_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652749"><attributeName>NLCD2001_FS_C71_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C71_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652750"><attributeName>NLCD2001_FS_C81_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C81_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652751"><attributeName>NLCD2001_FS_C82_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C82_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652752"><attributeName>NLCD2001_FS_C90_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C90_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1296268652753"><attributeName>NLCD2001_FS_C95_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C95_750_PLAND</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>10001</numberOfRecords>
+ </dataTable>
+ <dataTable id="1297209991130"><entityName>srd-locs.csv</entityName>
+ <entityDescription>SRD Locations</entityDescription>
+ <physical id="1297209870710"><objectName>srd-locs.csv</objectName>
+ <size unit="byte">113911</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.366.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList><attribute id="1297209991131"><attributeName>x</attributeName>
+ <attributeDefinition>x coordinate as latitude</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297209991132"><attributeName>y</attributeName>
+ <attributeDefinition>y coordinate as longitude</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>5000</numberOfRecords>
+ </dataTable>
+ <dataTable id="1297211113103"><entityName>srd-X.csv</entityName>
+ <entityDescription>SRD X data</entityDescription>
+ <physical id="1297210053007"><objectName>srd-X.csv</objectName>
+ <size unit="byte">2614834</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/erd.367.1</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList><attribute id="1297211113104"><attributeName>LATITUDE</attributeName>
+ <attributeDefinition>Latitude</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113105"><attributeName>LONGITUDE</attributeName>
+ <attributeDefinition>Longitude</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113106"><attributeName>HOUSING_DENSITY</attributeName>
+ <attributeDefinition>Housing Density</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>numberPerKilometerSquared</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113107"><attributeName>HOUSING_PERCENT_VACANT</attributeName>
+ <attributeDefinition>HOUSING_PERCENT_VACANT</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>dimensionless</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113108"><attributeName>ELEV_NED</attributeName>
+ <attributeDefinition>Elevation NED</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>meter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113109"><attributeName>BCR</attributeName>
+ <attributeDefinition>BCR</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>number</standardUnit>
+ </unit>
+ <numericDomain><numberType>integer</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113110"> <attributeName>CAUS_TEMP_AVG01</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG01</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113111"> <attributeName>CAUS_TEMP_AVG02</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG02</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113112"> <attributeName>CAUS_TEMP_AVG03</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG03</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113113"> <attributeName>CAUS_TEMP_AVG04</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG04</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113114"> <attributeName>CAUS_TEMP_AVG05</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG05</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113115"> <attributeName>CAUS_TEMP_AVG06</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG06</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113116"> <attributeName>CAUS_TEMP_AVG07</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG07</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113117"> <attributeName>CAUS_TEMP_AVG08</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG08</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113118"> <attributeName>CAUS_TEMP_AVG09</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG09</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113119"> <attributeName>CAUS_TEMP_AVG10</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG10</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113120"> <attributeName>CAUS_TEMP_AVG11</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG11</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113121"> <attributeName>CAUS_TEMP_AVG12</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG12</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113122"> <attributeName>CAUS_TEMP_AVG13</attributeName>
+ <attributeDefinition>CAUS_TEMP_AVG13</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113123"> <attributeName>CAUS_TEMP_MIN01</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN01</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113124"> <attributeName>CAUS_TEMP_MIN02</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN02</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113125"> <attributeName>CAUS_TEMP_MIN03</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN03</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113126"> <attributeName>CAUS_TEMP_MIN04</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN04</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113127"> <attributeName>CAUS_TEMP_MIN05</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN05</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113128"> <attributeName>CAUS_TEMP_MIN06</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN06</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113129"> <attributeName>CAUS_TEMP_MIN07</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN07</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113130"> <attributeName>CAUS_TEMP_MIN08</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN08</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113131"> <attributeName>CAUS_TEMP_MIN09</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN09</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113132"> <attributeName>CAUS_TEMP_MIN10</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN10</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113133"> <attributeName>CAUS_TEMP_MIN11</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN11</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113134"> <attributeName>CAUS_TEMP_MIN12</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN12</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113135"> <attributeName>CAUS_TEMP_MIN13</attributeName>
+ <attributeDefinition>CAUS_TEMP_MIN13</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113136"> <attributeName>CAUS_TEMP_MAX01</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX01</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113137"> <attributeName>CAUS_TEMP_MAX02</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX02</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113138"> <attributeName>CAUS_TEMP_MAX03</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX03</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113139"> <attributeName>CAUS_TEMP_MAX04</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX04</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113140"> <attributeName>CAUS_TEMP_MAX05</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX05</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113141"> <attributeName>CAUS_TEMP_MAX06</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX06</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113142"> <attributeName>CAUS_TEMP_MAX07</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX07</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113143"> <attributeName>CAUS_TEMP_MAX08</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX08</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113144"> <attributeName>CAUS_TEMP_MAX09</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX09</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113145"> <attributeName>CAUS_TEMP_MAX10</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX10</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113146"> <attributeName>CAUS_TEMP_MAX11</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX11</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113147"> <attributeName>CAUS_TEMP_MAX12</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX12</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113148"> <attributeName>CAUS_TEMP_MAX13</attributeName>
+ <attributeDefinition>CAUS_TEMP_MAX13</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113149"> <attributeName>CAUS_PREC01</attributeName>
+ <attributeDefinition>CAUS_PREC01</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113150"> <attributeName>CAUS_PREC02</attributeName>
+ <attributeDefinition>CAUS_PREC02</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113151"> <attributeName>CAUS_PREC03</attributeName>
+ <attributeDefinition>CAUS_PREC03</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113152"> <attributeName>CAUS_PREC04</attributeName>
+ <attributeDefinition>CAUS_PREC04</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113153"> <attributeName>CAUS_PREC05</attributeName>
+ <attributeDefinition>CAUS_PREC05</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113154"> <attributeName>CAUS_PREC06</attributeName>
+ <attributeDefinition>CAUS_PREC06</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113155"> <attributeName>CAUS_PREC07</attributeName>
+ <attributeDefinition>CAUS_PREC07</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113156"> <attributeName>CAUS_PREC08</attributeName>
+ <attributeDefinition>CAUS_PREC08</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113157"> <attributeName>CAUS_PREC09</attributeName>
+ <attributeDefinition>CAUS_PREC09</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113158"> <attributeName>CAUS_PREC10</attributeName>
+ <attributeDefinition>CAUS_PREC10</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113159"> <attributeName>CAUS_PREC11</attributeName>
+ <attributeDefinition>CAUS_PREC11</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113160"> <attributeName>CAUS_PREC12</attributeName>
+ <attributeDefinition>CAUS_PREC12</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113161"> <attributeName>CAUS_PREC13</attributeName>
+ <attributeDefinition>CAUS_PREC13</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113162"> <attributeName>CAUS_SNOW01</attributeName>
+ <attributeDefinition>CAUS_SNOW01</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113163"> <attributeName>CAUS_SNOW02</attributeName>
+ <attributeDefinition>CAUS_SNOW02</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113164"> <attributeName>CAUS_SNOW03</attributeName>
+ <attributeDefinition>CAUS_SNOW03</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113165"> <attributeName>CAUS_SNOW04</attributeName>
+ <attributeDefinition>CAUS_SNOW04</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113166"> <attributeName>CAUS_SNOW10</attributeName>
+ <attributeDefinition>CAUS_SNOW10</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113167"> <attributeName>CAUS_SNOW11</attributeName>
+ <attributeDefinition>CAUS_SNOW11</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113168"> <attributeName>CAUS_SNOW12</attributeName>
+ <attributeDefinition>CAUS_SNOW12</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113169"> <attributeName>CAUS_LAST_SPRING_32F_MEDIAN</attributeName>
+ <attributeDefinition>CAUS_LAST_SPRING_32F_MEDIAN</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113170"> <attributeName>CAUS_LAST_SPRING_32F_MEAN</attributeName>
+ <attributeDefinition>CAUS_LAST_SPRING_32F_MEAN</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113171"> <attributeName>CAUS_LAST_SPRING_32F_EXTREME</attributeName>
+ <attributeDefinition>CAUS_LAST_SPRING_32F_EXTREME</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113172"> <attributeName>CAUS_FIRST_AUTUMN_32F_MEDIAN</attributeName>
+ <attributeDefinition>CAUS_FIRST_AUTUMN_32F_MEDIAN</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113173"> <attributeName>CAUS_FIRST_AUTUMN_32F_MEAN</attributeName>
+ <attributeDefinition>CAUS_FIRST_AUTUMN_32F_MEAN</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113174"> <attributeName>CAUS_FIRST_AUTUMN_32F_EXTREME</attributeName>
+ <attributeDefinition>CAUS_FIRST_AUTUMN_32F_EXTREME</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>celsius</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113175"> <attributeName>NLCD2001_FS_L_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_L_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113176"> <attributeName>NLCD2001_FS_L_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_L_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113177"> <attributeName>NLCD2001_FS_L_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_L_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113178"> <attributeName>NLCD2001_FS_C11_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C11_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113179"> <attributeName>NLCD2001_FS_C11_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C11_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113180"> <attributeName>NLCD2001_FS_C11_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C11_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113181"> <attributeName>NLCD2001_FS_C11_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C11_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113182"> <attributeName>NLCD2001_FS_C12_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C12_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113183"> <attributeName>NLCD2001_FS_C12_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C12_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113184"> <attributeName>NLCD2001_FS_C12_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C12_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113185"> <attributeName>NLCD2001_FS_C12_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C12_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113186"> <attributeName>NLCD2001_FS_C21_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C21_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113187"> <attributeName>NLCD2001_FS_C21_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C21_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113188"> <attributeName>NLCD2001_FS_C21_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C21_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113189"> <attributeName>NLCD2001_FS_C21_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C21_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113190"> <attributeName>NLCD2001_FS_C22_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C22_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113191"> <attributeName>NLCD2001_FS_C22_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C22_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113192"> <attributeName>NLCD2001_FS_C22_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C22_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113193"> <attributeName>NLCD2001_FS_C22_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C22_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113194"> <attributeName>NLCD2001_FS_C23_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C23_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113195"> <attributeName>NLCD2001_FS_C23_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C23_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113196"> <attributeName>NLCD2001_FS_C23_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C23_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113197"> <attributeName>NLCD2001_FS_C23_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C23_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113198"> <attributeName>NLCD2001_FS_C24_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C24_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113199"> <attributeName>NLCD2001_FS_C24_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C24_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113200"> <attributeName>NLCD2001_FS_C24_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C24_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113201"> <attributeName>NLCD2001_FS_C24_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C24_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113202"> <attributeName>NLCD2001_FS_C31_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C31_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113203"> <attributeName>NLCD2001_FS_C31_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C31_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113204"> <attributeName>NLCD2001_FS_C31_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C31_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113205"> <attributeName>NLCD2001_FS_C31_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C31_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113206"> <attributeName>NLCD2001_FS_C41_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C41_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113207"> <attributeName>NLCD2001_FS_C41_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C41_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113208"> <attributeName>NLCD2001_FS_C41_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C41_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113209"> <attributeName>NLCD2001_FS_C41_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C41_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113210"> <attributeName>NLCD2001_FS_C42_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C42_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113211"> <attributeName>NLCD2001_FS_C42_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C42_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113212"> <attributeName>NLCD2001_FS_C42_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C42_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113213"> <attributeName>NLCD2001_FS_C42_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C42_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113214"> <attributeName>NLCD2001_FS_C43_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C43_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113215"> <attributeName>NLCD2001_FS_C43_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C43_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113216"> <attributeName>NLCD2001_FS_C43_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C43_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113217"> <attributeName>NLCD2001_FS_C43_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C43_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113218"> <attributeName>NLCD2001_FS_C52_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C52_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113219"> <attributeName>NLCD2001_FS_C52_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C52_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113220"> <attributeName>NLCD2001_FS_C52_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C52_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113221"> <attributeName>NLCD2001_FS_C52_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C52_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113222"> <attributeName>NLCD2001_FS_C71_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C71_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113223"> <attributeName>NLCD2001_FS_C71_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C71_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113224"> <attributeName>NLCD2001_FS_C71_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C71_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113225"> <attributeName>NLCD2001_FS_C71_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C71_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113226"> <attributeName>NLCD2001_FS_C81_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C81_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113227"> <attributeName>NLCD2001_FS_C81_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C81_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113228"> <attributeName>NLCD2001_FS_C81_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C81_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113229"> <attributeName>NLCD2001_FS_C81_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C81_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113230"> <attributeName>NLCD2001_FS_C82_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C82_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113231"> <attributeName>NLCD2001_FS_C82_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C82_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113232"> <attributeName>NLCD2001_FS_C82_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C82_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113233"> <attributeName>NLCD2001_FS_C82_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C82_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113234"> <attributeName>NLCD2001_FS_C90_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C90_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113235"> <attributeName>NLCD2001_FS_C90_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C90_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113236"> <attributeName>NLCD2001_FS_C90_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C90_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113237"> <attributeName>NLCD2001_FS_C90_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C90_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113238"> <attributeName>NLCD2001_FS_C95_750_ED</attributeName>
+ <attributeDefinition>NLCD2001_FS_C95_750_ED</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113239"> <attributeName>NLCD2001_FS_C95_750_LPI</attributeName>
+ <attributeDefinition>NLCD2001_FS_C95_750_LPI</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113240"> <attributeName>NLCD2001_FS_C95_750_PD</attributeName>
+ <attributeDefinition>NLCD2001_FS_C95_750_PD</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113241"> <attributeName>NLCD2001_FS_C95_750_PLAND</attributeName>
+ <attributeDefinition>NLCD2001_FS_C95_750_PLAND</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113242"> <attributeName>BAILEY_ECOREGION</attributeName>
+ <attributeLabel>ATT_NAME</attributeLabel>
+ <attributeDefinition>BAILEY_ECOREGION</attributeDefinition>
+ <storageType>Text</storageType>
+ <measurementScale> <nominal> <nonNumericDomain> <textDomain> <definition>*</definition>
+ </textDomain>
+ </nonNumericDomain>
+ </nominal>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113243"> <attributeName>OMERNIK_L3_ECOREGION</attributeName>
+ <attributeDefinition>OMERNIK_L3_ECOREGION</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113244"> <attributeName>NLCD01_CANOPYMEAN_RAD750</attributeName>
+ <attributeDefinition>NLCD01_CANOPYMEAN_RAD750</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113245"> <attributeName>NLCD01_IMPERVMEAN_RAD750</attributeName>
+ <attributeDefinition>NLCD01_IMPERVMEAN_RAD750</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>candelaPerSquareMeter</standardUnit>
+</unit>
+ <numericDomain><numberType>integer</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113246"> <attributeName>DIST_FROM_FLOWING_FRESH</attributeName>
+ <attributeDefinition>DIST_FROM_FLOWING_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113247"> <attributeName>DIST_IN_FLOWING_FRESH</attributeName>
+ <attributeDefinition>DIST_IN_FLOWING_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113248"> <attributeName>DIST_FROM_STANDING_FRESH</attributeName>
+ <attributeDefinition>DIST_FROM_STANDING_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113249"> <attributeName>DIST_IN_STANDING_FRESH</attributeName>
+ <attributeDefinition>DIST_IN_STANDING_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113250"> <attributeName>DIST_FROM_WET_VEG_FRESH</attributeName>
+ <attributeDefinition>DIST_FROM_WET_VEG_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113251"> <attributeName>DIST_IN_WET_VEG_FRESH</attributeName>
+ <attributeDefinition>DIST_IN_WET_VEG_FRESH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113252"> <attributeName>DIST_FROM_FLOWING_BRACKISH</attributeName>
+ <attributeDefinition>DIST_FROM_FLOWING_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113253"> <attributeName>DIST_IN_FLOWING_BRACKISH</attributeName>
+ <attributeDefinition>DIST_IN_FLOWING_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113254"> <attributeName>DIST_FROM_STANDING_BRACKISH</attributeName>
+ <attributeDefinition>DIST_FROM_STANDING_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113255"> <attributeName>DIST_IN_STANDING_BRACKISH</attributeName>
+ <attributeDefinition>DIST_IN_STANDING_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113256"> <attributeName>DIST_FROM_WET_VEG_BRACKISH</attributeName>
+ <attributeDefinition>DIST_FROM_WET_VEG_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ <attribute id="1297211113257"> <attributeName>DIST_IN_WET_VEG_BRACKISH</attributeName>
+ <attributeDefinition>DIST_IN_WET_VEG_BRACKISH</attributeDefinition>
+ <measurementScale> <ratio> <unit><standardUnit>meter</standardUnit>
+</unit>
+ <numericDomain><numberType>real</numberType>
+</numericDomain>
+ </ratio>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>5000</numberOfRecords>
+ </dataTable>
+ </dataset>
+ </eml:eml>

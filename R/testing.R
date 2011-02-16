@@ -8,6 +8,7 @@ d1.test <- function() {
     d1.t2()
     d1.t3()
     d1.t4()
+    d1.t5()
     print("####### End Testing ######################")
 }
 
@@ -65,7 +66,7 @@ d1.t4 <- function() {
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
-   print(testdf)
+   #print(testdf)
    csvdata <- convert.csv(d1, testdf)
    format <- "text/csv"
 
@@ -75,7 +76,50 @@ d1.t4 <- function() {
 
    # Create a D1Object for the table, and upload it to the MN
    d1object <- createD1Object(d1, id, csvdata, format, mn_nodeid, describes, describedBy)
-   print(d1object$getData())
+   #print(d1object$getData())
+   newId <- d1object$getIdentifier()
+   print("ID of d1object:")
+   print(newId$getValue())
+   d1object$create(d1@token)
+   print("Finished object upload.")
+   d1object$setPublicAccess(d1@token)
+   print("Finished setting access.")
+   print("Test finished")
+}
+
+d1.t5 <- function() {
+   print(" ")
+   print("####### Test 5: createD1Object for EML ######################")
+   cn_uri <- "http://cn-dev.dataone.org/cn/"
+   mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
+   mn_nodeid <- "http://knb-test-1.dataone.org"
+   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
+   pw <- "kepler"
+   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
+   id <- paste("r:test", cur_time, "1", sep=".")
+   
+   # Create a DataONE client, and login
+   d1 <- D1Client(cn_uri)
+   d1 <- login(d1, username, pw, mn_uri)
+
+   # Read a text file from disk
+   tfiles.directory <- file.path(.Library, .packageName, "testfiles", fsep=.Platform$file.sep)
+   filenames <- list.files(tfiles.directory)
+   tfname <- file.path(tfiles.directory, filenames[[1]], fsep=.Platform$file.sep)
+   info <- file.info(tfname)
+   doc_char <- readChar(tfname, info$size)
+   format <- "eml://ecoinformatics.org/eml-2.1.0"
+
+   # Create arrays listing describe relationships
+   describes <- c("bar.1.1", "baz.1.1")
+   describedBy <- c("bam.2.1")
+
+   # Create a D1Object for the table, and upload it to the MN
+   d1object <- createD1Object(d1, id, doc_char, format, mn_nodeid, describes, describedBy)
+   #print(d1object$getData())
+   newId <- d1object$getIdentifier()
+   print("ID of d1object:")
+   print(newId$getValue())
    d1object$create(d1@token)
    print("Finished object upload.")
    d1object$setPublicAccess(d1@token)
