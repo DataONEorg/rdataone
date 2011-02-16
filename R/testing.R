@@ -51,31 +51,36 @@ d1.t3 <- function() {
 d1.t4 <- function() {
    print(" ")
    print("####### Test 4: createD1Object ######################")
-   uri <- "http://cn-dev.dataone.org/cn/"
+   cn_uri <- "http://cn-dev.dataone.org/cn/"
    mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
-   #uri <- "http://cn.dataone.org/cn/"
+   mn_nodeid <- "http://knb-test-1.dataone.org"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
    # Create a DataONE client, and login
-   d1 <- D1Client(uri)
+   d1 <- D1Client(cn_uri)
    d1 <- login(d1, username, pw, mn_uri)
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
    print(testdf)
    csvdata <- convert.csv(d1, testdf)
+   format <- "text/csv"
+
+   # Create arrays listing describe relationships
+   describes <- c("bar.1.1", "baz.1.1")
+   describedBy <- c("bam.2.1")
 
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, csvdata)
+   d1object <- createD1Object(d1, id, csvdata, format, mn_nodeid, describes, describedBy)
    print(d1object$getData())
    d1object$create(d1@token)
    print("Finished object upload.")
    d1object$setPublicAccess(d1@token)
    print("Finished setting access.")
-   print("Test 3 passed.")
+   print("Test finished")
 }
 
 a.kgordon <- function(mydf) {

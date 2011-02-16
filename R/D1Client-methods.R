@@ -116,31 +116,28 @@ setGeneric("createD1Object", function(x, identifier, ...) {
     standardGeneric("createD1Object")
 })
 
-setMethod("createD1Object", "D1Client", function(x, identifier, data) {
+setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId, describes, describedBy) {
    cli <- x@cli
    token <- x@token
    nodeurl <- "http://knb-test-1.dataone.org/knb/d1"
 
-   # Create system metadata
-   #Identifier id, byte[] data, ObjectFormat format, String submitter, String
-   #nodeId, String[] describes, String[] describedBy
+   # Create identifier to be used in system metadata
    guid <- .jnew("org/dataone/service/types/Identifier")
    guid$setValue(identifier)
 
+   # Convert incoming data to byte array (byte[])
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
    barr <- iou$toByteArray(data)
    print(str(barr))
 
-   format <- "text/csv"
-   #submitter <- x@username
-   submitter <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
-   nodeId <- "http://knb-test-1.dataone.org"
-   describes <- .jarray(c("foo.1.1"))
-   describedBy <- .jarray(c("foo.2.1"))
+   # Set up/convert additional system metadata fields
+   submitter <- x@username
+   jDescribes <- .jarray(describes)
+   jDescribedBy <- .jarray(describedBy)
 
    # Now create the object with the sysmeta values
    #print(.jconstructors("org/dataone/client/D1Object"))
-   d1object <- .jnew("org/dataone/client/D1Object", guid, barr, format, submitter, nodeId, describes, describedBy, check=FALSE)
+   d1object <- .jnew("org/dataone/client/D1Object", guid, barr, format, submitter, nodeId, jDescribes, jDescribedBy, check=FALSE)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
