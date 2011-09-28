@@ -1,8 +1,8 @@
 setClass("D1Client",
          representation(endpoint = "character",
                         username = "character",
-                        cli = "jobjRef",
-                        token = "jobjRef")
+                        client = "jobjRef",
+                        session = "jobjRef")
 )
 
 #####################
@@ -10,18 +10,19 @@ setClass("D1Client",
 #####################
 
 ## generic
-setGeneric("D1Client", function(uri, ...) { standardGeneric("D1Client")} )
+setGeneric("D1Client", function(...) { standardGeneric("D1Client")} )
+#setGeneric("D1Client")
 
-## first arg is a character
-setMethod("D1Client", "character",
-    function(uri) {
+## no arguments in the signature
+setMethod("D1Client", ,
+    function() {
 
     ## create new D1Client object and insert uri endpoint
-    res <- new("D1Client")
-    res@endpoint <- uri
-    ## Create a Java D1Client object to use for contacting the server
-    cli <-  .jnew("org/dataone/client/D1Client", res@endpoint) 
-    res@cli <- cli
-
-    return(res)
+    result <- new("D1Client")
+    #result@endpoint <- uri
+    
+			## Create a Java D1Client object to use for contacting the server
+    client <-  .jnew("org/dataone/client/D1Client") 
+    result@client <- client
+    return(result)
 })
