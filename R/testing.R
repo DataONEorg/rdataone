@@ -5,19 +5,20 @@ d1.test <- function() {
     d1.javaversion()
     d1.hello()
     d1.t1()
-    d1.t2()
-    d1.t3()
-    d1.t4()
-    d1.t5()
+    #d1.t2()
+    #d1.t3()
+    #d1.t4()
+    #d1.t5()
     print("####### End Testing ######################")
 }
 
 d1.t1 <- function() {
    print(" ")
    print("####### Test 1: getD1Object ######################")
-   CN_URI <- "http://cn-dev.dataone.org/cn/"
-   id <- "erd.365.1"
-   d1 <- D1Client(CN_URI)
+   CN_URI <- "http://cn-dev.test.dataone.org/cn/v1/"
+   #id <- "erd.365.1"
+   id <- "my6test.10.1"
+   d1 <- D1Client()
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
    mydf <- asDataFrame(dp,1)
@@ -27,10 +28,11 @@ d1.t1 <- function() {
 d1.t2 <- function() {
    print(" ")
    print("####### Test 2: getPackage ######################")
-   uri <- "http://cn-dev.dataone.org/cn/"
+   uri <- "http://cn-dev.test.dataone.org/cn/v1/"
    #uri <- "http://cn.dataone.org/cn/"
-   id <- "erd.365.1"
-   d1 <- D1Client(uri)
+   #id <- "erd.365.1"
+   id <- "my6test.10.1"
+   d1 <- D1Client()
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
    mydf <- getData(dp,1)
@@ -40,8 +42,8 @@ d1.t2 <- function() {
 d1.t3 <- function() {
    print(" ")
    print("####### Test 3: convert.csv ######################")
-   uri <- "http://cn-dev.dataone.org/cn/"
-   d1 <- D1Client(uri)
+   uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   d1 <- D1Client()
    # Create a data table, and convert it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
    print(testdf)
@@ -52,8 +54,8 @@ d1.t3 <- function() {
 d1.t4 <- function() {
    print(" ")
    print("####### Test 4: createD1Object ######################")
-   cn_uri <- "http://cn-dev.dataone.org/cn/"
-   mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
+   cn_uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
    mn_nodeid <- "http://knb-test-1.dataone.org"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
@@ -61,8 +63,8 @@ d1.t4 <- function() {
    id <- paste("r:test", cur_time, "1", sep=".")
    
    # Create a DataONE client, and login
-   d1 <- D1Client(cn_uri)
-   d1 <- login(d1, username, pw, mn_uri)
+   d1 <- D1Client()
+   #d1 <- login(d1, username, pw, mn_uri)
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -80,9 +82,9 @@ d1.t4 <- function() {
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
    print(newId$getValue())
-   d1object$create(d1@token)
+   d1object$create(d1@session)
    print("Finished object upload.")
-   d1object$setPublicAccess(d1@token)
+   d1object$setPublicAccess(d1@session)
    print("Finished setting access.")
    print("Test finished")
 }
@@ -90,8 +92,8 @@ d1.t4 <- function() {
 d1.t5 <- function() {
    print(" ")
    print("####### Test 5: createD1Object for EML ######################")
-   cn_uri <- "http://cn-dev.dataone.org/cn/"
-   mn_uri <- "http://knb-test-1.dataone.org/knb/d1"
+   cn_uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
    mn_nodeid <- "http://knb-test-1.dataone.org"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
@@ -99,7 +101,7 @@ d1.t5 <- function() {
    id <- paste("r:test", cur_time, "1", sep=".")
    
    # Create a DataONE client, and login
-   d1 <- D1Client(cn_uri)
+   d1 <- D1Client()
    d1 <- login(d1, username, pw, mn_uri)
 
    # Read a text file from disk
@@ -121,9 +123,9 @@ d1.t5 <- function() {
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
    print(newId$getValue())
-   d1object$create(d1@token)
+   d1object$create(d1@session)
    print("Finished object upload.")
-   d1object$setPublicAccess(d1@token)
+   d1object$setPublicAccess(d1@session)
    print("Finished setting access.")
    print("Test finished")
 }
@@ -143,9 +145,9 @@ d1.test_old <- function() {
    #id <- "knb:testid:201017503651669"
    id <- "knb:testid:2010199125125239"
    print("Start testing")
-   d1 <- D1Client(uri)
+   d1 <- D1Client()
    d1 <- login(d1, username, pw)
-   print(c("TOKEN is: ", d1@token$getToken()))
+   print(c("TOKEN is: ", d1@session$getToken()))
    print(d1)
    print(c("Endpoint is: ", getEndpoint(d1)))
    dp <- getPackage(d1, id)
@@ -174,7 +176,7 @@ d1.login <- function(username, pw, mn_uri) {
    print("####### Test 0.5: Login ######################")
    d1 <- D1Client(uri)
    d1 <- login(d1, username, pw, mn_uri)
-   token <- d1@token
+   session <- d1@session
    return(d1)
 }
 
