@@ -1,7 +1,7 @@
 ### This file contains the methods and accessors for D1Client objects
 
 #########################################################
-### Authentication methods
+### MNAuthentication methods
 #########################################################
 
 ## login
@@ -9,22 +9,22 @@ setGeneric("login", function(x, username, password, ...) {
     standardGeneric("login")
 })
 
-setMethod("login", "D1Client", function(x, username, password, mnUrl) {
-    nodeurl <- getEndpoint(x)
-    x@username <- username 
-    cli <-  x@cli
-    print("Attempting login...")
-    mn <- cli$getMN(mnUrl)
-    token <- mn$login(username, password) 
-    .jcheck(silent = FALSE)
-    print("login succeeded.")
-    x@token <- token
-    print(c("Token from x is: ", x@token$getToken()))
-    return(x)
-})
+#setMethod("login", "D1Client", function(x, username, password, mnUrl) {
+#    nodeurl <- getEndpoint(x)
+#    x@username <- username 
+#    client <-  x@client
+#    print("Attempting login...")
+#    mn <- client$getMN(mnUrl)
+#    session <- mn$login(username, password) 
+#    .jcheck(silent = FALSE)
+#    print("login succeeded.")
+#    x@session <- session
+#    print(c("session from x is: ", x@session$getToken()))
+#    return(x)
+#})
 
 #########################################################
-### CRUD methods
+### MNRead methods
 #########################################################
 
 ## getPackage
@@ -33,15 +33,15 @@ setGeneric("getPackage", function(x, identifier, ...) {
 })
 
 setMethod("getPackage", "D1Client", function(x, identifier) {
-   cli <- x@cli
-   token <- x@token
-   guid <- .jnew("org/dataone/service/types/Identifier")
-   guid$setValue(identifier)
+   client <- x@client
+   session <- x@session
+   pid <- .jnew("org/dataone/service/types/v1/Identifier")
+   pid$setValue(identifier)
 
    # Resolve the ID to find the MN to use
-   cnode <- cli$getCN()
+   cnode <- client$getCN()
    print("Trying resolve operation....")
-   oll <- cnode$resolve(token, guid)
+   oll <- cnode$resolve(session, pid)
    olist <- oll$getObjectLocationList()
    objloc <- olist$get(as.integer(0))
    node <- objloc$getNodeIdentifier()
@@ -52,15 +52,15 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
 
    # Get the sysmeta for this GUID to decide how to handle it
    print("Trying sysmeta operation....")
-   sysmeta <- cnode$getSystemMetadata(token, guid)
+   sysmeta <- cnode$getSystemMetadata(session, pid)
    .jcheck(silent = FALSE)
    oformat = sysmeta$getObjectFormat()
    #print(oformat$toString())
 
    # Now get the object from the correct MN
    print("Trying read operation....")
-   mnode <- cli$getMN(nodeurl)
-   datastream <- mnode$get(token, guid) 
+   mnode <- client$getMN(nodeurl)
+   datastream <- mnode$get(session, pid) 
    .jcheck(silent = FALSE)
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
    .jcheck(silent = FALSE)
@@ -83,18 +83,18 @@ setGeneric("getD1Object", function(x, identifier, ...) {
 })
 
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-   cli <- x@cli
-   token <- x@token
-   guid <- .jnew("org/dataone/service/types/Identifier")
-   guid$setValue(identifier)
+   client <- x@client
+   session <- x@session
+   pid <- .jnew("org/dataone/service/types/v1/Identifier")
+   pid$setValue(identifier)
 
    #nodeurl <- "http://knb-mn.ecoinformatics.org/knb/d1"
-   nodeurl <- "http://knb-test-1.dataone.org/knb/d1"
+   nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
 
    # Now get the object from the correct MN
    print("Trying read operation....")
-   mnode <- cli$getMN(nodeurl)
-   datastream <- mnode$get(token, guid) 
+   mnode <- client$getMN(nodeurl)
+   datastream <- mnode$get(session, pid) 
    .jcheck(silent = FALSE)
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
    .jcheck(silent = FALSE)
@@ -104,7 +104,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    #df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
    #df <- read.table(textConnection(rdata), header = FALSE, skip=27)
 
-   sysmeta <- mnode$getSystemMetadata(token, guid)
+   sysmeta <- mnode$getSystemMetadata(session, pid)
    scimeta <- "Placeholder string for science metadata, waiting to implement lookup of sci metadata from describedBy field in sysmeta"
    dp <- DataPackage(identifier, sysmeta, scimeta)
    dp <- addData(dp, rdata)
@@ -117,13 +117,13 @@ setGeneric("createD1Object", function(x, identifier, ...) {
 })
 
 setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId, describes, describedBy) {
-   cli <- x@cli
-   token <- x@token
-   nodeurl <- "http://knb-test-1.dataone.org/knb/d1"
+   client <- x@client
+   session <- x@session
+   nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
 
    # Create identifier to be used in system metadata
-   guid <- .jnew("org/dataone/service/types/Identifier")
-   guid$setValue(identifier)
+   pid <- .jnew("org/dataone/service/types/v1/Identifier")
+   pid$setValue(identifier)
 
    # Convert incoming data to byte array (byte[])
    iou <-  .jnew("org/apache/commons/io/IOUtils") 
@@ -136,7 +136,7 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
 
    # Now create the object with the sysmeta values
    #print(.jconstructors("org/dataone/client/D1Object"))
-   d1object <- .jnew("org/dataone/client/D1Object", guid, barr, format, submitter, nodeId, jDescribes, jDescribedBy, check=FALSE)
+   d1object <- .jnew("org/dataone/client/D1Object", pid, barr, format, submitter, nodeId, jDescribes, jDescribedBy)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
