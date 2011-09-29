@@ -5,8 +5,8 @@ d1.test <- function() {
     d1.javaversion()
     d1.hello()
     d1.t1()
-    #d1.t2()
-    #d1.t3()
+    d1.t2()
+    d1.t3()
     #d1.t4()
     #d1.t5()
     print("####### End Testing ######################")
@@ -15,9 +15,11 @@ d1.test <- function() {
 d1.t1 <- function() {
    print(" ")
    print("####### Test 1: getD1Object ######################")
-   CN_URI <- "http://cn-dev.test.dataone.org/cn/v1/"
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
    #id <- "erd.365.1"
-   id <- "my6test.10.1"
+   id <- "test11.1.1"
    d1 <- D1Client()
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -28,10 +30,12 @@ d1.t1 <- function() {
 d1.t2 <- function() {
    print(" ")
    print("####### Test 2: getPackage ######################")
-   uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
    #uri <- "http://cn.dataone.org/cn/"
    #id <- "erd.365.1"
-   id <- "my6test.10.1"
+   id <- "test11.1.1"
    d1 <- D1Client()
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -42,7 +46,9 @@ d1.t2 <- function() {
 d1.t3 <- function() {
    print(" ")
    print("####### Test 3: convert.csv ######################")
-   uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
    d1 <- D1Client()
    # Create a data table, and convert it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -54,7 +60,11 @@ d1.t3 <- function() {
 d1.t4 <- function() {
    print(" ")
    print("####### Test 4: createD1Object ######################")
-   cn_uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
+   
    mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
    mn_nodeid <- "http://knb-test-1.dataone.org"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
@@ -92,9 +102,11 @@ d1.t4 <- function() {
 d1.t5 <- function() {
    print(" ")
    print("####### Test 5: createD1Object for EML ######################")
-   cn_uri <- "http://cn-dev.test.dataone.org/cn/v1/"
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
    mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
-   mn_nodeid <- "http://knb-test-1.dataone.org"
+   mn_nodeid <- "DEMO1"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
@@ -171,14 +183,14 @@ d1.analyze <- function() {
    boxplot(reprod_state ~ pisco.code, data=bfdata[[1]])
 }
 
-d1.login <- function(username, pw, mn_uri) {
-   print(" ")
-   print("####### Test 0.5: Login ######################")
-   d1 <- D1Client(uri)
-   d1 <- login(d1, username, pw, mn_uri)
-   session <- d1@session
-   return(d1)
-}
+#d1.login <- function(username, pw, mn_uri) {
+#   print(" ")
+#   print("####### Test 0.5: Login ######################")
+#   d1 <- D1Client(uri)
+#   d1 <- login(d1, username, pw, mn_uri)
+#   session <- d1@session
+#   return(d1)
+#}
 
 d1.hello <- function() {
    print(" ")
