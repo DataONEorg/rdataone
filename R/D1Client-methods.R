@@ -54,7 +54,8 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    print("Trying sysmeta operation....")
    sysmeta <- cnode$getSystemMetadata(session, pid)
    .jcheck(silent = FALSE)
-   oformat = sysmeta$getObjectFormat()
+   fmtid <- sysmeta$getFmtid()
+   oformat = cnode$getFormat(fmtid)
    #print(oformat$toString())
 
    # Now get the object from the correct MN
@@ -62,9 +63,9 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    mnode <- client$getMN(nodeurl)
    datastream <- mnode$get(session, pid) 
    .jcheck(silent = FALSE)
-   iou <-  .jnew("org/apache/commons/io/IOUtils") 
+   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
    .jcheck(silent = FALSE)
-   rdata <- iou$toString(datastream)
+   rdata <- ioUtils$toString(datastream)
 
    # Load the data into a dataframe
    df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
@@ -96,9 +97,9 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    mnode <- client$getMN(nodeurl)
    datastream <- mnode$get(session, pid) 
    .jcheck(silent = FALSE)
-   iou <-  .jnew("org/apache/commons/io/IOUtils") 
+   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
    .jcheck(silent = FALSE)
-   rdata <- iou$toString(datastream)
+   rdata <- ioUtils$toString(datastream)
 
    # Load the data into a dataframe
    #df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
@@ -126,8 +127,8 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
    pid$setValue(identifier)
 
    # Convert incoming data to byte array (byte[])
-   iou <-  .jnew("org/apache/commons/io/IOUtils") 
-   barr <- iou$toByteArray(data)
+   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
+   byteArray <- ioUtils$toByteArray(data)
 
    # Set up/convert additional system metadata fields
    submitter <- x@username
@@ -136,7 +137,7 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
 
    # Now create the object with the sysmeta values
    #print(.jconstructors("org/dataone/client/D1Object"))
-   d1object <- .jnew("org/dataone/client/D1Object", pid, barr, format, submitter, nodeId, jDescribes, jDescribedBy)
+   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, jDescribes, jDescribedBy)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
