@@ -19,7 +19,7 @@ d1.t1 <- function() {
    config <- J("org/dataone/configuration/Settings")$getConfiguration()
    config$setProperty("D1Client.CN_URL", CN_URI)
    #id <- "erd.365.1"
-   id <- "test11.1.1"
+   id <- "rtest.1.1"
    d1 <- D1Client()
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -35,7 +35,7 @@ d1.t2 <- function() {
    config$setProperty("D1Client.CN_URL", CN_URI)
    #uri <- "http://cn.dataone.org/cn/"
    #id <- "erd.365.1"
-   id <- "test11.1.1"
+   id <- "rtest.1.1"
    d1 <- D1Client()
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
