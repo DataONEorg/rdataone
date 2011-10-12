@@ -7,6 +7,7 @@
 # R CMD javareconf
 # R> install.packages("rJava")
 # ln -s /usr/local/lib/R/site-library/rJava/jri/libjri.so /usr/lib
+cd ..
 unset JAVA_HOME
 R --version
 R CMD INSTALL d1_client_r
