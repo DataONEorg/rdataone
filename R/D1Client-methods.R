@@ -89,23 +89,19 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    pid <- .jnew("org/dataone/service/types/v1/Identifier")
    pid$setValue(identifier)
 
-   #nodeurl <- "http://knb-mn.ecoinformatics.org/knb/d1"
-   nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
-
-   # Now get the object from the correct MN
-   print("Trying read operation....")
-   mnode <- client$getMN(nodeurl)
-   datastream <- mnode$get(session, pid) 
+   # Use libclient D1Object to get bytes of object
+   #print("Trying to get the object ...")
+   d1obj <- .jnew("org/dataone/client/D1Object", pid)
+   databytes <- d1obj$getData() 
    .jcheck(silent = FALSE)
-   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
+
+   #print("Convert to string...")
+   jString <-  .jnew("java/lang/String", databytes) 
    .jcheck(silent = FALSE)
-   rdata <- ioUtils$toString(datastream)
+   rdata <- jString$toString()
 
-   # Load the data into a dataframe
-   #df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
-   #df <- read.table(textConnection(rdata), header = FALSE, skip=27)
-
-   sysmeta <- mnode$getSystemMetadata(session, pid)
+   #print("Pull out sysmeta...")
+   sysmeta <- d1obj$getSystemMetadata()
    scimeta <- "Placeholder string for science metadata, waiting to implement lookup of sci metadata from describedBy field in sysmeta"
    dp <- DataPackage(identifier, sysmeta, scimeta)
    dp <- addData(dp, rdata)

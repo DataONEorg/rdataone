@@ -19,7 +19,8 @@ d1.t1 <- function() {
    config <- J("org/dataone/configuration/Settings")$getConfiguration()
    config$setProperty("D1Client.CN_URL", CN_URI)
    #id <- "erd.365.1"
-   id <- "rtest.1.1"
+   #id <- "rtest.1.1"
+   id <- "foo.2.4"
    d1 <- D1Client()
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -35,7 +36,8 @@ d1.t2 <- function() {
    config$setProperty("D1Client.CN_URL", CN_URI)
    #uri <- "http://cn.dataone.org/cn/"
    #id <- "erd.365.1"
-   id <- "rtest.1.1"
+   #id <- "rtest.1.1"
+   id <- "foo.2.4"
    d1 <- D1Client()
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -66,7 +68,7 @@ d1.t4 <- function() {
    config$setProperty("D1Client.CN_URL", CN_URI)
    
    mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
-   mn_nodeid <- "http://knb-test-1.dataone.org"
+   mn_nodeid <- "DEMO1"
    username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
    pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
