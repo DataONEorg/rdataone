@@ -127,13 +127,15 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
    byteArray <- ioUtils$toByteArray(data)
 
    # Set up/convert additional system metadata fields
-   submitter <- x@username
+   # get the submitter from the certificate
+   certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+   cert <- certman$loadCertificate()
+   submitter <- certman$getSubjectDN(cert)
    jDescribes <- .jarray(describes)
    jDescribedBy <- .jarray(describedBy)
 
    # Now create the object with the sysmeta values
-   #print(.jconstructors("org/dataone/client/D1Object"))
-   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, jDescribes, jDescribedBy)
+   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, jDescribes, jDescribedBy, check=FALSE)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))

@@ -7,7 +7,7 @@ d1.test <- function() {
     d1.t1()
     d1.t2()
     d1.t3()
-    #d1.t4()
+    d1.t4()
     #d1.t5()
     print("####### End Testing ######################")
 }
