@@ -8,7 +8,7 @@ d1.test <- function() {
     d1.t2()
     d1.t3()
     d1.t4()
-    #d1.t5()
+    d1.t5()
     print("####### End Testing ######################")
 }
 
@@ -18,9 +18,7 @@ d1.t1 <- function() {
    CN_URI <- "http://cn-dev.test.dataone.org/cn"
    config <- J("org/dataone/configuration/Settings")$getConfiguration()
    config$setProperty("D1Client.CN_URL", CN_URI)
-   #id <- "erd.365.1"
-   #id <- "rtest.1.1"
-   id <- "foo.2.4"
+   id <- "test.1.1"
    d1 <- D1Client()
    dp <- getD1Object(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -34,10 +32,7 @@ d1.t2 <- function() {
    CN_URI <- "http://cn-dev.test.dataone.org/cn"
    config <- J("org/dataone/configuration/Settings")$getConfiguration()
    config$setProperty("D1Client.CN_URL", CN_URI)
-   #uri <- "http://cn.dataone.org/cn/"
-   #id <- "erd.365.1"
-   #id <- "rtest.1.1"
-   id <- "foo.2.4"
+   id <- "test.1.1"
    d1 <- D1Client()
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
@@ -76,7 +71,6 @@ d1.t4 <- function() {
    
    # Create a DataONE client, and login
    d1 <- D1Client()
-   #d1 <- login(d1, username, pw, mn_uri)
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -116,7 +110,6 @@ d1.t5 <- function() {
    
    # Create a DataONE client, and login
    d1 <- D1Client()
-   d1 <- login(d1, username, pw, mn_uri)
 
    # Read a text file from disk
    libPath <- .libPaths()
