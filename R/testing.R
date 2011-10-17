@@ -15,9 +15,7 @@ d1.test <- function() {
 d1.t1 <- function() {
    print(" ")
    print("####### Test 1: getD1Object ######################")
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
+   selectCN()
    id <- "test.1.1"
    d1 <- D1Client()
    dp <- getD1Object(d1, id)
@@ -29,9 +27,7 @@ d1.t1 <- function() {
 d1.t2 <- function() {
    print(" ")
    print("####### Test 2: getPackage ######################")
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
+   selectCN()
    id <- "test.1.1"
    d1 <- D1Client()
    dp <- getPackage(d1, id)
@@ -43,9 +39,7 @@ d1.t2 <- function() {
 d1.t3 <- function() {
    print(" ")
    print("####### Test 3: convert.csv ######################")
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
+   selectCN()
    d1 <- D1Client()
    # Create a data table, and convert it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -58,14 +52,13 @@ d1.t4 <- function() {
    print(" ")
    print("####### Test 4: createD1Object ######################")
    
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
+   selectCN()
+   #CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   #config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   #config$setProperty("D1Client.CN_URL", CN_URI)
    
    mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
    mn_nodeid <- "DEMO1"
-   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
-   pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
@@ -78,12 +71,8 @@ d1.t4 <- function() {
    csvdata <- convert.csv(d1, testdf)
    format <- "text/csv"
 
-   # Create arrays listing describe relationships
-   describes <- c("bar.1.1", "baz.1.1")
-   describedBy <- c("bam.2.1")
-
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, csvdata, format, mn_nodeid, describes, describedBy)
+   d1object <- createD1Object(d1, id, csvdata, format, mn_nodeid)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
@@ -98,13 +87,9 @@ d1.t4 <- function() {
 d1.t5 <- function() {
    print(" ")
    print("####### Test 5: createD1Object for EML ######################")
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
+   selectCN()
    mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
    mn_nodeid <- "DEMO1"
-   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
-   pw <- "kepler"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
@@ -120,12 +105,8 @@ d1.t5 <- function() {
    doc_char <- readChar(tfname, info$size)
    format <- "eml://ecoinformatics.org/eml-2.1.0"
 
-   # Create arrays listing describe relationships
-   describes <- c("bar.1.1", "baz.1.1")
-   describedBy <- c("bam.2.1")
-
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, doc_char, format, mn_nodeid, describes, describedBy)
+   d1object <- createD1Object(d1, id, doc_char, format, mn_nodeid)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
@@ -137,6 +118,12 @@ d1.t5 <- function() {
    print("Test finished")
 }
 
+selectCN <- function() {
+   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   config$setProperty("D1Client.CN_URL", CN_URI)
+}
+
 a.kgordon <- function(mydf) {
    plot_colors <- c("blue","red","forestgreen")
    plot(Biomass ~ Density, data=mydf, col=plot_colors[2])
@@ -146,14 +133,12 @@ a.kgordon <- function(mydf) {
 }
 
 d1.test_old <- function() {
-   username <- "uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org"
-   pw <- "kepler"
    uri <- "http://localhost:8080/knb/"
    #id <- "knb:testid:201017503651669"
    id <- "knb:testid:2010199125125239"
    print("Start testing")
    d1 <- D1Client()
-   d1 <- login(d1, username, pw)
+   #d1 <- login(d1, username, pw)
    print(c("TOKEN is: ", d1@session$getToken()))
    print(d1)
    print(c("Endpoint is: ", getEndpoint(d1)))

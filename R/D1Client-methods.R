@@ -91,7 +91,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 
    # Use libclient D1Object to get bytes of object
    #print("Trying to get the object ...")
-   d1obj <- .jnew("org/dataone/client/D1Object", pid)
+   d1obj <- J("org/dataone/client/D1Object")$download(pid)
    databytes <- d1obj$getData() 
    .jcheck(silent = FALSE)
 
@@ -113,7 +113,7 @@ setGeneric("createD1Object", function(x, identifier, ...) {
     standardGeneric("createD1Object")
 })
 
-setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId, describes, describedBy) {
+setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId) {
    client <- x@client
    session <- x@session
    nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
@@ -131,11 +131,9 @@ setMethod("createD1Object", "D1Client", function(x, identifier, data, format, no
    certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
    cert <- certman$loadCertificate()
    submitter <- certman$getSubjectDN(cert)
-   jDescribes <- .jarray(describes)
-   jDescribedBy <- .jarray(describedBy)
 
    # Now create the object with the sysmeta values
-   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, jDescribes, jDescribedBy, check=FALSE)
+   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, check=FALSE)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
