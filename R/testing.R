@@ -1,64 +1,29 @@
 d1.test <- function() {
+    # Configurable settings for these tests
+    mn_nodeid <- "urn:node:DEMO1"
+    sleep_seconds <- 30
+
     print("####### Start Testing ######################")
     d1.inttest()
     d1.cp()
     d1.javaversion()
     d1.hello()
-    d1.t1()
-    d1.t2()
-    d1.t3()
-    d1.t4()
-    d1.t5()
+    objId <- d1.testCreateDataObject(mn_nodeid)
+    d1.testCreateEMLObject(mn_nodeid)
+    d1.testConvertCSV()
+    # Pause to wait for the CN to sync with the MN
+    Sys.sleep(sleep_seconds)
+    d1.getD1Object(objId)
+    d1.getPackage(objId)
     print("####### End Testing ######################")
 }
 
-d1.t1 <- function() {
+d1.testCreateDataObject <- function(mn_nodeid) {
    print(" ")
-   print("####### Test 1: getD1Object ######################")
-   selectCN()
-   id <- "test.1.1"
-   d1 <- D1Client()
-   dp <- getD1Object(d1, id)
-   print(c("Count of data objects: ", getDataCount(dp)))
-   mydf <- asDataFrame(dp,1)
-   print(summary(mydf))
-}
-
-d1.t2 <- function() {
-   print(" ")
-   print("####### Test 2: getPackage ######################")
-   selectCN()
-   id <- "test.1.1"
-   d1 <- D1Client()
-   dp <- getPackage(d1, id)
-   print(c("Count of data objects: ", getDataCount(dp)))
-   mydf <- getData(dp,1)
-   print(summary(mydf))
-}
-
-d1.t3 <- function() {
-   print(" ")
-   print("####### Test 3: convert.csv ######################")
-   selectCN()
-   d1 <- D1Client()
-   # Create a data table, and convert it to csv format
-   testdf <- data.frame(x=1:10,y=11:20)
-   print(testdf)
-   csv <- convert.csv(d1, testdf)
-   print(csv)
-}
-
-d1.t4 <- function() {
-   print(" ")
-   print("####### Test 4: createD1Object ######################")
+   print("####### Test 1: createD1Object ######################")
    
    selectCN()
-   #CN_URI <- "http://cn-dev.test.dataone.org/cn"
-   #config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   #config$setProperty("D1Client.CN_URL", CN_URI)
    
-   mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
-   mn_nodeid <- "DEMO1"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
@@ -77,19 +42,22 @@ d1.t4 <- function() {
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
    print(newId$getValue())
-   d1object$create(d1@session)
-   print("Finished object upload.")
    d1object$setPublicAccess(d1@session)
    print("Finished setting access.")
+   d1object$create(d1@session)
+   if (!is.null(e<-.jgetEx())) {
+       print("Java exception was raised")
+       print(.jcheck(silent=TRUE))
+   }
+   print("Finished object upload.")
    print("Test finished")
+   return(id)
 }
 
-d1.t5 <- function() {
+d1.testCreateEMLObject <- function(mn_nodeid) {
    print(" ")
-   print("####### Test 5: createD1Object for EML ######################")
+   print("####### Test 2: createD1Object for EML ######################")
    selectCN()
-   mn_uri <- "http://demo1.dataone.org/knb/d1/mn/v1"
-   mn_nodeid <- "DEMO1"
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
@@ -111,15 +79,54 @@ d1.t5 <- function() {
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
    print(newId$getValue())
-   d1object$create(d1@session)
-   print("Finished object upload.")
    d1object$setPublicAccess(d1@session)
    print("Finished setting access.")
+   d1object$create(d1@session)
+   .jcheck(silent = FALSE)
+   print("Finished object upload.")
    print("Test finished")
 }
 
+d1.testConvertCSV <- function() {
+   print(" ")
+   print("####### Test 3: convert.csv ######################")
+   selectCN()
+   d1 <- D1Client()
+   # Create a data table, and convert it to csv format
+   testdf <- data.frame(x=1:10,y=11:20)
+   print(testdf)
+   csv <- convert.csv(d1, testdf)
+   print(csv)
+}
+
+d1.getD1Object <- function(id) {
+   print(" ")
+   print("####### Test 4: getD1Object ######################")
+   selectCN()
+   print(paste("Getting object with ID:", id))
+   d1 <- D1Client()
+   print("D1Client created.")
+   dp <- getD1Object(d1, id)
+   print("D1Object created.")
+   print(c("Count of data objects: ", getDataCount(dp)))
+   mydf <- asDataFrame(dp,1)
+   print(summary(mydf))
+}
+
+d1.getPackage <- function(id) {
+   print(" ")
+   print("####### Test 5: getPackage ######################")
+   selectCN()
+   print(paste("Getting object with ID:", id))
+   d1 <- D1Client()
+   dp <- getPackage(d1, id)
+   print(c("Count of data objects: ", getDataCount(dp)))
+   mydf <- getData(dp,1)
+   print(summary(mydf))
+}
+
 selectCN <- function() {
-   CN_URI <- "http://cn-dev.test.dataone.org/cn"
+   CN_URI <- "https://cn-dev-rr.dataone.org/cn"
    config <- J("org/dataone/configuration/Settings")$getConfiguration()
    config$setProperty("D1Client.CN_URL", CN_URI)
 }

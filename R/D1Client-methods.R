@@ -54,7 +54,7 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
    print("Trying sysmeta operation....")
    sysmeta <- cnode$getSystemMetadata(session, pid)
    .jcheck(silent = FALSE)
-   fmtid <- sysmeta$getFmtid()
+   fmtid <- sysmeta$getFormatId()
    oformat = cnode$getFormat(fmtid)
    #print(oformat$toString())
 

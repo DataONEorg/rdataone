@@ -21,8 +21,9 @@ setMethod("D1Client", ,
     result <- new("D1Client")
     #result@endpoint <- uri
     
-			## Create a Java D1Client object to use for contacting the server
+	## Create a Java D1Client object to use for contacting the server
     client <-  .jnew("org/dataone/client/D1Client") 
     result@client <- client
+    result@session <-  .jnew("org/dataone/service/types/v1/Session") 
     return(result)
 })
