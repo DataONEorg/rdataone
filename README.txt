@@ -20,7 +20,7 @@ Build notes
 3. use "R CMD check d1_client_r" to check package validity
 4. use "R CMD build d1_client_r" to build a distribution
 
-Once installed, the package can be run n R using:
+Once installed, the package can be run in R using:
 $ R
 > library(dataone)
 Loading required package: rJava
@@ -35,11 +35,11 @@ method: GET
 Troubleshooting
 ---------------
 1. Java version on Mac OS X
-  -- even though my user default for Java was 1.6, rJava still uses 1.5
+  -- even though my user default for Java was 1.6, at times rJava still uses 1.5
   -- even switching to 1.6 under root doesn't help
-  -- thus, classes compiled under 1.6 won't run in rJava
+  -- thus, classes compiled under 1.6 sometimes won't run in rJava
   -- recompile with -source 1.5 -target 1.5 and things should work
-  -- still need to determine how to get things to work under 1.6
+  -- in recent versions of rJava, Java 1.6 code is working fine
   -- I wrote a utility method to determine the java version used in rJava,
      execute it as:
      > d1.javaversion()

@@ -4,24 +4,6 @@
 ### MNAuthentication methods
 #########################################################
 
-## login
-setGeneric("login", function(x, username, password, ...) { 
-    standardGeneric("login")
-})
-
-#setMethod("login", "D1Client", function(x, username, password, mnUrl) {
-#    nodeurl <- getEndpoint(x)
-#    x@username <- username 
-#    client <-  x@client
-#    print("Attempting login...")
-#    mn <- client$getMN(mnUrl)
-#    session <- mn$login(username, password) 
-#    .jcheck(silent = FALSE)
-#    print("login succeeded.")
-#    x@session <- session
-#    print(c("session from x is: ", x@session$getToken()))
-#    return(x)
-#})
 
 #########################################################
 ### MNRead methods

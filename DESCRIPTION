@@ -5,10 +5,10 @@ Title: DataONE R Client
 Author: Matthew Jones, Dave Vieglais, Ben Leinfelder, Chris Jones, Robert Waltz, Rob Nahf
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
 Description: A package that provides access to data and metadata from the 
-        DataONE network of member node data providers.
+        DataONE network of Member Node data providers.
 Depends: R (>= 2.9.2), rJava (>= 0.8-5)
 SystemRequirements: Java (>= 1.6)
-License: Apache2
+License: GPL
 Packaged: 2012-03-29 20:54:27 UTC; jones
 Repository: CRAN
 Date/Publication: 2012-03-29 20:49:45

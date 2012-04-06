@@ -1,34 +1,41 @@
 d1.test <- function() {
     # Configurable settings for these tests
+    cn_env <- "DEV"
     mn_nodeid <- "urn:node:DEMO1"
-    sleep_seconds <- 30
+    sleep_seconds <- 200
 
     print("####### Start Testing ######################")
     d1.inttest()
     d1.cp()
     d1.javaversion()
     d1.hello()
-    objId <- d1.testCreateDataObject(mn_nodeid)
-    d1.testCreateEMLObject(mn_nodeid)
-    d1.testConvertCSV()
+    d1.testClientEnv(cn_env)
+    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+    d1.testCreateEMLObject(cn_env, mn_nodeid)
+    d1.testConvertCSV(cn_env)
     # Pause to wait for the CN to sync with the MN
     Sys.sleep(sleep_seconds)
-    d1.getD1Object(objId)
-    d1.getPackage(objId)
+    d1.getD1Object(cn_env, objId)
+    d1.getPackage(cn_env, objId)
     print("####### End Testing ######################")
 }
 
-d1.testCreateDataObject <- function(mn_nodeid) {
+d1.testClientEnv <- function(env) {
+   # Create a DataONE client, and set the CN environemnt to use
+   print("####### Test 0.5: testClientEnv  ######################")
+   d1 <- D1Client(env)
+   print(paste("ENV IS: ", getEndpoint(d1)))
+}
+
+d1.testCreateDataObject <- function(env, mn_nodeid) {
    print(" ")
    print("####### Test 1: createD1Object ######################")
-   
-   selectCN()
    
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
    # Create a DataONE client, and login
-   d1 <- D1Client()
+   d1 <- D1Client(env)
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -54,15 +61,14 @@ d1.testCreateDataObject <- function(mn_nodeid) {
    return(id)
 }
 
-d1.testCreateEMLObject <- function(mn_nodeid) {
+d1.testCreateEMLObject <- function(env, mn_nodeid) {
    print(" ")
    print("####### Test 2: createD1Object for EML ######################")
-   selectCN()
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
    
    # Create a DataONE client, and login
-   d1 <- D1Client()
+   d1 <- D1Client(env)
 
    # Read a text file from disk
    libPath <- .libPaths()
@@ -87,11 +93,11 @@ d1.testCreateEMLObject <- function(mn_nodeid) {
    print("Test finished")
 }
 
-d1.testConvertCSV <- function() {
+d1.testConvertCSV <- function(env) {
    print(" ")
    print("####### Test 3: convert.csv ######################")
-   selectCN()
-   d1 <- D1Client()
+   ##selectCN()
+   d1 <- D1Client(env)
    # Create a data table, and convert it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
    print(testdf)
@@ -99,12 +105,12 @@ d1.testConvertCSV <- function() {
    print(csv)
 }
 
-d1.getD1Object <- function(id) {
+d1.getD1Object <- function(env, id) {
    print(" ")
    print("####### Test 4: getD1Object ######################")
-   selectCN()
+   #selectCN()
    print(paste("Getting object with ID:", id))
-   d1 <- D1Client()
+   d1 <- D1Client(env)
    print("D1Client created.")
    dp <- getD1Object(d1, id)
    print("D1Object created.")
@@ -113,23 +119,23 @@ d1.getD1Object <- function(id) {
    print(summary(mydf))
 }
 
-d1.getPackage <- function(id) {
+d1.getPackage <- function(env, id) {
    print(" ")
    print("####### Test 5: getPackage ######################")
-   selectCN()
+   #selectCN()
    print(paste("Getting object with ID:", id))
-   d1 <- D1Client()
+   d1 <- D1Client(env)
    dp <- getPackage(d1, id)
    print(c("Count of data objects: ", getDataCount(dp)))
    mydf <- getData(dp,1)
    print(summary(mydf))
 }
 
-selectCN <- function() {
-   CN_URI <- "https://cn-dev-rr.dataone.org/cn"
-   config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   config$setProperty("D1Client.CN_URL", CN_URI)
-}
+#selectCN <- function() {
+   #CN_URI <- "https://cn-dev-rr.dataone.org/cn"
+   #config <- J("org/dataone/configuration/Settings")$getConfiguration()
+   #config$setProperty("D1Client.CN_URL", CN_URI)
+#}
 
 a.kgordon <- function(mydf) {
    plot_colors <- c("blue","red","forestgreen")
@@ -137,26 +143,6 @@ a.kgordon <- function(mydf) {
    boxplot(Density ~ Taxon, data=mydf, col=plot_colors[1], outline=F)
    title(xlab="Taxon Number")
    title(ylab="Density")
-}
-
-d1.test_old <- function() {
-   uri <- "http://localhost:8080/knb/"
-   #id <- "knb:testid:201017503651669"
-   id <- "knb:testid:2010199125125239"
-   print("Start testing")
-   d1 <- D1Client()
-   #d1 <- login(d1, username, pw)
-   print(c("TOKEN is: ", d1@session$getToken()))
-   print(d1)
-   print(c("Endpoint is: ", getEndpoint(d1)))
-   dp <- getPackage(d1, id)
-   #print(c("Dumped data object: ", dp))
-   print(c("Count of data objects: ", getDataCount(dp)))
-   bfdata <- getData(dp,1)
-   #print(c("Head of first data object: ", head(bfdata[[1]], 15)))
-   print(summary(bfdata[[1]]))
-   #d1.analyze()
-   print("End testing")
 }
 
 d1.analyze <- function() {
@@ -169,15 +155,6 @@ d1.analyze <- function() {
    boxplot(reprod_state ~ species, data=bfdata[[1]])
    boxplot(reprod_state ~ pisco.code, data=bfdata[[1]])
 }
-
-#d1.login <- function(username, pw, mn_uri) {
-#   print(" ")
-#   print("####### Test 0.5: Login ######################")
-#   d1 <- D1Client(uri)
-#   d1 <- login(d1, username, pw, mn_uri)
-#   session <- d1@session
-#   return(d1)
-#}
 
 d1.hello <- function() {
    print(" ")
