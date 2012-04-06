@@ -10,7 +10,7 @@ rJava
 Installation Notes
 ------------------
 We need rJava to bind to the Java client libraries, be sure to install from
-version 0.8-5 because prior versions have a classpath bug
+version 0.8-5 or later because prior versions have a classpath bug
 > install.packages("rJava",,"http://rforge.net/",type="source")
 
 Build notes
@@ -45,4 +45,4 @@ Troubleshooting
      > d1.javaversion()
      [1] "1.5.0_24"
      [1] "1.5.0_24-b02-357-9M3165"
-2. The doc and man directories are still from the tutorial, need to be updated.
+2. The doc and man directories still contain only stub documentation
