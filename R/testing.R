@@ -24,12 +24,11 @@ d1.test <- function() {
     mn_nodeid <- "urn:node:DEMO1"
     sleep_seconds <- 200
 
+    # Make sure the environment is sane.
+    d1.testJavaEnvironment(cn_env)
+
+    print(" ")
     print("####### Start Testing ######################")
-    d1.inttest()
-    d1.cp()
-    d1.javaversion()
-    d1.hello()
-    d1.testClientEnv(cn_env)
     objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
     d1.testCreateEMLObject(cn_env, mn_nodeid)
     d1.testConvertCSV(cn_env)
@@ -40,31 +39,33 @@ d1.test <- function() {
     print("####### End Testing ######################")
 }
 
-d1.testClientEnv <- function(env) {
-   # Create a DataONE client, and set the CN environemnt to use
-   print("####### Test 0.5: testClientEnv  ######################")
-   d1 <- D1Client(env)
-   print(paste("ENV IS: ", getEndpoint(d1)))
-}
-
 d1.testCreateDataObject <- function(env, mn_nodeid) {
    print(" ")
    print("####### Test 1: createD1Object ######################")
    
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
    id <- paste("r:test", cur_time, "1", sep=".")
+   #print(paste("id: ", id))
    
    # Create a DataONE client, and login
-   d1 <- D1Client(env)
+print("creating d1 client")
+   d1 <- dataone.D1Client(env)
+   print(paste("d1: ", d1))
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
-   #print(testdf)
+   print(paste("testdf: ", testdf))
    csvdata <- convert.csv(d1, testdf)
+print("tick")
    format <- "text/csv"
+print("tick")
 
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, csvdata, format, mn_nodeid)
+   print("creating d1object")
+   d1object <- D1Object()
+   print(paste("d1object: ", d1object))
+   fred <- createD1Object(d1object, id, csvdata, format, mn_nodeid)
+   print(paste("fred: ", fred))
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    print("ID of d1object:")
@@ -174,6 +175,25 @@ d1.analyze <- function() {
    boxplot(count ~ pisco.code, data=bfdata[[1]])
    boxplot(reprod_state ~ species, data=bfdata[[1]])
    boxplot(reprod_state ~ pisco.code, data=bfdata[[1]])
+}
+
+
+#-- Test the Java environment --------------------------------------------------
+
+d1.testJavaEnvironment <- function(env) {
+    d1.inttest()
+    d1.cp()
+    d1.javaversion()
+    d1.hello()
+    d1.testClientEnv(env)
+}
+
+d1.testClientEnv <- function(env) {
+   # Create a DataONE client, and set the CN environemnt to use
+   print(" ")
+   print("####### Test 0.5: testClientEnv  ######################")
+   d1 <- D1Client(env)
+   print(paste("ENV IS: ", getEndpoint(d1)))
 }
 
 d1.hello <- function() {
