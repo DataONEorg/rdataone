@@ -110,44 +110,54 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    return(dp)
 })
 
+## setEndpoint
+setGeneric("setEndpoint", function(x, uri) { 
+    standardGeneric("setEndpoint")
+})
+
+setMethod("setEndpoint", "D1Client", function(x, uri) {
+    x@endpoint <- uri
+})
+
+
 ## createD1Object
-setGeneric("createD1Object", function(x, identifier, ...) { 
-    standardGeneric("createD1Object")
-})
-
-setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId) {
-   client <- x@client
-   session <- x@session
-   nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
-
-   # Create identifier to be used in system metadata
-   pid <- .jnew("org/dataone/service/types/v1/Identifier")
-   pid$setValue(identifier)
-
-   # Convert incoming data to byte array (byte[])
-   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
-   byteArray <- ioUtils$toByteArray(data)
-
-   # Set up/convert additional system metadata fields
-   # get the submitter from the certificate
-   certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
-   cert <- certman$loadCertificate()
-   submitter <- certman$getSubjectDN(cert)
-
-   # Now create the object with the sysmeta values
-   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, check=FALSE)
-   if (!is.null(e<-.jgetEx())) {
-       print("Java exception was raised")
-       print(.jcheck(silent=TRUE))
-       print(.jcheck(silent=TRUE))
-       print(e)
-   }
-
-   #dp <- DataPackage(identifier, sysmeta, scimeta)
-   #dp <- addData(dp, rdata)
-   #return(dp)
-   return(d1object)
-})
+#*#setGeneric("createD1Object", function(x, identifier, ...) { 
+#*#    standardGeneric("createD1Object")
+#*#})
+#*#
+#*#setMethod("createD1Object", "D1Client", function(x, identifier, data, format, nodeId) {
+#*#   client <- x@client
+#*#   session <- x@session
+#*#   nodeurl <- "http://demo1.test.dataone.org/knb/d1/mn/v1"
+#*#
+#*#   # Create identifier to be used in system metadata
+#*#   pid <- .jnew("org/dataone/service/types/v1/Identifier")
+#*#   pid$setValue(identifier)
+#*#
+#*#   # Convert incoming data to byte array (byte[])
+#*#   ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
+#*#   byteArray <- ioUtils$toByteArray(data)
+#*#
+#*#   # Set up/convert additional system metadata fields
+#*#   # get the submitter from the certificate
+#*#   certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+#*#   cert <- certman$loadCertificate()
+#*#   submitter <- certman$getSubjectDN(cert)
+#*#
+#*#   # Now create the object with the sysmeta values
+#*#   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format, submitter, nodeId, check=FALSE)
+#*#   if (!is.null(e<-.jgetEx())) {
+#*#       print("Java exception was raised")
+#*#       print(.jcheck(silent=TRUE))
+#*#       print(.jcheck(silent=TRUE))
+#*#       print(e)
+#*#   }
+#*#
+#*#   #dp <- DataPackage(identifier, sysmeta, scimeta)
+#*#   #dp <- addData(dp, rdata)
+#*#   #return(dp)
+#*#   return(d1object)
+#*#})
 
 #########################################################
 ### Accessor methods

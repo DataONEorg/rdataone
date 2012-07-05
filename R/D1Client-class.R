@@ -34,16 +34,7 @@ setGeneric("D1Client", function(...) { standardGeneric("D1Client")} )
 ## no arguments in the signature
 setMethod("D1Client", ,
     function() {
-
     result <- new("D1Client", "PROD")
-
-    ## create new D1Client object and insert uri endpoint
-    result <- new("D1Client")
-    
-	## Create a Java D1Client object to use for contacting the server
-    client <-  .jnew("org/dataone/client/D1Client") 
-    result@client <- client
-    result@session <-  .jnew("org/dataone/service/types/v1/Session") 
     return(result)
 })
 
@@ -70,9 +61,9 @@ setMethod("D1Client", ,
     result <- new("D1Client")
     result@endpoint <- CN_URI
     
-	## Create a Java D1Client object to use for contacting the server
-    client <-  .jnew("org/dataone/client/D1Client") 
+    ## Create a Java D1Client object to use for contacting the server
+    client <- .jnew("org/dataone/client/D1Client") 
     result@client <- client
-    result@session <-  .jnew("org/dataone/service/types/v1/Session") 
+    result@session <- .jnew("org/dataone/service/types/v1/Session") 
     return(result)
 })

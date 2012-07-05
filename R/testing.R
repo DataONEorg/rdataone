@@ -21,11 +21,11 @@
 d1.test <- function() {
     # Configurable settings for these tests
     cn_env <- "DEV"
-    mn_nodeid <- "urn:node:DEMO1"
+    mn_nodeid <- Sys.getenv("MN_NODE_ID")
     sleep_seconds <- 200
 
     # Make sure the environment is sane.
-    d1.testJavaEnvironment(cn_env)
+#    d1.testJavaEnvironment(cn_env)
 
     print(" ")
     print("####### Start Testing ######################")
@@ -48,31 +48,23 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    #print(paste("id: ", id))
    
    # Create a DataONE client, and login
-print("creating d1 client")
-   d1 <- dataone.D1Client(env)
-   print(paste("d1: ", d1))
+   d1Client <- D1Client(env)
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
    print(paste("testdf: ", testdf))
-   csvdata <- convert.csv(d1, testdf)
-print("tick")
+   csvdata <- convert.csv(d1Client, testdf)
    format <- "text/csv"
-print("tick")
 
    # Create a D1Object for the table, and upload it to the MN
-   print("creating d1object")
-   d1object <- D1Object()
-   print(paste("d1object: ", d1object))
-   fred <- createD1Object(d1object, id, csvdata, format, mn_nodeid)
-   print(paste("fred: ", fred))
+   d1object <- createD1Object(D1Object(), id, csvdata, format, mn_nodeid)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
-   print("ID of d1object:")
-   print(newId$getValue())
-   d1object$setPublicAccess(d1@session)
-   print("Finished setting access.")
-   d1object$create(d1@session)
+   print(paste("ID of d1object:",newId$getValue()))
+   setEndpoint(d1Client, mn_nodeid)
+   d1object$setPublicAccess(d1Client@session)
+print("Creating object.")
+   d1object$create(d1Client@session)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
