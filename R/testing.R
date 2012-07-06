@@ -24,8 +24,9 @@ d1.test <- function() {
     mn_nodeid <- Sys.getenv("MN_NODE_ID")
     sleep_seconds <- 200
 
-    # Make sure the environment is sane.
-#    d1.testJavaEnvironment(cn_env)
+    # Make sure the environment is sane.  Set the environment variable 
+    #   SKIP_JAVAENV_TEST="skip" in ${HOME}/.Renviron to suppress.
+    if ("skip" != Sys.getenv("SKIP_JAVAENV_TEST"))  d1.testJavaEnvironment(cn_env)
 
     print(" ")
     print("####### Start Testing ######################")
@@ -52,7 +53,7 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
-   print(paste("testdf: ", testdf))
+   #print(paste("testdf: ", testdf))
    csvdata <- convert.csv(d1Client, testdf)
    format <- "text/csv"
 
@@ -61,9 +62,9 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    print(paste("ID of d1object:",newId$getValue()))
-   setEndpoint(d1Client, mn_nodeid)
    d1object$setPublicAccess(d1Client@session)
-print("Creating object.")
+
+print("Attempting to create object.")
    d1object$create(d1Client@session)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
