@@ -110,15 +110,6 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
    return(dp)
 })
 
-## setEndpoint
-setGeneric("setEndpoint", function(x, uri) { 
-    standardGeneric("setEndpoint")
-})
-
-setMethod("setEndpoint", "D1Client", function(x, uri) {
-    x@endpoint <- uri
-})
-
 
 ## createD1Object
 #*#setGeneric("createD1Object", function(x, identifier, ...) { 
