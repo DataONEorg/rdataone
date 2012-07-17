@@ -7,9 +7,15 @@
 # R CMD javareconf
 # R> install.packages("rJava")
 # ln -s /usr/local/lib/R/site-library/rJava/jri/libjri.so /usr/lib
+
+# Install modules into user directory.
+#     R_USER_LIBS=${R_LIBS_USER:-${HOME}/.Rlibrary}
+#     mkdir -p ${R_LIBS_USER}
+#     echo 'R_LIBS_USER="~/.Rlibrary"' >> ${HOME}/.Renviron
+
 cd ..
 unset JAVA_HOME
-R --version
-R CMD INSTALL d1_client_r
-R --no-save -e 'library(dataone); d1.test();'
+#R --version
 #R --no-save -e 'library(dataone); d1.javaversion();'
+R --silent CMD INSTALL --library=${R_LIBS_USER:-${HOME}/.Rlibrary} d1_client_r &&\
+  R --silent --no-save -e 'library(dataone); d1.test();'
