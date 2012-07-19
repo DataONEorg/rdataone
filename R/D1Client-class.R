@@ -44,15 +44,20 @@ setMethod("D1Client", ,
 
     ## Select which CN environment should be used
     PROD <- "https://cn.dataone.org/cn"
-    STAGING <- "https://cn-stage.dataone.org/cn"
-    SANDBOX <- "https://cn-sandbox.dataone.org/cn"
-    DEV <- "https://cn-dev-rr.dataone.org/cn"
+    STAGING <- "https://cn-stage.test.dataone.org/cn"
+    SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
+    DEV <- "https://cn-dev.test.dataone.org/cn"
  
     CN_URI <- PROD
-    if (env == "DEV") CN_URI <- DEV
-    if (env == "STAGING") CN_URI <- STAGING
-    if (env == "SANDBOX") CN_URI <- SANDBOX
-    if (env == "PROD") CN_URI <- PROD
+    cnUrl <- Sys.getenv("CN_URI")
+    if(cnUrl != "") {
+        CN_URI <- cnUrl
+    } else {
+	if (env == "DEV") CN_URI <- DEV
+	if (env == "STAGING") CN_URI <- STAGING
+	if (env == "SANDBOX") CN_URI <- SANDBOX
+	if (env == "PROD") CN_URI <- PROD
+    }
  
     config <- J("org/dataone/configuration/Settings")$getConfiguration()
     config$setProperty("D1Client.CN_URL", CN_URI)
