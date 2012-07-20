@@ -20,6 +20,7 @@
 
 setClass("D1Client",
          representation(endpoint = "character",
+	 		mnRef = "jobjRef",
                         client = "jobjRef",
                         session = "jobjRef")
 )
@@ -65,10 +66,12 @@ setMethod("D1Client", ,
     ## create new D1Client object and insert uri endpoint
     result <- new("D1Client")
     result@endpoint <- CN_URI
+    result@mnRef <- .jnull("org/dataone/service/types/v1/NodeReference")
     
     ## Create a Java D1Client object to use for contacting the server
     client <- .jnew("org/dataone/client/D1Client") 
     result@client <- client
-    result@session <- .jnew("org/dataone/service/types/v1/Session") 
+    result@session <- .jnull("org/dataone/service/types/v1/Session") 
+
     return(result)
 })
