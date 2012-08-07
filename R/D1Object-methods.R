@@ -21,41 +21,8 @@
 ### This file contains the methods and accessors for D1Object objects
 
 #########################################################
-### MNRead ad MNStorage methods
+### MNRead and MNStorage methods
 #########################################################
-
-## getD1Object, as a static way to get in instance of a D1Object
-setGeneric("getD1Object", function(x, identifier, ...) { 
-    standardGeneric("getD1Object")
-})
-
-setMethod("getD1Object", "D1Object", function(x, identifier) {
-
-   result <- D1Object()
-
-   pid <- .jnew("org/dataone/service/types/v1/Identifier")
-   pid$setValue(identifier)
-
-   # Use libclient D1Object to get contents of object
-   d1obj <- J("org/dataone/client/D1Object")$download(pid)
-   result@d1o <- d1obj
-
-   #databytes <- d1obj$getData() 
-   #.jcheck(silent = FALSE)
-
-   #print("Convert to string...")
-   #jString <-  .jnew("java/lang/String", databytes) 
-   #.jcheck(silent = FALSE)
-   #rdata <- jString$toString()
-
-   #print("Pull out sysmeta...")
-   #sysmeta <- d1obj$getSystemMetadata()
-   #scimeta <- "Placeholder string for science metadata, waiting to implement lookup of sci metadata from describedBy field in sysmeta"
-   #dp <- DataPackage(identifier, sysmeta, scimeta)
-   #dp <- addData(dp, rdata)
-   #return(dp)
-   return(result)
-})
 
 ## createD1Object, implemented as a static way of constructing an object
 # Consider making this into a real constructor
