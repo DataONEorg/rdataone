@@ -40,42 +40,42 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
     pid <- .jnew("org/dataone/service/types/v1/Identifier")
     pid$setValue(identifier)
 
-    # Resolve the ID to find the MN to use
+    nullObject <- .jnull("org/dataone/client/DataPackage")
     cnode <- client$getCN()
-    print("Trying resolve operation....")
-    oll <- cnode$resolve(session, pid)
-    olist <- oll$getObjectLocationList()
-    objloc <- olist$get(as.integer(0))
-    node <- objloc$getNodeIdentifier()
-    nodeid <- node$getValue()
-    #print(nodeid)
-    nodeurl <- objloc$getBaseURL()
-    print(nodeurl)
 
-    # Get the sysmeta for this GUID to decide how to handle it
-    print("Trying sysmeta operation....")
-    sysmeta <- cnode$getSystemMetadata(session, pid)
-    .jcheck(silent = FALSE)
-    fmtid <- sysmeta$getFormatId()
-    oformat = cnode$getFormat(fmtid)
-    #print(oformat$toString())
+    # Make sure this is the correct type.
+    jSysmeta <- cnode$getSystemMetadata(pid)
+    if (!is.null(e<-.jgetEx())) {
+	print("Java exception was raised")
+	print(.jcheck(silent=TRUE))
+    } else {
+        jObjectFormatId <- jSysmeta$getFormatId()
+	formatId <- jObjectFormatId$getValue()
+	if(formatId != "http://www.openarchives.org/ore/terms") {
+	    print(paste("ERROR: Object is not correct format: ", formatId))
+	    return(nullObject)
+	}
+    }
 
-    # Now get the object from the correct MN
-    print("Trying read operation....")
-    mnode <- client$getMN(nodeurl)
-    datastream <- mnode$get(session, pid) 
-    .jcheck(silent = FALSE)
-    ioUtils <-  .jnew("org/apache/commons/io/IOUtils") 
-    .jcheck(silent = FALSE)
-    rdata <- ioUtils$toString(datastream)
+    # Resolve the ID to find the MN to use
+    jD1Object <- J("org/dataone/client/D1Object")$download(pid)
+    if (!is.null(e<-.jgetEx())) {
+	print("Java exception was raised")
+	print(.jcheck(silent=FALSE))
+    } else if(is.jnull(jD1Object)) {
+        print(paste("Couldn't download:", pid))
+	return(nullObject)
+    }
 
-    # Load the data into a dataframe
-    df <- read.table(textConnection(rdata), header = TRUE, sep = ",", na.strings = "-999")
-    #df <- read.table(textConnection(rdata), header = FALSE, skip=27)
-
-    scimeta <- "Placeholder string for science metadata, waiting to implement lookup of sci metadata from describedBy field in sysmeta"
-    dp <- DataPackage(identifier, sysmeta, scimeta)
-    dp <- addData(dp, df)
+    # Convert to data package.
+    databytes <- jD1Object$getData()
+    jString <- .jnew("java/lang/String", databytes)
+    if(FALSE) {
+	.jcheck(silent = FALSE)
+	print(paste("Object is",  jString$length(), "characters in size"))
+	print(jString)
+    }
+    dp <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
     return(dp)
 })
 
@@ -91,20 +91,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
     pid <- .jnew("org/dataone/service/types/v1/Identifier")
     pid$setValue(identifier)
 
-    # Use libclient D1Object to get bytes of object
-    # First, find a member node
-    cn <- client$getCN()
-    oll <- cn$resolve(session, pid)
-    if (!is.null(e<-.jgetEx())) {
-	print("Java exception was raised")
-	print(.jcheck(silent=TRUE))
-    }
-    olist <- oll$getObjectLocationList()
-    objloc <- olist$get(as.integer(0))
-    node <- objloc$getNodeIdentifier()
-    nodeid <- node$getValue()
-
-    # Second, get the object.
+    # Use libclient D1Object to get the object
     d1Object <- J("org/dataone/client/D1Object")$download(pid)
     .jcheck(silent = FALSE)
 
@@ -127,7 +114,8 @@ setMethod("create", "D1Client", function(x, J_d1Object) {
         print("Cannot create with a null sysmeta object.")
 	return(FALSE)
     }
-print("getSystemMetaData")
+
+    #print("getSystemMetaData")
     sysmeta <- J_d1Object$getSystemMetadata()
     if (!is.null(e<-.jgetEx())) {
 	print("Java exception was raised")

@@ -32,15 +32,17 @@ d1.test <- function() {
 
     print(" ")
     print("####### Start Testing ######################")
-    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-    d1.testCreateEMLObject(cn_env, mn_nodeid)
-    d1.testConvertCSV(cn_env)
+#    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+#    d1.testCreateEMLObject(cn_env, mn_nodeid)
+#    d1.testConvertCSV(cn_env)
 
     # Pause to wait for the CN to sync with the MN
 #    print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
-    Sys.sleep(sleep_seconds)
+#    Sys.sleep(sleep_seconds)
 
+objId <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
     d1.getD1Object(cn_env, objId)
+objId <- "resourceMap_dpennington.121.2"
     d1.getPackage(cn_env, objId)
     print("####### End Testing ######################")
 }
@@ -140,15 +142,35 @@ d1.getD1Object <- function(env, id) {
 }
 
 d1.getPackage <- function(env, id) {
-   print(" ")
-   print("####### Test 5: getPackage ######################")
-   #selectCN()
-   print(paste("Getting object with ID:", id))
-   d1 <- D1Client(env)
-   dp <- getPackage(d1, id)
-   print(c("Count of data objects: ", getDataCount(dp)))
-   mydf <- getData(dp,1)
-   print(summary(mydf))
+    print(" ")
+    print("####### Test 5: getPackage ######################")
+    d1Client <- D1Client(env)
+
+    # Make sure this doesn't work
+    dp <- getPackage(d1Client, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+    if(!is.jnull(dp)) {
+        print("FAIL: Created package out of incorrect format type")
+	return
+    }
+	
+    # Now, get the package.
+    #print(paste("Getting object with ID:", id))
+    jDataPackage <- getPackage(d1Client, id)
+    if(is.jnull(jDataPackage)) {
+        print("FAIL: Couldn't create package")
+	return
+    }
+
+    rDataPackage <- createDataPackage(jDataPackage)
+
+    pkgCount <- jDataPackage$identifiers()$size()
+    print(paste("Count of data objects:", pkgCount))
+
+    data <- getData(rDataPackage, "doi:10.5063/AA/dpennington.121.2")
+    #print(data)
+
+#    mydf <- getData(dp,1)
+#    print(summary(mydf))
 }
 
 #selectCN <- function() {
