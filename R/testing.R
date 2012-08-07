@@ -20,7 +20,9 @@
 
 d1.test <- function() {
     # Configurable settings for these tests
-    cn_env <- "DEV"
+    cn_env <- Sys.getenv("CN_ENV")
+    if(cn_env == "") cn_env <- "DEV"
+    if(cn_env != "DEV") print(paste("** Using the", cn_env, "environment."))
     mn_nodeid <- Sys.getenv("MN_NODE_ID")
     sleep_seconds <- 200
 
@@ -33,8 +35,11 @@ d1.test <- function() {
     objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
     d1.testCreateEMLObject(cn_env, mn_nodeid)
     d1.testConvertCSV(cn_env)
+
     # Pause to wait for the CN to sync with the MN
+#    print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
     Sys.sleep(sleep_seconds)
+
     d1.getD1Object(cn_env, objId)
     d1.getPackage(cn_env, objId)
     print("####### End Testing ######################")
@@ -45,11 +50,12 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    print("####### Test 1: createD1Object ######################")
    
    cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
-   id <- paste("r:test", cur_time, "1", sep=".")
+   id <- paste("Rtest", cur_time, "1", sep=".")
    #print(paste("id: ", id))
    
    # Create a DataONE client, and login
    d1Client <- D1Client(env)
+   setMNodeId(d1Client, Sys.getenv("MN_NODE_ID"))
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -61,11 +67,11 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    d1object <- createD1Object(D1Object(), id, csvdata, format, mn_nodeid)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
-   print(paste("ID of d1object:",newId$getValue()))
+   #print(paste("ID of d1object:",newId$getValue()))
    d1object$setPublicAccess(d1Client@session)
 
-print("Attempting to create object.")
-   d1object$create(d1Client@session)
+print("Attempting  d1Client$create()")
+   create(d1Client, d1object)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
@@ -94,13 +100,12 @@ d1.testCreateEMLObject <- function(env, mn_nodeid) {
    format <- "eml://ecoinformatics.org/eml-2.1.0"
 
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(d1, id, doc_char, format, mn_nodeid)
+   d1object <- createD1Object(D1Object(), id, doc_char, format, mn_nodeid)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
-   print("ID of d1object:")
-   print(newId$getValue())
+   print(paste("ID of d1object:", newId$getValue()))
    d1object$setPublicAccess(d1@session)
-   print("Finished setting access.")
+   #print("Finished setting access.")
    d1object$create(d1@session)
    .jcheck(silent = FALSE)
    print("Finished object upload.")
@@ -120,17 +125,18 @@ d1.testConvertCSV <- function(env) {
 }
 
 d1.getD1Object <- function(env, id) {
-   print(" ")
-   print("####### Test 4: getD1Object ######################")
-   #selectCN()
-   print(paste("Getting object with ID:", id))
-   d1 <- D1Client(env)
-   print("D1Client created.")
-   dp <- getD1Object(d1, id)
-   print("D1Object created.")
-   print(c("Count of data objects: ", getDataCount(dp)))
-   mydf <- asDataFrame(dp,1)
-   print(summary(mydf))
+    print(" ")
+    print("####### Test 4: getD1Object ######################")
+    print(paste("Attempting to get object:", id))
+
+    d1Client <- D1Client(env)
+    d1Object <- getD1Object(d1Client, id)
+    .jcheck(silent = FALSE)
+
+    databytes <- d1Object$getData()
+    jString <- .jnew("java/lang/String", databytes)
+    .jcheck(silent = FALSE)
+    print(paste("Object is",  jString$length(), "characters in size"))
 }
 
 d1.getPackage <- function(env, id) {
