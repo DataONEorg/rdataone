@@ -20,6 +20,7 @@
 
 setClass("DataPackage",
          representation(identifier = "character",
+	                jDataPackage = "jobjRef",
                         sysmeta = "jobjRef",
                         scimeta = "character",
 			dataList = "list")
@@ -41,6 +42,35 @@ setMethod("DataPackage", "character",
     res@identifier <- identifier
     res@sysmeta <- sysmeta1
     res@scimeta <- scimeta1
+    res@jDataPackage <- .jnull("org/dataone/client/DataPackage")
+
+    return(res)
+})
+
+## generic
+setGeneric("createDataPackage", function(jDataPackage, ...) { standardGeneric("createDataPackage")} )
+
+## first arg is a character
+setMethod("createDataPackage", "jobjRef", function(jDataPackage) {
+
+print("createDataPackage")
+    ## create new DataPackage object and insert identifier and data
+    res <- new("DataPackage")
+
+    if(is.jnull(jDataPackage)) {
+        print("Cannot create DataPacakge from null object")
+	return(res)
+    }
+
+    res@jDataPackage <- jDataPackage
+
+    pid <- jDataPackage$getPackageId()
+    res@identifier <- pid$getValue()
+
+    # Loop through all the identifiers, find the scimeta and scidata.
+
+#    res@sysmeta <- sysmeta1
+#    res@scimeta <- scimeta1
 
     return(res)
 })

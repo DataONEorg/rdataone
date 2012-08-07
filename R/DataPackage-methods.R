@@ -38,10 +38,23 @@ setMethod("addData", "DataPackage", function(x, dataObject) {
 
 
 ## getData, returns data object at index
-setGeneric("getData", function(x, index, ...) { standardGeneric("getData")} )
+setGeneric("getData", function(x, id, ...) { standardGeneric("getData")} )
 
-setMethod("getData", "DataPackage", function(x, index) {
-    return(x@dataList[[index]])
+setMethod("getData", "DataPackage", function(x, id) {
+    pid <- .jnew("org/dataone/service/types/v1/Identifier")
+    pid$setValue(id)
+    jD1Object <- x@jDataPackage$get(pid)
+    if(!is.jnull(jD1Object)) {
+	databytes <- jD1Object$getData()
+	if(is.null(databytes)) {
+	    print(paste("Didn't find data in:", id))
+	    return
+	}
+	jString <- .jnew("java/lang/String", databytes)
+	.jcheck(silent = FALSE)
+	return(jString$toString())
+    }
+    return
 })
 
 ## getDataCount, returns number of data objects in this package
