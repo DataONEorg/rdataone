@@ -160,10 +160,13 @@ setMethod("getEndpoint", "D1Client", function(x) {
     return(res)
 })
 
+
 setGeneric("getMNodeId", function(x, ...) { 
     standardGeneric("getMNodeId")
 })
 setMethod("getMNodeId", "D1Client", function(x) {
+print("get x@mnRef")
+print(x@mnRef)
     if(is.jnull(x@mnRef)) {
         return("")
     } else {
@@ -179,6 +182,8 @@ setMethod("setMNodeId", "D1Client", function(x, id) {
         nodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
 	nodeRef$setValue(id)
 	x@mnRef <- nodeRef
+print("set x@mnRef")
+print(x@mnRef)
     }
 })
 
