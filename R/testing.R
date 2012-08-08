@@ -32,7 +32,7 @@ d1.test <- function() {
 
     print(" ")
     print("####### Start Testing ######################")
-#    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
 #    d1.testCreateEMLObject(cn_env, mn_nodeid)
 #    d1.testConvertCSV(cn_env)
 
@@ -40,8 +40,8 @@ d1.test <- function() {
 #    print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
 #    Sys.sleep(sleep_seconds)
 
-    d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
-    d1.getPackage(cn_env)
+#    d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+#    d1.getPackage(cn_env)
 
     print("####### End Testing ######################")
 }
@@ -57,6 +57,9 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    # Create a DataONE client, and login
    d1Client <- D1Client(env)
    setMNodeId(d1Client, Sys.getenv("MN_NODE_ID"))
+   print("1")
+   blah <- getMNodeId(d1Client)
+   print("2")
 
    # Create a data table, and write it to csv format
    testdf <- data.frame(x=1:10,y=11:20)
@@ -65,7 +68,7 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    format <- "text/csv"
 
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(D1Object(), id, csvdata, format, mn_nodeid)
+   d1object <- createD1Object(D1Object(), id, csvdata, format, d1Client)
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    #print(paste("ID of d1object:",newId$getValue()))
