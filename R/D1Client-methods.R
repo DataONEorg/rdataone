@@ -40,20 +40,19 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
     pid <- .jnew("org/dataone/service/types/v1/Identifier")
     pid$setValue(identifier)
 
-    nullObject <- .jnull("org/dataone/client/DataPackage")
     cnode <- client$getCN()
 
     # Make sure this is the correct type.
-    jSysmeta <- cnode$getSystemMetadata(pid)
+    jSysMeta <- cnode$getSystemMetadata(pid)
     if (!is.null(e<-.jgetEx())) {
 	print("Java exception was raised")
 	print(.jcheck(silent=TRUE))
     } else {
-        jObjectFormatId <- jSysmeta$getFormatId()
+        jObjectFormatId <- jSysMeta$getFormatId()
 	formatId <- jObjectFormatId$getValue()
 	if(formatId != "http://www.openarchives.org/ore/terms") {
 	    print(paste("ERROR: Object is not correct format: ", formatId))
-	    return(nullObject)
+	    return(NULL)
 	}
     }
 
@@ -64,7 +63,7 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
 	print(.jcheck(silent=FALSE))
     } else if(is.jnull(jD1Object)) {
         print(paste("Couldn't download:", pid))
-	return(nullObject)
+	return(NULL)
     }
 
     # Convert to data package.
@@ -75,7 +74,8 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
 	print(paste("Object is",  jString$length(), "characters in size"))
 	print(jString)
     }
-    dp <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
+    jDataPackage <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
+    dp <- createDataPackage(jDataPackage, jSysMeta)
     return(dp)
 })
 
