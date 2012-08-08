@@ -56,7 +56,7 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    
    # Create a DataONE client, and login
    d1Client <- D1Client(env)
-   setMNodeId(d1Client, Sys.getenv("MN_NODE_ID"))
+   setMNodeId(d1Client, mn_nodeid)
    print("1")
    blah <- getMNodeId(d1Client)
    print("2")
@@ -68,7 +68,11 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
    format <- "text/csv"
 
    # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(D1Object(), id, csvdata, format, d1Client)
+   d1Object <- createD1Object(D1Object(), id, csvdata, format, d1Client)
+   if(is.jnull(d1Object)) {
+       print("d1Object is null")
+       return(NULL)
+   }
    #print(d1object$getData())
    newId <- d1object$getIdentifier()
    #print(paste("ID of d1object:",newId$getValue()))

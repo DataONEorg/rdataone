@@ -32,10 +32,32 @@ setGeneric("createD1Object", function(x, identifier, ...) {
     standardGeneric("createD1Object")
 })
 
-setMethod("createD1Object", "D1Object", function(x, identifier, data, format, nodeId) {
+setMethod("createD1Object", "D1Object", 
+      function(x, identifier, data, format, d1Client) {
    # Create identifier to be used in system metadata
    pid <- .jnew("org/dataone/service/types/v1/Identifier")
    pid$setValue(identifier)
+
+   # Set up/convert additional system metadata fields
+   # get the submitter from the certificate
+   certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+   cert <- certman$loadCertificate()
+   submitter <- .jnew("org/dataone/service/types/v1/Subject")
+   submitter$setValue(certman$getSubjectDN(cert))
+
+   # Try and reserve this pid.
+   #print(paste("Reserving pid:", identifier))
+   cnode <- getCN(d1Client)
+   pid <- cnode$reserveIdentifier(pid)
+   if (!is.null(e<-.jgetEx())) {
+      if(e$getDetail_code() == "4210") {
+	 print(paste(identifier, "id cannot be used"))
+      } else {
+	 print(e)
+      }
+      return
+   }
+   #print(paste("Reserved pid:", identifier))
 
    # Convert incoming data to byte array (byte[])
    ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
@@ -45,19 +67,27 @@ setMethod("createD1Object", "D1Object", function(x, identifier, data, format, no
    formatId <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
    formatId$setValue(format)
 
-   # Set up/convert additional system metadata fields
-   # get the submitter from the certificate
-   certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
-   cert <- certman$loadCertificate()
-   submitter <- .jnew("org/dataone/service/types/v1/Subject")
-   submitter$setValue(certman$getSubjectDN(cert))
-
-   # Create the NodeReference
-   mnNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-   mnNodeRef$setValue(nodeId)
+   # Get the noderef
+print("Getting MNodeId")
+   mNodeId <- getMNodeId(d1Client)
+   if(is.null(mNodeId) || (mNodeId == "")) {
+      print("ERROR: A Member Node must be defined to create an object.")
+      return(.jnull("org/dataone/client/D1Object"))
+   }
+print("got MNodeId")
+   mNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+   mNodeRef$setValue(mNodeId)
+print("got MNodeRef")
 
    # Now create the object with the sysmeta values
-   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, formatId, submitter, mnNodeRef, check=FALSE)
+print("creating object")
+   print("pid,byteArray,formatid,submitter,mnRef")
+   print(pid)
+   print(byteArray)
+   print(formatId)
+   print(submitter)
+   print(mNodeRef)
+   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, formatId, submitter, d1Client@mnRef, check=FALSE)
    if (!is.null(e<-.jgetEx())) {
        print("Java exception was raised")
        print(.jcheck(silent=TRUE))
