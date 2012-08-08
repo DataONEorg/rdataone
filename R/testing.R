@@ -40,10 +40,9 @@ d1.test <- function() {
 #    print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
 #    Sys.sleep(sleep_seconds)
 
-objId <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
-    d1.getD1Object(cn_env, objId)
-objId <- "resourceMap_dpennington.121.2"
-    d1.getPackage(cn_env, objId)
+    d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+    d1.getPackage(cn_env)
+
     print("####### End Testing ######################")
 }
 
@@ -79,7 +78,8 @@ print("Attempting  d1Client$create()")
        print(.jcheck(silent=TRUE))
    }
    print("Finished object upload.")
-   print("Test finished")
+
+   print("Test 1: finished")
    return(id)
 }
 
@@ -111,7 +111,8 @@ d1.testCreateEMLObject <- function(env, mn_nodeid) {
    d1object$create(d1@session)
    .jcheck(silent = FALSE)
    print("Finished object upload.")
-   print("Test finished")
+
+   print("Test 2: finished")
 }
 
 d1.testConvertCSV <- function(env) {
@@ -124,6 +125,8 @@ d1.testConvertCSV <- function(env) {
    print(testdf)
    csv <- convert.csv(d1, testdf)
    print(csv)
+
+   print("Test 3: finished")
 }
 
 d1.getD1Object <- function(env, id) {
@@ -139,45 +142,45 @@ d1.getD1Object <- function(env, id) {
     jString <- .jnew("java/lang/String", databytes)
     .jcheck(silent = FALSE)
     print(paste("Object is",  jString$length(), "characters in size"))
+
+    print("Test 4: finished")
 }
 
-d1.getPackage <- function(env, id) {
+d1.getPackage <- function(env) {
     print(" ")
     print("####### Test 5: getPackage ######################")
     d1Client <- D1Client(env)
 
     # Make sure this doesn't work
     dp <- getPackage(d1Client, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
-    if(!is.jnull(dp)) {
+    if(!is.null(dp)) {
         print("FAIL: Created package out of incorrect format type")
 	return
     }
 	
     # Now, get the package.
-    #print(paste("Getting object with ID:", id))
-    jDataPackage <- getPackage(d1Client, id)
-    if(is.jnull(jDataPackage)) {
+    id <- "resourceMap_dpennington.121.2"
+    print(" ")
+    print(paste("Getting object with ID:", id))
+
+    rDataPackage <- getPackage(d1Client, id)
+    if(is.null(rDataPackage)) {
         print("FAIL: Couldn't create package")
 	return
     }
 
-    rDataPackage <- createDataPackage(jDataPackage)
+    databytes <- getData(rDataPackage, "doi:10.5063/AA/IPCC.200802022123018.1")
+    if(is.null(databytes)) {
+        print("FAIL: Couldn't get data")
+	return
+    }
+#    jString <- .jnew("java/lang/String", databytes)
+#    .jcheck(silent = FALSE)
+#    print(jString)
 
-    pkgCount <- jDataPackage$identifiers()$size()
-    print(paste("Count of data objects:", pkgCount))
-
-    data <- getData(rDataPackage, "doi:10.5063/AA/dpennington.121.2")
-    #print(data)
-
-#    mydf <- getData(dp,1)
-#    print(summary(mydf))
+    print("Test 5: finished")
 }
 
-#selectCN <- function() {
-   #CN_URI <- "https://cn-dev-rr.dataone.org/cn"
-   #config <- J("org/dataone/configuration/Settings")$getConfiguration()
-   #config$setProperty("D1Client.CN_URL", CN_URI)
-#}
 
 a.kgordon <- function(mydf) {
    plot_colors <- c("blue","red","forestgreen")
