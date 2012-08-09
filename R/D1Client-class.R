@@ -20,7 +20,7 @@
 
 setClass("D1Client",
          representation(endpoint = "character",
-	 		mnRef = "jobjRef",
+	 		mn.nodeid = "character",
                         client = "jobjRef",
                         session = "jobjRef")
 )
@@ -29,49 +29,68 @@ setClass("D1Client",
 ## D1Client constructors
 #####################
 
-## generic
-setGeneric("D1Client", function(...) { standardGeneric("D1Client")} )
+## Generic function with 0, 1, or 2 parameters
+setGeneric("D1Client", function(env, mn_nodeid, ...) {
+  standardGeneric("D1Client")
+})
 
-## no arguments in the signature
+
+## No arguments in the signature - use default env and nodeid
 setMethod("D1Client", ,
     function() {
-    result <- new("D1Client", "PROD")
-    return(result)
+  result <- new("D1Client", "PROD", NULL)
+  return(result)
 })
 
-## Pass in the environment to be used by this D1Client
-setMethod("D1Client", ,
-    function(env) {
 
-    ## Select which CN environment should be used
-    PROD <- "https://cn.dataone.org/cn"
-    STAGING <- "https://cn-stage.test.dataone.org/cn"
-    SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
-    DEV <- "https://cn-dev.test.dataone.org/cn"
- 
-    CN_URI <- PROD
-    cnUrl <- Sys.getenv("CN_URI")
-    if(cnUrl != "") {
-        CN_URI <- cnUrl
-    } else {
-	if (env == "DEV") CN_URI <- DEV
-	if (env == "STAGING") CN_URI <- STAGING
-	if (env == "SANDBOX") CN_URI <- SANDBOX
-	if (env == "PROD") CN_URI <- PROD
-    }
- 
-    config <- J("org/dataone/configuration/Settings")$getConfiguration()
-    config$setProperty("D1Client.CN_URL", CN_URI)
-
-    ## create new D1Client object and insert uri endpoint
-    result <- new("D1Client")
-    result@endpoint <- CN_URI
-    result@mnRef <- .jnull("org/dataone/service/types/v1/NodeReference")
-    
-    ## Create a Java D1Client object to use for contacting the server
-    client <- .jnew("org/dataone/client/D1Client") 
-    result@client <- client
-    result@session <- .jnull("org/dataone/service/types/v1/Session") 
-
-    return(result)
+## Pass in the environment to be used by this D1Client, but use
+##   the default member node.
+setMethod("D1Client", signature("character"),
+    function(env, ...) {
+  result <- new("D1Client", "PROD", NULL)
+  return(result)
 })
+
+
+## Pass in the environment to be used by this D1Client, plus the 
+##   id of member node.
+setMethod("D1Client", signature("character", "character"),
+    function(env, mn_nodeid) {
+
+  ## Define the default CNs for each environment.
+  PROD <- "https://cn.dataone.org/cn"
+  STAGING <- "https://cn-stage.test.dataone.org/cn"
+  SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
+  DEV <- "https://cn-dev.test.dataone.org/cn"
+
+  # By default, use production.  But also look in the environment.
+  CN_URI <- PROD
+  cn.url <- Sys.getenv("CN_URI")
+  if(cn.url != "") {
+    CN_URI <- cn.url
+  } else {
+    if (env == "DEV") CN_URI <- DEV
+    if (env == "STAGING") CN_URI <- STAGING
+    if (env == "SANDBOX") CN_URI <- SANDBOX
+    if (env == "PROD") CN_URI <- PROD
+  }
+
+  config <- J("org/dataone/configuration/Settings")$getConfiguration()
+  config$setProperty("D1Client.CN_URL", CN_URI)
+
+  ## create new D1Client object and insert uri endpoint
+  result <- new("D1Client")
+  result@endpoint <- CN_URI
+  result@mn.nodeid <- mn_nodeid
+
+  ## Create a Java D1Client object to use for contacting the server
+  client <- .jnew("org/dataone/client/D1Client") 
+  result@client <- client
+  result@session <- .jnull("org/dataone/service/types/v1/Session") 
+
+  # Set the node reference
+  result@mn.nodeid <- mn_nodeid
+
+  return(result)
+})
+

@@ -160,50 +160,54 @@ setMethod("getEndpoint", "D1Client", function(x) {
     return(res)
 })
 
-
-setGeneric("getMNodeId", function(x, ...) { 
-    standardGeneric("getMNodeId")
+## Getter and Setter for the node id.
+##
+setGeneric("getMNodeId", function(x) { 
+  standardGeneric("getMNodeId")
 })
-setMethod("getMNodeId", "D1Client", function(x) {
-print("get x@mnRef")
-print(x@mnRef)
-    if(is.jnull(x@mnRef)) {
-        return("")
-    } else {
-        return(x@mnRef$getValue())
-    }
+setMethod("getMNodeId", signature("D1Client"), function(x) {
+  return(x@mn.nodeid)
 })
 
-setGeneric("setMNodeId", function(x, ...) { 
-    standardGeneric("setMNodeId")
+setGeneric("setMNodeId", function(x, id) { 
+  standardGeneric("setMNodeId")
 })
-setMethod("setMNodeId", "D1Client", function(x, id) {
-    if(id != "") {
-        nodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-	nodeRef$setValue(id)
-	x@mnRef <- nodeRef
-print("set x@mnRef")
-print(x@mnRef)
-    }
+setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
+  if(!is.null(id) && id != "") {
+    x@mn.nodeid <- id
+  }
 })
 
-setGeneric("getMN", function(x, ...) { 
+
+## Get a member node client.
+## Allow for optionally passing the nodeid.
+setGeneric("getMN", function(x, nodeid, ...) { 
     standardGeneric("getMN")
 })
-setMethod("getMN", "D1Client", function(x) {
-    if(is.jnull(x@mnRef)) {
-        e <- .jnew("org/dataone/service/exceptions/ServiceFailure", "1102", "Invalid Request: No member node defined.")
-	.jthrow(e)
-    }
+setMethod("getMN", signature("D1Client"), function(x, ...) {
+  mn <- getMN(x, x@mn.nodeid)
+})
+setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
+  # Validate nodeid.
+  if(is.null(nodeid) || (nodeid == "")) {
+    print("ERROR: No member node id is defined.")
+    return(.jnull("org/dataone/client/MNode"))
+  }
 
-    mn <- J("org/dataone/client/D1Client")$getMN(x@mnRef)
-    return(mn)
+  # Build a NodeReference out of the id and return a MN client.
+  node.ref <- .jnew("org/dataone/service/types/v1/NodeReference")
+  node.ref$setValue(nodeid)
+  mn <- J("org/dataone/client/D1Client")$getMN(node.ref)
+
+  return(mn)
 })
 
-setGeneric("getCN", function(x, ...) { 
+
+## Get a coordinating node client.
+setGeneric("getCN", function(x) { 
     standardGeneric("getCN")
 })
-setMethod("getCN", "D1Client", function(x) {
+setMethod("getCN", signature("D1Client"), function(x) {
     cn <- J("org/dataone/client/D1Client")$getCN()
     return(cn)
 })
