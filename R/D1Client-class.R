@@ -34,23 +34,20 @@ setGeneric("D1Client", function(env, mn_nodeid, ...) {
   standardGeneric("D1Client")
 })
 
-
 ## No arguments in the signature - use default env and nodeid
 setMethod("D1Client", ,
     function() {
-  result <- new("D1Client", "PROD", NULL)
+  result <- D1Client("PROD", "")
   return(result)
 })
-
 
 ## Pass in the environment to be used by this D1Client, but use
 ##   the default member node.
 setMethod("D1Client", signature("character"),
     function(env, ...) {
-  result <- new("D1Client", "PROD", NULL)
+  result <- D1Client(env, "")
   return(result)
 })
-
 
 ## Pass in the environment to be used by this D1Client, plus the 
 ##   id of member node.
