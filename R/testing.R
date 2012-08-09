@@ -30,17 +30,25 @@ d1.test <- function() {
   #   SKIP_JAVAENV_TEST="skip" in ${HOME}/.Renviron to suppress.
   if ("skip" != Sys.getenv("SKIP_JAVAENV_TEST"))  d1.testJavaEnvironment(cn_env)
 
+
   print(" ")
   print("####### Start Testing ######################")
-  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+
+  objId <- ""
+  # objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
   # d1.testCreateEMLObject(cn_env, mn_nodeid)
   # d1.testConvertCSV(cn_env)
 
-    # Pause to wait for the CN to sync with the MN
-    # print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
-    # Sys.sleep(sleep_seconds)
+  # Pause to wait for the CN to sync with the MN  (
+  if(objId != "") {
+    print(paste("Waiting", sleep_seconds,
+		"seconds to let the CN sync the EML object."))
+    Sys.sleep(sleep_seconds)
+  } else {
+    objId <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
+  }
 
-  # d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+  d1.getD1Object(cn_env, objId)
   # d1.getPackage(cn_env)
 
   print("####### End Testing ######################")
@@ -136,64 +144,71 @@ d1.testConvertCSV <- function(env) {
 }
 
 d1.getD1Object <- function(env, id) {
-    print(" ")
-    print("####### Test 4: getD1Object ######################")
-    print(paste("Attempting to get object:", id))
+  print(" ")
+  print("####### Test 4: getD1Object ######################")
 
-    d1Client <- D1Client(env)
-    d1Object <- getD1Object(d1Client, id)
-    .jcheck(silent = FALSE)
+  print(paste("Attempting to get object:", id))
+  d1Client <- D1Client(env)
+  d1Object <- getD1Object(d1Client, id)
+  .jcheck(silent = FALSE)
 
-    databytes <- d1Object$getData()
-    jString <- .jnew("java/lang/String", databytes)
-    .jcheck(silent = FALSE)
-    print(paste("Object is",  jString$length(), "characters in size"))
+  databytes <- d1Object$getData()
+  jString <- .jnew("java/lang/String", databytes)
+  .jcheck(silent = FALSE)
+  data_size <- jString$length()
+  if(data_size < 14000) {
+    print(paste("Data is too small (expecting at least 14000, only found",
+                data_size))
+  }
 
-    print("Test 4: finished")
+  print("Test 4: finished")
 }
 
 d1.getPackage <- function(env) {
-    print(" ")
-    print("####### Test 5: getPackage ######################")
-    d1Client <- D1Client(env)
+  print(" ")
+  print("####### Test 5: getPackage ######################")
 
-    # Make sure this doesn't work
-    dp <- getPackage(d1Client, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
-    if(!is.null(dp)) {
-        print("FAIL: Created package out of incorrect format type")
-	return
-    }
-	
-    # Now, get the package.
-    id <- "resourceMap_dpennington.121.2"
-    print(" ")
-    print(paste("Getting object with ID:", id))
+  # Get the CN (only) client.
+  d1Client <- D1Client(env)
 
-    rDataPackage <- getPackage(d1Client, id)
-    if(is.null(rDataPackage)) {
-        print("FAIL: Couldn't create package")
-	return
-    }
+  # Make sure this doesn't work
+  dp <- getPackage(d1Client, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+  if(!is.null(dp)) {
+    print("FAIL: Created package out of incorrect format type")
+    return
+  }
 
-    databytes <- getData(rDataPackage, "doi:10.5063/AA/IPCC.200802022123018.1")
-    if(is.null(databytes)) {
-        print("FAIL: Couldn't get data")
-	return
-    }
-#    jString <- .jnew("java/lang/String", databytes)
-#    .jcheck(silent = FALSE)
-#    print(jString)
+  # Now, get the package.
+  id <- "resourceMap_dpennington.121.2"
+  print(" ")
+  print(paste("Getting object with ID:", id))
 
-    print("Test 5: finished")
+  rDataPackage <- getPackage(d1Client, id)
+  if(is.null(rDataPackage)) {
+    print("FAIL: Couldn't create package")
+    return
+  }
+
+  databytes <- getData(rDataPackage, "doi:10.5063/AA/IPCC.200802022123018.1")
+  if(is.null(databytes)) {
+  print("FAIL: Couldn't get data")
+  return
+  }
+
+  # jString <- .jnew("java/lang/String", databytes)
+  # .jcheck(silent = FALSE)
+  # print(jString)
+
+  print("Test 5: finished")
 }
 
 
 a.kgordon <- function(mydf) {
-   plot_colors <- c("blue","red","forestgreen")
-   plot(Biomass ~ Density, data=mydf, col=plot_colors[2])
-   boxplot(Density ~ Taxon, data=mydf, col=plot_colors[1], outline=F)
-   title(xlab="Taxon Number")
-   title(ylab="Density")
+  plot_colors <- c("blue","red","forestgreen")
+  plot(Biomass ~ Density, data=mydf, col=plot_colors[2])
+  boxplot(Density ~ Taxon, data=mydf, col=plot_colors[1], outline=F)
+  title(xlab="Taxon Number")
+  title(ylab="Density")
 }
 
 d1.analyze <- function() {
