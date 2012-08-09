@@ -19,75 +19,74 @@
 #
 
 d1.test <- function() {
-    # Configurable settings for these tests
-    cn_env <- Sys.getenv("CN_ENV")
-    if(cn_env == "") cn_env <- "DEV"
-    if(cn_env != "DEV") print(paste("** Using the", cn_env, "environment."))
-    mn_nodeid <- Sys.getenv("MN_NODE_ID")
-    sleep_seconds <- 200
+  # Configurable settings for these tests
+  cn_env <- Sys.getenv("CN_ENV")
+  if(cn_env == "") cn_env <- "DEV"
+  if(cn_env != "DEV") print(paste("** Using the", cn_env, "environment."))
+  mn_nodeid <- Sys.getenv("MN_NODE_ID")
+  sleep_seconds <- 200
 
-    # Make sure the environment is sane.  Set the environment variable 
-    #   SKIP_JAVAENV_TEST="skip" in ${HOME}/.Renviron to suppress.
-    if ("skip" != Sys.getenv("SKIP_JAVAENV_TEST"))  d1.testJavaEnvironment(cn_env)
+  # Make sure the environment is sane.  Set the environment variable 
+  #   SKIP_JAVAENV_TEST="skip" in ${HOME}/.Renviron to suppress.
+  if ("skip" != Sys.getenv("SKIP_JAVAENV_TEST"))  d1.testJavaEnvironment(cn_env)
 
-    print(" ")
-    print("####### Start Testing ######################")
-    objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-#    d1.testCreateEMLObject(cn_env, mn_nodeid)
-#    d1.testConvertCSV(cn_env)
+  print(" ")
+  print("####### Start Testing ######################")
+  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+  # d1.testCreateEMLObject(cn_env, mn_nodeid)
+  # d1.testConvertCSV(cn_env)
 
     # Pause to wait for the CN to sync with the MN
-#    print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
-#    Sys.sleep(sleep_seconds)
+    # print(paste("Waiting", sleep_seconds, "seconds to let the CN sync the EML object."))
+    # Sys.sleep(sleep_seconds)
 
-#    d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
-#    d1.getPackage(cn_env)
+  # d1.getD1Object(cn_env, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+  # d1.getPackage(cn_env)
 
-    print("####### End Testing ######################")
+  print("####### End Testing ######################")
 }
 
+
 d1.testCreateDataObject <- function(env, mn_nodeid) {
-   print(" ")
-   print("####### Test 1: createD1Object ######################")
-   
-   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
-   id <- paste("Rtest", cur_time, "1", sep=".")
-   #print(paste("id: ", id))
-   
-   # Create a DataONE client, and login
-   d1Client <- D1Client(env)
-   setMNodeId(d1Client, mn_nodeid)
-   print("1")
-   blah <- getMNodeId(d1Client)
-   print("2")
+  print(" ")
+  print("####### Test 1: createD1Object ######################")
 
-   # Create a data table, and write it to csv format
-   testdf <- data.frame(x=1:10,y=11:20)
-   #print(paste("testdf: ", testdf))
-   csvdata <- convert.csv(d1Client, testdf)
-   format <- "text/csv"
+  # Create a permanent id.
+  cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
+  id <- paste("Rtest", cur_time, "1", sep=".")
+  #print(paste("id: ", id))
 
-   # Create a D1Object for the table, and upload it to the MN
-   d1Object <- createD1Object(D1Object(), id, csvdata, format, d1Client)
-   if(is.jnull(d1Object)) {
-       print("d1Object is null")
-       return(NULL)
-   }
-   #print(d1object$getData())
-   newId <- d1object$getIdentifier()
-   #print(paste("ID of d1object:",newId$getValue()))
-   d1object$setPublicAccess(d1Client@session)
+  # Create a DataONE client
+  d1Client <- D1Client(env, mn_nodeid)
+
+  # Create a data table, and write it to csv format
+  testdf <- data.frame(x=1:10,y=11:20)
+  #print(paste("testdf: ", testdf))
+  csvdata <- convert.csv(d1Client, testdf)
+  format <- "text/csv"
+
+  # Create a D1Object for the table, and upload it to the MN
+  d1Object <- createD1Object(id, csvdata, format, d1Client)
+  if(is.jnull(d1Object)) {
+    print("d1Object is null")
+    return(NULL)
+  }
+return(FALSE)
+  #print(d1object$getData())
+  newId <- d1object$getIdentifier()
+  #print(paste("ID of d1object:",newId$getValue()))
+  d1object$setPublicAccess(d1Client@session)
 
 print("Attempting  d1Client$create()")
-   create(d1Client, d1object)
-   if (!is.null(e<-.jgetEx())) {
-       print("Java exception was raised")
-       print(.jcheck(silent=TRUE))
-   }
-   print("Finished object upload.")
+  create(d1Client, d1object)
+  if (!is.null(e <- .jgetEx())) {
+    print("Java exception was raised")
+    print(.jcheck(silent=TRUE))
+  }
+  print("Finished object upload.")
 
-   print("Test 1: finished")
-   return(id)
+  print("Test 1: finished")
+  return(id)
 }
 
 d1.testCreateEMLObject <- function(env, mn_nodeid) {
