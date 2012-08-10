@@ -36,8 +36,8 @@ d1.test <- function() {
 
   objId <- ""
   # objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-  # d1.testCreateEMLObject(cn_env, mn_nodeid)
-  # d1.testConvertCSV(cn_env)
+  d1.testCreateEMLObject(cn_env, mn_nodeid)
+  d1.testConvertCSV(cn_env)
 
   # Pause to wait for the CN to sync with the MN  (
   if(objId != "") {
@@ -48,45 +48,49 @@ d1.test <- function() {
     objId <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
   }
 
-  d1.getD1Object(cn_env, objId)
+  # d1.getD1Object(cn_env, objId)
   # d1.getPackage(cn_env)
 
   print("####### End Testing ######################")
 }
 
-
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Create a basic DataONE D1Object.				|#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.testCreateDataObject <- function(env, mn_nodeid) {
   print(" ")
   print("####### Test 1: createD1Object ######################")
 
   # Create a permanent id.
   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
-  id <- paste("Rtest", cur_time, "1", sep=".")
+  id <- paste("r_test1", cur_time, "1", sep=".")
   #print(paste("id: ", id))
-
-  # Create a DataONE client
-  d1Client <- D1Client(env, mn_nodeid)
 
   # Create a data table, and write it to csv format
   testdf <- data.frame(x=1:10,y=11:20)
   #print(paste("testdf: ", testdf))
-  csvdata <- convert.csv(d1Client, testdf)
+  csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
 
   # Create a D1Object for the table, and upload it to the MN
-  d1Object <- createD1Object(id, csvdata, format, d1Client)
-  if(is.jnull(d1Object)) {
-    print("d1Object is null")
+  d1_object <- createD1Object(id, csvdata, format, mn_nodeid)
+  if(is.jnull(d1_object)) {
+    print("d1_object is null")
     return(NULL)
   }
-return(FALSE)
-  #print(d1object$getData())
-  newId <- d1object$getIdentifier()
-  #print(paste("ID of d1object:",newId$getValue()))
-  d1object$setPublicAccess(d1Client@session)
 
-print("Attempting  d1Client$create()")
-  create(d1Client, d1object)
+  # Create a DataONE client
+  d1_client <- D1Client(env, mn_nodeid)
+
+  #print(d1_object$getData())
+  newId <- d1_object$getIdentifier()
+  #print(paste("ID of d1_object:",newId$getValue()))
+  d1_object$setPublicAccess(d1_client@session)
+
+  #print("Attempting d1_client@create()")
+  create(d1_client, d1_object)
   if (!is.null(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
@@ -97,52 +101,74 @@ print("Attempting  d1Client$create()")
   return(id)
 }
 
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Create a basic DataONE EML D1Object.				|#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.testCreateEMLObject <- function(env, mn_nodeid) {
-   print(" ")
-   print("####### Test 2: createD1Object for EML ######################")
-   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
-   id <- paste("r:test", cur_time, "1", sep=".")
-   
-   # Create a DataONE client, and login
-   d1 <- D1Client(env)
+  print(" ")
+  print("####### Test 2: createD1Object for EML ######################")
 
-   # Read a text file from disk
-   libPath <- .libPaths()
-   tfiles.directory <- file.path(libPath[1], .packageName, "testfiles", fsep=.Platform$file.sep)
-   filenames <- list.files(tfiles.directory)
-   tfname <- file.path(tfiles.directory, filenames[[1]], fsep=.Platform$file.sep)
-   info <- file.info(tfname)
-   doc_char <- readChar(tfname, info$size)
-   format <- "eml://ecoinformatics.org/eml-2.1.0"
+  # Create new id.
+  cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
+  id <- paste("r_test2", cur_time, "1", sep=".")
 
-   # Create a D1Object for the table, and upload it to the MN
-   d1object <- createD1Object(D1Object(), id, doc_char, format, mn_nodeid)
-   #print(d1object$getData())
-   newId <- d1object$getIdentifier()
-   print(paste("ID of d1object:", newId$getValue()))
-   d1object$setPublicAccess(d1@session)
-   #print("Finished setting access.")
-   d1object$create(d1@session)
-   .jcheck(silent = FALSE)
-   print("Finished object upload.")
+  # Read a text file from disk
+  libPath <- .libPaths()
+  tfiles.directory <- file.path(libPath[1], .packageName, "testfiles",
+			        fsep=.Platform$file.sep)
+  filenames <- list.files(tfiles.directory)
+  tfname <- file.path(tfiles.directory, filenames[[1]],
+		      fsep=.Platform$file.sep)
+  info <- file.info(tfname)
+  doc_char <- readChar(tfname, info$size)
+  format <- "eml://ecoinformatics.org/eml-2.1.0"
 
-   print("Test 2: finished")
+  # Create a D1Object for the table, and upload it to the MN
+  d1object <- createD1Object(id, doc_char, format, mn_nodeid)
+  #print(d1object$getData())
+  newId <- d1object$getIdentifier()
+  print(paste("ID of d1object:", newId$getValue()))
+
+  # Create a DataONE client.
+  d1_client <- D1Client(env, mn_nodeid)
+
+  # Upload object.
+  d1object$setPublicAccess(d1_client@session)
+print("creating object")
+  create(d1_client, d1object)
+  .jcheck(silent = FALSE)
+  print("Finished object upload.")
+
+  print("Test 2: finished")
 }
 
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Convert a dataframe to a csv stream.				|#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.testConvertCSV <- function(env) {
-   print(" ")
-   print("####### Test 3: convert.csv ######################")
-   ##selectCN()
-   d1 <- D1Client(env)
-   # Create a data table, and convert it to csv format
-   testdf <- data.frame(x=1:10,y=11:20)
-   print(testdf)
-   csv <- convert.csv(d1, testdf)
-   print(csv)
+  print(" ")
+  print("####### Test 3: convert.csv ######################")
 
-   print("Test 3: finished")
+  # Create a data table, and convert it to csv format
+  testdf <- data.frame(x=1:10,y=11:20)
+  print(testdf)
+
+  d1 <- D1Client(env)
+  csv <- convert.csv(d1, testdf)
+  print(csv)
+
+  print("Test 3: finished")
 }
 
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Retreive a D1Object from DataONE using the client library.	|#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.getD1Object <- function(env, id) {
   print(" ")
   print("####### Test 4: getD1Object ######################")
@@ -164,6 +190,11 @@ d1.getD1Object <- function(env, id) {
   print("Test 4: finished")
 }
 
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Create a basic DataONE D1Object.				|#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.getPackage <- function(env) {
   print(" ")
   print("####### Test 5: getPackage ######################")
@@ -223,52 +254,56 @@ d1.analyze <- function() {
 }
 
 
-#-- Test the Java environment --------------------------------------------------
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Verify that the Java environment is working correctly.		|#
+#|									|#
+#+----------------------------------------------------------------------+#
 
 d1.testJavaEnvironment <- function(env) {
-    d1.inttest()
-    d1.cp()
-    d1.javaversion()
-    d1.hello()
-    d1.testClientEnv(env)
-}
-
-d1.testClientEnv <- function(env) {
-   # Create a DataONE client, and set the CN environemnt to use
-   print(" ")
-   print("####### Test 0.5: testClientEnv  ######################")
-   d1 <- D1Client(env)
-   print(paste("ENV IS: ", getEndpoint(d1)))
-}
-
-d1.hello <- function() {
-   print(" ")
-   print("####### Test 0.4: Hello World ######################")
-   hjw <- .jnew("HelloJavaWorld") # create instance of HelloJavaWorld class
-   out <- .jcall(hjw, "S", "sayHello") # invoke sayHello method
-   print(out)
-}
-
-d1.javaversion <- function() {
-   print(" ")
-   print("####### Test 0.3: Java Version ######################")
-   sys <- .jnew("java/lang/System")
-   print(.jcall(sys, "S", "getProperty", "java.version"))
-   print(.jcall(sys, "S", "getProperty", "java.runtime.version"))
-}
-
-d1.cp <- function() {
-   print(" ")
-   print("####### Test 0.2: Java Classpath ######################")
-   cp <- .jclassPath()
-   print(cp)
+  d1.inttest()
+  d1.cp()
+  d1.javaversion()
+  d1.hello()
+  d1.testClientEnv(env)
 }
 
 d1.inttest <- function() {
-   print(" ")
-   print("####### Test 0.1: rJava Accessible ######################")
-   myint <- .jnew("java/lang/Integer", "7")
-   value <- .jcall(myint, "I", "intValue")
-   print(value)
+  print(" ")
+  print("####### Test 0.1: rJava Accessible ######################")
+  myint <- .jnew("java/lang/Integer", "7")
+  value <- .jcall(myint, "I", "intValue")
+  print(value)
+}
+
+d1.cp <- function() {
+  print(" ")
+  print("####### Test 0.2: Java Classpath ########################")
+  cp <- .jclassPath()
+  print(cp)
+}
+
+d1.javaversion <- function() {
+  print(" ")
+  print("####### Test 0.3: Java Version ##########################")
+  sys <- .jnew("java/lang/System")
+  print(.jcall(sys, "S", "getProperty", "java.version"))
+  print(.jcall(sys, "S", "getProperty", "java.runtime.version"))
+}
+
+d1.hello <- function() {
+  print(" ")
+  print("####### Test 0.4: Hello World ###########################")
+  hjw <- .jnew("HelloJavaWorld") # create instance of HelloJavaWorld class
+  out <- .jcall(hjw, "S", "sayHello") # invoke sayHello method
+  print(out)
+}
+
+d1.testClientEnv <- function(env) {
+  # Create a DataONE client, and set the CN environemnt to use
+  print(" ")
+  print("####### Test 0.5: testClientEnv  ########################")
+  d1 <- D1Client(env)
+  print(paste("ENV IS: ", getEndpoint(d1)))
 }
 
