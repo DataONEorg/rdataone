@@ -31,77 +31,77 @@
 
 ## getPackage
 setGeneric("getPackage", function(x, identifier, ...) { 
-    standardGeneric("getPackage")
+  standardGeneric("getPackage")
 })
 
 setMethod("getPackage", "D1Client", function(x, identifier) {
-    client <- x@client
-    session <- x@session
-    pid <- .jnew("org/dataone/service/types/v1/Identifier")
-    pid$setValue(identifier)
+  client <- x@client
+  session <- x@session
+  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+  pid$setValue(identifier)
 
-    cnode <- client$getCN()
+  cnode <- client$getCN()
 
-    # Make sure this is the correct type.
-    jSysMeta <- cnode$getSystemMetadata(pid)
-    if (!is.null(e<-.jgetEx())) {
-	print("Java exception was raised")
-	print(.jcheck(silent=TRUE))
-    } else {
-        jObjectFormatId <- jSysMeta$getFormatId()
-	formatId <- jObjectFormatId$getValue()
-	if(formatId != "http://www.openarchives.org/ore/terms") {
-	    print(paste("ERROR: Object is not correct format: ", formatId))
-	    return(NULL)
-	}
+  # Make sure this is the correct type.
+  jSysMeta <- cnode$getSystemMetadata(pid)
+  if (!is.null(e<-.jgetEx())) {
+    print("Java exception was raised")
+    print(.jcheck(silent=TRUE))
+  } else {
+    jObjectFormatId <- jSysMeta$getFormatId()
+    formatId <- jObjectFormatId$getValue()
+    if(formatId != "http://www.openarchives.org/ore/terms") {
+      print(paste("ERROR: Object is not correct format: ", formatId))
+      return(NULL)
     }
+  }
 
-    # Resolve the ID to find the MN to use
-    jD1Object <- J("org/dataone/client/D1Object")$download(pid)
-    if (!is.null(e<-.jgetEx())) {
-	print("Java exception was raised")
-	print(.jcheck(silent=FALSE))
-    } else if(is.jnull(jD1Object)) {
-        print(paste("Couldn't download:", pid))
-	return(NULL)
-    }
+  # Resolve the ID to find the MN to use
+  jD1Object <- J("org/dataone/client/D1Object")$download(pid)
+  if (!is.null(e<-.jgetEx())) {
+    print("Java exception was raised")
+    print(.jcheck(silent=FALSE))
+  } else if(is.jnull(jD1Object)) {
+    print(paste("Couldn't download:", pid))
+    return(NULL)
+  }
 
-    # Convert to data package.
-    databytes <- jD1Object$getData()
-    jString <- .jnew("java/lang/String", databytes)
-    if(FALSE) {
-	.jcheck(silent = FALSE)
-	print(paste("Object is",  jString$length(), "characters in size"))
-	print(jString)
-    }
-    jDataPackage <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
-    dp <- createDataPackage(jDataPackage, jSysMeta)
-    return(dp)
+  # Convert to data package.
+  databytes <- jD1Object$getData()
+  jString <- .jnew("java/lang/String", databytes)
+  if(FALSE) {
+    .jcheck(silent = FALSE)
+    print(paste("Object is",  jString$length(), "characters in size"))
+    print(jString)
+  }
+  jDataPackage <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
+  dp <- createDataPackage(jDataPackage, jSysMeta)
+  return(dp)
 })
 
 
 ## getD1Object
 setGeneric("getD1Object", function(x, identifier, ...) { 
-    standardGeneric("getD1Object")
+  standardGeneric("getD1Object")
 })
 
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-    client <- x@client
-    session <- x@session
-    pid <- .jnew("org/dataone/service/types/v1/Identifier")
-    pid$setValue(identifier)
+  client <- x@client
+  session <- x@session
+  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+  pid$setValue(identifier)
 
-    # Use libclient D1Object to get the object
-    d1Object <- J("org/dataone/client/D1Object")$download(pid)
-    .jcheck(silent = FALSE)
+  # Use libclient D1Object to get the object
+  d1Object <- J("org/dataone/client/D1Object")$download(pid)
+  .jcheck(silent = FALSE)
 
-    return(d1Object)
+  return(d1Object)
 })
 
 
 ## reserveIdentifier
 setGeneric("reserveIdentifier", function(x, id, ...) { 
-    standardGeneric("reserveIdentifier")
+  standardGeneric("reserveIdentifier")
 })
 
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
@@ -196,8 +196,8 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, d1_object, ...
 setGeneric("getEndpoint", function(x, ...) { standardGeneric("getEndpoint")} )
 
 setMethod("getEndpoint", "D1Client", function(x) {
-    res <- x@endpoint
-    return(res)
+  res <- x@endpoint
+  return(res)
 })
 
 ## Getter and Setter for the node id.
@@ -245,11 +245,11 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 
 ## Get a coordinating node client.
 setGeneric("getCN", function(x) { 
-    standardGeneric("getCN")
+  standardGeneric("getCN")
 })
 setMethod("getCN", signature("D1Client"), function(x) {
-    cn <- J("org/dataone/client/D1Client")$getCN()
-    return(cn)
+  cn <- J("org/dataone/client/D1Client")$getCN()
+  return(cn)
 })
 
 
@@ -259,13 +259,13 @@ setMethod("getCN", signature("D1Client"), function(x) {
 
 ## convert.csv
 setGeneric("convert.csv", function(x, ...) {
-    standardGeneric("convert.csv")} 
+  standardGeneric("convert.csv")} 
 )
 
 setMethod("convert.csv", signature(x="D1Client"), function(x, df) {
-    con <- textConnection("data", "w")
-    write.csv(df, file=con, row.names = FALSE)
-    close(con)
-    csvdata <- paste(data, collapse="\n")
-    return(csvdata)
+  con <- textConnection("data", "w")
+  write.csv(df, file=con, row.names = FALSE)
+  close(con)
+  csvdata <- paste(data, collapse="\n")
+  return(csvdata)
 })
