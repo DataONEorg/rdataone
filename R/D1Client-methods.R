@@ -99,52 +99,92 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 })
 
 
-## create
-setGeneric("create", function(x, J_d1Object, ...) { 
-    standardGeneric("create")
+## reserveIdentifier
+setGeneric("reserveIdentifier", function(x, id, ...) { 
+    standardGeneric("reserveIdentifier")
 })
 
-setMethod("create", "D1Client", function(x, J_d1Object) {
-    # -- Validate everything necessary to create new object..
-    if(is.jnull(J_d1Object)) {
-        print("Cannot create a null object.")
-	return(FALSE)
-    }
-    if(is.jnull(J_d1Object$getSystemMetadata())) {
-        print("Cannot create with a null sysmeta object.")
-	return(FALSE)
-    }
+setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
+  #print(paste("Reserving id:", id))
 
-    #print("getSystemMetaData")
-    sysmeta <- J_d1Object$getSystemMetadata()
-    if (!is.null(e<-.jgetEx())) {
-	print("Java exception was raised")
-	print(.jcheck(silent=TRUE))
+  # Create a DataONE Identifier
+  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+  pid$setValue(id)
+
+  # Reserve the specified identifier on the coordinating node.
+  cn <- getCN(x)
+  pid <- cn$reserveIdentifier(pid)
+  if (!is.null(e <- .jgetEx())) {
+    if(e$getDetail_code() == "4210") {
+      print(paste(identifier, "id cannot be used"))
+    } else {
+      print(paste("Exception detail code:", e$getDetail_code()))
+      print(e)
     }
+    return(FALSE)
+  }
 
-    if(is.jnull(sysmeta$getIdentifier())) {
-        print("Cannot create with a null identifier.")
-	return(FALSE)
-    }
-    pid <- sysmeta$getIdentifier()
+  #print(paste("Reserved pid:", pid$getValue()))
+  return(TRUE)
+})
 
-    cn <- getCN(x)
-    oll <- cn$resolve(x@session, pid)
-    if(!is.jnull(d1Client@mnRef)) {
-        print(paste(pid, "- object already exists."))
-	return(FALSE)
-    }
 
-    if(is.jnull(d1Client@mnRef)) {
-        print("Cannot create an object without a Member Node defined.")
-	return(FALSE)
-    }
+## create
+setGeneric("create", function(x, d1_object, ...) { 
+  standardGeneric("create")
+})
 
-    object <- .jnew("java/io/ByteArrayInputStream", J_d1Object$getData())
-    mn <- getMN(x)
-    newPid <- mn$create(x@session, pid, object, sysmeta)
+setMethod("create", signature("D1Client", "jobjRef"), function(x, d1_object, ...) {
+  VERBOSE <- FALSE
+  if (VERBOSE) print("--> D1Object@create")
 
-    return(is.jnull(newPid))
+  # -- Validate everything necessary to create new object.
+  if(is.jnull(d1_object)) {
+    print("Cannot create a null object.")
+    return(FALSE)
+  }
+  if (VERBOSE) print("    * The object is not null.")
+  sysmeta <- d1_object$getSystemMetadata()
+  if(is.jnull(sysmeta)) {
+    print("Cannot create with a null sysmeta object.")
+    return(FALSE)
+  }
+  if (VERBOSE) print("    * The sysmeta is not null.")
+  if(is.jnull(sysmeta$getIdentifier())) {
+    print("Cannot create with a null identifier.")
+    return(FALSE)
+  }
+
+  # -- Reserve this identifier
+  pid <- sysmeta$getIdentifier()
+  id <- pid$getValue()
+  if(!reserveIdentifier(x, id)) {
+    print(paste("Identifier already exists, or has been reserved: ", id))
+    return(FALSE)
+  }
+  if (VERBOSE) print(paste("    * Reserved.", id))
+
+  # -- Connect to the member node and create the object.
+  mn <- getMN(x)
+  if(is.jnull(mn)) {
+    return(FALSE)
+  }
+  object <- .jnew("java/io/ByteArrayInputStream", d1_object$getData())
+  newPid <- mn$create(x@session, pid, object, sysmeta)
+  if (!is.jnull(e <- .jgetEx())) {
+    print("Java exception was raised")
+    print(.jcheck(silent=FALSE))
+  }
+  if (VERBOSE) print("    * Created.")
+
+  if(!is.jnull(newPid)) {
+    if (VERBOSE) print(paste("      - created pid:", pid$getValue()))
+  } else {
+    if (VERBOSE) print("      - pid is null")
+  }
+
+  if (VERBOSE) print("<-- D1Object@create")
+  return(is.jnull(newPid))
 })
 
 

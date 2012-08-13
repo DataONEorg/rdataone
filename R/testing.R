@@ -26,6 +26,8 @@ d1.test <- function() {
   mn_nodeid <- Sys.getenv("MN_NODE_ID")
   sleep_seconds <- 200
 
+  d1.set_certificate_location()
+
   # Make sure the environment is sane.  Set the environment variable 
   #   SKIP_JAVAENV_TEST="skip" in ${HOME}/.Renviron to suppress.
   if ("skip" != Sys.getenv("SKIP_JAVAENV_TEST"))  d1.testJavaEnvironment(cn_env)
@@ -35,8 +37,8 @@ d1.test <- function() {
   print("####### Start Testing ######################")
 
   objId <- ""
-  # objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-  d1.testCreateEMLObject(cn_env, mn_nodeid)
+  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+  # d1.testCreateEMLObject(cn_env, mn_nodeid)
   d1.testConvertCSV(cn_env)
 
   # Pause to wait for the CN to sync with the MN  (
@@ -68,6 +70,9 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   id <- paste("r_test1", cur_time, "1", sep=".")
   #print(paste("id: ", id))
 
+  # Create a DataONE client
+  d1_client <- D1Client(env, mn_nodeid)
+
   # Create a data table, and write it to csv format
   testdf <- data.frame(x=1:10,y=11:20)
   #print(paste("testdf: ", testdf))
@@ -81,9 +86,6 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
     return(NULL)
   }
 
-  # Create a DataONE client
-  d1_client <- D1Client(env, mn_nodeid)
-
   #print(d1_object$getData())
   newId <- d1_object$getIdentifier()
   #print(paste("ID of d1_object:",newId$getValue()))
@@ -95,7 +97,7 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
   }
-  print("Finished object upload.")
+  #print("Finished object upload.")
 
   print("Test 1: finished")
   return(id)
@@ -251,6 +253,14 @@ d1.analyze <- function() {
    boxplot(count ~ pisco.code, data=bfdata[[1]])
    boxplot(reprod_state ~ species, data=bfdata[[1]])
    boxplot(reprod_state ~ pisco.code, data=bfdata[[1]])
+}
+
+d1.set_certificate_location <- function() {
+  cert_filename <- Sys.getenv("X509_CERTIFICATE_PATH")
+  if(!is.null(cert_filename) && (cert_filename != "")) {
+    cert_mgr <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+    cert_mgr$setCertificateLocation(cert_filename)
+  }
 }
 
 

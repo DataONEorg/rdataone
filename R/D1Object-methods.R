@@ -28,13 +28,13 @@
 # Consider making this into a real constructor
 # Currently this is just a copy from the D1Client class, needs to be
 # refactored
-setGeneric("createD1Object", function(id, data, format, d1Client, ...) { 
+setGeneric("createD1Object", function(id, data, format, mn_nodeid, ...) { 
   standardGeneric("createD1Object")
 })
 
 setMethod("createD1Object",
-          signature("character", "character", "character", "D1Client"),
-	  function(id, data, format, d1Client) {
+          signature("character", "character", "character", "character"),
+	  function(id, data, format, mn_nodeid) {
 
   # Create identifier to be used in system metadata
   pid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -47,21 +47,6 @@ setMethod("createD1Object",
   submitter <- .jnew("org/dataone/service/types/v1/Subject")
   submitter$setValue(certman$getSubjectDN(cert))
 
-  # Try and reserve this pid.
-  print(paste("Reserving pid:", pid$getValue()))
-  cnode <- getCN(d1Client)
-  pid <- cnode$reserveIdentifier(pid)
-  if (!is.null(e <- .jgetEx())) {
-    print(paste("detail code:", e$getDetail_code()))
-    if(e$getDetail_code() == "4210") {
-       print(paste(identifier, "id cannot be used"))
-    } else {
-       print(e)
-    }
-    return
-  }
-  print(paste("Reserved pid:", pid$getValue()))
-
   # Convert incoming data to byte array (byte[])
   ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
   byteArray <- ioUtils$toByteArray(data)
@@ -70,21 +55,18 @@ setMethod("createD1Object",
   format.id <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
   format.id$setValue(format)
 
-  # Get the NodeReference from the mn node id.
-  print("Getting MNodeId")
-  node_id <- getMNodeId(d1Client)
-  if(is.null(node_id) || (node_id == "")) {
+  # Create the NodeReference from the mn_nodeid.
+  if(is.null(mn_nodeid) || (mn_nodeid == "")) {
     print("ERROR: A Member Node must be defined to create an object.")
     return(.jnull("org/dataone/client/D1Object"))
   }
   mn.noderef <- .jnew("org/dataone/service/types/v1/NodeReference")
-  mn.noderef$setValue(node_id)
-  print("got MN NodeReference")
+  mn.noderef$setValue(mn_nodeid)
 
   # Now create the object with the sysmeta values
-print("creating object")
   d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format.id,
                     submitter, mn.noderef, check=FALSE)
+  #print("creating object")
   if (!is.null(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
