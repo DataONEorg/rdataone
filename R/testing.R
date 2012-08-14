@@ -26,6 +26,7 @@ d1.test <- function() {
   mn_nodeid <- Sys.getenv("MN_NODE_ID")
   sleep_seconds <- 200
 
+  # Check if the certificate is specified.
   d1.set_certificate_location()
 
   # Make sure the environment is sane.  Set the environment variable 
@@ -37,9 +38,9 @@ d1.test <- function() {
   print("####### Start Testing ######################")
 
   objId <- ""
-  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-  # d1.testCreateEMLObject(cn_env, mn_nodeid)
-  d1.testConvertCSV(cn_env)
+  # objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+  # d1.testConvertCSV(cn_env)
+  d1.createPackage(cn_env, mn_nodeid)
 
   # Pause to wait for the CN to sync with the MN  (
   if(objId != "") {
@@ -102,19 +103,51 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   print("Test 1: finished")
   return(id)
 }
-
 #+----------------------------------------------------------------------+#
 #|									|#
-#|	Create a basic DataONE EML D1Object.				|#
+#|	Convert a dataframe to a csv stream.				|#
 #|									|#
 #+----------------------------------------------------------------------+#
-d1.testCreateEMLObject <- function(env, mn_nodeid) {
+d1.testConvertCSV <- function(env) {
   print(" ")
-  print("####### Test 2: createD1Object for EML ######################")
+  print("####### Test 2: convert.csv ######################")
 
-  # Create new id.
+  # Create a data table, and convert it to csv format
+  testdf <- data.frame(x=1:10,y=11:20)
+  print(testdf)
+
+  d1 <- D1Client(env)
+  csv <- convert.csv(d1, testdf)
+  print(csv)
+
+  print("Test 3: finished")
+}
+
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	Create a DataONE data package.					|#
+#|									|#
+#+----------------------------------------------------------------------+#
+d1.createPackage <- function(env, mn_nodeid) {
+  print(" ")
+  print("####### Test 3: createD1Object for EML ######################")
+
+  # Get the time for all the later objects.
   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")
-  id <- paste("r_test2", cur_time, "1", sep=".")
+
+  # Create id's
+  package_id <- paste("r_test3", "package", cur_time, sep=".")
+  scimeta_id <- paste("r_test3", "scimeta", cur_time, sep=".")
+  scidata1_id <- paste("r_test3", "scidata", "1", cur_time, sep=".")
+  scidata2_id <- paste("r_test3", "scidata", "2", cur_time, sep=".")
+
+  # Create a DataONE client
+  d1_client <- D1Client(env, mn_nodeid)
+
+
+  #
+  # ** Science Metadata Object **
+  #
 
   # Read a text file from disk
   libPath <- .libPaths()
@@ -128,43 +161,51 @@ d1.testCreateEMLObject <- function(env, mn_nodeid) {
   format <- "eml://ecoinformatics.org/eml-2.1.0"
 
   # Create a D1Object for the table, and upload it to the MN
-  d1object <- createD1Object(id, doc_char, format, mn_nodeid)
-  #print(d1object$getData())
-  newId <- d1object$getIdentifier()
-  print(paste("ID of d1object:", newId$getValue()))
+  j_scimeta <- createD1Object(scimeta_id, doc_char, format, mn_nodeid)
+  if(is.jnull(j_scimeta)) {
+    print("j_scimeta is null")
+    return(NULL)
+  }
+  newId <- j_scimeta$getIdentifier()
+  scimeta_id <- newId$getValue()
+  print(paste("ID of scimeta:", scimeta_id))
 
-  # Create a DataONE client.
-  d1_client <- D1Client(env, mn_nodeid)
+
+  #
+  # ** Science Data Objects **
+  #
+  testdf <- data.frame(x=1:10, y=11:20)
+  csvdata <- convert.csv(d1_client, testdf)
+  format <- "text/csv"
+  j_scidata1 <- createD1Object(scidata1_id, csvdata, format, mn_nodeid)
+  if(is.jnull(j_scidata1)) {
+    print("j_scidata1 is null")
+    return(NULL)
+  }
+
+  testdf <- data.frame(x=21:30, y=31:40, z=41:50)
+  csvdata <- convert.csv(d1_client, testdf)
+  format <- "text/csv"
+  j_scidata2 <- createD1Object(scidata2_id, csvdata, format, mn_nodeid)
+  if(is.jnull(j_scidata2)) {
+    print("j_scidata2 is null")
+    return(NULL)
+  }
+
+  data_package <- DataPackage(package_id)
+  addMeta(data_package, j_scimeta)
+  addData(data_package, j_scidata1)
+  addData(data_package, j_scidata2)
+
 
   # Upload object.
-  d1object$setPublicAccess(d1_client@session)
-print("creating object")
-  create(d1_client, d1object)
+  create(d1_client, data_package)
   .jcheck(silent = FALSE)
   print("Finished object upload.")
 
   print("Test 2: finished")
 }
 
-#+----------------------------------------------------------------------+#
-#|									|#
-#|	Convert a dataframe to a csv stream.				|#
-#|									|#
-#+----------------------------------------------------------------------+#
-d1.testConvertCSV <- function(env) {
-  print(" ")
-  print("####### Test 3: convert.csv ######################")
-
-  # Create a data table, and convert it to csv format
-  testdf <- data.frame(x=1:10,y=11:20)
-  print(testdf)
-
-  d1 <- D1Client(env)
-  csv <- convert.csv(d1, testdf)
-  print(csv)
-
-  print("Test 3: finished")
-}
 
 #+----------------------------------------------------------------------+#
 #|									|#
@@ -198,6 +239,17 @@ d1.getD1Object <- function(env, id) {
 #|									|#
 #+----------------------------------------------------------------------+#
 d1.getPackage <- function(env) {
+
+  # What datapackage?
+  eml_pid <- "knb-lter-gce.187.26"
+  dp_pid <- "resourceMap_jscientist.7.2"
+  dp_scidata_id <- "xx"
+  if(env == "PROD") {
+    eml_pid <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
+    dp_pid <- "resourceMap_dpennington.121.2"
+    dp_scidata_id <- "doi:10.5063/AA/IPCC.200802022123018.1"
+  }
+
   print(" ")
   print("####### Test 5: getPackage ######################")
 
@@ -205,27 +257,26 @@ d1.getPackage <- function(env) {
   d1Client <- D1Client(env)
 
   # Make sure this doesn't work
-  dp <- getPackage(d1Client, "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1")
+  dp <- getPackage(d1Client, eml_pid)
   if(!is.null(dp)) {
     print("FAIL: Created package out of incorrect format type")
     return
   }
 
   # Now, get the package.
-  id <- "resourceMap_dpennington.121.2"
   print(" ")
-  print(paste("Getting object with ID:", id))
+  print(paste("Getting object with ID:", dp_pid))
 
-  rDataPackage <- getPackage(d1Client, id)
+  rDataPackage <- getPackage(d1Client, dp_pid)
   if(is.null(rDataPackage)) {
     print("FAIL: Couldn't create package")
     return
   }
 
-  databytes <- getData(rDataPackage, "doi:10.5063/AA/IPCC.200802022123018.1")
+  databytes <- getData(rDataPackage, dp_scidata_pid)
   if(is.null(databytes)) {
-  print("FAIL: Couldn't get data")
-  return
+    print("FAIL: Couldn't get data")
+    return
   }
 
   # jString <- .jnew("java/lang/String", databytes)

@@ -34,7 +34,7 @@ setGeneric("getPackage", function(x, identifier, ...) {
   standardGeneric("getPackage")
 })
 
-setMethod("getPackage", "D1Client", function(x, identifier) {
+setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
   client <- x@client
   session <- x@session
   pid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -77,6 +77,20 @@ setMethod("getPackage", "D1Client", function(x, identifier) {
   jDataPackage <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
   dp <- createDataPackage(jDataPackage, jSysMeta)
   return(dp)
+})
+
+
+## createPackage
+setGeneric("createPackage", function(x, data_package, ...) { 
+  standardGeneric("createPackage")
+})
+
+setMethod("createPackage", signature("D1Client", "DataPackage"),
+    function(x, data_package) {
+  client <- x@client
+  session <- x@session
+  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+  pid$setValue(identifier)
 })
 
 
@@ -130,21 +144,21 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 
 
 ## create
-setGeneric("create", function(x, d1_object, ...) { 
+setGeneric("create", function(x, object, ...) { 
   standardGeneric("create")
 })
 
-setMethod("create", signature("D1Client", "jobjRef"), function(x, d1_object, ...) {
+setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
   VERBOSE <- FALSE
   if (VERBOSE) print("--> D1Object@create")
 
   # -- Validate everything necessary to create new object.
-  if(is.jnull(d1_object)) {
+  if(is.jnull(object)) {
     print("Cannot create a null object.")
     return(FALSE)
   }
   if (VERBOSE) print("    * The object is not null.")
-  sysmeta <- d1_object$getSystemMetadata()
+  sysmeta <- object$getSystemMetadata()
   if(is.jnull(sysmeta)) {
     print("Cannot create with a null sysmeta object.")
     return(FALSE)
@@ -169,7 +183,7 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, d1_object, ...
   if(is.jnull(mn)) {
     return(FALSE)
   }
-  object <- .jnew("java/io/ByteArrayInputStream", d1_object$getData())
+  object <- .jnew("java/io/ByteArrayInputStream", object$getData())
   newPid <- mn$create(x@session, pid, object, sysmeta)
   if (!is.jnull(e <- .jgetEx())) {
     print("Java exception was raised")
@@ -185,6 +199,27 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, d1_object, ...
 
   if (VERBOSE) print("<-- D1Object@create")
   return(is.jnull(newPid))
+})
+
+
+setMethod("create", signature("D1Client", "DataPackage"),
+    function(x, object, ...) {
+  print("--> create datapackage")
+
+  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+  pid$setValue(identifier)
+  j_dp <- .jnew("org/dataone/client/DataPackage", pid)
+
+  l <- length(x@dataList)
+  for(pid in x@dataList) {
+    j_dp$addData(x@dataList[[pid]])
+  }
+
+  j_string <- j_dp$serializePackage()
+
+
+
+  #d1object$setPublicAccess(d1_client@session)
 })
 
 

@@ -20,9 +20,26 @@
 
 ## This file contains the methods and accessors for DataPackage objects
 
+
+
 #########################################################
 ## Accessor methods
 #########################################################
+
+## addData to the end of the dataList
+## takes the package and data object as input
+setGeneric("addMeta", function(x, j_d1object, ...) { 
+    standardGeneric("addMeta")
+})
+
+setMethod("addMeta", signature("DataPackage", "jobjRef"), function(x, j_d1object) {
+  databytes <- j_d1object$getData()
+  j_string <- .jnew("java/lang/String", databytes)
+  .jcheck(silent = FALSE)
+
+  x@scimeta <- j_string$toString()
+})
+
 
 ## addData to the end of the dataList
 ## takes the package and data object as input
@@ -31,9 +48,9 @@ setGeneric("addData", function(x, dataObject, ...) {
 })
 
 setMethod("addData", "DataPackage", function(x, dataObject) {
-   l <- length(x@dataList)
-   x@dataList[l+1] <- list(dataObject)
-   return(x)
+ l <- length(x@dataList)
+ x@dataList[l+1] <- list(dataObject)
+ return(x)
 })
 
 
