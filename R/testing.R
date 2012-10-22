@@ -38,8 +38,8 @@ d1.test <- function() {
   print("####### Start Testing ######################")
 
   objId <- ""
-  # objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-  # d1.testConvertCSV(cn_env)
+  #objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+  d1.testConvertCSV(cn_env)
   d1.createPackage(cn_env, mn_nodeid)
 
   # Pause to wait for the CN to sync with the MN  (
@@ -48,11 +48,11 @@ d1.test <- function() {
 		"seconds to let the CN sync the EML object."))
     Sys.sleep(sleep_seconds)
   } else {
-    objId <- "doi:10.6085/AA/MORXXX_015MTBD009R00_20080411.50.1"
+    objId <- "r_test1.2012081311271344882424.1"
   }
 
-  # d1.getD1Object(cn_env, objId)
-  # d1.getPackage(cn_env)
+  d1.getD1Object(cn_env, objId)
+  d1.getPackage(cn_env)
 
   print("####### End Testing ######################")
 }
@@ -87,18 +87,18 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
     return(NULL)
   }
 
-  #print(d1_object$getData())
+  print(d1_object$getData())
   newId <- d1_object$getIdentifier()
-  #print(paste("ID of d1_object:",newId$getValue()))
+  print(paste("ID of d1_object:",newId$getValue()))
   d1_object$setPublicAccess(d1_client@session)
 
-  #print("Attempting d1_client@create()")
+  print("Attempting d1_client@create()")
   create(d1_client, d1_object)
   if (!is.null(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
   }
-  #print("Finished object upload.")
+  print("Finished object upload.")
 
   print("Test 1: finished")
   return(id)
@@ -142,6 +142,7 @@ d1.createPackage <- function(env, mn_nodeid) {
   scidata2_id <- paste("r_test3", "scidata", "2", cur_time, sep=".")
 
   # Create a DataONE client
+  print("@@ 01: Creating the D1Client...")
   d1_client <- D1Client(env, mn_nodeid)
 
 
@@ -150,6 +151,7 @@ d1.createPackage <- function(env, mn_nodeid) {
   #
 
   # Read a text file from disk
+  print("@@ 02: Reading text file from disk...")
   libPath <- .libPaths()
   tfiles.directory <- file.path(libPath[1], .packageName, "testfiles",
 			        fsep=.Platform$file.sep)
@@ -161,6 +163,7 @@ d1.createPackage <- function(env, mn_nodeid) {
   format <- "eml://ecoinformatics.org/eml-2.1.0"
 
   # Create a D1Object for the table, and upload it to the MN
+  print("@@ 03: Create scimeta object...")
   j_scimeta <- createD1Object(scimeta_id, doc_char, format, mn_nodeid)
   if(is.jnull(j_scimeta)) {
     print("j_scimeta is null")
@@ -174,6 +177,7 @@ d1.createPackage <- function(env, mn_nodeid) {
   #
   # ** Science Data Objects **
   #
+  print("@@ 04: Create first data  object...")
   testdf <- data.frame(x=1:10, y=11:20)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
@@ -183,6 +187,7 @@ d1.createPackage <- function(env, mn_nodeid) {
     return(NULL)
   }
 
+  print("@@ 05: Create second data  object...")
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
@@ -192,18 +197,24 @@ d1.createPackage <- function(env, mn_nodeid) {
     return(NULL)
   }
 
+  print("@@ 06: Create data package...")
   data_package <- DataPackage(package_id)
+  print("@@20:")
   addMeta(data_package, j_scimeta)
+  print("@@21:")
   addData(data_package, j_scidata1)
+  print("@@22:")
   addData(data_package, j_scidata2)
 
+  print("@@23:")
 
   # Upload object.
   create(d1_client, data_package)
+  print("@@24:")
   .jcheck(silent = FALSE)
   print("Finished object upload.")
 
-  print("Test 2: finished")
+  print("Test 3: finished")
 }
 
 

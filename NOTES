@@ -31,7 +31,7 @@ testing.R:
     #5: Retrieves a data package (format-id of "http://www.openarchives.org/ore/terms")
         from DataONE.  Uses the java DataObject to do all the heavy lifting.
   * Tests #1, #2, #4, and #5 have been shown to pass.  Work was currently being
-      done so test #4 (creating a data package) would pass.  Until the Java
+      done so test #3 (creating a data package) would pass.  Until the Java
       side is completed, all processing will need to be duplicated in R.
 
 D1Client-class.R:

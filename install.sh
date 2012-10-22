@@ -17,5 +17,5 @@ cd ..
 unset JAVA_HOME
 #R --version
 #R --no-save -e 'library(dataone); d1.javaversion();'
-R --silent CMD INSTALL --library=${R_LIBS_USER:-${HOME}/.Rlibrary} d1_client_r &&\
+R --silent CMD INSTALL d1_client_r &&\
   R --silent --no-save -e 'library(dataone); d1.test();'

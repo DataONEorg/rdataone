@@ -119,7 +119,7 @@ setGeneric("reserveIdentifier", function(x, id, ...) {
 })
 
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
-  #print(paste("Reserving id:", id))
+  print(paste("Reserving id:", id))
 
   # Create a DataONE Identifier
   pid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -138,7 +138,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
     return(FALSE)
   }
 
-  #print(paste("Reserved pid:", pid$getValue()))
+  print(paste("Reserved pid:", pid$getValue()))
   return(TRUE)
 })
 
@@ -149,7 +149,7 @@ setGeneric("create", function(x, object, ...) {
 })
 
 setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
-  VERBOSE <- FALSE
+  VERBOSE <- TRUE
   if (VERBOSE) print("--> D1Object@create")
 
   # -- Validate everything necessary to create new object.
@@ -183,8 +183,11 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
   if(is.jnull(mn)) {
     return(FALSE)
   }
+  print(mn)
   object <- .jnew("java/io/ByteArrayInputStream", object$getData())
+  print("@@40:")
   newPid <- mn$create(x@session, pid, object, sysmeta)
+  print("@@41:")
   if (!is.jnull(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=FALSE))
@@ -205,17 +208,21 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
 setMethod("create", signature("D1Client", "DataPackage"),
     function(x, object, ...) {
   print("--> create datapackage")
+  print(paste("@@30: Creating DP with ID: ", object@identifier))
 
   pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(identifier)
+  pid$setValue(object@identifier)
   j_dp <- .jnew("org/dataone/client/DataPackage", pid)
 
-  l <- length(x@dataList)
-  for(pid in x@dataList) {
-    j_dp$addData(x@dataList[[pid]])
+  l <- length(object@dataList)
+  print(paste("@@31: length of dataList: ", l))
+  for (pid in object@dataList) {
+    print(paste("@@32:"))
+    j_dp$addData(object@dataList[[pid]])
   }
 
-  j_string <- j_dp$serializePackage()
+  print(paste("@@33: Implementation Incomplete, need to finish!"))
+  #j_string <- j_dp$serializePackage()
 
 
 

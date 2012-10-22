@@ -42,6 +42,7 @@ setMethod("DataPackage", signature("character"),
   null_sysmeta = .jnull("org/dataone/service/types/v1/SystemMetadata")
 
   res <- DataPackage(identifier, null_sysmeta, "")
+  print("@@15:")
   return(res)
 })
 
@@ -55,6 +56,7 @@ setMethod("DataPackage", signature("character", "jobjRef"),
   }
 
   res <- DataPackage(identifier, sysmeta, "")
+  print("@@14:")
   return(res)
 })
 
@@ -62,15 +64,22 @@ setMethod("DataPackage", signature("character", "jobjRef"),
 setMethod("DataPackage", signature("character", "jobjRef", "character"),
   function(identifier, sysmeta, scimeta) {
 
+  print("@@ 7: Running in DataPackage 3 arg constructor...")
+  print(paste("@@ 8: Identifier is: ", identifier))
   ## create new DataPackage object and insert identifier and data
   res <- new("DataPackage")
+  print("@@ 9:")
   res@jDataPackage <- .jnull("org/dataone/client/DataPackage")
 
+  print("@@10:")
   res@identifier <- identifier
+  print("@@11:")
   res@sysmeta <- sysmeta
+  print("@@12:")
   if(!is.null(scimeta) && (scimeta != "")) {
     res@scimeta <- scimeta
   }
+  print("@@13:")
 
   return(res)
 })
