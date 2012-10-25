@@ -18,12 +18,26 @@
 #   limitations under the License.
 #
 
+
+#+----------------------------------------------------------------------+#
+#|									|#
+#|	appears to be the  main function                                |# 
+#|              ( d1.test() is called by install.sh )                   |#
+#|									|#
+#+----------------------------------------------------------------------+#
 d1.test <- function() {
+
   # Configurable settings for these tests
+  
   cn_env <- Sys.getenv("CN_ENV")
+
   if(cn_env == "") cn_env <- "DEV"
   if(cn_env != "DEV") print(paste("** Using the", cn_env, "environment."))
+
   mn_nodeid <- Sys.getenv("MN_NODE_ID")
+  if (mn_nodeid =="") 
+     mn_nodeid <- "urn:node:mnDemo5"
+
   sleep_seconds <- 200
 
   # Check if the certificate is specified.
@@ -103,6 +117,8 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   print("Test 1: finished")
   return(id)
 }
+
+
 #+----------------------------------------------------------------------+#
 #|									|#
 #|	Convert a dataframe to a csv stream.				|#
@@ -120,7 +136,7 @@ d1.testConvertCSV <- function(env) {
   csv <- convert.csv(d1, testdf)
   print(csv)
 
-  print("Test 3: finished")
+  print("Test 2: finished")
 }
 
 #+----------------------------------------------------------------------+#
@@ -161,6 +177,7 @@ d1.createPackage <- function(env, mn_nodeid) {
   info <- file.info(tfname)
   doc_char <- readChar(tfname, info$size)
   format <- "eml://ecoinformatics.org/eml-2.1.0"
+  mn_nodeid <- "urn:node:mnDemo5"
 
   # Create a D1Object for the table, and upload it to the MN
   print("@@ 03: Create scimeta object...")
@@ -341,7 +358,7 @@ d1.testJavaEnvironment <- function(env) {
 }
 
 d1.inttest <- function() {
-  print(" ")
+  print("")
   print("####### Test 0.1: rJava Accessible ######################")
   myint <- .jnew("java/lang/Integer", "7")
   value <- .jcall(myint, "I", "intValue")

@@ -19,3 +19,4 @@ unset JAVA_HOME
 #R --no-save -e 'library(dataone); d1.javaversion();'
 R --silent CMD INSTALL d1_client_r &&\
   R --silent --no-save -e 'library(dataone); d1.test();'
+

@@ -1,5 +1,14 @@
 == Current Status ==============================================================
 
+10/25/2012 - rnahf
+inst/java:
+  * updated the d1_common_java and d1_libclient_java jars to incorporate new trustManager logic
+  * updated httpclient, httpcore, httpmime to 4.1.3
+
+testing.R
+  * added default MN_node_id.  Getting tests to get most of the way through Test 3.  
+
+
 install.sh:
   * Installs compiled version of the library into ~/.Rlibrary so root
       access is not needed.  This can be over-ridden with the R_LIBS_USER
