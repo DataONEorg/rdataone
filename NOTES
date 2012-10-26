@@ -1,5 +1,11 @@
 == Current Status ==============================================================
 
+10?26/2012 - rnahf
+  * status:  testing.R tests 1,2,4 are working.  3 and 5 (creating and getting DataPackage) are not.
+  * did some basic code cleanup for better readability
+  * testing.R - wired the mn_nodeid used for testD1Object into the testDataPackage 
+
+
 10/25/2012 - rnahf
 inst/java:
   * updated the d1_common_java and d1_libclient_java jars to incorporate new trustManager logic

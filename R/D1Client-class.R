@@ -78,15 +78,17 @@ setMethod("D1Client", signature("character", "character"),
   ## create new D1Client object and insert uri endpoint
   result <- new("D1Client")
   result@endpoint <- CN_URI
+
+  ## Set the node reference
   result@mn.nodeid <- mn_nodeid
 
   ## Create a Java D1Client object to use for contacting the server
   client <- .jnew("org/dataone/client/D1Client") 
   result@client <- client
+
+  ## initialize the session, but not sure where it's used
   result@session <- .jnull("org/dataone/service/types/v1/Session") 
 
-  # Set the node reference
-  result@mn.nodeid <- mn_nodeid
 
   return(result)
 })

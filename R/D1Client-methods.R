@@ -184,10 +184,10 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
     return(FALSE)
   }
   print(mn)
-  object <- .jnew("java/io/ByteArrayInputStream", object$getData())
-  print("@@40:")
-  newPid <- mn$create(x@session, pid, object, sysmeta)
-  print("@@41:")
+  data <- .jnew("java/io/ByteArrayInputStream", object$getData())
+  print("@@ D1Client-methods 40:")
+  newPid <- mn$create(x@session, pid, data, sysmeta)
+  print("@@ D1Client-methods 41:")
   if (!is.jnull(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=FALSE))
@@ -206,28 +206,33 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
 
 
 setMethod("create", signature("D1Client", "DataPackage"),
-    function(x, object, ...) {
-  print("--> create datapackage")
-  print(paste("@@30: Creating DP with ID: ", object@identifier))
-
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(object@identifier)
-  j_dp <- .jnew("org/dataone/client/DataPackage", pid)
-
-  l <- length(object@dataList)
-  print(paste("@@31: length of dataList: ", l))
-  for (pid in object@dataList) {
-    print(paste("@@32:"))
-    j_dp$addData(object@dataList[[pid]])
-  }
-
-  print(paste("@@33: Implementation Incomplete, need to finish!"))
-  #j_string <- j_dp$serializePackage()
-
-
-
-  #d1object$setPublicAccess(d1_client@session)
-})
+    function(x, rPackage, ...) {
+      print("--> create datapackage")
+      print(paste("@@ D1Client-methods 30: Creating DP with ID: ", rPackage@identifier))
+      
+      pid <- .jnew("org/dataone/service/types/v1/Identifier")
+      pid$setValue(rPackage@identifier)
+      j_dp <- .jnew("org/dataone/client/DataPackage", pid)
+      
+      l <- length(rPackage@dataList)
+      print(paste("@@ D1Client-methods 31: length of dataList: ", l))
+      
+      ## add the vector of pids in the dataList to the java DataPackage
+      for (pid in rPackage@dataList) {
+        print(paste("@@ D1Client-methods 32:"))
+        j_dp$addData(rPackage@dataList[[pid]])
+      }
+      
+      print(paste("@@ D1Client-methods 33: Implementation Incomplete, need to finish!"))
+      
+      ## j_string <- j_dp$serializePackage()
+      ## d1object$setPublicAccess(d1_client@session)
+      
+      
+      ## we can imagine this as the final call one the jDataPackage is assembled
+      ## x@client$create()
+      
+    })
 
 
 #########################################################
