@@ -124,9 +124,17 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   pidValue <- getIdentifier(d1Object)
   print(paste("ID of d1Object:",pidValue))
 
-  ##  print(getData(d1Object))
-
   setPublicAccess(d1Object)
+
+  if (canRead(d1Object,"public")) {
+    print("successfully set public access");
+  } else {
+    print("FAIL: did not set public access");
+  }
+
+  print("outputting data bytes...")
+  bytes <- getData(d1Object)
+  print(bytes)
 
   print("  Attempting d1_client@create()")
   create(d1_client, d1Object)

@@ -88,10 +88,9 @@
 ### Utility methods
 #########################################################
 
-setGeneric("getData", function(x, ...)
-           {
-             standardGeneric("getData")
-           } )
+setGeneric("getData", function(x, ...) {
+  standardGeneric("getData")
+})
 
 setMethod("getData", signature("D1Object"),
           function(x)
@@ -113,10 +112,9 @@ setMethod("getData", signature("D1Object"),
         )
 
 
-setGeneric("getIdentifier", function(x, ...)
-           {
-             standardGeneric("getIdentifier")
-           } )
+setGeneric("getIdentifier", function(x, ...) {
+  standardGeneric("getIdentifier")
+})
 
 setMethod("getIdentifier", signature("D1Object"),
           function(x)
@@ -134,10 +132,9 @@ setMethod("getIdentifier", signature("D1Object"),
         )
 
 
-setGeneric("setPublicAccess", function(x, ...)
-           {
-             standardGeneric("setPublicAccess")
-           } )
+setGeneric("setPublicAccess", function(x, ...) {
+  standardGeneric("setPublicAccess")
+})
 
 setMethod("setPublicAccess", signature("D1Object"),
           function(x)
@@ -145,10 +142,39 @@ setMethod("setPublicAccess", signature("D1Object"),
             jD1Object = x@d1o
             if(!is.jnull(jD1Object)) {
               jPolicyEditor <- jD1Object$getAccessPolicyEditor()
-              print("got policy editor")
-              jPolicyEditor$setPublicAccess()
+              if (!is.jnull(jPolicyEditor)) {
+                print("setPublicAccess: got policy editor")
+                jPolicyEditor$setPublicAccess()
+              } else {
+                print("policy editor is null")
+              }
             }
           }
           )
+
+setGeneric("canRead", function(x, subject, ...) {
+  standardGeneric("canRead")
+})
+
+setMethod("canRead", signature("D1Object", "character"),
+          function(x, subject)
+          {
+            jD1Object = x@d1o
+            if(!is.jnull(jD1Object)) {
+              jPolicyEditor <- jD1Object$getAccessPolicyEditor()
+              if (!is.jnull(jPolicyEditor)) {
+                print("canRead: got policy editor")
+                jSubject <- J("org/dataone/client/D1TypeBuilder", "buildSubject", subject)
+                jPermission <- J("org/dataone/service/types/v1/Permission", "convert", "read")
+                result <- jPolicyEditor$hasAccess(jSubject,jPermission)
+              } else {
+                print("policy editor is null")
+                result <- FALSE
+              }
+            }
+            return(result)
+          }
+          )
+
 
 
