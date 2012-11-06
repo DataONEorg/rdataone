@@ -24,58 +24,58 @@
 ### MNRead and MNStorage methods
 #########################################################
 
-## createD1Object, implemented as a static way of constructing an object
-# Consider making this into a real constructor
+## buildD1Object, implemented as a static way of constructing an object
+# TODO: Consider making this into a real constructor
 # Currently this is just a copy from the D1Client class, needs to be
-# refactored
-setGeneric("createD1Object", function(id, data, format, mn_nodeid, ...) { 
-  standardGeneric("createD1Object")
-})
-
-setMethod("createD1Object",
-          signature("character", "character", "character", "character"),
-	  function(id, data, format, mn_nodeid) {
-
-  # Create identifier to be used in system metadata
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(id)
+# refactored.
+#setGeneric("buildD1Object", function(id, data, format, mn_nodeid, ...) { 
+#  standardGeneric("buildD1Object")
+#})
+#
+#setMethod("buildD1Object",
+#          signature("character", "character", "character", "character"),
+#	  function(id, data, format, mn_nodeid) {
+#
+  # build identifier to be used in system metadata
+#  pid <- .jnew("org/dataone/service/types/v1/Identifier")
+#  pid$setValue(id)
 
   # Set up/convert additional system metadata fields
   # get the submitter from the certificate
-  certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
-  cert <- certman$loadCertificate()
-  submitter <- .jnew("org/dataone/service/types/v1/Subject")
-  submitter$setValue(certman$getSubjectDN(cert))
+#  certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+#  cert <- certman$loadCertificate()
+#  submitter <- .jnew("org/dataone/service/types/v1/Subject")
+#  submitter$setValue(certman$getSubjectDN(cert))
 
   # Convert incoming data to byte array (byte[])
-  ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
-  byteArray <- ioUtils$toByteArray(data)
+#  ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
+#  byteArray <- ioUtils$toByteArray(data)
 
-  # Create the ObjectFormatIdentifier.
-  format.id <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
-  format.id$setValue(format)
+  # build the ObjectFormatIdentifier.
+#  format.id <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
+#  format.id$setValue(format)
 
-  # Create the NodeReference from the mn_nodeid.
-  if(is.null(mn_nodeid) || (mn_nodeid == "")) {
-    print("ERROR: A Member Node must be defined to create an object.")
-    return(.jnull("org/dataone/client/D1Object"))
-  }
-  mn.noderef <- .jnew("org/dataone/service/types/v1/NodeReference")
-  mn.noderef$setValue(mn_nodeid)
+  # build the NodeReference from the mn_nodeid.
+#  if(is.null(mn_nodeid) || (mn_nodeid == "")) {
+#    print("ERROR: A Member Node must be defined to create an object.")
+#    return(.jnull("org/dataone/client/D1Object"))
+#  }
+#  mn.noderef <- .jnew("org/dataone/service/types/v1/NodeReference")
+#  mn.noderef$setValue(mn_nodeid)
 
-  # Now create the object with the sysmeta values
-  d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format.id,
-                    submitter, mn.noderef, check=FALSE)
-  #print("creating object")
-  if (!is.null(e <- .jgetEx())) {
-    print("Java exception was raised")
-    print(.jcheck(silent=TRUE))
-    print(.jcheck(silent=TRUE))
-    print(e)
-  }
+  # Now build the object with the sysmeta values
+#  d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format.id,
+#                    submitter, mn.noderef, check=FALSE)
+  #print("building object")
+#  if (!is.null(e <- .jgetEx())) {
+#    print("Java exception was raised")
+#    print(.jcheck(silent=TRUE))
+#    print(.jcheck(silent=TRUE))
+#    print(e)
+#  }
 
-  return(d1object)
-})
+#  return(d1object)
+#})
 
 #########################################################
 ### Accessor methods
@@ -87,4 +87,68 @@ setMethod("createD1Object",
 #########################################################
 ### Utility methods
 #########################################################
+
+setGeneric("getData", function(x, ...)
+           {
+             standardGeneric("getData")
+           } )
+
+setMethod("getData", signature("D1Object"),
+          function(x)
+          {
+            print("@@r1")
+            jD1Object = x@d1o
+            print ("@@r2")
+            if(!is.jnull(jD1Object)) {
+              print ("@@r3")
+              databytes <- jD1Object$getData()
+              print ("@@r4")
+              if(is.null(databytes)) {
+                print(paste("Didn't find data in:", id))
+                return()
+              }
+              return(databytes)
+            }
+          }
+        )
+
+
+setGeneric("getIdentifier", function(x, ...)
+           {
+             standardGeneric("getIdentifier")
+           } )
+
+setMethod("getIdentifier", signature("D1Object"),
+          function(x)
+          {
+            jD1Object = x@d1o
+            if(!is.jnull(jD1Object)) {
+              jPid <- jD1Object$getIdentifier()
+              print ("@@r4")
+              if(is.null(jPid)) {
+                return()
+              }
+              return(jPid$getValue())
+            }
+          }
+        )
+
+
+setGeneric("setPublicAccess", function(x, ...)
+           {
+             standardGeneric("setPublicAccess")
+           } )
+
+setMethod("setPublicAccess", signature("D1Object"),
+          function(x)
+          {
+            jD1Object = x@d1o
+            if(!is.jnull(jD1Object)) {
+              jPolicyEditor <- jD1Object$getAccessPolicyEditor()
+              print("got policy editor")
+              jPolicyEditor$setPublicAccess()
+            }
+          }
+          )
+
 

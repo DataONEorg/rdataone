@@ -112,20 +112,24 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
 
-  ## Create a D1Object for the table, and upload it to the MN
-  d1_object <- createD1Object(id, csvdata, format, mn_nodeid)
-  if(is.jnull(d1_object)) {
-    print("d1_object is null")
+  ## Build a D1Object for the table, and upload it to the MN
+  print("building a D1Object")
+  d1Object <- new(Class="D1Object", id, csvdata, format, mn_nodeid)
+  if(is.jnull(d1Object)) {
+    print("d1Object is null")
     return(NULL)
   }
 
-  print(d1_object$getData())
-  newId <- d1_object$getIdentifier()
-  print(paste("ID of d1_object:",newId$getValue()))
-  d1_object$setPublicAccess(d1_client@session)
+
+  pidValue <- getIdentifier(d1Object)
+  print(paste("ID of d1Object:",pidValue))
+
+  ##  print(getData(d1Object))
+
+  setPublicAccess(d1Object)
 
   print("  Attempting d1_client@create()")
-  create(d1_client, d1_object)
+  create(d1_client, d1Object)
   if (!is.null(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
@@ -202,7 +206,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
   # Create a D1Object for the table, and upload it to the MN
   print("@@ testing.R 03: Create scimeta object...")
-  j_scimeta <- createD1Object(scimeta_id, doc_char, format, mn_nodeid)
+  j_scimeta <- buildD1Object(scimeta_id, doc_char, format, mn_nodeid)
   if(is.jnull(j_scimeta)) {
     print("j_scimeta is null")
     return(NULL)
@@ -219,7 +223,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   testdf <- data.frame(x=1:10, y=11:20)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
-  j_scidata1 <- createD1Object(scidata1_id, csvdata, format, mn_nodeid)
+  j_scidata1 <- buildD1Object(scidata1_id, csvdata, format, mn_nodeid)
   if(is.jnull(j_scidata1)) {
     print("j_scidata1 is null")
     return(NULL)
@@ -232,7 +236,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
-  j_scidata2 <- createD1Object(scidata2_id, csvdata, format, mn_nodeid)
+  j_scidata2 <- buildD1Object(scidata2_id, csvdata, format, mn_nodeid)
   if(is.jnull(j_scidata2)) {
     print("j_scidata2 is null")
     return(NULL)

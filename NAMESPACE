@@ -1,16 +1,19 @@
 import("rJava")
 
 # Classes
-exportClasses(D1Client, DataPackage)
+exportClasses(D1Client, DataPackage, D1Object)
 
 # constructor methods
-exportMethods(D1Client, DataPackage)
+exportMethods(D1Client, DataPackage, D1Object)
 
 # D1Client methods
-exportMethods(getPackage, getD1Object, createD1Object, getEndpoint, addData, getData, getDataCount, convert.csv)
+exportMethods(getPackage, getD1Object, getEndpoint, addData, getData, getDataCount, convert.csv)
 
 # DataPackage methods
 exportMethods(asDataFrame)
+
+# D1Object methods
+exportMethods(getData, getIdentifier)
 
 # Misc testing methods
 export("d1.test")

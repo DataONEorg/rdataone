@@ -148,7 +148,7 @@ setGeneric("create", function(x, object, ...) {
   standardGeneric("create")
 })
 
-setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
+setMethod("create", signature("D1Client", "D1Object"), function(x, object, ...) {
   VERBOSE <- TRUE
   if (VERBOSE) print("--> D1Object@create")
 
@@ -202,6 +202,10 @@ setMethod("create", signature("D1Client", "jobjRef"), function(x, object, ...) {
 
   if (VERBOSE) print("<-- D1Object@create")
   return(is.jnull(newPid))
+})
+
+setGeneric("create", function(x, rPackage, ...) { 
+  standardGeneric("create")
 })
 
 
