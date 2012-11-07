@@ -28,12 +28,12 @@
 
 ## addData to the end of the dataList
 ## takes the package and data object as input
-setGeneric("addMeta", function(x, j_d1object, ...) { 
+setGeneric("addMeta", function(x, d1object, ...) { 
     standardGeneric("addMeta")
 })
 
-setMethod("addMeta", signature("DataPackage", "jobjRef"), function(x, j_d1object) {
-  databytes <- j_d1object$getData()
+setMethod("addMeta", signature("DataPackage", "D1Object"), function(x, d1object) {
+  databytes <- getData(d1object)
   j_string <- .jnew("java/lang/String", databytes)
   .jcheck(silent = FALSE)
 

@@ -185,9 +185,9 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
     return(FALSE)
   }
   print(mn)
-  data <- .jnew("java/io/ByteArrayInputStream", object$getData())
+  jDataIS <- .jnew("java/io/ByteArrayInputStream", getData(object))
   print("@@ D1Client-methods 40:")
-  newPid <- mn$create(x@session, pid, data, sysmeta)
+  jNewPid <- mn$create(x@session, pid, jDataIS, sysmeta)
   print("@@ D1Client-methods 41:")
   if (!is.jnull(e <- .jgetEx())) {
     print("Java exception was raised")
@@ -195,14 +195,14 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   }
   if (VERBOSE) print("    * Created.")
 
-  if(!is.jnull(newPid)) {
-    if (VERBOSE) print(paste("      - created pid:", pid$getValue()))
+  if(!is.jnull(jNewPid)) {
+    if (VERBOSE) print(paste("      - created pid:", jNewPid$getValue()))
   } else {
     if (VERBOSE) print("      - pid is null")
   }
 
   if (VERBOSE) print("<-- D1Object@create")
-  return(is.jnull(newPid))
+  return(is.jnull(jNewPid))
 })
 
 ## setGeneric("create", function(x, rPackage, ...) { 

@@ -214,13 +214,12 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
   # Create a D1Object for the table, and upload it to the MN
   print("@@ testing.R 03: Create scimeta object...")
-  j_scimeta <- buildD1Object(scimeta_id, doc_char, format, mn_nodeid)
-  if(is.jnull(j_scimeta)) {
-    print("j_scimeta is null")
+  d1o_scimeta <- new(Class="D1Object", scimeta_id, doc_char, format, mn_nodeid)
+  if(is.jnull(d1o_scimeta)) {
+    print("the d1o_scimeta is null")
     return(NULL)
   }
-  newId <- j_scimeta$getIdentifier()
-  scimeta_id <- newId$getValue()
+  scimeta_id <- getIdentifier(d1o_scimeta)
   print(paste("ID of scimeta:", scimeta_id))
 
 
@@ -231,36 +230,36 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   testdf <- data.frame(x=1:10, y=11:20)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
-  j_scidata1 <- buildD1Object(scidata1_id, csvdata, format, mn_nodeid)
-  if(is.jnull(j_scidata1)) {
-    print("j_scidata1 is null")
+  d1o_scidata1 <- new("D1Object", scidata1_id, csvdata, format, mn_nodeid)
+  if(is.jnull(d1o_scidata1)) {
+    print("d1o_scidata1 is null")
     return(NULL)
   }
-  pid <- j_scidata1$getIdentifier()
-  print(paste("ID of data object 1:", pid$getValue()))
+  pid <- getIdentifier(d1o_scidata1)
+  print(paste("ID of data object 1:", pid))
 
   
   print("@@ testing.R 05: Create second data object...")
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
-  j_scidata2 <- buildD1Object(scidata2_id, csvdata, format, mn_nodeid)
-  if(is.jnull(j_scidata2)) {
-    print("j_scidata2 is null")
+  d1o_scidata2 <- new("D1Object", scidata2_id, csvdata, format, mn_nodeid)
+  if(is.jnull(d1o_scidata2)) {
+    print("d1o_scidata2 is null")
     return(NULL)
   }
-  pid <- j_scidata2$getIdentifier()
-  print(paste("ID of data object 2:", pid$getValue()))
+  pid <- getIdentifier(d1o_scidata2)
+  print(paste("ID of data object 2:", pid ))
 
         
   print("@@ testing.R 06: Create data package...")
   data_package <- DataPackage(package_id)
   print("@@ testing.R 20:  adding metadata...")
-  addMeta(data_package, j_scimeta)
+  addMeta(data_package, d1o_scimeta)
   print("@@ testing.R 21:  adding data object 1 ...")
-  addData(data_package, j_scidata1)
+  addData(data_package, d1o_scidata1)
   print("@@ testing.R 22:  adding data object 2 ...")
-  addData(data_package, j_scidata2)
+  addData(data_package, d1o_scidata2)
 
   print("@@ testing.R 23: uploading the object... ")
 
