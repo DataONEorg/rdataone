@@ -55,9 +55,9 @@ setMethod("addData", "DataPackage", function(x, dataObject) {
 
 
 ## getData, returns data object at index
-setGeneric("getData", function(x, id, ...) { standardGeneric("getData")} )
+##setGeneric("getData", function(x, ...) { standardGeneric("getData")} )
 
-setMethod("getData", "DataPackage", function(x, id) {
+setMethod("getData", signature("DataPackage", "character"), function(x, id) {
     pid <- .jnew("org/dataone/service/types/v1/Identifier")
     pid$setValue(id)
 

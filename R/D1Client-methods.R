@@ -148,7 +148,7 @@ setGeneric("create", function(x, object, ...) {
   standardGeneric("create")
 })
 
-setMethod("create", signature("D1Client", "D1Object"), function(x, object, ...) {
+setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   VERBOSE <- TRUE
   if (VERBOSE) print("--> D1Object@create")
 
@@ -157,8 +157,9 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object, ...) 
     print("Cannot create a null object.")
     return(FALSE)
   }
+  jD1o <- object@d1o
   if (VERBOSE) print("    * The object is not null.")
-  sysmeta <- object$getSystemMetadata()
+  sysmeta <- jD1o$getSystemMetadata()
   if(is.jnull(sysmeta)) {
     print("Cannot create with a null sysmeta object.")
     return(FALSE)
@@ -204,27 +205,27 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object, ...) 
   return(is.jnull(newPid))
 })
 
-setGeneric("create", function(x, rPackage, ...) { 
-  standardGeneric("create")
-})
+## setGeneric("create", function(x, rPackage, ...) { 
+##   standardGeneric("create")
+## })
 
 
 setMethod("create", signature("D1Client", "DataPackage"),
-    function(x, rPackage, ...) {
+    function(x, object ) {
       print("--> create datapackage")
-      print(paste("@@ D1Client-methods 30: Creating DP with ID: ", rPackage@identifier))
+      print(paste("@@ D1Client-methods 30: Creating DP with ID: ", object@identifier))
       
       pid <- .jnew("org/dataone/service/types/v1/Identifier")
-      pid$setValue(rPackage@identifier)
+      pid$setValue(object@identifier)
       j_dp <- .jnew("org/dataone/client/DataPackage", pid)
       
-      l <- length(rPackage@dataList)
+      l <- length(object@dataList)
       print(paste("@@ D1Client-methods 31: length of dataList: ", l))
       
       ## add the vector of pids in the dataList to the java DataPackage
-      for (pid in rPackage@dataList) {
+      for (pid in object@dataList) {
         print(paste("@@ D1Client-methods 32:"))
-        j_dp$addData(rPackage@dataList[[pid]])
+        j_dp$addData(object@dataList[[pid]])
       }
       
       print(paste("@@ D1Client-methods 33: Implementation Incomplete, need to finish!"))
