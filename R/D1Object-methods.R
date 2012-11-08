@@ -88,7 +88,7 @@
 ### Utility methods
 #########################################################
 
-setGeneric("getData", function(x, id, ...) {
+setGeneric("getData", function(x, index, ...) {
   standardGeneric("getData")
 })
 

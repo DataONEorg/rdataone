@@ -19,11 +19,10 @@
 #
 
 setClass("DataPackage",
-         representation(identifier = "character",
-	                jDataPackage = "jobjRef",
-                        sysmeta = "jobjRef",
-                        scimeta = "character",
-			dataList = "list")
+        representation(identifier = "character",
+                jDataPackage = "jobjRef",
+                metaList = "list",
+                dataList = "list")
 )
 
 ###########################
@@ -31,7 +30,7 @@ setClass("DataPackage",
 ###########################
 
 ## generic
-setGeneric("DataPackage", function(identifier, sysmeta, scimeta, ...) {
+setGeneric("DataPackage", function(identifier, metaList, dataList, ...) {
   standardGeneric("DataPackage")
 })
 
@@ -39,30 +38,16 @@ setGeneric("DataPackage", function(identifier, sysmeta, scimeta, ...) {
 setMethod("DataPackage", signature("character"),
   function(identifier, ...) {
 
-  null_sysmeta = .jnull("org/dataone/service/types/v1/SystemMetadata")
 
-  res <- DataPackage(identifier, null_sysmeta, "")
+  res <- DataPackage(identifier, "", "")
   print("@@ DataPackage-class.R 15:")
   return(res)
 })
 
-## Two args: pid, sysmeta
-setMethod("DataPackage", signature("character", "jobjRef"),
-  function(identifier, sysmeta, ...) {
-
-  if(!.jinstanceof(sysmeta, J("org.dataone.service.types.v1.SystemMetadata"))) {
-    print("Second argument must be a Java SystemMetadata object.")
-    return(NULL)
-  }
-
-  res <- DataPackage(identifier, sysmeta, "")
-  print("@@ DataPackage-class.R 14:")
-  return(res)
-})
 
 ## All three args: pid, sysmeta, scimeta
-setMethod("DataPackage", signature("character", "jobjRef", "character"),
-  function(identifier, sysmeta, scimeta) {
+setMethod("DataPackage", signature("character", "list", "list"),
+  function(identifier, metaList, dataList) {
 
   print(      "@@ DataPackage-class.R 07: Running in DataPackage 3 arg constructor...")
   print(paste("@@ DataPackage-class.R 08: Identifier is: ", identifier))
@@ -75,13 +60,10 @@ setMethod("DataPackage", signature("character", "jobjRef", "character"),
   print("@@ DataPackage-class.R 10:")
   res@identifier <- identifier
   print("@@ DataPackage-class.R 11:")
-  res@sysmeta <- sysmeta
+  res@metaList <- metaList
   print("@@ DataPackage-class.R 12:")
-  if(!is.null(scimeta) && (scimeta != "")) {
-    res@scimeta <- scimeta
-  }
-  print("@@DataPackage-class.R  13:")
-
+  res@dataList <- dataList
+  
   return(res)
 })
 
@@ -89,12 +71,12 @@ setMethod("DataPackage", signature("character", "jobjRef", "character"),
 ## Create an R DataPackage from a Java DataPackage.
 
 ## generic
-setGeneric("createDataPackage", function(jDataPackage, sysmeta, ...) {
+setGeneric("createDataPackage", function(jDataPackage, ...) {
   standardGeneric("createDataPackage")
 })
 
-setMethod("createDataPackage", signature("jobjRef", "jobjRef"),
-    function(jDataPackage, sysmeta) {
+setMethod("createDataPackage", signature("jobjRef"),
+    function(jDataPackage) {
   ## create new DataPackage object and insert identifier and data
   res <- new("DataPackage")
 
@@ -103,28 +85,20 @@ setMethod("createDataPackage", signature("jobjRef", "jobjRef"),
     print("Cannot create DataPackage from null object")
     return(res)
   } else if(!.jinstanceof(jDataPackage, J("org.dataone.client.DataPackage"))) {
-    print("Second argument must be a Java DataPackage object.")
-    return(NULL)
-  }
-
-  # Verify second object.
-  if(!is.jnull(jDataPackage) && !.jinstanceof(sysmeta,
-      J("org.dataone.service.types.v1.SystemMetadata"))) {
-    print("Second argument must be null or a Java SystemMetadata object.")
+    print("First argument must be a Java DataPackage object.")
     return(NULL)
   }
 
   # Save the Java objects (sysmeta may be null).
   res@jDataPackage <- jDataPackage
-  res@sysmeta <- sysmeta
 
   # Get the pid.
   pid <- jDataPackage$getPackageId()
   res@identifier <- pid$getValue()
   
-  # Make sure scimeta is blank at first in case there are 2 of them.
-  res@scimeta <- ""
-  res@dataList <- list()
+  
+##  res@metaList <- ""
+##  res@dataList <- ""
 
   # Loop through all the identifiers, find the scimeta and scidata.
   jResSet <- jDataPackage$identifiers()

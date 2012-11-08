@@ -26,18 +26,19 @@
 ## Accessor methods
 #########################################################
 
-## addData to the end of the dataList
-## takes the package and data object as input
+## addMeta adds another science metadata D1Object to the end of the meta slot
+## takes the DataPackage and D1Object as input
 setGeneric("addMeta", function(x, d1object, ...) { 
     standardGeneric("addMeta")
 })
 
 setMethod("addMeta", signature("DataPackage", "D1Object"), function(x, d1object) {
-  databytes <- getData(d1object)
-  j_string <- .jnew("java/lang/String", databytes)
-  .jcheck(silent = FALSE)
-
-  x@scimeta <- j_string$toString()
+    if (!is.null(x@scimeta)) {
+        l <- length(x@scimeta)
+        x@scimeta[ l + 1 ] <- d1object
+      } else {
+          x@scimeta <- d1object
+       }
 })
 
 
@@ -47,25 +48,22 @@ setGeneric("addData", function(x, dataObject, ...) {
     standardGeneric("addData")
 })
 
-setMethod("addData", "DataPackage", function(x, dataObject) {
+setMethod("addData", signature("DataPackage", "D1Object"),function(x, dataObject) {
  l <- length(x@dataList)
- x@dataList[l+1] <- list(dataObject)
- return(x)
+ x@dataList[ l + 1 ] <- list(dataObject)
 })
 
 
 ## getData, returns data object at index
 ##setGeneric("getData", function(x, ...) { standardGeneric("getData")} )
 
-setMethod("getData", signature("DataPackage", "character"), function(x, id) {
-    pid <- .jnew("org/dataone/service/types/v1/Identifier")
-    pid$setValue(id)
+setMethod("getData", signature("DataPackage", "numeric"), function(x, index) {
 
-    jD1Object <- x@dataList[[ id ]]
-    if(!is.jnull(jD1Object)) {
-	databytes <- jD1Object$getData()
+    d1Object <- x@dataList[[ index ]]
+    if(!is.null(d1Object)) {
+	databytes <- getData(d1Object)
 	if(is.null(databytes)) {
-	    print(paste("Didn't find data in:", id))
+	    print(paste("Didn't find data in object at index", index))
 	    return
 	}
 	return(databytes)
@@ -78,6 +76,15 @@ setGeneric("getDataCount", function(x, ...) { standardGeneric("getDataCount")} )
 setMethod("getDataCount", "DataPackage", function(x) {
     return(length(x@dataList))
 })
+
+## getMetaCount, returns number of metadata objects in this package
+setGeneric("getMetaCount", function(x, ...) { standardGeneric("getMetaCount")} )
+
+setMethod("getMetaCount", "DataPackage", function(x) {
+            return(length(x@scimeta))
+        })
+
+
 
 ## getData, returns data object at index
 setGeneric("asDataFrame", function(x, index, ...) { standardGeneric("asDataFrame")} )

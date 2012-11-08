@@ -21,13 +21,13 @@
 
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	appears to be the  main function                                |# 
+#|	                                                                    |# 
+#|	           the main function                                        |# 
 #|              ( d1.test() is called by install.sh )                   |#
-#|									|#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.test <- function() {
-
+	
   ## Configurable settings for these tests
   cn_env <- Sys.getenv("CN_ENV")
 
@@ -57,10 +57,10 @@ d1.test <- function() {
 #  return()
   
   objId <- ""
-  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-  print(paste("testCreateDataObject created object with id ", objId))
+##  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+##  print(paste("testCreateDataObject created object with id ", objId))
 
-  d1.testConvertCSV(cn_env)
+##  d1.testConvertCSV(cn_env)
 
   testPackage <- ""
   testPackage <- d1.testCreateDataPackage(cn_env, mn_nodeid)
@@ -90,9 +90,9 @@ d1.test <- function() {
 }
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Create a basic DataONE D1Object.				|#
-#|									|#
+#|	                                                                    |# 
+#|	Create a basic DataONE D1Object.                                    |#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.testCreateDataObject <- function(env, mn_nodeid) {
   print(" ")
@@ -150,9 +150,9 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
 
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Convert a dataframe to a csv stream.				|#
-#|									|#
+#|	                                                                    |# 
+#|	Convert a dataframe to a csv stream.	                            |#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.testConvertCSV <- function(env) {
   print(" ")
@@ -170,9 +170,9 @@ d1.testConvertCSV <- function(env) {
 }
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Create a DataONE data package.					|#
-#|									|#
+#|	                                                                    |# 
+#|	Create a DataONE data package.                                      |#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.testCreateDataPackage <- function(env, mn_nodeid) {
   print(" ")
@@ -254,6 +254,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
         
   print("@@ testing.R 06: Create data package...")
   data_package <- DataPackage(package_id)
+  print(data_package)
   print("@@ testing.R 20:  adding metadata...")
   addMeta(data_package, d1o_scimeta)
   print("@@ testing.R 21:  adding data object 1 ...")
@@ -261,6 +262,12 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   print("@@ testing.R 22:  adding data object 2 ...")
   addData(data_package, d1o_scidata2)
 
+  print(paste("Data Object count:",getDataCount(data_package)))
+  print(paste("Meta Object count:",getMetaCount(data_package)))
+  
+  print(getData(data_package, 1)) 
+##  getIdentifier(d1o_scidata2))
+  
   print("@@ testing.R 23: uploading the object... ")
 
   # Upload object.
@@ -303,9 +310,9 @@ d1.testGetD1Object <- function(env, id) {
 }
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Create a basic DataONE D1Object.				|#
-#|									|#
+#|	                                                                    |# 
+#|	Create a basic DataONE D1Object.                                    |#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.testGetPackage <- function(env, package) {
 
@@ -393,9 +400,9 @@ d1.set_certificate_location <- function() {
 
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Verify that the Java environment is working correctly.		|#
-#|									|#
+#|	                                                                    |# 
+#|	Verify that the Java environment is working correctly.              |#
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 
 d1.testJavaEnvironment <- function(env) {
