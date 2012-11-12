@@ -280,13 +280,13 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   print("@@ testing.R 23: setup the describes relationship... ")
   insertRelationship(data_package, scimeta_id, c(scidata1_id, scidata2_id))
 
-##  print("@@ testing.R 24: uploading the object... ")
+  print("@@ testing.R 24: uploading the object... ")
 
-  # Upload object.
-##  create(d1_client, data_package)
-##  print("@@ testing.R 25: checking for call errors...")
-##  .jcheck(silent = FALSE)
-##  print("Finished object upload.")
+  ## Upload object.
+  create(d1_client, data_package)
+  print("@@ testing.R 25: checking for call errors...")
+  .jcheck(silent = FALSE)
+  print("Finished object upload.")
 
   print("Test 3: finished")
   print(" ")

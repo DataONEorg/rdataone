@@ -49,13 +49,19 @@ setMethod("getSize", "DataPackage", function(x) {
   return(x@jDataPackage$size())
 })
 
-## getDataCount, returns number of data objects in this package
-##setGeneric("getIdentifiers", function(x, ...) { standardGeneric("getIdentifiers")} )
-##
-##setMethod("getIdentifiers", "DataPackage", function(x) {
-##  jSet <- x@jDataPackage$identifiers()
-##  
-##})
+## getIdentifiers, returns number of data objects in this package
+setGeneric("getIdentifiers", function(x, ...) { standardGeneric("getIdentifiers")} )
+
+setMethod("getIdentifiers", "DataPackage", function(x) {
+  jSet <- x@jDataPackage$identifiers()
+  identifiers <- character(0)
+  jIt <- jSet$iterator()
+  while(jIt$hasNext()) {
+    jPid <- .jrcall(jIt,"next")
+    identifiers <- append(identifiers, jPid$getValue())
+  }
+  return(identifiers)
+})
 
 
 
@@ -66,8 +72,8 @@ setGeneric("addData", function(x, d1object, ...) {
 })
 
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, d1object) {
-  jD1o <- d1object@d1o
-  x@jDataPackage$addData(jD1o)
+  jD1object <- d1object@jD1o
+  x@jDataPackage$addData(jD1object)
 })
 
 ## addAndDownloadData downloads a D1Object to the DataPackage, using the provided identifier
@@ -145,7 +151,8 @@ setMethod("get", signature("DataPackage", "character"), function(x, identifier) 
   jPid$setValue(identifier)
   
   jD1Object <- x@jDataPackage$get(jPid)
-  return(new(class = "D1Object", jD1o = jD1Object))
+  rD1o <- new(Class="D1Object",d1o=jD1Object)
+  return(rD1o)
 })
 
 

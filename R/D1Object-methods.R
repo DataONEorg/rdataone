@@ -94,7 +94,7 @@ setGeneric("getData", function(x, id, ...) {
  
 setMethod("getData", signature("D1Object"), function(x) {
   print("@@r1")
-  jD1Object = x@d1o
+  jD1Object = x@jD1o
   print ("@@r2")
   if(!is.jnull(jD1Object)) {
     print ("@@r3")
@@ -138,7 +138,7 @@ setGeneric("getIdentifier", function(x, ...) {
 setMethod("getIdentifier", signature("D1Object"),
           function(x)
           {
-            jD1Object = x@d1o
+            jD1Object = x@jD1o
             if(!is.jnull(jD1Object)) {
               jPid <- jD1Object$getIdentifier()
               if(is.null(jPid)) {
@@ -157,7 +157,7 @@ setGeneric("setPublicAccess", function(x, ...) {
 setMethod("setPublicAccess", signature("D1Object"),
           function(x)
           {
-            jD1Object = x@d1o
+            jD1Object = x@jD1o
             if(!is.jnull(jD1Object)) {
               jPolicyEditor <- jD1Object$getAccessPolicyEditor()
               if (!is.jnull(jPolicyEditor)) {
@@ -177,7 +177,7 @@ setGeneric("canRead", function(x, subject, ...) {
 setMethod("canRead", signature("D1Object", "character"),
           function(x, subject)
           {
-            jD1Object = x@d1o
+            jD1Object = x@jD1o
             if(!is.jnull(jD1Object)) {
               jPolicyEditor <- jD1Object$getAccessPolicyEditor()
               if (!is.jnull(jPolicyEditor)) {

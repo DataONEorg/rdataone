@@ -106,10 +106,10 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
   pid$setValue(identifier)
 
   # Use libclient D1Object to get the object
-  d1Object <- J("org/dataone/client/D1Object")$download(pid)
+  jD1Object <- J("org/dataone/client/D1Object")$download(pid)
   .jcheck(silent = FALSE)
 
-  return(d1Object)
+  return(jD1Object)
 })
 
 
@@ -157,7 +157,7 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
     print("Cannot create a null object.")
     return(FALSE)
   }
-  jD1o <- object@d1o
+  jD1o <- object@jD1o
   if (VERBOSE) print("    * The object is not null.")
   sysmeta <- jD1o$getSystemMetadata()
   if(is.jnull(sysmeta)) {
@@ -215,17 +215,17 @@ setMethod("create", signature("D1Client", "DataPackage"),
       print("--> create datapackage")
       print(paste("@@ D1Client-methods 30: Creating DP with ID: ", object@identifier))
       
-      pid <- .jnew("org/dataone/service/types/v1/Identifier")
-      pid$setValue(object@identifier)
-      j_dp <- .jnew("org/dataone/client/DataPackage", pid)
+#      pid <- .jnew("org/dataone/service/types/v1/Identifier")
+#      pid$setValue(object@identifier)
+#      j_dp <- .jnew("org/dataone/client/DataPackage", pid)
       
-      l <- length(object@dataList)
-      print(paste("@@ D1Client-methods 31: length of dataList: ", l))
+      print(paste("@@ D1Client-methods 31: number of members: ", getSize(object)))
       
       ## add the vector of pids in the dataList to the java DataPackage
-      for (pid in object@dataList) {
-        print(paste("@@ D1Client-methods 32:"))
-        j_dp$addData(object@dataList[[pid]])
+      for (pid in getIdentifiers(object)) {
+        print(paste("     next member to create:", pid))
+        rD1o <- get(object, pid)
+        create(x, rD1o)
       }
       
       print(paste("@@ D1Client-methods 33: Implementation Incomplete, need to finish!"))
