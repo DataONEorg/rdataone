@@ -7,7 +7,7 @@ exportClasses(D1Client, DataPackage, D1Object)
 exportMethods(D1Client, DataPackage, D1Object)
 
 # D1Client methods
-exportMethods(getPackage, getD1Object, getEndpoint, addData, getData, getDataCount, convert.csv)
+exportMethods(getPackage, getD1Object, getEndpoint, addData, getData, getSize, convert.csv)
 
 # DataPackage methods
 exportMethods(asDataFrame)

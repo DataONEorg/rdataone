@@ -21,10 +21,10 @@
 
 
 #+----------------------------------------------------------------------+#
-#|	                                                                    |# 
-#|	           the main function                                        |# 
+#|	                                                                |# 
+#|	           the top-level testing function                       |# 
 #|              ( d1.test() is called by install.sh )                   |#
-#|	                                                                    |# 
+#|	                                                                |# 
 #+----------------------------------------------------------------------+#
 d1.test <- function() {
 	
@@ -251,30 +251,42 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   pid <- getIdentifier(d1o_scidata2)
   print(paste("ID of data object 2:", pid ))
 
+
         
   print("@@ testing.R 06: Create data package...")
   data_package <- DataPackage(package_id)
-  print(data_package)
+
   print("@@ testing.R 20:  adding metadata...")
-  addMeta(data_package, d1o_scimeta)
+  addData(data_package, d1o_scimeta)
+
   print("@@ testing.R 21:  adding data object 1 ...")
   addData(data_package, d1o_scidata1)
+  
+  print("@@ testing.R 21a:  getting the added data...")
+  d <- getData(data_package,scidata1_id)
+  print(d)
+  
   print("@@ testing.R 22:  adding data object 2 ...")
   addData(data_package, d1o_scidata2)
 
-  print(paste("Data Object count:",getDataCount(data_package)))
-  print(paste("Meta Object count:",getMetaCount(data_package)))
+  print("@@ testing.R 22a:  getting the added data...")
+  d <- getData(data_package,scidata2_id)
+  print(d)
+
+  print(paste("size of data list:",getSize(data_package)))
+
   
-  print(getData(data_package, 1)) 
-##  getIdentifier(d1o_scidata2))
   
-  print("@@ testing.R 23: uploading the object... ")
+  print("@@ testing.R 23: setup the describes relationship... ")
+  insertRelationship(data_package, scimeta_id, c(scidata1_id, scidata2_id))
+
+##  print("@@ testing.R 24: uploading the object... ")
 
   # Upload object.
-  create(d1_client, data_package)
-  print("@@ testing.R 24: checking for call errors...")
-  .jcheck(silent = FALSE)
-  print("Finished object upload.")
+##  create(d1_client, data_package)
+##  print("@@ testing.R 25: checking for call errors...")
+##  .jcheck(silent = FALSE)
+##  print("Finished object upload.")
 
   print("Test 3: finished")
   print(" ")

@@ -88,28 +88,47 @@
 ### Utility methods
 #########################################################
 
-setGeneric("getData", function(x, index, ...) {
+setGeneric("getData", function(x, id, ...) {
   standardGeneric("getData")
 })
+ 
+setMethod("getData", signature("D1Object"), function(x) {
+  print("@@r1")
+  jD1Object = x@d1o
+  print ("@@r2")
+  if(!is.jnull(jD1Object)) {
+    print ("@@r3")
+    databytes <- jD1Object$getData()
+    print ("@@r4")
+    if(is.null(databytes)) {
+      print(paste("Didn't find data in:", id))
+      return()
+    }
+    return(databytes)
+  }
+})
 
-setMethod("getData", signature("D1Object"),
-          function(x)
-          {
-            print("@@r1")
-            jD1Object = x@d1o
-            print ("@@r2")
-            if(!is.jnull(jD1Object)) {
-              print ("@@r3")
-              databytes <- jD1Object$getData()
-              print ("@@r4")
-              if(is.null(databytes)) {
-                print(paste("Didn't find data in:", id))
-                return()
-              }
-              return(databytes)
-            }
-          }
-        )
+
+## setMethod("getData", signature("jobJRef"), function(x) {
+
+##   if (.jinstanceof(x, "org/dataone/client/D1Object") {
+##     jD1Object = x
+
+##     if(!is.jnull(jD1Object)) {
+##       print ("@@r3")
+##       databytes <- jD1Object$getData()
+##       print ("@@r4")
+##       if(is.null(databytes)) {
+##         print(paste("Didn't find data in:", id))
+##         return()
+##       }
+##       return(databytes)
+##     }
+##   } else {
+##     print("Passed in Java object not the right type (org.dataone.client.D1Object)")
+##     return()
+##   }
+##})
 
 
 setGeneric("getIdentifier", function(x, ...) {
@@ -122,7 +141,6 @@ setMethod("getIdentifier", signature("D1Object"),
             jD1Object = x@d1o
             if(!is.jnull(jD1Object)) {
               jPid <- jD1Object$getIdentifier()
-              print ("@@r4")
               if(is.null(jPid)) {
                 return()
               }

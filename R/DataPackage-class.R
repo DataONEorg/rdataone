@@ -19,10 +19,8 @@
 #
 
 setClass("DataPackage",
-        representation(identifier = "character",
-                jDataPackage = "jobjRef",
-                metaList = "list",
-                dataList = "list")
+         representation(identifier = "character",
+                        jDataPackage = "jobjRef")
 )
 
 ###########################
@@ -30,39 +28,27 @@ setClass("DataPackage",
 ###########################
 
 ## generic
-setGeneric("DataPackage", function(identifier, metaList, dataList, ...) {
+setGeneric("DataPackage", function(identifier, ...) {
   standardGeneric("DataPackage")
 })
+
 
 ## One arg: pid
 setMethod("DataPackage", signature("character"),
   function(identifier, ...) {
 
-
-  res <- DataPackage(identifier, "", "")
-  print("@@ DataPackage-class.R 15:")
-  return(res)
-})
-
-
-## All three args: pid, sysmeta, scimeta
-setMethod("DataPackage", signature("character", "list", "list"),
-  function(identifier, metaList, dataList) {
-
-  print(      "@@ DataPackage-class.R 07: Running in DataPackage 3 arg constructor...")
+  print(      "@@ DataPackage-class.R 07: Running in DataPackage constructor...")
   print(paste("@@ DataPackage-class.R 08: Identifier is: ", identifier))
 
   ## create new DataPackage object and insert identifier and data
   res <- new("DataPackage")
   print("@@ DataPackage-class.R 09:")
-  res@jDataPackage <- .jnull("org/dataone/client/DataPackage")
+  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+  jPid$setValue(identifier)
+  res@jDataPackage <- .jnew("org/dataone/client/DataPackage",jPid)
 
   print("@@ DataPackage-class.R 10:")
   res@identifier <- identifier
-  print("@@ DataPackage-class.R 11:")
-  res@metaList <- metaList
-  print("@@ DataPackage-class.R 12:")
-  res@dataList <- dataList
   
   return(res)
 })
@@ -115,12 +101,12 @@ setMethod("createDataPackage", signature("jobjRef"),
 	  str <- substring(jFormatId$getValue(), 1, 4)
 	  # Should really go to the CN to determine if this is scimeta
 	  if(str == "eml:") {
-	    if(res@scimeta != "") {
+	    if(res@metaList != "") {
 	      print(paste("Found second scimeta in", jResId$getValue()))
 	    } else {
 	      databytes <- jD1Object$getData()
 	      asString <- .jnew("java/lang/String", databytes)
-	      res@scimeta <- asString$toString()
+	      res@metaList <- asString$toString()
 	      next
 	    }
 	  }
