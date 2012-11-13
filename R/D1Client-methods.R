@@ -150,47 +150,55 @@ setGeneric("create", function(x, object, ...) {
 
 setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   VERBOSE <- TRUE
-  if (VERBOSE) print("--> D1Object@create")
+  if (VERBOSE) print("--> create(D1Client, D1Object)")
 
-  # -- Validate everything necessary to create new object.
+  ## -- Validate everything necessary to create new object.
   if(is.jnull(object)) {
-    print("Cannot create a null object.")
+    print("    ** Cannot create a null object.")
     return(FALSE)
   }
-  jD1o <- object@jD1o
+  jD1o <- object@jD1o  
+  
   if (VERBOSE) print("    * The object is not null.")
   sysmeta <- jD1o$getSystemMetadata()
   if(is.jnull(sysmeta)) {
-    print("Cannot create with a null sysmeta object.")
+    print("    ** Cannot create with a null sysmeta object.")
     return(FALSE)
   }
   if (VERBOSE) print("    * The sysmeta is not null.")
   if(is.jnull(sysmeta$getIdentifier())) {
-    print("Cannot create with a null identifier.")
+    print("    ** Cannot create with a null identifier.")
     return(FALSE)
   }
 
-  # -- Reserve this identifier
+  ## -- Reserve this identifier
   pid <- sysmeta$getIdentifier()
   id <- pid$getValue()
   if(!reserveIdentifier(x, id)) {
-    print(paste("Identifier already exists, or has been reserved: ", id))
+    print(paste("    ** Identifier already exists, or has been reserved: ", id))
     return(FALSE)
   }
   if (VERBOSE) print(paste("    * Reserved.", id))
 
-  # -- Connect to the member node and create the object.
-  mn <- getMN(x)
-  if(is.jnull(mn)) {
-    return(FALSE)
-  }
-  print(mn)
-  jDataIS <- .jnew("java/io/ByteArrayInputStream", getData(object))
-  print("@@ D1Client-methods 40:")
-  jNewPid <- mn$create(x@session, pid, jDataIS, sysmeta)
+  
+  
+  ## -- Connect to the member node and create the object.
+  jNewPid <- x@client$create(x@session, jD1o)
+            
+  ## the old way, of creating, but it doesn't respect the object's MN reference            
+  ## mn <- getMN(x)
+  ## if(is.jnull(mn)) {
+  ##   return(FALSE)
+  ## }
+  ## print(mn)
+  ## jDataIS <- .jnew("java/io/ByteArrayInputStream", getData(object))
+  ## print("@@ D1Client-methods 40:")
+  ## 
+  ## jNewPid <- mn$create(x@session, pid, jDataIS, sysmeta)
+  
   print("@@ D1Client-methods 41:")
   if (!is.jnull(e <- .jgetEx())) {
-    print("Java exception was raised")
+    print("    ** Java exception was raised")
     print(.jcheck(silent=FALSE))
   }
   if (VERBOSE) print("    * Created.")
@@ -201,7 +209,7 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
     if (VERBOSE) print("      - pid is null")
   }
 
-  if (VERBOSE) print("<-- D1Object@create")
+  if (VERBOSE) print("<--  create(D1Client, D1Object)")
   return(is.jnull(jNewPid))
 })
 
@@ -210,36 +218,31 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
 ## })
 
 
-setMethod("create", signature("D1Client", "DataPackage"),
-    function(x, object ) {
-      print("--> create datapackage")
-      print(paste("@@ D1Client-methods 30: Creating DP with ID: ", object@identifier))
-      
-      pid <- .jnew("org/dataone/service/types/v1/Identifier")
-      pid$setValue(object@identifier)
-#      jDataPackage <- .jnew("org/dataone/client/DataPackage", pid)
-      
-      print(paste("@@ D1Client-methods 31: number of members: ", getSize(object)))
-      
-      ## add the vector of pids in the dataList to the java DataPackage
-      members <- getIdentifiers(object)
-      print(members)
-      for (pid in members) {
-        print(paste("     next member to create:", pid))
-        rD1o <- get(object, pid)
-        create(x, rD1o)
-      }
-      
-      print("@@ D1Client-methods 32: building and creating the resource map ...")
-      resourceMapString <- object@jDataPackage$serializePackage()
-      mapObject <- new("D1Object", object@identifier, resourceMapString, "RDF/XML", x@mn.nodeid)
-      mapObject$setPublicAccess(x@session)
-      create(x, mapObject)
+setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
+  print("====> create(D1Client,DataPackage")
+            
+  print(paste("    * building the resource map for the", getSize(object), "members..."))
+  resourceMapString <- object@jDataPackage$serializePackage()
+  mapObject <- new("D1Object", object@identifier, resourceMapString, "RDF/XML", x@mn.nodeid)
+  
+  ## TODO: this should not always be the case in the future.  
+  ## access should match the accessPolicy of the metadata objects, yes?
+  setPublicAccess(mapObject)
+  
+  ## add the vector of pids in the dataList to the java DataPackage
+  members <- getIdentifiers(object)
+  
+  for (pid in members) {
+      print(paste("    * next member to create:", pid))
+      rD1o <- get(object, pid)
+      create(x, rD1o)
+  }
+  print(paste("    * creating the package resource map:", object@identifier ))
+  create(x, mapObject)
+  
+  print("<====  create(D1Client, DataPackage")
 
-      
-      print(paste("@@ D1Client-methods 33: done"))
-      
-    })
+})
 
 
 #########################################################

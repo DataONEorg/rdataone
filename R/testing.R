@@ -279,6 +279,20 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   
   print("@@ testing.R 23: setup the describes relationship... ")
   insertRelationship(data_package, scimeta_id, c(scidata1_id, scidata2_id))
+  
+  jMap <- data_package@jDataPackage$getMetadataMap()
+  jKS <- jMap$keySet()
+  jIt <- jKS$iterator()
+  while(jIt$hasNext()) {
+    jPid <- .jrcall(jIt,"next")
+    print(paste("    metadataMap key:", jPid$getValue()))
+    jDataList <- jMap$get(jPid)
+    jDataIt <- jDataList$iterator()
+    while (jDataIt$hasNext()) {
+      jDataPid <- .jrcall(jDataIt,"next")
+      print(paste("      data:", jDataPid$getValue()))
+    }
+  }
 
   print("@@ testing.R 24: uploading the object... ")
 

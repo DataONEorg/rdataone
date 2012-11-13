@@ -101,12 +101,16 @@ setMethod("insertRelationship", signature("DataPackage", "character", "character
   jMetaPid$setValue(metadataID)
   
   jList <- .jnew("java/util/LinkedList")
-  for (i in 1:length(dataIDs)) {
+  for (id in dataIDs) {
     jPid <- .jnew("org/dataone/service/types/v1/Identifier")
-    jPid$setValue(dataIDs[i])
+    jPid$setValue(id)
     jList$add(jPid)
   }
   x@jDataPackage$insertRelationship(jMetaPid, jList)
+  if (!is.jnull(e <- .jgetEx())) {
+      print("    ** Java exception was raised")
+      print(.jcheck(silent=FALSE))
+  }
 })
 
 
