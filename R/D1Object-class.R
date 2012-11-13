@@ -36,11 +36,9 @@ setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
 
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId) {
 
-  if (.jinstanceof(id,"org/dataone/client/D1Object")) {
-    jd1o <- id
-  }
-  else {
-  
+  if (typeof(id) == "character") {
+    print("@@ D1Object-class:R initialize as character")
+    
     ## build identifier to be used in system metadata
     pid <- .jnew("org/dataone/service/types/v1/Identifier")
     pid$setValue(id)
@@ -76,6 +74,14 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
       jd1o = .jnull("org/dataone/client/D1Object")
     }
   }
+  else {
+    print("@@ D1Object-class:R initialize as something else")
+    if (.jinstanceof(id,"org/dataone/client/D1Object")) {
+          print("@@ D1Object-class:R initialize with jobjRef")
+      jd1o <- id
+    }
+  }
+  
   .Object@jD1o <- jd1o
   return(.Object)
 })

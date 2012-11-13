@@ -215,27 +215,29 @@ setMethod("create", signature("D1Client", "DataPackage"),
       print("--> create datapackage")
       print(paste("@@ D1Client-methods 30: Creating DP with ID: ", object@identifier))
       
-#      pid <- .jnew("org/dataone/service/types/v1/Identifier")
-#      pid$setValue(object@identifier)
-#      j_dp <- .jnew("org/dataone/client/DataPackage", pid)
+      pid <- .jnew("org/dataone/service/types/v1/Identifier")
+      pid$setValue(object@identifier)
+#      jDataPackage <- .jnew("org/dataone/client/DataPackage", pid)
       
       print(paste("@@ D1Client-methods 31: number of members: ", getSize(object)))
       
       ## add the vector of pids in the dataList to the java DataPackage
-      for (pid in getIdentifiers(object)) {
+      members <- getIdentifiers(object)
+      print(members)
+      for (pid in members) {
         print(paste("     next member to create:", pid))
         rD1o <- get(object, pid)
         create(x, rD1o)
       }
       
-      print(paste("@@ D1Client-methods 33: Implementation Incomplete, need to finish!"))
+      print("@@ D1Client-methods 32: building and creating the resource map ...")
+      resourceMapString <- object@jDataPackage$serializePackage()
+      mapObject <- new("D1Object", object@identifier, resourceMapString, "RDF/XML", x@mn.nodeid)
+      mapObject$setPublicAccess(x@session)
+      create(x, mapObject)
+
       
-      ## j_string <- j_dp$serializePackage()
-      ## d1object$setPublicAccess(d1_client@session)
-      
-      
-      ## we can imagine this as the final call one the jDataPackage is assembled
-      ## x@client$create()
+      print(paste("@@ D1Client-methods 33: done"))
       
     })
 

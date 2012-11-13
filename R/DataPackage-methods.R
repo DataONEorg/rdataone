@@ -151,7 +151,7 @@ setMethod("get", signature("DataPackage", "character"), function(x, identifier) 
   jPid$setValue(identifier)
   
   jD1Object <- x@jDataPackage$get(jPid)
-  rD1o <- new(Class="D1Object",d1o=jD1Object)
+  rD1o <- new(Class="D1Object",jD1Object)
   return(rD1o)
 })
 
