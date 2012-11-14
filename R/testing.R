@@ -21,10 +21,10 @@
 
 
 #+----------------------------------------------------------------------+#
-#|	                                                                |# 
-#|	           the top-level testing function                       |# 
+#|	                                                                    |# 
+#|	           the top-level testing function                           |# 
 #|              ( d1.test() is called by install.sh )                   |#
-#|	                                                                |# 
+#|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.test <- function() {
 	
@@ -53,14 +53,19 @@ d1.test <- function() {
   print(" ")
   print("####### Start Testing ######################")
 
+  ## reserveIdentifier seems to be timing out a lot with the default of 30 sec
+  ## so bumping it up across the board to 60 seconds
+  config <- J("org/dataone/configuration/Settings")$getConfiguration()
+  config$setProperty("D1Client.CNode.reserveIdentifier.timeout", .jnew("java/lang/Integer","60000"))
+  
 #  d1.testGetPackage(cn_env, " ")
 #  return()
   
   objId <- ""
-##  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
-##  print(paste("testCreateDataObject created object with id ", objId))
+  objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
+  print(paste("testCreateDataObject created object with id ", objId))
 
-##  d1.testConvertCSV(cn_env)
+  d1.testConvertCSV(cn_env)
 
   testPackage <- ""
   testPackage <- d1.testCreateDataPackage(cn_env, mn_nodeid)
@@ -71,7 +76,7 @@ d1.test <- function() {
 		"seconds to let the CN sync the created object and package"))
     Sys.sleep(sleep_seconds)
   }
-  else if (testPackage == "") {
+  else if (testPackage != "") {
     print(paste("Waiting", sleep_seconds,
 		"seconds to let the CN sync the created object and package"))
     Sys.sleep(sleep_seconds)
@@ -300,7 +305,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   create(d1_client, data_package)
   print("@@ testing.R 25: checking for call errors...")
   .jcheck(silent = FALSE)
-  print("Finished object upload.")
+  print("Finished package upload.")
 
   print("Test 3: finished")
   print(" ")
@@ -309,9 +314,9 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
 
 #+----------------------------------------------------------------------+#
-#|									|#
-#|	Retreive a D1Object from DataONE using the client library.	|#
-#|									|#
+#|                                                                      |#
+#|	Retreive a D1Object from DataONE using the client library.          |#
+#|                                                                      |#
 #+----------------------------------------------------------------------+#
 d1.testGetD1Object <- function(env, id) {
   print(" ")
