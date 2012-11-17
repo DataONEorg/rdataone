@@ -37,45 +37,19 @@ setGeneric("getPackage", function(x, identifier, ...) {
 setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
   client <- x@client
   session <- x@session
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(identifier)
-
-  cnode <- client$getCN()
-
-  # Make sure this is the correct type.
-  jSysMeta <- cnode$getSystemMetadata(pid)
+  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+  jPid$setValue(identifier)
+  print(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
+  ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+  ## jNodeRef$setValue(x@mn.nodeid)
+  ## print(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
+  print(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
+  jDataPackage <- J("org/dataone/client/DataPackage")$download(jPid)
   if (!is.null(e<-.jgetEx())) {
-    print("Java exception was raised")
-    print(.jcheck(silent=TRUE))
-  } else {
-    jObjectFormatId <- jSysMeta$getFormatId()
-    formatId <- jObjectFormatId$getValue()
-    if(formatId != "http://www.openarchives.org/ore/terms") {
-      print(paste("ERROR: Object is not correct format: ", formatId))
-      return(NULL)
-    }
+	  print("Java exception was raised")
+	  print(.jcheck(silent=FALSE))
   }
-
-  # Resolve the ID to find the MN to use
-  jD1Object <- J("org/dataone/client/D1Object")$download(pid)
-  if (!is.null(e<-.jgetEx())) {
-    print("Java exception was raised")
-    print(.jcheck(silent=FALSE))
-  } else if(is.jnull(jD1Object)) {
-    print(paste("Couldn't download:", pid))
-    return(NULL)
-  }
-
-  # Convert to data package.
-  databytes <- jD1Object$getData()
-  jString <- .jnew("java/lang/String", databytes)
-  if(FALSE) {
-    .jcheck(silent = FALSE)
-    print(paste("Object is",  jString$length(), "characters in size"))
-    print(jString)
-  }
-  jDataPackage <- J("org/dataone/client/DataPackage")$deserializePackage(jString)
-  dp <- createDataPackage(jDataPackage, jSysMeta)
+  dp <- new(Class="DataPackage",jDataPackage=jDataPackage)
   return(dp)
 })
 
@@ -102,14 +76,18 @@ setGeneric("getD1Object", function(x, identifier, ...) {
 setMethod("getD1Object", "D1Client", function(x, identifier) {
   client <- x@client
   session <- x@session
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(identifier)
+  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+  jPid$setValue(identifier)
+  
+  ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+  ## jNodeRef$setValue(x@mn.nodeid)
 
   # Use libclient D1Object to get the object
-  jD1Object <- J("org/dataone/client/D1Object")$download(pid)
+  jD1Object <- J("org/dataone/client/D1Object")$download(jPid)
   .jcheck(silent = FALSE)
-
-  return(jD1Object)
+  
+  d1o <- new("D1Object",jD1Object)
+  return(d1o)
 })
 
 
@@ -223,7 +201,8 @@ setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
             
   print(paste("    * building the resource map for the", getSize(object), "members..."))
   resourceMapString <- object@jDataPackage$serializePackage()
-  mapObject <- new("D1Object", object@identifier, resourceMapString, "RDF/XML", x@mn.nodeid)
+  mapObject <- new("D1Object", object@packageId, resourceMapString, 
+		  "http://www.openarchives.org/ore/terms", x@mn.nodeid)
   
   ## TODO: this should not always be the case in the future.  
   ## access should match the accessPolicy of the metadata objects, yes?
@@ -237,7 +216,7 @@ setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
       rD1o <- get(object, pid)
       create(x, rD1o)
   }
-  print(paste("    * creating the package resource map:", object@identifier ))
+  print(paste("    * creating the package resource map:", object@packageId ))
   create(x, mapObject)
   
   print("<====  create(D1Client, DataPackage")

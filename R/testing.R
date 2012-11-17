@@ -38,7 +38,7 @@ d1.test <- function() {
   if (mn_nodeid =="") 
      mn_nodeid <- "urn:node:mnDemo5"
 
-  sleep_seconds <- 200
+  sleep_seconds <- 250
 
  
   # Check if the certificate is specified.
@@ -87,9 +87,9 @@ d1.test <- function() {
     objId <- "r_test1.2012081311271344882424.1"
   }
 
-  d1.testGetD1Object(cn_env, objId)
+  d1.testGetD1Object(cn_env, mn_nodeid, objId)
 
-  d1.testGetPackage(cn_env, testPackage)
+  d1.testGetPackage(cn_env, mn_nodeid, testPackage)
 
   print("####### End Testing ######################")
 }
@@ -259,7 +259,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
         
   print("@@ testing.R 06: Create data package...")
-  data_package <- DataPackage(package_id)
+  data_package <- new(Class="DataPackage",packageId=package_id)
 
   print("@@ testing.R 20:  adding metadata...")
   addData(data_package, d1o_scimeta)
@@ -318,16 +318,16 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 #|	Retreive a D1Object from DataONE using the client library.          |#
 #|                                                                      |#
 #+----------------------------------------------------------------------+#
-d1.testGetD1Object <- function(env, id) {
+d1.testGetD1Object <- function(env, mn_nodeid, id) {
   print(" ")
   print("####### Test 4: testGetD1Object ######################")
 
   print(paste("Attempting to get object:", id))
-  d1Client <- D1Client(env)
+  d1Client <- D1Client(env, mn_nodeid)
   d1Object <- getD1Object(d1Client, id)
   .jcheck(silent = FALSE)
 
-  databytes <- d1Object$getData()
+  databytes <- getData(d1Object)
   jString <- .jnew("java/lang/String", databytes)
   .jcheck(silent = FALSE)
   data_size <- jString$length()
@@ -345,7 +345,7 @@ d1.testGetD1Object <- function(env, id) {
 #|	Create a basic DataONE D1Object.                                    |#
 #|	                                                                    |# 
 #+----------------------------------------------------------------------+#
-d1.testGetPackage <- function(env, package) {
+d1.testGetPackage <- function(env, mn_nodeid, package) {
 
   # What datapackage?
 #  eml_pid <- "knb-lter-gce.187.26"
@@ -362,17 +362,14 @@ d1.testGetPackage <- function(env, package) {
   print("####### Test 5: testGetPackage ######################")
 
   # Get the CN (only) client.
-  d1Client <- D1Client(env)
+  d1Client <- D1Client(env, mn_nodeid)
 
-  if (package == " ") {
-#    return
-    packageId = "r_test3.package.2012102615451351287944"
-  }
-  else {
-    jDP <- package@jDataPackage
-    jIdentifier <- jDP$getIdentifier
-    packageId <- jIdentifier$getValue()
-  }
+##  if (length(package) == 0) {
+    packageId = "r_test3.package.2012111514381353015496"
+##  }
+##  else {
+##    packageId <- package@identifier
+##  }
   # Make sure we can't get a D1Object as a DataPackage
 
 
@@ -387,7 +384,8 @@ d1.testGetPackage <- function(env, package) {
   print(" ")
 
   
-    
+  members <- getIdentifiers(rDataPackage)
+  print(paste("package members:",members))
 #  databytes <- getData(rDataPackage, dp_scidata_pid)
 #  if(is.null(databytes)) {
 #    print("FAIL: Couldn't get data")
