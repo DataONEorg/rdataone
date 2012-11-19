@@ -89,23 +89,23 @@
 #########################################################
 
 setGeneric("getData", function(x, id, ...) {
-  standardGeneric("getData")
+    standardGeneric("getData")
 })
  
 setMethod("getData", signature("D1Object"), function(x) {
-  print("@@r1")
-  jD1Object = x@jD1o
-  print ("@@r2")
-  if(!is.jnull(jD1Object)) {
-    print ("@@r3")
-    databytes <- jD1Object$getData()
-    print ("@@r4")
-    if(is.null(databytes)) {
-      print(paste("Didn't find data in:", id))
-      return()
-    }
-    return(databytes)
-  }
+    print("@@r1")
+	jD1Object = x@jD1o
+	print ("@@r2")
+	if(!is.jnull(jD1Object)) {
+		print ("@@r3")
+		databytes <- jD1Object$getData()
+		print ("@@r4")
+		if(is.null(databytes)) {
+			print(paste("Didn't find data in:", id))
+			return()
+		}
+		return(databytes)
+	}
 })
 
 
@@ -132,67 +132,70 @@ setMethod("getData", signature("D1Object"), function(x) {
 
 
 setGeneric("getIdentifier", function(x, ...) {
-  standardGeneric("getIdentifier")
+    standardGeneric("getIdentifier")
 })
 
-setMethod("getIdentifier", signature("D1Object"),
-          function(x)
-          {
-            jD1Object = x@jD1o
-            if(!is.jnull(jD1Object)) {
-              jPid <- jD1Object$getIdentifier()
-              if(is.null(jPid)) {
-                return()
-              }
-              return(jPid$getValue())
-            }
-          }
-        )
+setMethod("getIdentifier", signature("D1Object"), function(x) {
+    jD1Object = x@jD1o
+	if(!is.jnull(jD1Object)) {
+		jPid <- jD1Object$getIdentifier()
+		if(is.null(jPid)) {
+			return()
+		}
+		return(jPid$getValue())
+	}
+})
 
 
 setGeneric("setPublicAccess", function(x, ...) {
   standardGeneric("setPublicAccess")
 })
 
-setMethod("setPublicAccess", signature("D1Object"),
-          function(x)
-          {
-            jD1Object = x@jD1o
-            if(!is.jnull(jD1Object)) {
-              jPolicyEditor <- jD1Object$getAccessPolicyEditor()
-              if (!is.jnull(jPolicyEditor)) {
-                print("setPublicAccess: got policy editor")
-                jPolicyEditor$setPublicAccess()
-              } else {
-                print("policy editor is null")
-              }
-            }
-          }
-          )
+
+setMethod("setPublicAccess", signature("D1Object"), function(x) {
+    jD1Object = x@jD1o
+	if(!is.jnull(jD1Object)) {
+		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
+		if (!is.jnull(jPolicyEditor)) {
+			print("setPublicAccess: got policy editor")
+			jPolicyEditor$setPublicAccess()
+		} else {
+			print("policy editor is null")
+		}
+	}
+})
+
+
 
 setGeneric("canRead", function(x, subject, ...) {
   standardGeneric("canRead")
 })
 
-setMethod("canRead", signature("D1Object", "character"),
-          function(x, subject)
-          {
-            jD1Object = x@jD1o
-            if(!is.jnull(jD1Object)) {
-              jPolicyEditor <- jD1Object$getAccessPolicyEditor()
-              if (!is.jnull(jPolicyEditor)) {
-                print("canRead: got policy editor")
-                jSubject <- J("org/dataone/client/D1TypeBuilder", "buildSubject", subject)
-                jPermission <- J("org/dataone/service/types/v1/Permission", "convert", "read")
-                result <- jPolicyEditor$hasAccess(jSubject,jPermission)
-              } else {
-                print("policy editor is null")
-                result <- FALSE
-              }
-            }
-            return(result)
-          }
-          )
+setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
+    jD1Object = x@jD1o
+	if(!is.jnull(jD1Object)) {
+		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
+		if (!is.jnull(jPolicyEditor)) {
+			print("canRead: got policy editor")
+			jSubject <- J("org/dataone/client/D1TypeBuilder", "buildSubject", subject)
+			jPermission <- J("org/dataone/service/types/v1/Permission", "convert", "read")
+			result <- jPolicyEditor$hasAccess(jSubject,jPermission)
+		} else {
+			print("policy editor is null")
+			result <- FALSE
+		}
+	}
+	return(result)
+})
 
 
+## getData, returns data object at index
+setGeneric("asDataFrame", function(x, ...) { standardGeneric("asDataFrame")} )
+
+setMethod("asDataFrame", "D1Object", function(x) {
+	# Load the data into a dataframe
+	#df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
+	df <- read.csv(textConnection(getData(x)))
+	return(df)
+})
 

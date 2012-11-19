@@ -20,14 +20,14 @@
 
 setClass("D1Client",
          representation(endpoint = "character",
-	 		mn.nodeid = "character",
+                        mn.nodeid = "character",
                         client = "jobjRef",
                         session = "jobjRef")
 )
 
-#####################
+#########################
 ## D1Client constructors
-#####################
+#########################
 
 ## Generic function with 0, 1, or 2 parameters
 setGeneric("D1Client", function(env, mn_nodeid, ...) {
@@ -35,24 +35,21 @@ setGeneric("D1Client", function(env, mn_nodeid, ...) {
 })
 
 ## No arguments in the signature - use default env and nodeid
-setMethod("D1Client", ,
-    function() {
-  result <- D1Client("PROD", "")
-  return(result)
+setMethod("D1Client", , function() {
+    result <- D1Client("PROD", "")
+    return(result)
 })
 
 ## Pass in the environment to be used by this D1Client, but use
 ##   the default member node.
-setMethod("D1Client", signature("character"),
-    function(env, ...) {
-  result <- D1Client(env, "")
-  return(result)
+setMethod("D1Client", signature("character"), function(env, ...) {
+    result <- D1Client(env, "")
+    return(result)
 })
 
 ## Pass in the environment to be used by this D1Client, plus the 
 ##   id of member node.
-setMethod("D1Client", signature("character", "character"),
-    function(env, mn_nodeid) {
+setMethod("D1Client", signature("character", "character"), function(env, mn_nodeid) {
 
   ## Define the default CNs for each environment.
   PROD <- "https://cn.dataone.org/cn"
@@ -88,7 +85,6 @@ setMethod("D1Client", signature("character", "character"),
 
   ## initialize the session, but not sure where it's used
   result@session <- .jnull("org/dataone/service/types/v1/Session") 
-
 
   return(result)
 })

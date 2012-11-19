@@ -55,17 +55,17 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 
 
 ## createPackage
-setGeneric("createPackage", function(x, data_package, ...) { 
-  standardGeneric("createPackage")
-})
-
-setMethod("createPackage", signature("D1Client", "DataPackage"),
-    function(x, data_package) {
-  client <- x@client
-  session <- x@session
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(identifier)
-})
+## setGeneric("createPackage", function(x, data_package, ...) { 
+##   standardGeneric("createPackage")
+## })
+## 
+## setMethod("createPackage", signature("D1Client", "DataPackage"),
+##     function(x, data_package) {
+##   client <- x@client
+##   session <- x@session
+##   pid <- .jnew("org/dataone/service/types/v1/Identifier")
+##   pid$setValue(identifier)
+## })
 
 
 ## getD1Object
