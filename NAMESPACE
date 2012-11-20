@@ -7,13 +7,14 @@ exportClasses(D1Client, DataPackage, D1Object)
 exportMethods(D1Client, DataPackage, D1Object)
 
 # D1Client methods
-exportMethods(getPackage, getD1Object, getEndpoint, addData, getData, getSize, convert.csv)
+exportMethods(getPackage, getD1Object, reserveIdentifier, create, getEndpoint, getData, getMNodeId, setMNodeId, getMN, getCN, convert.csv)
 
 # DataPackage methods
-exportMethods(asDataFrame)
+exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, insertRelationship,
+              contains, remove, get, asDataFrame)
 
 # D1Object methods
-exportMethods(getData, getIdentifier)
+exportMethods(getData, getIdentifier, setPublicAccess, canRead, asDataFrame)
 
 # Misc testing methods
 export("d1.test")

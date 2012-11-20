@@ -99,12 +99,18 @@ setMethod("getData", signature("D1Object"), function(x) {
 	if(!is.jnull(jD1Object)) {
 		print ("@@r3")
 		databytes <- jD1Object$getData()
-		print ("@@r4")
 		if(is.null(databytes)) {
 			print(paste("Didn't find data in:", id))
 			return()
 		}
-		return(databytes)
+		jDataString <- .jnew("java/lang/String",databytes,"UTF-8")
+		if (!is.null(e<-.jgetEx())) {
+			print("Java exception was raised")
+			print(e)
+			print(.jcheck(silent=FALSE))
+		}
+		dataString <- jDataString$toString()
+		return(dataString)
 	}
 })
 
@@ -190,12 +196,14 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 
 
 ## getData, returns data object at index
-setGeneric("asDataFrame", function(x, ...) { standardGeneric("asDataFrame")} )
+##setGeneric("asDataFrame", function(x, ...) { standardGeneric("asDataFrame")} )
+setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
 
-setMethod("asDataFrame", "D1Object", function(x) {
-	# Load the data into a dataframe
-	#df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
-	df <- read.csv(textConnection(getData(x)))
+setMethod("asDataFrame", signature("D1Object"), function(x) {
+	## Load the data into a dataframe
+	##df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
+	dataBytes <- getData(x)
+    df <- read.csv(textConnection(dataBytes))
 	return(df)
 })
 

@@ -160,9 +160,9 @@ setMethod("get", signature("DataPackage", "character"), function(x, identifier) 
 })
 
 ## getData, returns data object at index
-setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
+##setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
 
-setMethod("asDataFrame", signature("DataPackage", "numeric"), function(x, identifier) {
+setMethod("asDataFrame", signature("DataPackage", "character"), function(x, identifier) {
     # Load the data into a dataframe
     #df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
     d1o <- get(x,identifier)
