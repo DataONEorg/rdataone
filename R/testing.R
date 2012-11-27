@@ -224,6 +224,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
     print("the d1o_scimeta is null")
     return(NULL)
   }
+  setPublicAccess(d1o_scimeta)
   scimeta_id <- getIdentifier(d1o_scimeta)
   print(paste("ID of scimeta:", scimeta_id))
 
@@ -240,6 +241,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
     print("d1o_scidata1 is null")
     return(NULL)
   }
+  setPublicAccess(d1o_scidata1)
   pid <- getIdentifier(d1o_scidata1)
   print(paste("ID of data object 1:", pid))
 
@@ -253,6 +255,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
     print("d1o_scidata2 is null")
     return(NULL)
   }
+  setPublicAccess(d1o_scidata2)
   pid <- getIdentifier(d1o_scidata2)
   print(paste("ID of data object 2:", pid ))
 
@@ -301,7 +304,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
   print("@@ testing.R 24: uploading the object... ")
 
-  ## Upload object.
+  ## Upload the whole package...
   create(d1_client, data_package)
   print("@@ testing.R 25: checking for call errors...")
   .jcheck(silent = FALSE)
@@ -364,12 +367,12 @@ d1.testGetPackage <- function(env, mn_nodeid, package) {
   # Get the CN (only) client.
   d1Client <- D1Client(env, mn_nodeid)
 
-##  if (length(package) == 0) {
+  if (length(package) == 0) {
     packageId = "r_test3.package.2012111514381353015496"
-##  }
-##  else {
-##    packageId <- package@identifier
-##  }
+  }
+  else {
+    packageId <- package@packageId
+  }
   # Make sure we can't get a D1Object as a DataPackage
 
 
