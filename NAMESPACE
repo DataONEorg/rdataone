@@ -1,10 +1,10 @@
 import("rJava")
 
 # Classes
-exportClasses(D1Client, DataPackage, D1Object)
+exportClasses(D1Client, DataPackage, D1Object, EMLParser)
 
 # constructor methods
-exportMethods(D1Client, DataPackage, D1Object)
+exportMethods(D1Client, DataPackage, D1Object, EMLParser)
 
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, create, getEndpoint, getData, getMNodeId, setMNodeId, getMN, getCN, convert.csv)
@@ -15,6 +15,10 @@ exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, ins
 
 # D1Object methods
 exportMethods(getData, getIdentifier, setPublicAccess, canRead, asDataFrame)
+
+# EMLParser methods
+exportMethods(dataTable.entityNames, dataTable.distributionIdentification, dataTable.size,
+    dataTable.fieldDelimiter, dataTable.quoteCharacter, dataTable.characterEncoding, dataTable.missingValueCodes)
 
 # Misc testing methods
 export("d1.test")

@@ -18,14 +18,15 @@
 #   limitations under the License.
 #
 
-setClass("EMLParser", representation(xmlDocRoot = "XMLNode") )
+setClass("EMLParser", representation(d1Object = "D1Object",
+				                     xmlDocRoot = "XMLNode") )
 
 ##########################
 ## EMLParser constructors
 ##########################
 
 ## generic
-setGeneric("EMLParser", function(...) { standardGeneric("DMLParser")} )
+setGeneric("EMLParser", function(d1Object, ...) { standardGeneric("EMLParser")} )
 
 ## no arguments in the signature
 ## setMethod("D1Object", , function() {
@@ -34,16 +35,12 @@ setGeneric("EMLParser", function(...) { standardGeneric("DMLParser")} )
 ## })
 
 
-setMethod("initialize", "EMLDataParser", function(.Object, d1Object) {
+setMethod("EMLParser", signature("D1Object"), function(d1Object) {
 
-  if (typeof(d1Object) == "D1Object") {
+    result <- new("EMLParser")
+  	result@d1Object <- d1Object
     xmlDocRoot <- xmlRoot(xmlTreeParse(as.character(getData(d1Object))))
     
-  }
-  else {
-    print("EMLParser requires a D1Object as a parameter")
-  }
-  
-  .Object@xmlDoc <- xmlDoc
-  return(.Object)
+  result@xmlDocRoot <- xmlDocRoot
+  return(result)
 })
