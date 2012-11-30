@@ -17,8 +17,10 @@ exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, ins
 exportMethods(getData, getIdentifier, setPublicAccess, canRead, asDataFrame)
 
 # EMLParser methods
-exportMethods(dataTable.entityNames, dataTable.distributionIdentification, dataTable.size,
-    dataTable.fieldDelimiter, dataTable.quoteCharacter, dataTable.characterEncoding, dataTable.missingValueCodes)
+exportMethods(dataTable.entityNames, dataTable.dataoneIdentifier, dataTable.size,
+    dataTable.fieldDelimiter, dataTable.quoteCharacter, dataTable.characterEncoding, 
+    dataTable.missingValueCodes, dataTable.orientation, 
+    dataTable.attributeNames, dataTable.attributeTypes, dataTable.attributeStorageTypes)
 
 # Misc testing methods
 export("d1.test")

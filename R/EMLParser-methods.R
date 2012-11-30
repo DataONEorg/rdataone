@@ -37,13 +37,16 @@ setMethod("dataTable.entityNames", signature("EMLParser"), function(x) {
 
 
 ##
-setGeneric("dataTable.distributionIdentification", function(x, ...) {
-    standardGeneric("dataTable.distributionIdentification")
+setGeneric("dataTable.dataoneIdentifier", function(x, ...) {
+    standardGeneric("dataTable.dataoneIdentifier")
 })
 
-setMethod("dataTable.distributionIdentification", signature("EMLParser"), function(x) {
+setMethod("dataTable.dataoneIdentifier", signature("EMLParser"), function(x) {
    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/distribution/online")
-   return(sapply(aList, function(x) xmlValue(x[["url"]])))
+   return(sapply(aList, function(x) { 
+					   gsub("ecogrid://knb/","",xmlValue(x[["url"]]))
+				   	   
+				   }))
 })
 
 
@@ -92,17 +95,65 @@ setMethod("dataTable.characterEncoding", signature("EMLParser"), function(x) {
         })
 
 
+##
+setGeneric("dataTable.orientation", function(x, index, ...) {
+			standardGeneric("dataTable.orientation")
+		})
+
+## 
+setMethod("dataTable.orientation", signature("EMLParser", "numeric"), function(x, index) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
+			return(sapply(aList, function(x) xmlValue(x[["attributeOrientation"]])))
+		})
+
+
+
 #########  EML-attribute items
 ##
 setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
             standardGeneric("dataTable.missingValueCodes")
         })
 
-## 
 setMethod("dataTable.missingValueCodes", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
             bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
                         
-            return(sapply(bList, function(x) xmlValue(x[["missingValueCode"]])))
+            return(sapply(bList, function(x) xmlValue(x[["missingValueCode"]]$code)))
         })
 
+##
+setGeneric("dataTable.attributeNames", function(x, index, ...) {
+			standardGeneric("dataTable.attributeNames")
+		})
+ 
+setMethod("dataTable.attributeNames", signature("EMLParser", "numeric"), function(x, index) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
+			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
+			
+			return(sapply(bList, function(x) xmlValue(x[["attributeName"]])))
+		})
+
+##
+setGeneric("dataTable.attributeTypes", function(x, index, ...) {
+			standardGeneric("dataTable.attributeTypes")
+		})
+ 
+setMethod("dataTable.attributeTypes", signature("EMLParser", "numeric"), function(x, index) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
+			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
+			
+			return(sapply(bList, function(x) xmlName(xmlChildren(x[["measurementScale"]])[[1]])))
+		})
+
+
+##
+setGeneric("dataTable.attributeStorageTypes", function(x, index, ...) {
+			standardGeneric("dataTable.attributeStorageTypes")
+		})
+
+setMethod("dataTable.attributeStorageTypes", signature("EMLParser", "numeric"), function(x, index) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
+			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
+			
+			return(sapply(bList, function(x) xmlValue(x[["storageType"]])))
+		})
