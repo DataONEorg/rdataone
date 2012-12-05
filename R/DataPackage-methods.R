@@ -131,12 +131,12 @@ setMethod("contains", signature("DataPackage", "character"), function(x, identif
 
 ##
 ##
-setGeneric("remove", function(x, identifier, ...) {
-  standardGeneric("remove")
+setGeneric("removeMember", function(x, identifier, ...) {
+  standardGeneric("removeMember")
 })
 
 
-setMethod("remove", signature("DataPackage", "character"), function(x, identifier) {
+setMethod("removeMember", signature("DataPackage", "character"), function(x, identifier) {
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
   jPid$setValue(identifier)
   
@@ -145,12 +145,12 @@ setMethod("remove", signature("DataPackage", "character"), function(x, identifie
 
 ##
 ##
-setGeneric("get", function(x, identifier, ...) {
-  standardGeneric("get")
+setGeneric("getMember", function(x, identifier, ...) {
+  standardGeneric("getMember")
 })
 
 
-setMethod("get", signature("DataPackage", "character"), function(x, identifier) {
+setMethod("getMember", signature("DataPackage", "character"), function(x, identifier) {
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
   jPid$setValue(identifier)
   
@@ -162,11 +162,15 @@ setMethod("get", signature("DataPackage", "character"), function(x, identifier) 
 ## getData, returns data object at index
 ##setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
 
-setMethod("asDataFrame", signature("DataPackage", "character"), function(x, identifier) {
+setMethod("asDataFrame", signature("DataPackage", "character"), function(x, reference) {
     # Load the data into a dataframe
     #df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
-    d1o <- get(x,identifier)
-	df <- asDataFrame(d1o)
-    return(df)
+    d1o <- getMember(x,reference)
+	
+	jMetadataId <- x@jDataPackage$getDocumentedBy(d1o@jD1o$getIdentifier)
+	documenterObject <- getMember(x,jMetadataId$getValue)
+	
+	df <- asDataFrame(d1o,documenterObject)
+	return(df)
 })
 

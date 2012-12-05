@@ -11,7 +11,7 @@ exportMethods(getPackage, getD1Object, reserveIdentifier, create, getEndpoint, g
 
 # DataPackage methods
 exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, insertRelationship,
-              contains, remove, get, asDataFrame)
+              contains, removeMember, getMember, asDataFrame)
 
 # D1Object methods
 exportMethods(getData, getIdentifier, setPublicAccess, canRead, asDataFrame)

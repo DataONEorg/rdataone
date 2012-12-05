@@ -213,7 +213,7 @@ setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
   
   for (pid in members) {
       print(paste("    * next member to create:", pid))
-      rD1o <- get(object, pid)
+      rD1o <- getMember(object, pid)
       create(x, rD1o)
   }
   print(paste("    * creating the package resource map:", object@packageId ))

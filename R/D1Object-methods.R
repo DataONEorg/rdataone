@@ -161,6 +161,7 @@ setGeneric("setPublicAccess", function(x, ...) {
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
     jD1Object = x@jD1o
 	if(!is.jnull(jD1Object)) {
+		
 		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
 		if (!is.jnull(jPolicyEditor)) {
 			print("setPublicAccess: got policy editor")
@@ -195,15 +196,51 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 })
 
 
-## getData, returns data object at index
-##setGeneric("asDataFrame", function(x, ...) { standardGeneric("asDataFrame")} )
-setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
+## the generic asDataFrame function returns the data as a DataFrame, assuming that
+## the object represents data and can be coerced into tabular form.
+## 'x' as per usual, represents the class of the implementing method
+## 'reference' is either the identifier of the data, or the metadata D1Object, depending
+## on the implementing method.
 
-setMethod("asDataFrame", signature("D1Object"), function(x) {
-	## Load the data into a dataframe
-	##df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
-	dataBytes <- getData(x)
-    df <- read.csv(textConnection(dataBytes))
+setGeneric("asDataFrame", function(x, reference, ...) { standardGeneric("asDataFrame")} )
+
+##
+## this method uses the provided metadata reference object for instructions on
+## how to parser the data table (which parameters to set)
+## 'reference' is the metadata D1Object that gives instruction on how to read the data
+## into the dataFrame
+##
+setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
+
+    metadata <- reference
+   	parser <- EMLParser(metadata)
+	pids <- dataTable.dataoneIdentifier(parser)
+	jDataId <- x@jD1o$getIdentifier()$getValue()
+	index <- which(pids == jDataId)
+	print(paste("Index of data item is",index))
+	
+	fieldSeparator <- dataTable.fieldDelimiter(parser)[index]
+	if (is.na(fieldSeparator))
+		fieldSeparator <- ","
+
+	df <- asDataFrame(x,header=TRUE, sep=fieldSeparator)
 	return(df)
+})
+
+##
+##  this method performs a read.csv on the D1Object data.  As with read.csv, you 
+##  can any of the parameters from read.table to override default behavior 
+##  (see read.csv and read.table)
+##
+setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
+    ## Load the data into a dataframe
+
+	dataBytes <- getData(x)
+	theData <- textConnection(dataBytes)
+	print(paste("theData is", class(theData)))
+	## using read.csv instead of read.table, because it exposes the defaults we want
+	## while also allowing them to be overriden
+    df <- read.csv(theData, ...)
+    return(df)
 })
 
