@@ -25,50 +25,25 @@
 #########################################################
 
 ##
-setGeneric("dataTable.dataFormat", function(x, ...) {
-    standardGeneric("dataTable.dataFormat")
+setMethod("documents.d1FormatIds", signature("EMLParser"), function(x, ...) {
+    return(c(
+        "eml://ecoinformatics.org/eml-2.1.1", 
+        "eml://ecoinformatics.org/eml-2.1.0",
+        "eml://ecoinformatics.org/eml-2.0.1", 
+        "eml://ecoinformatics.org/eml-2.0.0"
+    ))
 })
- 
-setMethod("dataTable.dataFormat", signature("EMLParser"), function(x, index) {
-    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
-    bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/simpleDelimited")
-	if (length(bList) == 1) { 
-		format <- "text/simpleDelimited"
-	} else {
-		bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/complex")
-		if (length(bList) == 1) {
-			format <- "text/complex"
-		} else {
-			bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/binaryRasterFormat")
-			if (length(bList) == 1) {
-				format <- "binary"
-			} else {
-				format <- "externallyDefined"
-			}
-		}
-	}
-	return(format)
-})
+
 
 
 ##
-setGeneric("dataTable.entityNames", function(x, ...) {
-			standardGeneric("dataTable.entityNames")
-		})
-
-setMethod("dataTable.entityNames", signature("EMLParser"), function(x) {
+setMethod("documented.entityNames", signature("EMLParser"), function(x) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
 		})
 
-
-
 ##
-setGeneric("dataTable.dataoneIdentifier", function(x, ...) {
-    standardGeneric("dataTable.dataoneIdentifier")
-})
-
-setMethod("dataTable.dataoneIdentifier", signature("EMLParser"), function(x) {
+setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/distribution/online")
    return(sapply(aList, function(x) { 
 					   gsub("ecogrid://knb/","",xmlValue(x[["url"]]))
@@ -77,55 +52,54 @@ setMethod("dataTable.dataoneIdentifier", signature("EMLParser"), function(x) {
 })
 
 
-
-##
-setGeneric("dataTable.size", function(x, ...) {
-    standardGeneric("dataTable.size")
-})
-
-setMethod("dataTable.size", signature("EMLParser"), function(x) {
+setMethod("documented.sizes", signature("EMLParser"), function(x) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
     return(sapply(aList, function(x) xmlValue(x[["size"]])))
 })
 
-##
-setGeneric("dataTable.fieldDelimiter", function(x, ...) {
-            standardGeneric("dataTable.fieldDelimiter")
-        })
 
-setMethod("dataTable.fieldDelimiter", signature("EMLParser"), function(x) {
+setMethod("dataTable.dataFormat", signature("EMLParser", "numeric"), function(x, index) {
+    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
+    bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/simpleDelimited")
+    if (length(bList) == 1) { 
+        format <- "text/simpleDelimited"
+    } else {
+        bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/complex")
+        if (length(bList) == 1) {
+            format <- "text/complex"
+        } else {
+            bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/binaryRasterFormat")
+            if (length(bList) == 1) {
+                format <- "binary"
+            } else {
+                format <- "externallyDefined"
+            }
+        }
+    }
+    return(format)
+})
+
+setMethod("dataTable.fieldDelimiter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["fieldDelimiter"]])))
         })
 
 
-##
-setGeneric("dataTable.quoteCharacter", function(x, ...) {
-            standardGeneric("dataTable.quoteCharacter")
-        })
 
-setMethod("dataTable.quoteCharacter", signature("EMLParser"), function(x) {
+setMethod("dataTable.quoteCharacter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["quoteCharacter"]])))
         })
 
 
 
-##
-setGeneric("dataTable.characterEncoding", function(x, ...) {
-            standardGeneric("dataTable.characterEncoding")
-        })
 
-setMethod("dataTable.characterEncoding", signature("EMLParser"), function(x) {
+setMethod("dataTable.characterEncoding", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
             return(sapply(aList, function(x) xmlValue(x[["characterEncoding"]])))
         })
 
 
-##
-setGeneric("dataTable.attributeOrientation", function(x, index, ...) {
-			standardGeneric("dataTable.attributeOrientation")
-		})
  
 setMethod("dataTable.attributeOrientation", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
@@ -133,10 +107,6 @@ setMethod("dataTable.attributeOrientation", signature("EMLParser", "numeric"), f
 		})
 
 
-##
-setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
-			standardGeneric("dataTable.skipLinesHeader")
-		})
  
 setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
@@ -146,10 +116,6 @@ setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), functi
 
 #########  EML-attribute items
 ##
-setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
-            standardGeneric("dataTable.missingValueCodes")
-        })
-
 setMethod("dataTable.missingValueCodes", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
             bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -158,10 +124,6 @@ setMethod("dataTable.missingValueCodes", signature("EMLParser", "numeric"), func
         })
 
 ##
-setGeneric("dataTable.attributeNames", function(x, index, ...) {
-			standardGeneric("dataTable.attributeNames")
-		})
- 
 setMethod("dataTable.attributeNames", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -170,10 +132,6 @@ setMethod("dataTable.attributeNames", signature("EMLParser", "numeric"), functio
 		})
 
 ##
-setGeneric("dataTable.attributeTypes", function(x, index, ...) {
-			standardGeneric("dataTable.attributeTypes")
-		})
- 
 setMethod("dataTable.attributeTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -183,10 +141,6 @@ setMethod("dataTable.attributeTypes", signature("EMLParser", "numeric"), functio
 
 
 ##
-setGeneric("dataTable.attributeStorageTypes", function(x, index, ...) {
-			standardGeneric("dataTable.attributeStorageTypes")
-		})
-
 setMethod("dataTable.attributeStorageTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")

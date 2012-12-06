@@ -185,48 +185,50 @@ setGeneric("asDataFrame", function(x, reference, ...) { standardGeneric("asDataF
 
 ##
 ## this method uses the provided metadata reference object for instructions on
-## how to parser the data table (which parameters to set)
+## how to parse the data table (which parameters to set)
 ## 'reference' is the metadata D1Object that gives instruction on how to read the data
 ## into the dataFrame
 ##
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
-
-    metadata <- reference
-
-    ## TODO: generalize the choice of parsers	
-   	parser <- EMLParser(metadata)
-	pids <- dataTable.dataoneIdentifier(parser)
+    ## reference is a metadata D1Object
+    return(parser <- EMLParser(reference))
+})
+            
+setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x, reference, ...) {
+                        
+    ## reference is a DataTableDescriber
+	pids <- documented.d1Identifier(reference)
 	jDataId <- x@jD1o$getIdentifier()$getValue()
 	index <- which(pids == jDataId)
 	print(paste("Index of data item is",index))
 
 	## is this a datatype that we can handle?
-	dataFormat <- dataTable.dataFormat(parser,index)
+	dataFormat <- dataTable.dataFormat(reference,index)
 	if (dataFormat != "text/simpleDelimited") {
 		print(paste("cannot process data of type", dataFormat))
 		return()
-	} else if (dataTable.attributeOrientation(parser, index) == 'row') {
+	} else if (dataTable.attributeOrientation(reference, index) == 'row') {
 		print(paste("cannot process text/simpleDelimited file where attributes are by row"))
 	}
 	
-	fieldSeparator <- dataTable.fieldDelimiter(parser)[index]
+	fieldSeparator <- dataTable.fieldDelimiter(reference, index)
 	if (is.na(fieldSeparator))
 		fieldSeparator <- ","
 
-	quoteChar <- dataTable.quoteCharacter(parser)[index]
+	quoteChar <- dataTable.quoteCharacter(reference, index)
 	if (is.na(quoteChar))
 		quotChar <- "\""
 
-	missingValues <- dataTable.missingValueCodes(parser,index)
+	missingValues <- dataTable.missingValueCodes(reference,index)
 	missingValues <- subset(missingValues, !is.na(missingValues))
 	if(length(missingValues)==0)
 		missingValues <- "NA"
 	
-	encoding <- dataTable.characterEncoding(parser)[index]
+	encoding <- dataTable.characterEncoding(reference, index)
 	if (is.na(encoding))
 		encoding <- "unknown"
 
-	skip <- dataTable.skipLinesHeader(parser)[index]
+	skip <- dataTable.skipLinesHeader(reference, index)
 	if (is.na(skip))
 		skip <- 0
 

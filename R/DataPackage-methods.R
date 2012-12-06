@@ -159,16 +159,13 @@ setMethod("getMember", signature("DataPackage", "character"), function(x, identi
   return(rD1o)
 })
 
-## getData, returns data object at index
-##setGeneric("asDataFrame", function(x, identifier, ...) { standardGeneric("asDataFrame")} )
 
 setMethod("asDataFrame", signature("DataPackage", "character"), function(x, reference) {
-    # Load the data into a dataframe
-    #df <- read.table(textConnection(x@dataList[[index]]), header = TRUE, sep = ",", na.strings = "-999")
+ 
+    ## find the dataObject and the metadata that Documents it
     d1o <- getMember(x,reference)
-	
-	jMetadataId <- x@jDataPackage$getDocumentedBy(d1o@jD1o$getIdentifier)
-	documenterObject <- getMember(x,jMetadataId$getValue)
+	jMetadataId <- x@jDataPackage$getDocumentedBy(d1o@jD1o$getIdentifier())
+	documenterObject <- getMember(x,jMetadataId$getValue())
 	
 	df <- asDataFrame(d1o,documenterObject)
 	return(df)

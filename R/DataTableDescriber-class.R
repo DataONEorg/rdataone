@@ -1,0 +1,97 @@
+#
+#   This work was created by participants in the DataONE project, and is
+#   jointly copyrighted by participating institutions in DataONE. For
+#   more information on DataONE, see our web site at http://dataone.org.
+#
+#     Copyright 2011-2012
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+
+setClass("DataTableDescriber", representation=representation(dataoneFormatIds = "character"))
+
+##########################
+## 
+##########################
+
+## generic
+setGeneric("documents.d1FormatIds", function(x, ...) {
+    standardGeneric("documents.d1FormatIds")
+})
+
+##
+setGeneric("documented.entityNames", function(x, ...) {
+    standardGeneric("documented.entityNames")
+})
+
+##
+setGeneric("documented.d1Identifiers", function(x, ...) {
+    standardGeneric("documented.d1Identifiers")
+})
+
+##
+setGeneric("documented.sizes", function(x, ...) {
+    standardGeneric("documented.sizes")
+})
+
+##
+setGeneric("dataTable.dataFormat", function(x, index, ...) {
+    standardGeneric("dataTable.dataFormat")
+})
+
+##
+setGeneric("dataTable.fieldDelimiter", function(x, index, ...) {
+    standardGeneric("dataTable.fieldDelimiter")
+})
+
+##
+setGeneric("dataTable.quoteCharacter", function(x, index, ...) {
+    standardGeneric("dataTable.quoteCharacter")
+})
+
+##
+setGeneric("dataTable.characterEncoding", function(x, index, ...) {
+    standardGeneric("dataTable.characterEncoding")
+})
+
+##
+setGeneric("dataTable.attributeOrientation", function(x, index, ...) {
+    standardGeneric("dataTable.attributeOrientation")
+})
+
+##
+setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
+    standardGeneric("dataTable.skipLinesHeader")
+})
+
+#########  EML-attribute items
+##
+setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
+    standardGeneric("dataTable.missingValueCodes")
+})
+
+##
+setGeneric("dataTable.attributeNames", function(x, index, ...) {
+    standardGeneric("dataTable.attributeNames")
+})
+
+##
+setGeneric("dataTable.attributeTypes", function(x, index, ...) {
+    standardGeneric("dataTable.attributeTypes")
+})
+
+##
+setGeneric("dataTable.attributeStorageTypes", function(x, index, ...) {
+    standardGeneric("dataTable.attributeStorageTypes")
+})
+
