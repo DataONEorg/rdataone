@@ -115,27 +115,6 @@ setMethod("getData", signature("D1Object"), function(x) {
 })
 
 
-## setMethod("getData", signature("jobJRef"), function(x) {
-
-##   if (.jinstanceof(x, "org/dataone/client/D1Object") {
-##     jD1Object = x
-
-##     if(!is.jnull(jD1Object)) {
-##       print ("@@r3")
-##       databytes <- jD1Object$getData()
-##       print ("@@r4")
-##       if(is.null(databytes)) {
-##         print(paste("Didn't find data in:", id))
-##         return()
-##       }
-##       return(databytes)
-##     }
-##   } else {
-##     print("Passed in Java object not the right type (org.dataone.client.D1Object)")
-##     return()
-##   }
-##})
-
 
 setGeneric("getIdentifier", function(x, ...) {
     standardGeneric("getIdentifier")
@@ -213,17 +192,59 @@ setGeneric("asDataFrame", function(x, reference, ...) { standardGeneric("asDataF
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
 
     metadata <- reference
+
+    ## TODO: generalize the choice of parsers	
    	parser <- EMLParser(metadata)
 	pids <- dataTable.dataoneIdentifier(parser)
 	jDataId <- x@jD1o$getIdentifier()$getValue()
 	index <- which(pids == jDataId)
 	print(paste("Index of data item is",index))
+
+	## is this a datatype that we can handle?
+	dataFormat <- dataTable.dataFormat(parser,index)
+	if (dataFormat != "text/simpleDelimited") {
+		print(paste("cannot process data of type", dataFormat))
+		return()
+	} else if (dataTable.attributeOrientation(parser, index) == 'row') {
+		print(paste("cannot process text/simpleDelimited file where attributes are by row"))
+	}
 	
 	fieldSeparator <- dataTable.fieldDelimiter(parser)[index]
 	if (is.na(fieldSeparator))
 		fieldSeparator <- ","
 
-	df <- asDataFrame(x,header=TRUE, sep=fieldSeparator)
+	quoteChar <- dataTable.quoteCharacter(parser)[index]
+	if (is.na(quoteChar))
+		quotChar <- "\""
+
+	missingValues <- dataTable.missingValueCodes(parser,index)
+	missingValues <- subset(missingValues, !is.na(missingValues))
+	if(length(missingValues)==0)
+		missingValues <- "NA"
+	
+	encoding <- dataTable.characterEncoding(parser)[index]
+	if (is.na(encoding))
+		encoding <- "unknown"
+
+	skip <- dataTable.skipLinesHeader(parser)[index]
+	if (is.na(skip))
+		skip <- 0
+
+	
+	## TODO: add the colClasses logic
+	
+	## as.is = !stringsAsFactors,
+	##  colClasses = NA, nrows = -1,
+	## check.names = TRUE, 
+	## fill = !blank.lines.skip,
+	## strip.white = FALSE, 
+	## blank.lines.skip = TRUE,
+	## comment.char = "#",
+	## allowEscapes = FALSE, flush = FALSE,
+	## stringsAsFactors = default.stringsAsFactors(),
+	
+	df <- asDataFrame(x, skip=skip, header=TRUE, sep=fieldSeparator, quote=quoteChar, 
+			na.strings=missingValues, encoding=encoding)
 	return(df)
 })
 

@@ -25,14 +25,41 @@
 #########################################################
 
 ##
-setGeneric("dataTable.entityNames", function(x, ...) {
-    standardGeneric("dataTable.entityNames")
+setGeneric("dataTable.dataFormat", function(x, ...) {
+    standardGeneric("dataTable.dataFormat")
 })
  
-setMethod("dataTable.entityNames", signature("EMLParser"), function(x) {
+setMethod("dataTable.dataFormat", signature("EMLParser"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
-    return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
+    bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/simpleDelimited")
+	if (length(bList) == 1) { 
+		format <- "text/simpleDelimited"
+	} else {
+		bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/complex")
+		if (length(bList) == 1) {
+			format <- "text/complex"
+		} else {
+			bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/binaryRasterFormat")
+			if (length(bList) == 1) {
+				format <- "binary"
+			} else {
+				format <- "externallyDefined"
+			}
+		}
+	}
+	return(format)
 })
+
+
+##
+setGeneric("dataTable.entityNames", function(x, ...) {
+			standardGeneric("dataTable.entityNames")
+		})
+
+setMethod("dataTable.entityNames", signature("EMLParser"), function(x) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
+			return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
+		})
 
 
 
@@ -96,16 +123,25 @@ setMethod("dataTable.characterEncoding", signature("EMLParser"), function(x) {
 
 
 ##
-setGeneric("dataTable.orientation", function(x, index, ...) {
-			standardGeneric("dataTable.orientation")
+setGeneric("dataTable.attributeOrientation", function(x, index, ...) {
+			standardGeneric("dataTable.attributeOrientation")
 		})
-
-## 
-setMethod("dataTable.orientation", signature("EMLParser", "numeric"), function(x, index) {
+ 
+setMethod("dataTable.attributeOrientation", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
-			return(sapply(aList, function(x) xmlValue(x[["attributeOrientation"]])))
+			return( sapply(aList, function(x) xmlValue(x[["attributeOrientation"]]))[index])
 		})
 
+
+##
+setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
+			standardGeneric("dataTable.skipLinesHeader")
+		})
+ 
+setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
+			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
+			return(sapply(aList, function(x) xmlValue(x[["numHeaderLines"]])))
+		})
 
 
 #########  EML-attribute items
