@@ -21,19 +21,8 @@
 
 
 #########################################################
-### Utility methods
+### Interface methods (that follow the generics)
 #########################################################
-
-##
-setMethod("documents.d1FormatIds", signature("EMLParser"), function(x, ...) {
-    return(c(
-        "eml://ecoinformatics.org/eml-2.1.1", 
-        "eml://ecoinformatics.org/eml-2.1.0",
-        "eml://ecoinformatics.org/eml-2.0.1", 
-        "eml://ecoinformatics.org/eml-2.0.0"
-    ))
-})
-
 
 
 ##
@@ -60,15 +49,15 @@ setMethod("documented.sizes", signature("EMLParser"), function(x) {
 
 setMethod("dataTable.dataFormat", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
-    bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/simpleDelimited")
+    bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")
     if (length(bList) == 1) { 
         format <- "text/simpleDelimited"
     } else {
-        bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/textFormat/complex")
+        bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/complex")
         if (length(bList) == 1) {
             format <- "text/complex"
         } else {
-            bList <- getNodeSet(aList[[index]], "//dataTable/dataFormat/binaryRasterFormat")
+            bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/binaryRasterFormat")
             if (length(bList) == 1) {
                 format <- "binary"
             } else {
@@ -110,7 +99,10 @@ setMethod("dataTable.attributeOrientation", signature("EMLParser", "numeric"), f
  
 setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
-			return(sapply(aList, function(x) xmlValue(x[["numHeaderLines"]])))
+			result <- sapply(aList, function(x) { 
+						v <- xmlValue(x[["numHeaderLines"]])
+						return(ifelse(v==0,0,as.numeric(v)-1))
+					})
 		})
 
 

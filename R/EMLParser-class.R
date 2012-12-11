@@ -18,10 +18,26 @@
 #   limitations under the License.
 #
 
+
+##############################
+## EMLParser class definition - note that it inherits from DataTableDescriber
+##############################
 setClass("EMLParser", 
         representation(d1Object = "D1Object", xmlDocRoot = "XMLNode"),
         contains="DataTableDescriber",
         prototype=prototype(new("DataTableDescriber")))
+
+
+###########################################################
+### define here which DataONE FormatIds this class handles
+###########################################################
+if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
+dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser" 
+dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser" 
+dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser" 
+dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser" 
+
+
 
 ##########################
 ## EMLParser constructors

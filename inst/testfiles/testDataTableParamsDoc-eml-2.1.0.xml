@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packageId="foo.1.1" system="knb" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.0 eml.xsd">
+  <access authSystem="knb" order="allowFirst">
+    <allow>
+      <principal>public</principal>
+      <permission>read</permission>
+    </allow>
+  </access>
+  <dataset>
+    <title>This is not a real document</title>
+    <creator id="1294883795094">
+      <individualName>
+        <givenName>Rob</givenName>
+        <surName>Nahf</surName>
+      </individualName>
+      <organizationName>DataONE coredev</organizationName>
+    </creator>
+    <associatedParty id="1294883843478">
+      <individualName>
+        <givenName>Matthew</givenName>
+        <surName>Jones</surName>
+      </individualName>
+      <organizationName>National Center for Ecological Analysis and Synthesis (NCEAS)</organizationName>
+      <role>Metadata Provider</role>
+    </associatedParty>
+    <abstract>
+      <para>Just a general data table physical description</para>
+    </abstract>
+    <intellectualRights>
+      <para>unlimited</para>
+    </intellectualRights>
+    <coverage>
+      <geographicCoverage>
+        <geographicDescription>New England</geographicDescription>
+        <boundingCoordinates>
+          <westBoundingCoordinate>-83.25</westBoundingCoordinate>
+          <eastBoundingCoordinate>-69.125</eastBoundingCoordinate>
+          <northBoundingCoordinate>46.75</northBoundingCoordinate>
+          <southBoundingCoordinate>35.875</southBoundingCoordinate>
+        </boundingCoordinates>
+      </geographicCoverage>
+    </coverage>
+    <contact>
+      <references>1294883795094</references>
+    </contact>
+    <dataTable id="1294884943262">
+      <entityName>DataONEPid1</entityName>
+      <entityDescription>Some LAttest data</entityDescription>
+      <physical id="1294884802348">
+        <objectName>DataONEPid1.csv</objectName>
+        <size unit="byte">123456789</size>
+        <dataFormat>
+          <textFormat>
+            <numHeaderLines>1</numHeaderLines>
+            <recordDelimiter>#x0A</recordDelimiter>
+            <attributeOrientation>column</attributeOrientation>
+            <simpleDelimited>
+              <fieldDelimiter>,</fieldDelimiter>
+            </simpleDelimited>
+          </textFormat>
+        </dataFormat>
+        <distribution>
+          <online>
+            <url>ecogrid://knb/DataONEPid1</url>
+          </online>
+        </distribution>
+      </physical>
+      <attributeList>
+        <attribute id="1294884943264">
+          <attributeName>x</attributeName>
+          <attributeLabel>Latitude</attributeLabel>
+          <attributeDefinition>Latitude of the point</attributeDefinition>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <standardUnit>degree</standardUnit>
+              </unit>
+              <numericDomain>
+                <numberType>real</numberType>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="1294884943265">
+          <attributeName>y</attributeName>
+          <attributeLabel>Longitude</attributeLabel>
+          <attributeDefinition>Longitude of the point.</attributeDefinition>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <standardUnit>degree</standardUnit>
+              </unit>
+              <numericDomain>
+                <numberType>real</numberType>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+      </attributeList>
+      <numberOfRecords>100</numberOfRecords>
+    </dataTable>
+    <dataTable id="1296267532260">
+      <entityName>DataONEPid2</entityName>
+      <physical id="1296267442952">
+        <objectName>DataONEPid2.tsv</objectName>
+        <size unit="byte">35083</size>
+        <dataFormat>
+          <textFormat>
+            <numHeaderLines>1</numHeaderLines>
+            <recordDelimiter>#x0A</recordDelimiter>
+            <attributeOrientation>column</attributeOrientation>
+            <simpleDelimited>
+              <fieldDelimiter>\t</fieldDelimiter>
+            </simpleDelimited>
+          </textFormat>
+        </dataFormat>
+        <distribution>
+          <online>
+            <url>ecogrid://knb/DataONEPid2</url>
+          </online>
+        </distribution>
+      </physical>
+      <attributeList>
+        <attribute id="1296267532262">
+          <attributeName>x</attributeName>
+          <attributeDefinition>X</attributeDefinition>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <standardUnit>number</standardUnit>
+              </unit>
+              <numericDomain>
+                <numberType>natural</numberType>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="1296267532263">
+          <attributeName>y</attributeName>
+          <attributeDefinition>Y</attributeDefinition>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <standardUnit>number</standardUnit>
+              </unit>
+              <numericDomain>
+                <numberType>natural</numberType>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="1296267532264">
+          <attributeName>z</attributeName>
+          <attributeDefinition>Z</attributeDefinition>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <standardUnit>number</standardUnit>
+              </unit>
+              <numericDomain>
+                <numberType>natural</numberType>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+      </attributeList>
+      <numberOfRecords>10</numberOfRecords>
+    </dataTable>
+  </dataset>
+</eml:eml>

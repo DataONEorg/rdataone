@@ -298,9 +298,9 @@ setGeneric("convert.csv", function(x, ...) {
   standardGeneric("convert.csv")} 
 )
 
-setMethod("convert.csv", signature(x="D1Client"), function(x, df) {
+setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
   con <- textConnection("data", "w")
-  write.csv(df, file=con, row.names = FALSE)
+  write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
   close(con)
   csvdata <- paste(data, collapse="\n")
   return(csvdata)

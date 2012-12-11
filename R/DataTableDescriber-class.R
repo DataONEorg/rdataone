@@ -20,6 +20,13 @@
 
 setClass("DataTableDescriber", representation=representation(dataoneFormatIds = "character"))
 
+## create a global where implementing classes will map the formats they handle
+## in the form:
+##     dataTableDescriber.registry[[ <d1FormatId> ]] <- <implementing class>
+
+if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
+
+
 ##########################
 ## 
 ##########################

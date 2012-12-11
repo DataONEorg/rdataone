@@ -132,6 +132,22 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 })
 
 
+setGeneric("getFormatId", function(x, ...) {
+			standardGeneric("getFormatId")
+		})
+
+setMethod("getFormatId", signature("D1Object"), function(x) {
+			jD1Object = x@jD1o
+			if(!is.jnull(jD1Object)) {
+				jFormatId <- jD1Object$getFormatId()
+				if(is.null(jFormatId)) {
+					return()
+				}
+				return(jFormatId$getValue())
+			}
+		})
+
+
 setGeneric("setPublicAccess", function(x, ...) {
   standardGeneric("setPublicAccess")
 })
@@ -191,13 +207,30 @@ setGeneric("asDataFrame", function(x, reference, ...) { standardGeneric("asDataF
 ##
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
     ## reference is a metadata D1Object
-    return(parser <- EMLParser(reference))
+	mdFormat <- getFormatId(reference)
+	
+	dtdClassName <- dataTableDescriber.registry[[ mdFormat ]]
+	print(paste("@@ asDataFrame/Object", dtdClassName))
+	if (!is.na(dtdClassName)) {
+		dtd <-	do.call(dtdClassName, list(reference))
+		df <- asDataFrame(x,dtd)
+		## con <-textConnection("signatures", "w")
+		## showMethods("documents.d1FormatIds", printTo=con)
+		## close(con)
+		## regMdParsers <- na.omit(sapply(strsplit(signatures[2:length(signatures)],"\""), 
+		##             function(x) ifelse(length(x>1),x[2],NA)))
+	} else {
+		print("Could not find metadata parser, so will try as plain csv...")
+		df <-  asDataFrame(x)
+	}
+	return( df )
 })
-            
+             
 setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x, reference, ...) {
                         
+    print(paste("@@ asDataFrame / D1Object-dtd",class(reference)))
     ## reference is a DataTableDescriber
-	pids <- documented.d1Identifier(reference)
+	pids <- documented.d1Identifiers(reference)
 	jDataId <- x@jD1o$getIdentifier()$getValue()
 	index <- which(pids == jDataId)
 	print(paste("Index of data item is",index))
@@ -244,7 +277,11 @@ setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x
 	## comment.char = "#",
 	## allowEscapes = FALSE, flush = FALSE,
 	## stringsAsFactors = default.stringsAsFactors(),
-	
+	print(paste("@@ skip",skip))
+	print(paste("@@ sep",fieldSeparator))
+	print(paste("@@ quote",quoteChar))
+	print(paste("@@ na.strings",missingValues))
+	print(paste("@@ encoding",encoding))
 	df <- asDataFrame(x, skip=skip, header=TRUE, sep=fieldSeparator, quote=quoteChar, 
 			na.strings=missingValues, encoding=encoding)
 	return(df)

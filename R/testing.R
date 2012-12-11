@@ -58,8 +58,6 @@ d1.test <- function() {
   config <- J("org/dataone/configuration/Settings")$getConfiguration()
   config$setProperty("D1Client.CNode.reserveIdentifier.timeout", .jnew("java/lang/Integer","60000"))
   
-#  d1.testGetPackage(cn_env, " ")
-#  return()
   
   objId <- ""
   objId <- d1.testCreateDataObject(cn_env, mn_nodeid)
@@ -67,8 +65,15 @@ d1.test <- function() {
 
   d1.testConvertCSV(cn_env)
 
+  d1.buildDataPackage(cn_env, mn_nodeid)
+  
   testPackage <- ""
-  testPackage <- d1.testCreateDataPackage(cn_env, mn_nodeid)
+  testPackage <- d1.buildDataPackage(cn_env, mn_nodeid)
+
+  d1.testAsDataFrame(testPackage)
+  
+  testPackage <- d1.testCreateDataPackage(cn_env, mn_nodeid, testPackage)
+  
 
   # Pause to wait for the CN to sync with the MN  (
   if(objId != "") {
@@ -88,7 +93,6 @@ d1.test <- function() {
   }
 
   d1.testGetD1Object(cn_env, mn_nodeid, objId)
-
   d1.testGetPackage(cn_env, mn_nodeid, testPackage)
 
   print("####### End Testing ######################")
@@ -179,7 +183,7 @@ d1.testConvertCSV <- function(env) {
 #|	Create a DataONE data package.                                      |#
 #|	                                                                    |# 
 #+----------------------------------------------------------------------+#
-d1.testCreateDataPackage <- function(env, mn_nodeid) {
+d1.buildDataPackage <- function(env, mn_nodeid) {
   print(" ")
   print("####### Test 3: create DataPackage / EML format  ######################")
 
@@ -210,16 +214,18 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
 
   ## this is a bit weak, since it will potentially return the wrong
   ## file if there is any other file in the 'testfiles' directory 
-  tfname <- file.path(tfiles.directory, filenames[[1]],
+  tfname <- file.path(tfiles.directory, "testDataTableParamsDoc-eml-2.1.0.xml",
 		      fsep=.Platform$file.sep)
   info <- file.info(tfname)
-  doc_char <- readChar(tfname, info$size)
+  templateDoc <- readChar(tfname, info$size)
+  templateDoc <- gsub("DataONEPid1",scidata1_id,templateDoc)
+  actualDoc <- gsub("DataONEPid2",scidata2_id,templateDoc)
   format <- "eml://ecoinformatics.org/eml-2.1.0"
 
 
   # Create a D1Object for the table, and upload it to the MN
   print("@@ testing.R 03: Create scimeta object...")
-  d1o_scimeta <- new(Class="D1Object", scimeta_id, doc_char, format, mn_nodeid)
+  d1o_scimeta <- new(Class="D1Object", scimeta_id, actualDoc, format, mn_nodeid)
   if(is.jnull(d1o_scimeta)) {
     print("the d1o_scimeta is null")
     return(NULL)
@@ -233,7 +239,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   # ** Science Data Objects **
   #
   print("@@ testing.R 04: Create first data object...")
-  testdf <- data.frame(x=1:10, y=11:20)
+  testdf <- data.frame(x=1:100, y=101:200)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
   d1o_scidata1 <- new("D1Object", scidata1_id, csvdata, format, mn_nodeid)
@@ -248,7 +254,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
   
   print("@@ testing.R 05: Create second data object...")
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
-  csvdata <- convert.csv(d1_client, testdf)
+  csvdata <- convert.csv(d1_client, testdf, sep="\t")
   format <- "text/csv"
   d1o_scidata2 <- new("D1Object", scidata2_id, csvdata, format, mn_nodeid)
   if(is.jnull(d1o_scidata2)) {
@@ -301,9 +307,17 @@ d1.testCreateDataPackage <- function(env, mn_nodeid) {
       print(paste("      data:", jDataPid$getValue()))
     }
   }
-
+  return(data_package)
+}
+  
+  
+d1.testCreateDataPackage <- function(env, mn_nodeid,  data_package) {
+  
   print("@@ testing.R 24: uploading the object... ")
 
+  d1_client <- D1Client(env, mn_nodeid)
+  
+  
   ## Upload the whole package...
   create(d1_client, data_package)
   print("@@ testing.R 25: checking for call errors...")
@@ -400,6 +414,26 @@ d1.testGetPackage <- function(env, mn_nodeid, package) {
   # print(jString)
 
   print("Test 5: finished")
+}
+
+d1.testAsDataFrame <- function(package) {
+	options(warn=1)
+	
+	print(" ")
+	print("####### Test 3a: testAsDataFrame ######################")
+	
+	## get the package data members
+	memberIds <- getIdentifiers(package)
+	dataIds <- subset(memberIds, grepl("scidata", memberIds))
+	df1 <- asDataFrame(package,dataIds[1])
+	df2 <- asDataFrame(package,dataIds[2])
+	print(paste("object 1 (", dataIds[1], "as Data Frame "))
+	print(df1)
+	print(" ")
+	print(paste("object 2 (", dataIds[2], "as Data Frame "))
+	print(df2)
+	print(" ")
+	warnings()
 }
 
 
