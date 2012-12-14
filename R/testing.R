@@ -64,8 +64,6 @@ d1.test <- function() {
   print(paste("testCreateDataObject created object with id ", objId))
 
   d1.testConvertCSV(cn_env)
-
-  d1.buildDataPackage(cn_env, mn_nodeid)
   
   testPackage <- ""
   testPackage <- d1.buildDataPackage(cn_env, mn_nodeid)
@@ -180,12 +178,12 @@ d1.testConvertCSV <- function(env) {
 
 #+----------------------------------------------------------------------+#
 #|	                                                                    |# 
-#|	Create a DataONE data package.                                      |#
+#|	Build a DataONE data package.                                      |#
 #|	                                                                    |# 
 #+----------------------------------------------------------------------+#
 d1.buildDataPackage <- function(env, mn_nodeid) {
   print(" ")
-  print("####### Test 3: create DataPackage / EML format  ######################")
+  print("####### Test 3: build DataPackage / EML format  ######################")
 
   # Get the time for all the later objects.
   cur_time <- format(Sys.time(), "%Y%m%d%H%M%s")

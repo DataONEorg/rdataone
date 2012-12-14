@@ -2,8 +2,8 @@
 \alias{DataPackage}
 \title{
     An object representing a data package in DataONE, which consists of a
-    series of data objects, their science metadata, and system metadata
-    describing them.
+    series of data objects, the science metadata that documents them, and
+    the resourceMap object that defines the relationships.   
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~

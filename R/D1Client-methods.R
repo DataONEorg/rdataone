@@ -152,11 +152,13 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   ## -- Reserve this identifier
   pid <- sysmeta$getIdentifier()
   id <- pid$getValue()
-  if(!reserveIdentifier(x, id)) {
-    print(paste("    ** Identifier already exists, or has been reserved: ", id))
-    return(FALSE)
-  }
-  if (VERBOSE) print(paste("    * Reserved.", id))
+  
+  ## TODO: uncomment this when /reserve is more reliable
+#  if(!reserveIdentifier(x, id)) {
+#    print(paste("    ** Identifier already exists, or has been reserved: ", id))
+#    return(FALSE)
+#  }
+#  if (VERBOSE) print(paste("    * Reserved.", id))
 
   
   
