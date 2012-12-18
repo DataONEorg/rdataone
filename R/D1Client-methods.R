@@ -35,8 +35,7 @@ setGeneric("getPackage", function(x, identifier, ...) {
 })
 
 setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
-  client <- x@client
-  session <- x@session
+
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
   jPid$setValue(identifier)
   print(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
@@ -54,18 +53,31 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
-## createPackage
-## setGeneric("createPackage", function(x, data_package, ...) { 
-##   standardGeneric("createPackage")
-## })
-## 
-## setMethod("createPackage", signature("D1Client", "DataPackage"),
-##     function(x, data_package) {
-##   client <- x@client
-##   session <- x@session
-##   pid <- .jnew("org/dataone/service/types/v1/Identifier")
-##   pid$setValue(identifier)
-## })
+#' A method to query DataONE with an arbitrary query string 
+#' @param x  D1Client
+#' @param solrQuery character: 
+#' @param ... 
+#' @returnType character
+#' @return the solr response (XML)
+#' 
+#' @author rnahf
+#' @export
+setGeneric("d1.solr.query", function(x, solrQuery, ...) { 
+            standardGeneric("d1.solr.query")
+        })
+
+
+setMethod("d1.solr.query", signature("D1Client", "character"), function(x, solrQuery) {
+
+    data <- J("org/apache/commons/io/IOUtils","toString", 
+                    x@client$getCN()$query("solr",solrQuery),"UTF-8")
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    return(data)
+})
+
 
 
 ## getD1Object
