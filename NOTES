@@ -1,9 +1,13 @@
 == Current Status ==============================================================
+12/21/2012 - kram
+  * Wondering why the license is part of every script when the same is in the LICENSE file? Not a big deal but curious.
+  * Outside of class definitions, I don't see any of the functions documented in the manual under the R folder. Are these all handled by the jars in java/?
+
 
 10/26/2012 - rnahf
   * status:  testing.R tests 1,2,4 are working.  3 and 5 (creating and getting DataPackage) are not.
   * did some basic code cleanup for better readability
-  * testing.R - wired the mn_nodeid used for testD1Object into the testDataPackage 
+  * testing.R - wired the mn_nodeid used for testD1Object into the testDataPackage
 
 
 10/25/2012 - rnahf
@@ -12,7 +16,7 @@ inst/java:
   * updated httpclient, httpcore, httpmime to 4.1.3
 
 testing.R
-  * added default MN_node_id.  Getting tests to get most of the way through Test 3.  
+  * added default MN_node_id.  Getting tests to get most of the way through Test 3.
 
 
 install.sh:
