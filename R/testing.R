@@ -195,7 +195,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   scidata2_id <- paste("r_test3", "scidata", "2", cur_time, sep=".")
 
   # Create a DataONE client
-  print("@@ testing.R 01: Creating the D1Client...")
+  message("@@ testing.R 01: Creating the D1Client...")
   d1_client <- D1Client(env, mn_nodeid)
 
 
@@ -204,7 +204,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   #
 
   # Read a text file from disk
-  print("@@ testing.R 02: Reading text file from disk...")
+  message("@@ testing.R 02: Reading text file from disk...")
   libPath <- .libPaths()
   tfiles.directory <- file.path(libPath[1], .packageName, "testfiles",
 			        fsep=.Platform$file.sep)
@@ -222,7 +222,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
 
 
   # Create a D1Object for the table, and upload it to the MN
-  print("@@ testing.R 03: Create scimeta object...")
+  message("@@ testing.R 03: Create scimeta object...")
   d1o_scimeta <- new(Class="D1Object", scimeta_id, actualDoc, format, mn_nodeid)
   if(is.jnull(d1o_scimeta)) {
     print("the d1o_scimeta is null")
@@ -236,7 +236,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   #
   # ** Science Data Objects **
   #
-  print("@@ testing.R 04: Create first data object...")
+  message("@@ testing.R 04: Create first data object...")
   testdf <- data.frame(x=1:100, y=101:200)
   csvdata <- convert.csv(d1_client, testdf)
   format <- "text/csv"
@@ -250,7 +250,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   print(paste("ID of data object 1:", pid))
 
   
-  print("@@ testing.R 05: Create second data object...")
+  message("@@ testing.R 05: Create second data object...")
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
   csvdata <- convert.csv(d1_client, testdf, sep="\t")
   format <- "text/csv"
@@ -265,31 +265,31 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
 
 
         
-  print("@@ testing.R 06: Create data package...")
+  message("@@ testing.R 06: Create data package...")
   data_package <- new(Class="DataPackage",packageId=package_id)
 
-  print("@@ testing.R 20:  adding metadata...")
+  message("@@ testing.R 20:  adding metadata...")
   addData(data_package, d1o_scimeta)
 
-  print("@@ testing.R 21:  adding data object 1 ...")
+  message("@@ testing.R 21:  adding data object 1 ...")
   addData(data_package, d1o_scidata1)
   
-  print("@@ testing.R 21a:  getting the added data...")
+  message("@@ testing.R 21a:  getting the added data...")
   d <- getData(data_package,scidata1_id)
   print(d)
   
-  print("@@ testing.R 22:  adding data object 2 ...")
+  message("@@ testing.R 22:  adding data object 2 ...")
   addData(data_package, d1o_scidata2)
 
-  print("@@ testing.R 22a:  getting the added data...")
+  message("@@ testing.R 22a:  getting the added data...")
   d <- getData(data_package,scidata2_id)
   print(d)
 
-  print(paste("size of data list:",getSize(data_package)))
+  message(paste("size of data list:",getSize(data_package)))
 
   
   
-  print("@@ testing.R 23: setup the describes relationship... ")
+  message("@@ testing.R 23: setup the describes relationship... ")
   insertRelationship(data_package, scimeta_id, c(scidata1_id, scidata2_id))
   
   jMap <- data_package@jDataPackage$getMetadataMap()
@@ -311,14 +311,14 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   
 d1.testCreateDataPackage <- function(env, mn_nodeid,  data_package) {
   
-  print("@@ testing.R 24: uploading the object... ")
+    message("@@ testing.R 24: uploading the object... ")
 
   d1_client <- D1Client(env, mn_nodeid)
   
   
   ## Upload the whole package...
   create(d1_client, data_package)
-  print("@@ testing.R 25: checking for call errors...")
+  message("@@ testing.R 25: checking for call errors...")
   .jcheck(silent = FALSE)
   print("Finished package upload.")
 

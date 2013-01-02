@@ -35,12 +35,12 @@ setGeneric("DataPackage", function(...) { standardGeneric("DataPackage")} )
 
 
 setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage) {
-	print("@@ DataPackage-class.R initialize")
+	message("@@ DataPackage-class.R initialize")
 	## verify the jDataPackage
 	if (missing("jDataPackage")) {
-		print("@@ DataPackage-class.R - (missing jDataPackage)...")
+        message("@@ DataPackage-class.R - (missing jDataPackage)...")
 		if (!missing("packageId")) {
-			print("@@ DataPackage-class.R - (have packageId)...")
+            message("@@ DataPackage-class.R - (have packageId)...")
 			## set the packageId and instantiate a new jDataPackage
 			.Object@packageId <- packageId
 			jPid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -56,11 +56,11 @@ setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage
 			.Object@jDataPackage <- jDataPackage
 		}
 	} else {
-		print("@@ DataPackage-class.R - (have a jDataPackage...)")
+        message("@@ DataPackage-class.R - (have a jDataPackage...)")
 		## check that jDataPackage is indeed one
 		## then set the packageId from that one
 		if (.jinstanceof(jDataPackage,"org/dataone/client/DataPackage")) {
-			print("@@ DataPackage-class.R - (jDataPackage is a DataPackage instance)...")
+            message("@@ DataPackage-class.R - (jDataPackage is a DataPackage instance)...")
 			jPid <- jDataPackage$getPackageId()
 			.Object@packageId <- jPid$getValue()
 			.Object@jDataPackage <- jDataPackage
@@ -74,18 +74,18 @@ setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage
 #setMethod("DataPackage",
 #  function(identifier, ...) {
 #
-#  print(      "@@ DataPackage-class.R 07: Running in DataPackage constructor...")
-#  print(paste("@@ DataPackage-class.R 08: Identifier is: ", identifier))
+#  message(      "@@ DataPackage-class.R 07: Running in DataPackage constructor...")
+#  message(paste("@@ DataPackage-class.R 08: Identifier is: ", identifier))
 #
 #  ## create new DataPackage object and insert identifier and data
 ###  res <- new("DataPackage")
-#  print("@@ DataPackage-class.R 09:")
+#  message("@@ DataPackage-class.R 09:")
 #  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
 #  jPid$setValue(identifier)
 #  jDP <- .jnew("org/dataone/client/DataPackage",jPid)
 #
 #  res <- new(Class="DataPackage",identifier=identifier, jDataPackage=jDP)
-#  print("@@ DataPackage-class.R 10:")
+#  message("@@ DataPackage-class.R 10:")
 ###  res@identifier <- identifier
 #  
 #  return(res)
@@ -96,10 +96,10 @@ setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage
 # 
 ### create new DataPackage object and insert identifier and data
 ###  res <- 
-#  print("DataPackage-class.R 07a: in 2 arg constructor")
+#  message("DataPackage-class.R 07a: in 2 arg constructor")
 #  # Verify first object.
 #  if (exists("jDataPackage")) {
-#	  print(jDataPackage)
+#	  message(jDataPackage)
 #	  if (is.null(jDataPackage)) {
 #		  print("found the problem")
 #		  return(new(Class="DataPackage"))
@@ -115,13 +115,13 @@ setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage
 #    print("First argument must be a Java DataPackage object.")
 #    return(NULL)
 #  }
-#  print("@@ DataPackage-class.R 09a:")
+#  message("@@ DataPackage-class.R 09a:")
 #  res <- new(Class="DataPackage", identifier=identifier, jDataPackage=jDataPackage)
 ###  res@jDataPackage <- jDataPackage
 #
 #
 ###  res@jDataPackage <- jDataPackage
-#  print("@@ DataPackage-class.R 10a:")
+#  message("@@ DataPackage-class.R 10a:")
 ###  res@identifier <- identifier
 #    
 #  return(res)
@@ -176,7 +176,7 @@ setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage
 #	  # Should really go to the CN to determine if this is scimeta
 #	  if(str == "eml:") {
 #	    if(res@metaList != "") {
-#	      print(paste("Found second scimeta in", jResId$getValue()))
+#	      message(paste("Found second scimeta in", jResId$getValue()))
 #	    } else {
 #	      databytes <- jD1Object$getData()
 #	      asString <- .jnew("java/lang/String", databytes)

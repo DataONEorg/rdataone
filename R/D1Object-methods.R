@@ -66,7 +66,7 @@
   # Now build the object with the sysmeta values
 #  d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format.id,
 #                    submitter, mn.noderef, check=FALSE)
-  #print("building object")
+  #message("building object")
 #  if (!is.null(e <- .jgetEx())) {
 #    print("Java exception was raised")
 #    print(.jcheck(silent=TRUE))
@@ -93,9 +93,9 @@ setGeneric("getData", function(x, id, ...) {
 })
  
 setMethod("getData", signature("D1Object"), function(x) {
-    print("@@r1")
+    message("@@r1")
 	jD1Object = x@jD1o
-	print ("@@r2")
+	message("@@r2")
 	if(!is.jnull(jD1Object)) {
 		print ("@@r3")
 		databytes <- jD1Object$getData()
@@ -159,7 +159,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 		
 		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
 		if (!is.jnull(jPolicyEditor)) {
-			print("setPublicAccess: got policy editor")
+			message("setPublicAccess: got policy editor")
 			jPolicyEditor$setPublicAccess()
 		} else {
 			print("policy editor is null")
@@ -178,7 +178,7 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 	if(!is.jnull(jD1Object)) {
 		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
 		if (!is.jnull(jPolicyEditor)) {
-			print("canRead: got policy editor")
+			message("canRead: got policy editor")
 			jSubject <- J("org/dataone/client/D1TypeBuilder", "buildSubject", subject)
 			jPermission <- J("org/dataone/service/types/v1/Permission", "convert", "read")
 			result <- jPolicyEditor$hasAccess(jSubject,jPermission)
@@ -210,7 +210,7 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 	mdFormat <- getFormatId(reference)
 	
 	dtdClassName <- dataTableDescriber.registry[[ mdFormat ]]
-	print(paste("@@ asDataFrame/Object", dtdClassName))
+	message(paste("@@ asDataFrame/Object", dtdClassName))
 	if (!is.na(dtdClassName)) {
 		dtd <-	do.call(dtdClassName, list(reference))
 		df <- asDataFrame(x,dtd)
@@ -220,7 +220,7 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 		## regMdParsers <- na.omit(sapply(strsplit(signatures[2:length(signatures)],"\""), 
 		##             function(x) ifelse(length(x>1),x[2],NA)))
 	} else {
-		print("Could not find metadata parser, so will try as plain csv...")
+		print("Could not find metadata parser, trying as plain csv...")
 		df <-  asDataFrame(x)
 	}
 	return( df )
@@ -228,12 +228,12 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
              
 setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x, reference, ...) {
                         
-    print(paste("@@ asDataFrame / D1Object-dtd",class(reference)))
+    message(paste("@@ asDataFrame / D1Object-dtd",class(reference)))
     ## reference is a DataTableDescriber
 	pids <- documented.d1Identifiers(reference)
 	jDataId <- x@jD1o$getIdentifier()$getValue()
 	index <- which(pids == jDataId)
-	print(paste("Index of data item is",index))
+	message(paste("Index of data item is",index))
 
 	## is this a datatype that we can handle?
 	dataFormat <- dataTable.dataFormat(reference,index)
@@ -277,11 +277,11 @@ setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x
 	## comment.char = "#",
 	## allowEscapes = FALSE, flush = FALSE,
 	## stringsAsFactors = default.stringsAsFactors(),
-	print(paste("@@ skip",skip))
-	print(paste("@@ sep",fieldSeparator))
-	print(paste("@@ quote",quoteChar))
-	print(paste("@@ na.strings",missingValues))
-	print(paste("@@ encoding",encoding))
+	message("@@ skip ",skip)
+	message("@@ sep ",fieldSeparator)
+	message("@@ quote ",quoteChar)
+	message("@@ na.strings ",missingValues)
+	message("@@ encoding ",encoding)
 	df <- asDataFrame(x, skip=skip, header=TRUE, sep=fieldSeparator, quote=quoteChar, 
 			na.strings=missingValues, encoding=encoding)
 	return(df)
@@ -297,7 +297,7 @@ setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
 
 	dataBytes <- getData(x)
 	theData <- textConnection(dataBytes)
-	print(paste("theData is", class(theData)))
+	message("theData is ", class(theData))
 	## using read.csv instead of read.table, because it exposes the defaults we want
 	## while also allowing them to be overriden
     df <- read.csv(theData, ...)

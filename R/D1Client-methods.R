@@ -38,11 +38,11 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
   jPid$setValue(identifier)
-  print(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
+  message(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
   ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
   ## jNodeRef$setValue(x@mn.nodeid)
-  ## print(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
-  print(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
+  ## message(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
+  message(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
   jDataPackage <- J("org/dataone/client/DataPackage")$download(jPid)
   if (!is.null(e<-.jgetEx())) {
 	  print("Java exception was raised")
@@ -109,7 +109,7 @@ setGeneric("reserveIdentifier", function(x, id, ...) {
 })
 
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
-  print(paste("Reserving id:", id))
+  message(paste("Reserving id:", id))
 
   # Create a DataONE Identifier
   pid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -128,7 +128,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
     return(FALSE)
   }
 
-  print(paste("Reserved pid:", pid$getValue()))
+  message(paste("Reserved pid:", pid$getValue()))
   return(TRUE)
 })
 
@@ -140,7 +140,7 @@ setGeneric("create", function(x, object, ...) {
 
 setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   VERBOSE <- TRUE
-  if (VERBOSE) print("--> create(D1Client, D1Object)")
+  if (VERBOSE) message("--> create(D1Client, D1Object)")
 
   ## -- Validate everything necessary to create new object.
   if(is.jnull(object)) {
@@ -149,13 +149,13 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   }
   jD1o <- object@jD1o  
   
-  if (VERBOSE) print("    * The object is not null.")
+  if (VERBOSE) message("    * The object is not null.")
   sysmeta <- jD1o$getSystemMetadata()
   if(is.jnull(sysmeta)) {
     print("    ** Cannot create with a null sysmeta object.")
     return(FALSE)
   }
-  if (VERBOSE) print("    * The sysmeta is not null.")
+  if (VERBOSE) message("    * The sysmeta is not null.")
   if(is.jnull(sysmeta$getIdentifier())) {
     print("    ** Cannot create with a null identifier.")
     return(FALSE)
@@ -170,7 +170,7 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
 #    print(paste("    ** Identifier already exists, or has been reserved: ", id))
 #    return(FALSE)
 #  }
-#  if (VERBOSE) print(paste("    * Reserved.", id))
+#  if (VERBOSE) message(paste("    * Reserved.", id))
 
   
   
@@ -188,32 +188,29 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
   ## 
   ## jNewPid <- mn$create(x@session, pid, jDataIS, sysmeta)
   
-  print("@@ D1Client-methods 41:")
+  message("@@ D1Client-methods 41:")
   if (!is.jnull(e <- .jgetEx())) {
     print("    ** Java exception was raised")
     print(.jcheck(silent=FALSE))
   }
-  if (VERBOSE) print("    * Created.")
+  if (VERBOSE) message("    * Created.")
 
   if(!is.jnull(jNewPid)) {
-    if (VERBOSE) print(paste("      - created pid:", jNewPid$getValue()))
+    if (VERBOSE) message(paste("      - created pid:", jNewPid$getValue()))
   } else {
-    if (VERBOSE) print("      - pid is null")
+    if (VERBOSE) message("      - pid is null")
   }
 
-  if (VERBOSE) print("<--  create(D1Client, D1Object)")
+  if (VERBOSE) message("<--  create(D1Client, D1Object)")
   return(is.jnull(jNewPid))
 })
 
-## setGeneric("create", function(x, rPackage, ...) { 
-##   standardGeneric("create")
-## })
 
 
 setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
-  print("====> create(D1Client,DataPackage")
+  message("====> create(D1Client,DataPackage")
             
-  print(paste("    * building the resource map for the", getSize(object), "members..."))
+  message(paste("    * building the resource map for the", getSize(object), "members..."))
   resourceMapString <- object@jDataPackage$serializePackage()
   mapObject <- new("D1Object", object@packageId, resourceMapString, 
 		  "http://www.openarchives.org/ore/terms", x@mn.nodeid)
@@ -226,18 +223,18 @@ setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
   members <- getIdentifiers(object)
   
   for (pid in members) {
-      print(paste("    * next member to create:", pid))
+      message(paste("    * next member to create:", pid))
       rD1o <- getMember(object, pid)
       create(x, rD1o)
   }
-  print(paste("    * creating the package resource map:", object@packageId ))
+  message(paste("    * creating the package resource map:", object@packageId ))
   create(x, mapObject)
   
-  print("<====  create(D1Client, DataPackage")
+  message("<====  create(D1Client, DataPackage")
 
 })
 
-
+ 
 #########################################################
 ### Accessor methods
 #########################################################
