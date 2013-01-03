@@ -1,29 +1,31 @@
 \name{createD1Object}
 \alias{createD1Object}
 \title{
+  createD1Object
+}
+\description{
   Create a D1Object by calling the DataONE create() service to upload an object
   and its associated system metadata to a Member Node.
 }
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
 \usage{
-createD1Object(x, identifier, ...)
+createD1Object(x, d1Object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+  The D1Client that will do the creating
 }
-  \item{identifier}{
-%%     ~~Describe \code{identifier} here~~
+  \item{d1Object}{
+  The D1Object instance to be submitted to DataONE for creation.  
 }
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+  The D1Object data along with generated system metadata will be submitted to the
+  Member Node associated with the D1Client, using the current credentials to 
+  populate the submitter and rightsholder fields.
 }
 \value{
 %%  ~Describe the value returned
@@ -33,10 +35,14 @@ createD1Object(x, identifier, ...)
 %% ...
 }
 \references{
-%% ~put references to the literature/web site here ~
+  See d1_libclient_java documentation D1Client.create()
+  \code{
+  	\link{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create(org.dataone.service.types.v1.Session,%20org.dataone.client.D1Object)"
+       }
+    }
 }
 \author{
-%%  ~~who you are~~
+	Rob Nahf
 }
 \note{
 %%  ~~further notes~~
@@ -48,19 +54,15 @@ createD1Object(x, identifier, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+  # (not executable!!)
+  library(dataone)
+  cli <- D1Client("STAGING","urn:node:memberNodeFoo")
+  
+  # a fictitious function that assembles a D1Object
+  d1object <- makeANewObject()
+  
+  createD1Object(cli, d1object)
 
-## The function is currently defined as
-structure(function (x, identifier, ...) 
-{
-    standardGeneric("createD1Object")
-  }, generic = structure("createD1Object", package = "dataone"), package = "dataone", group = list(), valueClass = character(0), signature = c("x", 
-"identifier"), default = `NULL`, skeleton = function (x, identifier, 
-    ...) 
-stop("invalid call in method dispatch to \"createD1Object\" (no default method)", 
-    domain = NA)(x, identifier, ...), class = structure("nonstandardGenericFunction", package = "methods"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

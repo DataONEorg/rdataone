@@ -1,33 +1,37 @@
 \name{DataPackage}
 \alias{DataPackage}
 \title{
-    An object representing a data package in DataONE, which consists of a
-    series of data objects, the science metadata that documents them, and
-    the resourceMap object that defines the relationships.   
+  The DataPackage class     
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  An object representing a data package in DataONE, which consists of a
+  series of data objects, the science metadata objects that documents them, 
+  and the resourceMap object that defines the relationships.
 }
 \usage{
-DataPackage(identifier, sysmeta1, scimeta1, ...)
+new("DataPackage", packageId = pid)
+new("DataPackage", jDataPackage = jDataPackage)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{identifier}{
-%%     ~~Describe \code{identifier} here~~
-}
-  \item{sysmeta1}{
-%%     ~~Describe \code{sysmeta1} here~~
-}
-  \item{scimeta1}{
-%%     ~~Describe \code{scimeta1} here~~
-}
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
-}
+    The identifier for the data package, that corresponds to the DataONE identifier
+    for the resourceMap object. If a new package is being built, this should be
+    a new identifier not already registered in DataONE.
+  }
+  \item{jDataPackage}{
+    A jJobRef to an instantiated java DataPackage object.  This parameter is typically
+    only used when retrieving an existing package from the DataONE system, as through
+    the D1Client's 'getPackage' method.
+  }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+  A DataPackage object is a thin wrapper around the Java org.dataone.client.DataPackage
+  class, exposing most methods, and adapting their parameters to remove the need
+  to provide java-specific instances.  
+  
+  At least one method, "asDataFrame," is completely implemented within this package
+  and has no corresponding java method.
 }
 \value{
 %%  ~Describe the value returned
@@ -40,7 +44,7 @@ DataPackage(identifier, sysmeta1, scimeta1, ...)
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+  Rob Nahf
 }
 \note{
 %%  ~~further notes~~
@@ -52,19 +56,14 @@ DataPackage(identifier, sysmeta1, scimeta1, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (identifier, sysmeta1, scimeta1, ...) 
-{
-    standardGeneric("DataPackage")
-  }, generic = structure("DataPackage", package = "dataone"), package = "dataone", group = list(), valueClass = character(0), signature = c("identifier", 
-"sysmeta1", "scimeta1"), default = `NULL`, skeleton = function (identifier, 
-    sysmeta1, scimeta1, ...) 
-stop("invalid call in method dispatch to \"DataPackage\" (no default method)", 
-    domain = NA)(identifier, sysmeta1, scimeta1, ...), class = structure("nonstandardGenericFunction", package = "methods"))
+  ## example of instantiating a new DataPackage
+  data_package <- new(Class="DataPackage",packageId="somePackageId")
+  
+  ## example of instantiating an existing DataPackage, through the
+  ## fictional intermediate function foo()
+  jD1Package <- foo()
+  data_package <- new(Class="DataPackage", jDataPackage=jD1Package)
+  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

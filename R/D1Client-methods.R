@@ -133,21 +133,21 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 })
 
 
-## create
-setGeneric("create", function(x, object, ...) { 
-  standardGeneric("create")
+
+setGeneric("createD1Object", function(x, d1Object, ...) { 
+  standardGeneric("createD1Object")
 })
 
-setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
+setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
   VERBOSE <- TRUE
-  if (VERBOSE) message("--> create(D1Client, D1Object)")
+  if (VERBOSE) message("--> createD1Object(D1Client, D1Object)")
 
   ## -- Validate everything necessary to create new object.
-  if(is.jnull(object)) {
+  if(is.jnull(d1Object)) {
     print("    ** Cannot create a null object.")
     return(FALSE)
   }
-  jD1o <- object@jD1o  
+  jD1o <- d1Object@jD1o  
   
   if (VERBOSE) message("    * The object is not null.")
   sysmeta <- jD1o$getSystemMetadata()
@@ -206,13 +206,15 @@ setMethod("create", signature("D1Client", "D1Object"), function(x, object) {
 })
 
 
-
-setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
-  message("====> create(D1Client,DataPackage")
+setGeneric("createDataPackage", function(x, dataPackage, ...) { 
+            standardGeneric("createDataPackage")
+        })
+setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
+  message("====> createDataPackage(D1Client,DataPackage")
             
-  message(paste("    * building the resource map for the", getSize(object), "members..."))
-  resourceMapString <- object@jDataPackage$serializePackage()
-  mapObject <- new("D1Object", object@packageId, resourceMapString, 
+  message(paste("    * building the resource map for the", getSize(dataPackage), "members..."))
+  resourceMapString <- dataPackage@jDataPackage$serializePackage()
+  mapObject <- new("D1Object", dataPackage@packageId, resourceMapString, 
 		  "http://www.openarchives.org/ore/terms", x@mn.nodeid)
   
   ## TODO: this should not always be the case in the future.  
@@ -220,17 +222,17 @@ setMethod("create", signature("D1Client", "DataPackage"), function(x, object ) {
   setPublicAccess(mapObject)
   
   ## add the vector of pids in the dataList to the java DataPackage
-  members <- getIdentifiers(object)
+  members <- getIdentifiers(dataPackage)
   
   for (pid in members) {
       message(paste("    * next member to create:", pid))
-      rD1o <- getMember(object, pid)
-      create(x, rD1o)
+      rD1o <- getMember(dataPackage, pid)
+      createD1Object(x, rD1o)
   }
-  message(paste("    * creating the package resource map:", object@packageId ))
-  create(x, mapObject)
+  message(paste("    * creating the package resource map:", dataPackage@packageId ))
+  createD1Object(x, mapObject)
   
-  message("<====  create(D1Client, DataPackage")
+  message("<====  createDataPackage(D1Client, DataPackage")
 
 })
 

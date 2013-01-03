@@ -143,8 +143,8 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   bytes <- getData(d1Object)
   print(bytes)
 
-  print("  Attempting d1_client@create()")
-  create(d1_client, d1Object)
+  print("  Attempting d1_client@createD1Object()")
+  createD1Object(d1_client, d1Object)
   if (!is.null(e <- .jgetEx())) {
     print("Java exception was raised")
     print(.jcheck(silent=TRUE))
@@ -317,7 +317,7 @@ d1.testCreateDataPackage <- function(env, mn_nodeid,  data_package) {
   
   
   ## Upload the whole package...
-  create(d1_client, data_package)
+  createDataPackage(d1_client, data_package)
   message("@@ testing.R 25: checking for call errors...")
   .jcheck(silent = FALSE)
   print("Finished package upload.")
