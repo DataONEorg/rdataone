@@ -40,7 +40,17 @@
   #}
 }
 \details{
-  Details are given in the individual methods.
+  Most interaction with DataONE services requires the client to have a valid X509 
+  certificate.  DataONE uses CILogon.org to issue client certificates, which is
+  accessed at https://cilogon.org/?skin=DataONE.  
+  
+  To successfully use the dataone R package, users first need to install a CILogon
+  certificate on their local machine.  These CILogon certificates are short-lived,
+  so typically, a user will need to download a fresh certificate each day.
+  
+  CILogon recognizes several identity providers, including Google, so most times
+  new users to DataONE can get certificates using existing institutional accounts.
+  For more information about the CILogon service, see http://www.cilogon.org/faq
 }
 \author{Matthew Jones}
 \examples{
