@@ -18,6 +18,13 @@
 #   limitations under the License.
 #
 
+#' 
+#' @slot endpoint The baseurl of the CN in that environment
+#' @slot mn.nodeid The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.
+#' @slot client The reference to the internally held Java D1Client instance
+#' @slot session The reference to the internally held Java Session instance
+#' @author rnahf
+#' @export
 setClass("D1Client",
          representation(endpoint = "character",
                         mn.nodeid = "character",
@@ -30,11 +37,30 @@ setClass("D1Client",
 #########################
 
 ## Generic function with 0, 1, or 2 parameters
+#' 
+#' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
+#' @param mn_nodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
+#' @param ... 
+#' @returnType an S4 D1Client object 
+#' @return 
+#' 
+#' @author mbjones
+#' @export
 setGeneric("D1Client", function(env, mn_nodeid, ...) {
   standardGeneric("D1Client")
 })
 
-## No arguments in the signature - use default env and nodeid
+## 
+#' Construct a D1Client, using default env ("PROD") and nodeid ("")
+#' @name D1Client
+#' @alias D1Client,-method
+#' 
+#' @returnType 
+#' @return 
+#' 
+#' @author rnahf
+#' @docType methods
+#' @export
 setMethod("D1Client", , function() {
     result <- D1Client("PROD", "")
     return(result)
