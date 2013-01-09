@@ -53,6 +53,30 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
+#' converts solr escaped character string to url-encoded string
+#' The starting point is a character string where backslashes have to be doubled
+#' (need to make sure this is what would be in a string coming from a ui)
+urlEncodeSolrQuery <- function(solrQuery) {
+
+#    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
+#    solrQuery <- "q=id:example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
+#    solrQuery <- gsub("\\x5c{1,3}(\\x22)","%5C\\1",solrQuery, perl=TRUE)
+#    gsub("\\\\([\\x5b\\x5d])", "%5C\\1",solrQuery, perl=TRUE)
+
+    solrQuery <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",solrQuery, perl=TRUE)
+    
+    ## perhaps should use encoding utilities at this point, instead?
+    ## need to hide the ampersand
+    solrQuery <- gsub("%5C&","%5C%26",solrQuery)
+    ## need to hide the +
+    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)
+    
+    
+    return(escaped)
+
+}
+
+
 #' A method to query DataONE with an arbitrary query string 
 #' @param x  D1Client
 #' @param solrQuery character: 
@@ -62,15 +86,17 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 #' 
 #' @author rnahf
 #' @export
-setGeneric("d1.solr.query", function(x, solrQuery, ...) { 
-            standardGeneric("d1.solr.query")
+setGeneric("d1SolrQuery", function(x, solrQuery, ...) { 
+            standardGeneric("d1SolrQuery")
         })
 
 
-setMethod("d1.solr.query", signature("D1Client", "character"), function(x, solrQuery) {
+setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
 
+    J("org/dataone/service/util/EncodingUtilities")$encode(jPid)
+    encodedSolrQuery <- paste("?",)
     data <- J("org/apache/commons/io/IOUtils","toString", 
-                    x@client$getCN()$query("solr",solrQuery),"UTF-8")
+                    x@client$getCN()$query("solr",paste("?",solrQuery,sep=""),"UTF-8"))
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
         print(.jcheck(silent=FALSE))
