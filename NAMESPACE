@@ -8,7 +8,7 @@ exportClasses(D1Client, DataPackage, D1Object, EMLParser)
 exportMethods(D1Client, DataPackage, D1Object, EMLParser)
 
 # D1Client methods
-exportMethods(d1.solr.query, getPackage, getD1Object, reserveIdentifier, createD1Object,
+exportMethods(d1SolrQuery, getPackage, getD1Object, reserveIdentifier, createD1Object,
 				createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN, convert.csv)
 
 # DataPackage methods

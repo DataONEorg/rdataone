@@ -71,7 +71,16 @@ setGeneric("dataTable.characterEncoding", function(x, index, ...) {
     standardGeneric("dataTable.characterEncoding")
 })
 
-##
+
+#' returns whether the data table has attributes arranged in 'columns' or 'rows'
+#' @param x - the DataTableDescriber instance
+#' @param index - the index of the dataTable to get results for
+#' @param ... 
+#' @returnType character
+#' @return columns | rows
+#' 
+#' @author rnahf
+#' @export
 setGeneric("dataTable.attributeOrientation", function(x, index, ...) {
     standardGeneric("dataTable.attributeOrientation")
 })
@@ -82,22 +91,61 @@ setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
 })
 
 #########  EML-attribute items
-##
+
+#' returns the missing value codes defined in the metadata document for 
+#' the specified data table
+#' @param x - the DataTableDescriber instance
+#' @param index - the index of the dataTable to get results for
+#' @param ... 
+#' @returnType character
+#' @return vector of missing value codes
+#' 
+#' @author rnahf
+#' @export
 setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
     standardGeneric("dataTable.missingValueCodes")
 })
 
-##
+
+#' returns the attribute names defined in the metadata document for 
+#' the specified data table
+#' @param x - the DataTableDescriber instance
+#' @param index - the index of the dataTable to get results for
+#' @param ... 
+#' @returnType character
+#' @return the attribute (column) names of the data
+#' 
+#' @author rnahf
+#' @export
 setGeneric("dataTable.attributeNames", function(x, index, ...) {
     standardGeneric("dataTable.attributeNames")
 })
 
-##
+
+#' returns the attributes' data types defined in the metadata document for 
+#' the specified data table
+#' @param x - the DataTableDescriber instance
+#' @param index - the index of the dataTable to get results for
+#' @param ... 
+#' @returnType character
+#' @return the data types of the attributes
+#' 
+#' @author rnahf
+#' @export
 setGeneric("dataTable.attributeTypes", function(x, index, ...) {
     standardGeneric("dataTable.attributeTypes")
 })
 
-##
+#' returns the attributes' data storage types defined in the metadata document for 
+#' the specified data table
+#' @param x - the DataTableDescriber instance
+#' @param index - the index of the dataTable to get results for
+#' @param ... 
+#' @returnType character
+#' @return the data storage types of the attributes
+#' 
+#' @author rnahf
+#' @export
 setGeneric("dataTable.attributeStorageTypes", function(x, index, ...) {
     standardGeneric("dataTable.attributeStorageTypes")
 })

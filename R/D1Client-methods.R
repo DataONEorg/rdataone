@@ -53,52 +53,88 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
-#' converts solr escaped character string to url-encoded string
-#' The starting point is a character string where backslashes have to be doubled
-#' (need to make sure this is what would be in a string coming from a ui)
-urlEncodeSolrQuery <- function(solrQuery) {
+#' encodes the reserved characters in a url query segment
+urlEncodeQuerySegment <- function(querySegment) {
 
 #    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
-#    solrQuery <- "q=id:example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
-#    solrQuery <- gsub("\\x5c{1,3}(\\x22)","%5C\\1",solrQuery, perl=TRUE)
-#    gsub("\\\\([\\x5b\\x5d])", "%5C\\1",solrQuery, perl=TRUE)
+#    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
 
-    solrQuery <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",solrQuery, perl=TRUE)
+    message("querySegment: ", querySegment)
+    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    message("encoded: ", encoded)
+    return(encoded)
     
-    ## perhaps should use encoding utilities at this point, instead?
-    ## need to hide the ampersand
-    solrQuery <- gsub("%5C&","%5C%26",solrQuery)
-    ## need to hide the +
-    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)
-    
-    
-    return(escaped)
-
+    ## an R-only alternate implementation that only would work for ASCII characters
+    ## (may need to check the behavior of {,},[,] - they may need to be hidden also)
+    #    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
+    #    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
+    #    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
 }
 
 
-#' A method to query DataONE with an arbitrary query string 
-#' @param x  D1Client
-#' @param solrQuery character: 
-#' @param ... 
-#' @returnType character
-#' @return the solr response (XML)
-#' 
-#' @author rnahf
-#' @export
-setGeneric("d1SolrQuery", function(x, solrQuery, ...) { 
+
+setGeneric("d1SolrQuery", function(x, solrQuery) { 
             standardGeneric("d1SolrQuery")
         })
 
+#' A method to query the DataONE solr endpoint of the Coordinating Node.
+#' It expects any lucene reserved characters to already be escaped with backslash.
+#' @param x  the D1Client (environment) being queried
+#' @param solrQuery  list.
+#' @returnType character
+#' @return the solr response (XML)
+#' @example d1SolrQuery(client,list(q="+species population diversity", fl="identifier"))
+#' @author rnahf
+#' @export
+setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 
+    encodedKVs <- character()
+    for(key in attributes(solrQuery)$names) {
+        kv <- paste0(urlEncodeQuerySegment(key), "=", urlEncodeQuerySegment(solrQuery[[key]]))
+        if (!is.null(e<-.jgetEx())) {
+            print("Java exception was raised")
+            print(paste("Exception detail code:", e$getDetail_code()))
+            print(e)
+            print(.jcheck(silent=FALSE))
+        }
+        message("kv: ", kv)
+        encodedKVs[length(encodedKVs)+1] <- kv
+    }
+    message(encodedKVs)
+    assembledQuery <- paste(encodedKVs,collapse="&")
+    message(assembledQuery)
+    
+    return( d1SolrQuery(x, assembledQuery) )
+})
+
+
+#' A method to query the DataONE solr endpoint of the Coordinating Node.
+#' It expects a fully encoded character string as input (with lucene-reserved 
+#' characters backslash escaped and url-reserved characters %-encoded).
+#' @param x  D1Client: representing the DataONE environment being queried
+#' @param solrQuery  character: a fully encoded query string 
+#' @returnType character
+#' @return the solr response (XML)
+#' @note users should not provide the leading '?' to the query
+#' @example d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier"
+#' @author rnahf
+#' @export
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
-
-    J("org/dataone/service/util/EncodingUtilities")$encode(jPid)
-    encodedSolrQuery <- paste("?",)
-    data <- J("org/apache/commons/io/IOUtils","toString", 
-                    x@client$getCN()$query("solr",paste("?",solrQuery,sep=""),"UTF-8"))
+    
+    packagedQuery <- paste0("?", solrQuery)
+    message("packagedQuery: ", packagedQuery)
+    
+    jInputStream <- x@client$getCN()$query("solr", packagedQuery)
+    
+    data <- J("org/apache/commons/io/IOUtils","toString", jInputStream,"UTF-8")
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
+        print(paste("Exception detail code:", e$getDetail_code()))
+        print(e)
         print(.jcheck(silent=FALSE))
     }
     return(data)
