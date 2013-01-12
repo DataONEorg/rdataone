@@ -84,10 +84,10 @@ setGeneric("d1SolrQuery", function(x, solrQuery) {
 #' A method to query the DataONE solr endpoint of the Coordinating Node.
 #' It expects any lucene reserved characters to already be escaped with backslash.
 #' @param x  the D1Client (environment) being queried
-#' @param solrQuery  list.
+#' @param solrQuery  list
 #' @returnType character
 #' @return the solr response (XML)
-#' @example d1SolrQuery(client,list(q="+species population diversity", fl="identifier"))
+#' @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
 #' @author rnahf
 #' @export
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
@@ -120,7 +120,7 @@ setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 #' @returnType character
 #' @return the solr response (XML)
 #' @note users should not provide the leading '?' to the query
-#' @example d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier"
+#' @examples \dontrun{ d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier" }
 #' @author rnahf
 #' @export
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
@@ -200,71 +200,61 @@ setGeneric("createD1Object", function(x, d1Object, ...) {
   standardGeneric("createD1Object")
 })
 
+#' creates a D1Object on the MemberNode determined by the object's systemMetadata.
+#' returns FALSE on exceptions
+#' 
 setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
-  VERBOSE <- TRUE
-  if (VERBOSE) message("--> createD1Object(D1Client, D1Object)")
+    message("--> createD1Object(D1Client, D1Object)")
 
-  ## -- Validate everything necessary to create new object.
-  if(is.jnull(d1Object)) {
-    print("    ** Cannot create a null object.")
-    return(FALSE)
-  }
-  jD1o <- d1Object@jD1o  
+    ## -- Validate everything necessary to create new object.
+    message("    * Validating the D1Object....")
+    if(is.jnull(d1Object)) {
+        print("    ** Cannot create a null object.")
+        return(FALSE)
+    }
+    jD1o <- d1Object@jD1o  
   
-  if (VERBOSE) message("    * The object is not null.")
-  sysmeta <- jD1o$getSystemMetadata()
-  if(is.jnull(sysmeta)) {
-    print("    ** Cannot create with a null sysmeta object.")
-    return(FALSE)
-  }
-  if (VERBOSE) message("    * The sysmeta is not null.")
-  if(is.jnull(sysmeta$getIdentifier())) {
-    print("    ** Cannot create with a null identifier.")
-    return(FALSE)
-  }
+    sysmeta <- jD1o$getSystemMetadata()
+    if(is.jnull(sysmeta)) {
+        print("    ** Cannot create with a null sysmeta object.")
+        return(FALSE)
+    }
+    
+    if(is.jnull(sysmeta$getIdentifier())) {
+        print("    ** Cannot create with a null identifier.")
+        return(FALSE)
+    }
+    message("    * object valid")
 
-  ## -- Reserve this identifier
-  pid <- sysmeta$getIdentifier()
-  id <- pid$getValue()
+    ## TODO: uncomment this when /reserve is more reliable
+    ## -- Reserve this identifier
+    #  pid <- sysmeta$getIdentifier()
+    #  id <- pid$getValue()
   
-  ## TODO: uncomment this when /reserve is more reliable
-#  if(!reserveIdentifier(x, id)) {
-#    print(paste("    ** Identifier already exists, or has been reserved: ", id))
-#    return(FALSE)
-#  }
-#  if (VERBOSE) message(paste("    * Reserved.", id))
+    #  if(!reserveIdentifier(x, id)) {
+    #      print(paste("    ** Identifier already exists, or has been reserved: ", id))
+    #      return(FALSE)
+    #  }
+    #  message("    * ID Reserved: ", id)
 
-  
-  
-  ## -- Connect to the member node and create the object.
-  jNewPid <- x@client$create(x@session, jD1o)
-            
-  ## the old way, of creating, but it doesn't respect the object's MN reference            
-  ## mn <- getMN(x)
-  ## if(is.jnull(mn)) {
-  ##   return(FALSE)
-  ## }
-  ## print(mn)
-  ## jDataIS <- .jnew("java/io/ByteArrayInputStream", getData(object))
-  ## print("@@ D1Client-methods 40:")
-  ## 
-  ## jNewPid <- mn$create(x@session, pid, jDataIS, sysmeta)
-  
-  message("@@ D1Client-methods 41:")
-  if (!is.jnull(e <- .jgetEx())) {
-    print("    ** Java exception was raised")
-    print(.jcheck(silent=FALSE))
-  }
-  if (VERBOSE) message("    * Created.")
+    ## -- Connect to the member node and create the object.
 
-  if(!is.jnull(jNewPid)) {
-    if (VERBOSE) message(paste("      - created pid:", jNewPid$getValue()))
-  } else {
-    if (VERBOSE) message("      - pid is null")
-  }
+    jNewPid <- x@client$create(x@session, jD1o)
+    if (!is.jnull(e <- .jgetEx())) {
+        print("    ** Java exception was raised")
+        print(paste("Exception detail code:", e$getDetail_code()))
+        print(e)
+        print(.jcheck(silent=FALSE))
+    }
+    message("    * Created.")
 
-  if (VERBOSE) message("<--  create(D1Client, D1Object)")
-  return(is.jnull(jNewPid))
+    if(!is.jnull(jNewPid)) {
+        message("      - created pid:", jNewPid$getValue())
+    } else {
+        message("      - pid is null")
+    }
+    message("<--  create(D1Client, D1Object)")
+    return(is.jnull(jNewPid))
 })
 
 
@@ -289,8 +279,15 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
   for (pid in members) {
       message(paste("    * next member to create:", pid))
       rD1o <- getMember(dataPackage, pid)
+      jUploadDate <- rD1o@jD1o$getSystemMetadata()$getDateUploaded()
+      if (!is.jnull( jUploadDate )) {
+          message("     * SystemMetadata indicates that this object was already created (uploaded ",
+                    jUploadDate$toString(),
+                    "). Skipping create.")
+      }
       createD1Object(x, rD1o)
   }
+  
   message(paste("    * creating the package resource map:", dataPackage@packageId ))
   createD1Object(x, mapObject)
   
