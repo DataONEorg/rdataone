@@ -141,6 +141,40 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 })
 
 
+setGeneric("d1IdentifierSearch", function(x, solrQuery) {
+			standardGeneric("d1IdentifierSearch")    
+		})
+
+
+#' A method to query the DataONE solr endpoint of the Coordinating Node, and 
+#' return a character vector of identifiers.  
+#' It expects a fully encoded character string as input (with lucene-reserved 
+#' characters backslash escaped and url-reserved characters %-encoded).
+#' @param x  D1Client: representing the DataONE environment being queried
+#' @param solrQuery  character: a fully encoded query string 
+#' @returnType character
+#' @return a vector of identifiers found
+#' @note users should not provide the leading '?' to the query
+#' @examples \dontrun{ d1IdentifierSearch(client,"q=%2Bspecies%20population%20diversity" }
+#' @author rnahf
+#' @export
+setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
+	
+	## empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
+	## negates any other fl or wr values that might be part of the passed in solrQuery
+	## (need to do this for parsing the reponse)
+	finalQuery = paste0("fl=identifier&wt=json&",solrQuery)
+	message("final query: ", finalQuery)
+	jsonResponse <- d1SolrQuery(x, finalQuery)
+	
+	## remove leading and trailing junk that surrounds the identifier list
+	intermediate <- sub("\"}\\]}}","",sub(".*docs\":\\[\\{\"identifier\":\"","",jsonResponse))
+	## split the remaining identifier list by the json cruft
+	result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
+	return(result)
+})
+
+
 
 ## getD1Object
 setGeneric("getD1Object", function(x, identifier, ...) { 
