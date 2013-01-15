@@ -9,7 +9,8 @@ exportMethods(D1Client, DataPackage, D1Object, EMLParser)
 
 # D1Client methods
 exportMethods(d1SolrQuery, d1IdentifierSearch, getPackage, getD1Object, reserveIdentifier, createD1Object,
-				createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN, convert.csv)
+				createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN, convert.csv,
+              showCertificateExpiration, showCurrentIdentity, launchCertificateDownload, obscureDefaultCertificate)
 
 # DataPackage methods
 exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, insertRelationship,

@@ -140,16 +140,21 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
     return(data)
 })
 
+setGeneric("d1SolrIdSearch", function(x, solrQuery) {
+    standardGeneric("d1SolrIdSearch")    
+})
+
+
 
 setGeneric("d1IdentifierSearch", function(x, solrQuery) {
-			standardGeneric("d1IdentifierSearch")    
-		})
+	standardGeneric("d1IdentifierSearch")    
+})
 
 
 #' A method to query the DataONE solr endpoint of the Coordinating Node, and 
 #' return a character vector of identifiers.  
 #' It expects a fully encoded character string as input (with lucene-reserved 
-#' characters backslash escaped and url-reserved characters %-encoded).
+#' characters backslash escaped and url-reserved characters percent-encoded).
 #' @param x  D1Client: representing the DataONE environment being queried
 #' @param solrQuery  character: a fully encoded query string 
 #' @returnType character
@@ -173,7 +178,6 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 	result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
 	return(result)
 })
-
 
 
 ## getD1Object
@@ -393,6 +397,77 @@ setMethod("getCN", signature("D1Client"), function(x) {
   cn <- J("org/dataone/client/D1Client")$getCN()
   return(cn)
 })
+
+
+## getCurrentIdentity
+setGeneric("showCurrentIdentity", function(x) { 
+    standardGeneric("showCurrentIdentity")
+})
+
+setMethod("showCurrentIdentity", signature("D1Client"), function(x) {
+    
+    jSubject <- J("org/dataone/client/auth/ClientIdentityManager")$getCurrentIdentity()
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    subjectValue <- jSubject$getValue()
+    if (subjectValue == J("org/dataone/service/util/Constants")$SUBJECT_PUBLIC) {
+        return(subjectValue)
+    }
+    
+    ## since there's a certificate, now check to see if its expired
+    jExpDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
+    jNowDate <- .jnew("java/util/Date")
+    if (jExpDate$before(jNowDate)) {
+        return(paste("[EXPIRED]", jSubject$getValue()))
+    }
+    return(jSubject$getValue())
+})
+
+
+##
+setGeneric("showCertificateExpiration", function(x) {
+    standardGeneric("showCertificateExpiration")
+})
+
+setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
+    jDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    if (is.null(jDate)) {
+        return(NULL)
+    }
+    return(jDate$toString())
+})
+
+
+## open the CILogin page in the default browser
+setGeneric("launchCertificateDownload", function(x) {
+    standardGeneric("launchCertificateDownload")
+})
+
+setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
+    browseURL("https://cilogon.org/?skin=DataONE")
+})
+
+setGeneric("obscureDefaultCertificate", function(x) {
+    standardGeneric("obscureDefaultCertificate")
+})
+
+setMethod("obscureDefaultCertificate", signature("D1Client"), 
+          function(x) {
+    jFile <- J("org/dataone/client/auth/CertificateManager")$locateDefaultCertificate()
+    # check for FileNotFound
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    filePath <- jFile$getAbsolutePath()
+    file.rename(filePath,paste0(filePath,"_obscured"))
+}
 
 
 #########################################################

@@ -37,7 +37,7 @@
   a dataFrame.
   
   This doesn't work for all data sets, so any of the named parameters of 'read.table'
-  can be added, 'sep="\t"' for example for tab delimited data.
+  can be added, 'sep="\\t"' for example for tab delimited data.
   
   Manually figuring out what the correct parameters should be is a time-consuming
   process, especially if working with someone else's data.  In DataONE, the metadata
