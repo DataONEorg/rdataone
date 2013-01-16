@@ -8,8 +8,9 @@ exportClasses(D1Client, DataPackage, D1Object, EMLParser)
 exportMethods(D1Client, DataPackage, D1Object, EMLParser)
 
 # D1Client methods
-exportMethods(d1SolrQuery, d1IdentifierSearch, getPackage, getD1Object, reserveIdentifier, createD1Object,
-				createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN, convert.csv,
+exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,
+		      createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN, convert.csv,
+              d1SolrQuery, d1IdentifierSearch, 
               showCertificateExpiration, showCurrentIdentity, launchCertificateDownload, 
               obscureDefaultCertificate, restoreDefaultCertificate)
 
@@ -31,3 +32,4 @@ exportMethods(documents.d1FormatIds,
 export("d1.test")
 export("d1.javaversion")
 export("dataTableDescriber.registry")
+export("urlEncodeQuerySegment")

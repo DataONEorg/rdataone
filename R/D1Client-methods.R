@@ -174,6 +174,11 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 	
 	## remove leading and trailing junk that surrounds the identifier list
 	intermediate <- sub("\"}\\]}}","",sub(".*docs\":\\[\\{\"identifier\":\"","",jsonResponse))
+	
+	## if there are no identifiers returned, the intermediate will still have the responseHeader
+	if(grepl("^\\{\"responseHeader\":",intermediate)) {
+		return(character(0))
+	}
 	## split the remaining identifier list by the json cruft
 	result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
 	return(result)
