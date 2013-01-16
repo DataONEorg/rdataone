@@ -485,6 +485,9 @@ setMethod("restoreDefaultCertificate", signature("D1Client"), function(x) {
 	# check for FileNotFound
 	tryCatch({
 		jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
+	    ## if we got here, a new certificate is in the default location, so
+		## remove any obscured certificate
+		file.remove(paste0(jFile$getAbsolutePath,"_obscured"))
 	}, error=function(err) { 
 		expectedLoc <- sub("(.+expected location: )","",err$getMessage())
 		obscured <- paste0(expectedLoc,"_obscured")
