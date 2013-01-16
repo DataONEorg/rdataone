@@ -399,7 +399,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 })
 
 
-## getCurrentIdentity
+## showCurrentIdentity
 setGeneric("showCurrentIdentity", function(x) { 
     standardGeneric("showCurrentIdentity")
 })
@@ -444,7 +444,7 @@ setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
 })
 
 
-## open the CILogin page in the default browser
+#' open the CILogin Certificate download page in the default browser
 setGeneric("launchCertificateDownload", function(x) {
     standardGeneric("launchCertificateDownload")
 })
@@ -453,13 +453,18 @@ setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
     browseURL("https://cilogon.org/?skin=DataONE")
 })
 
+#' Obscures the client certificate CILogon installs, effectively making future
+#' interactions with the DataONE services anonymous.  Note, when the client
+#' certificate is obscured, you will not be able to create objects to DataONE,
+#' or build D1Objects, which uses the certificate to fill out fields in the
+#' system metadata.
+#' restoreDefaultCertificate is this method's inverse operation   
 setGeneric("obscureDefaultCertificate", function(x) {
     standardGeneric("obscureDefaultCertificate")
 })
 
-setMethod("obscureDefaultCertificate", signature("D1Client"), 
-          function(x) {
-    jFile <- J("org/dataone/client/auth/CertificateManager")$locateDefaultCertificate()
+setMethod("obscureDefaultCertificate", signature("D1Client"), function(x) {
+    jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
     # check for FileNotFound
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
@@ -467,7 +472,30 @@ setMethod("obscureDefaultCertificate", signature("D1Client"),
     }
     filePath <- jFile$getAbsolutePath()
     file.rename(filePath,paste0(filePath,"_obscured"))
-}
+})
+
+#' Restores an obscured certificate to its original location.  The inverse
+#' operation to "obscureDefaultCertificate".  
+setGeneric("restoreDefaultCertificate", function(x) {
+			standardGeneric("restoreDefaultCertificate")
+		})
+
+setMethod("restoreDefaultCertificate", signature("D1Client"), function(x) {
+
+	# check for FileNotFound
+	tryCatch({
+		jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
+	}, error=function(err) { 
+		expectedLoc <- sub("(.+expected location: )","",err$getMessage())
+		obscured <- paste0(expectedLoc,"_obscured")
+		message("expected:",expectedLoc," obscured: ", obscured)
+		if (file.exists(obscured)) {
+			file.rename(obscured, expectedLoc)
+		} else {
+			message("No obscured certificate to restore at", obscured)
+		}
+	})
+})
 
 
 #########################################################
