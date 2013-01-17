@@ -46,7 +46,7 @@ setClass("D1Client",
 #' 
 #' @author mbjones
 #' @export
-setGeneric("D1Client", function(env, mn_nodeid, ...) {
+setGeneric("D1Client", function(env, mnNodeid, ...) {
   standardGeneric("D1Client")
 })
 
@@ -69,13 +69,14 @@ setMethod("D1Client", , function() {
 ## Pass in the environment to be used by this D1Client, but use
 ##   the default member node.
 setMethod("D1Client", signature("character"), function(env, ...) {
+    message("instantiating D1Client without a 'home' Member Node...")
     result <- D1Client(env, "")
     return(result)
 })
 
-## Pass in the environment to be used by this D1Client, plus the 
-##   id of member node.
-setMethod("D1Client", signature("character", "character"), function(env, mn_nodeid) {
+#' Pass in the environment to be used by this D1Client, plus the 
+#' id of the member node to be used for primary interactions such as creates
+setMethod("D1Client", signature("character", "character"), function(env, mnNodeid) {
 
   ## Define the default CNs for each environment.
   PROD <- "https://cn.dataone.org/cn"
@@ -102,13 +103,37 @@ setMethod("D1Client", signature("character", "character"), function(env, mn_node
   result <- new("D1Client")
   result@endpoint <- CN_URI
 
-  ## Set the node reference
-  result@mn.nodeid <- mn_nodeid
-
+  ## an expired certificate can crash the R session, so want to check before 
+  ## instantiating any Java objects, which might interact with the DataONE environment
+  ## while setting things up.  (It will be called in this routine when 
+  ## validating the member node id)
+  if (d1.isCertExpired()) {
+      message("Your client certificate is expired.  Please download new one before continuing...")
+      return(NULL)
+  }
+  
   ## Create a Java D1Client object to use for contacting the server
   client <- .jnew("org/dataone/client/D1Client") 
   result@client <- client
-
+  
+  ## Check and set the node reference
+  if (mnNodeid == "") {
+    ## allow the mn to be unset with empty string only
+    result@mn.nodeid <- mnNodeid
+  } else {
+    ## check to see if it's a valid value   
+    jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+    jNodeRef$setValue(mnNodeid)
+  
+    mnUrl <- result@client$getCN()$lookupNodeBaseUrl(mnNodeid)
+    if (is.null(mnUrl) || mnUrl == "") {
+        message("Error: The provided mnNodeid value is invalid for the DataONE environment")
+        return(NULL)
+    } else {
+        result@mn.nodeid <- mnNodeid
+    }
+  }
+ 
   ## initialize the session, but not sure where it's used
   result@session <- .jnull("org/dataone/service/types/v1/Session") 
 

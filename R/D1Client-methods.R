@@ -52,6 +52,10 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
   return(dp)
 })
 
+solrEscapeCharacters <- function(querySegment) {
+    backslashed <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
+    return(backslashed)
+}
 
 #' encodes the reserved characters in a url query segment
 urlEncodeQuerySegment <- function(querySegment) {
@@ -139,11 +143,6 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
     }
     return(data)
 })
-
-setGeneric("d1SolrIdSearch", function(x, solrQuery) {
-    standardGeneric("d1SolrIdSearch")    
-})
-
 
 
 setGeneric("d1IdentifierSearch", function(x, solrQuery) {
@@ -404,105 +403,16 @@ setMethod("getCN", signature("D1Client"), function(x) {
 })
 
 
-## showCurrentIdentity
-setGeneric("showCurrentIdentity", function(x) { 
-    standardGeneric("showCurrentIdentity")
+
+
+setGeneric("listMemberNodes", function(x) {
+    standardGeneric("listNodes")
 })
 
-setMethod("showCurrentIdentity", signature("D1Client"), function(x) {
-    
-    jSubject <- J("org/dataone/client/auth/ClientIdentityManager")$getCurrentIdentity()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    subjectValue <- jSubject$getValue()
-    if (subjectValue == J("org/dataone/service/util/Constants")$SUBJECT_PUBLIC) {
-        return(subjectValue)
-    }
-    
-    ## since there's a certificate, now check to see if its expired
-    jExpDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
-    jNowDate <- .jnew("java/util/Date")
-    if (jExpDate$before(jNowDate)) {
-        return(paste("[EXPIRED]", jSubject$getValue()))
-    }
-    return(jSubject$getValue())
-})
-
-
-##
-setGeneric("showCertificateExpiration", function(x) {
-    standardGeneric("showCertificateExpiration")
-})
-
-setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
-    jDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    if (is.null(jDate)) {
-        return(NULL)
-    }
-    return(jDate$toString())
-})
-
-
-#' open the CILogin Certificate download page in the default browser
-setGeneric("launchCertificateDownload", function(x) {
-    standardGeneric("launchCertificateDownload")
-})
-
-setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
-    browseURL("https://cilogon.org/?skin=DataONE")
-})
-
-#' Obscures the client certificate CILogon installs, effectively making future
-#' interactions with the DataONE services anonymous.  Note, when the client
-#' certificate is obscured, you will not be able to create objects to DataONE,
-#' or build D1Objects, which uses the certificate to fill out fields in the
-#' system metadata.
-#' restoreDefaultCertificate is this method's inverse operation   
-setGeneric("obscureDefaultCertificate", function(x) {
-    standardGeneric("obscureDefaultCertificate")
-})
-
-setMethod("obscureDefaultCertificate", signature("D1Client"), function(x) {
-    jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
-    # check for FileNotFound
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    filePath <- jFile$getAbsolutePath()
-    file.rename(filePath,paste0(filePath,"_obscured"))
-})
-
-#' Restores an obscured certificate to its original location.  The inverse
-#' operation to "obscureDefaultCertificate".  
-setGeneric("restoreDefaultCertificate", function(x) {
-			standardGeneric("restoreDefaultCertificate")
-		})
-
-setMethod("restoreDefaultCertificate", signature("D1Client"), function(x) {
-
-	# check for FileNotFound
-	tryCatch({
-		jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
-	    ## if we got here, a new certificate is in the default location, so
-		## remove any obscured certificate
-		file.remove(paste0(jFile$getAbsolutePath,"_obscured"))
-	}, error=function(err) { 
-		expectedLoc <- sub("(.+expected location: )","",err$getMessage())
-		obscured <- paste0(expectedLoc,"_obscured")
-		message("expected:",expectedLoc," obscured: ", obscured)
-		if (file.exists(obscured)) {
-			file.rename(obscured, expectedLoc)
-		} else {
-			message("No obscured certificate to restore at", obscured)
-		}
-	})
+setMethod("listMemberNodes", signature("D1Client"), function(x) {
+    mnIDset <- x@client$getCN()$listNodeIds()$toArray(.jarray(""))
+    ## remove CN
+    return (mnIDset)
 })
 
 
@@ -511,14 +421,14 @@ setMethod("restoreDefaultCertificate", signature("D1Client"), function(x) {
 #########################################################
 
 ## convert.csv
-setGeneric("convert.csv", function(x, ...) {
-  standardGeneric("convert.csv")} 
-)
-
-setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
-  con <- textConnection("data", "w")
-  write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
-  close(con)
-  csvdata <- paste(data, collapse="\n")
-  return(csvdata)
-})
+# setGeneric("convert.csv", function(x, ...) {
+#   standardGeneric("convert.csv")} 
+# )
+# 
+# setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
+#   con <- textConnection("data", "w")
+#   write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
+#   close(con)
+#   csvdata <- paste(data, collapse="\n")
+#   return(csvdata)
+# })
