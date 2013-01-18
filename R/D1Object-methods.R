@@ -210,15 +210,10 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 	mdFormat <- getFormatId(reference)
 	
 	dtdClassName <- dataTableDescriber.registry[[ mdFormat ]]
-	message(paste("@@ asDataFrame/Object", dtdClassName))
+	message(paste("@@ asDataFrame/Object", getIdentifier(reference), dtdClassName))
 	if (!is.na(dtdClassName)) {
 		dtd <-	do.call(dtdClassName, list(reference))
 		df <- asDataFrame(x,dtd)
-		## con <-textConnection("signatures", "w")
-		## showMethods("documents.d1FormatIds", printTo=con)
-		## close(con)
-		## regMdParsers <- na.omit(sapply(strsplit(signatures[2:length(signatures)],"\""), 
-		##             function(x) ifelse(length(x>1),x[2],NA)))
 	} else {
 		print("Could not find metadata parser, trying as plain csv...")
 		df <-  asDataFrame(x)
@@ -228,7 +223,7 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
              
 setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x, reference, ...) {
                         
-    message(paste("@@ asDataFrame / D1Object-dtd",class(reference)))
+    message("asDataFrame / D1Object-dtd",class(reference))
     ## reference is a DataTableDescriber
 	pids <- documented.d1Identifiers(reference)
 	jDataId <- x@jD1o$getIdentifier()$getValue()

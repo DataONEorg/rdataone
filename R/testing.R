@@ -91,7 +91,8 @@ d1.test <- function() {
   }
 
   d1.testGetD1Object(cn_env, mn_nodeid, objId)
-  d1.testGetPackage(cn_env, mn_nodeid, testPackage)
+  retrievedPackage <- d1.testGetPackage(cn_env, mn_nodeid, testPackage)
+  d1.testAsDataFrame(retrievedPackage)
 
   print("####### End Testing ######################")
 }
@@ -116,7 +117,7 @@ d1.testCreateDataObject <- function(env, mn_nodeid) {
   ## Create a data table, and write it to csv format
   testdf <- data.frame(x=1:10,y=11:20)
   ## print(paste("testdf: ", testdf))
-  csvdata <- convert.csv(d1_client, testdf)
+  csvdata <- convert.csv(testdf)
   format <- "text/csv"
 
   ## Build a D1Object for the table, and upload it to the MN
@@ -170,7 +171,7 @@ d1.testConvertCSV <- function(env) {
   print(testdf)
 
   d1 <- D1Client(env)
-  csv <- convert.csv(d1, testdf)
+  csv <- convert.csv(testdf)
   print(csv)
 
   print("Test 2: finished")
@@ -238,7 +239,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   #
   message("@@ testing.R 04: Create first data object...")
   testdf <- data.frame(x=1:100, y=101:200)
-  csvdata <- convert.csv(d1_client, testdf)
+  csvdata <- convert.csv(testdf)
   format <- "text/csv"
   d1o_scidata1 <- new("D1Object", scidata1_id, csvdata, format, mn_nodeid)
   if(is.jnull(d1o_scidata1)) {
@@ -252,7 +253,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   
   message("@@ testing.R 05: Create second data object...")
   testdf <- data.frame(x=21:30, y=31:40, z=41:50)
-  csvdata <- convert.csv(d1_client, testdf, sep="\t")
+  csvdata <- convert.csv(testdf, sep="\t")
   format <- "text/csv"
   d1o_scidata2 <- new("D1Object", scidata2_id, csvdata, format, mn_nodeid)
   if(is.jnull(d1o_scidata2)) {
@@ -412,6 +413,7 @@ d1.testGetPackage <- function(env, mn_nodeid, package) {
   # print(jString)
 
   print("Test 5: finished")
+  return(rDataPackage)
 }
 
 d1.testAsDataFrame <- function(package) {
