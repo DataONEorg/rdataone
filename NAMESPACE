@@ -1,5 +1,6 @@
 import("rJava")
-import("XML")
+# commenting out this import, to avoid build (check) errors
+#import("XML")
 
 # Classes
 exportClasses(D1Client, DataPackage, D1Object, EMLParser)

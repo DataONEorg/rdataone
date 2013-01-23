@@ -1,59 +1,33 @@
+\docType{methods}
 \name{D1Client}
 \alias{D1Client}
-\title{
-    Create a new D1Client object for access to DataONE services.
-}
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
-\usage{
-D1Client(...)
-}
-%- maybe also 'usage' for other objects documented here.
+\title{Construct a D1Client, using default env ("PROD") and nodeid ("")}
 \arguments{
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
-}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
+  \item{env}{The label for the DataONE environment to be
+  using ('PROD','STAGING','SANDBOX','DEV')}
+
+  \item{mn_nodeid}{The node Id of the application's 'home'
+  node.  Should be already registered to the corresponding
+  'env'}
+
+  \item{...}{}
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  the D1Client object representing the DataONE environment
+
+  the D1Client object representing the DataONE environment
 }
-\references{
-%% ~put references to the literature/web site here ~
+\description{
+  Construct a D1Client, using default env ("PROD") and
+  nodeid ("")
+
+  Pass in the environment to be used by this D1Client, plus
+  the id of the member node to be used for primary
+  interactions such as creates
 }
 \author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+  mbjones
+
+  rnahf
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (...) 
-{
-    standardGeneric("D1Client")
-  }, generic = structure("D1Client", package = "dataone"), package = "dataone", group = list(), valueClass = character(0), signature = "...", default = `NULL`, skeleton = function (...) 
-stop("invalid call in method dispatch to \"D1Client\" (no default method)", 
-    domain = NA)(...), class = structure("nonstandardGenericFunction", package = "methods"))
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

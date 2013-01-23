@@ -406,7 +406,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 
 
 setGeneric("listMemberNodes", function(x) {
-    standardGeneric("listNodes")
+    standardGeneric("listMemberNodes")
 })
 
 setMethod("listMemberNodes", signature("D1Client"), function(x) {

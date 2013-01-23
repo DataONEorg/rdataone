@@ -45,18 +45,6 @@ convert.csv(x, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (x, ...) 
-{
-    standardGeneric("convert.csv")
-  }, generic = structure("convert.csv", package = "dataone"), package = "dataone", group = list(), valueClass = character(0), signature = "x", default = `NULL`, skeleton = function (x, 
-    ...) 
-stop("invalid call in method dispatch to \"convert.csv\" (no default method)", 
-    domain = NA)(x, ...), class = structure("nonstandardGenericFunction", package = "methods"))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

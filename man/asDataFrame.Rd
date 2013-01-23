@@ -79,41 +79,40 @@
   read.csv / read.table
 }
 \examples{
+  \dontrun{
+    ## a trivial working example for the manual workflow
+
+    ## preparing some data for the examples 
+    ## trees is a built-in dataset
+    d1.client <- D1Client("SANDBOX")
+    trees.csv <- convert.csv(trees)
+
+    ## now the trees data is serialized into a D1Object
+    trees.d1o <- new("D1Object","exampleId", trees.csv, "text/csv", "node:urn:foo")
+
+    ## now converted the data object known to be a standard csv file 
+    df <- asDataFrame(trees.d1o)
 
 
-## a trivial working example for the manual workflow
+    ## other non-working examples
+    ## (these depend on the presence of the proper DataTableDescriber")
+    #####################################################################
 
-## preparing some data for the examples 
-## trees is a built-in dataset
-d1.client <- D1Client("SANDBOX")
-trees.csv <- convert.csv(trees)
+    ## providing a different field separator
+    df <- asDataFrame(data.object, sep="\t", ...)
 
-## now the trees data is serialized into a D1Object
-trees.d1o <- new("D1Object","exampleId", trees.csv, "text/csv", "node:urn:foo")
+    ## using a DataTableDesciber to provide instructions
+    table.describer <- EMLParser(its.metadata)
+    df <- asDataFrame(data.object, table.describer)
 
-## now converted the data object known to be a standard csv file 
-df <- asDataFrame(trees.d1o)
+    ## using the metadata identifier, and letting the method
+    ## find the correct DataTableDescriber based on the formatId of the metadata
+    df <- asDataFrame(data.object, its.metadata)
 
-
-## other non-working examples
-## (these depend on the presence of the proper DataTableDescriber")
-#####################################################################
-
-## providing a different field separator
-df <- asDataFrame(data.object, sep="\t", ...)
-
-## using a DataTableDesciber to provide instructions
-table.describer <- EMLParser(its.metadata)
-df <- asDataFrame(data.object, table.describer)
-
-## using the metadata identifier, and letting the method
-## find the correct DataTableDescriber based on the formatId of the metadata
-df <- asDataFrame(data.object, its.metadata)
-
-## finally, using the resourceMap to find the metadata object that describes
-## the data object.
-df <- asDataFrame(data.package, dataMember.id)
-
+    ## finally, using the resourceMap to find the metadata object that describes
+    ## the data object.
+    df <- asDataFrame(data.package, dataMember.id)
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

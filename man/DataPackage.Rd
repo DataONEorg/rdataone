@@ -56,14 +56,15 @@ new("DataPackage", jDataPackage = jDataPackage)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-  ## example of instantiating a new DataPackage
-  data_package <- new(Class="DataPackage",packageId="somePackageId")
+  \dontrun{
+    ## example of instantiating a new DataPackage
+    data_package <- new(Class="DataPackage",packageId="somePackageId")
   
-  ## example of instantiating an existing DataPackage, through the
-  ## fictional intermediate function foo()
-  jD1Package <- foo()
-  data_package <- new(Class="DataPackage", jDataPackage=jD1Package)
-  
+    ## example of instantiating an existing DataPackage, through the
+    ## fictional intermediate function foo()
+    jD1Package <- foo()
+    data_package <- new(Class="DataPackage", jDataPackage=jD1Package)
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

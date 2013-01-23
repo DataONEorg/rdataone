@@ -46,10 +46,7 @@ createDataPackage(x, d1Object, ...)
 }
 \references{
   See d1_libclient_java documentation D1Client.create()
-  \code{
-  	\link{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create(org.dataone.service.types.v1.Session,%20org.dataone.client.D1Object)"
-       }
-    }
+  	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create(org.dataone.service.types.v1.Session,%20org.dataone.client.D1Object)"}
 }
 \author{
 	Rob Nahf
@@ -64,6 +61,7 @@ createDataPackage(x, d1Object, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+  \dontrun{
   # (not executable!!)
   library(dataone)
   cli <- D1Client("STAGING","urn:node:memberNodeFoo")
@@ -79,7 +77,7 @@ createDataPackage(x, d1Object, ...)
   addRelationship(dataPackage,d1objectMeta,c(d1object1,d1object2))
   
   createDataPackage(cli, dataPackage)
-
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
