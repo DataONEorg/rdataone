@@ -46,17 +46,15 @@ createDataPackage(x, d1Object, ...)
 }
 \references{
   See d1_libclient_java documentation D1Client.create()
-  	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create(org.dataone.service.types.v1.Session,%20org.dataone.client.D1Object)"}
-}
-\author{
-	Rob Nahf
+  	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create"}
 }
 \note{
 %%  ~~further notes~~
 }
-
+\author{
+	Rob Nahf
+}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
