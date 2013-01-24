@@ -42,14 +42,33 @@ setMethod("getData", signature("DataPackage", "character"), function(x, id) {
 
 
 
-## getDataCount, returns number of data objects in this package
+
+#' Get the Count of Objects in the Package
+#' @param x DataPackage
+#' @param ... 
+#' @returnType numeric
+#' @return the number of object in the Package
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getSize", function(x, ...) { standardGeneric("getSize")} )
 
 setMethod("getSize", "DataPackage", function(x) {
   return(x@jDataPackage$size())
 })
 
-## getIdentifiers, returns number of data objects in this package
+
+
+#' Get the Identifiers of Package Members
+#' 
+#' Return the identifiers of the package members, as defined by the ResourceMap
+#' @param x : DataPackage
+#' @param ... 
+#' @returnType character
+#' @return list of identifiers
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getIdentifiers", function(x, ...) { standardGeneric("getIdentifiers")} )
 
 setMethod("getIdentifiers", "DataPackage", function(x) {
@@ -90,6 +109,12 @@ setMethod("addAndDownloadData", signature("DataPackage", "character"), function(
 })
 
 
+#' Associates Data Objects to the Science Metadata Objects that Describe Them
+#' 
+#' @note Since the resource map that defines a package is separate from the items
+#' it associates, it is possible to use identifiers that have not been defined 
+#' as members of the package.
+
 
 setGeneric("insertRelationship", function(x, metadataID, dataIDs, ...) {
   standardGeneric("insertRelationship")
@@ -114,12 +139,11 @@ setMethod("insertRelationship", signature("DataPackage", "character", "character
 })
 
 
-##
-##
+#' Returns true if the specified object is a member of the package
+#'  
 setGeneric("contains", function(x, identifier, ...) {
   standardGeneric("contains")
 })
-
 
 setMethod("contains", signature("DataPackage", "character"), function(x, identifier) {
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -129,12 +153,14 @@ setMethod("contains", signature("DataPackage", "character"), function(x, identif
 })
 
 
-##
-##
+#' Remove the Specified Member from the Package
+#' 
+#' Given the identifier of a member of the data package, return the D1Object
+#' representation of the member.
+#' 
 setGeneric("removeMember", function(x, identifier, ...) {
   standardGeneric("removeMember")
 })
-
 
 setMethod("removeMember", signature("DataPackage", "character"), function(x, identifier) {
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -143,12 +169,15 @@ setMethod("removeMember", signature("DataPackage", "character"), function(x, ide
   x@jDataPackage$remove(jPid)
 })
 
-##
-##
+
+#' Return the Package Member by Identifier
+#' 
+#' Given the identifier of a member of the data package, return the D1Object
+#' representation of the member.
+#' 
 setGeneric("getMember", function(x, identifier, ...) {
   standardGeneric("getMember")
 })
-
 
 setMethod("getMember", signature("DataPackage", "character"), function(x, identifier) {
   jPid <- .jnew("org/dataone/service/types/v1/Identifier")
@@ -159,7 +188,11 @@ setMethod("getMember", signature("DataPackage", "character"), function(x, identi
   return(rD1o)
 })
 
-
+#' returns a DataFrame from the specified data object
+#' 
+#' Given the identifier of a member of the data package, return a data frame
+#' using any parsing instructions contained in its describing science metadata
+#' 
 setMethod("asDataFrame", signature("DataPackage", "character"), function(x, reference) {
  
     ## find the dataObject and the metadata that Documents it

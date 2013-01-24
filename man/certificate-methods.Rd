@@ -67,10 +67,12 @@
 }
 \author{Rob Nahf}
 \examples{
+  \dontrun{
   d1.getIdentity()
   d1.downloadCert()
   d1.getCertExpires()
   d1.isCertExpired()
   d1.obscureCert()
   d1.restoreCert()
+  }
 }

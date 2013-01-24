@@ -88,6 +88,18 @@
 ### Utility methods
 #########################################################
 
+
+#' Get the Contents of the Specified Data Object
+#' 
+#' @param x  D1Object or DataPackage: the data structure from where to get the data
+#' @param id Missing or character: if @code{x} is DataPackage, the identifier of the
+#' package member to get data from
+#' @param ... 
+#' @returnType character 
+#' @return character representation of the data
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getData", function(x, id, ...) {
     standardGeneric("getData")
 })
@@ -116,6 +128,14 @@ setMethod("getData", signature("D1Object"), function(x) {
 
 
 
+#' Get the Identifier of the D1Object
+#' @param x D1Object
+#' @param ... 
+#' @returnType character
+#' @return the identifier
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getIdentifier", function(x, ...) {
     standardGeneric("getIdentifier")
 })
@@ -132,6 +152,14 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 })
 
 
+#' Get the FormatId of the D1Object
+#' @param x D1Object
+#' @param ... 
+#' @returnType character
+#' @return the formatId
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getFormatId", function(x, ...) {
 			standardGeneric("getFormatId")
 		})
@@ -148,6 +176,19 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 		})
 
 
+#' Add a Rule to the AccessPolicy to Make the Object Publicly Readable
+#' 
+#' To be called prior to creating the object in DataONE.  When called before 
+#' creating the object, adds a rule to the access policy that makes this object
+#' publicly readable.  If called after creation, it will only change the system
+#' metadata locally, and will not have any affect. 
+#' @param x D1Object
+#' @param ... 
+#' @returnType NULL
+#' @return NULL
+#' 
+#' @author rnahf
+#' @export
 setGeneric("setPublicAccess", function(x, ...) {
   standardGeneric("setPublicAccess")
 })
@@ -169,10 +210,26 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 
 
 
+#' Test whether the provided subject can read the object
+#' 
+#' Using the AccessPolicy, tests whether the subject has read permission
+#' for the object.  This method is meant work prior to submission, so uses
+#' only the AccessPolicy to determine who can read (Not the rightsHolder field,
+#' which always can read.)
+#' @param x D1Client
+#' @param subject : character
+#' @param ... 
+#' @returnType logical
+#' @return TRUE or FALSE
+#' 
+#' @author rnahf
+#' @export
 setGeneric("canRead", function(x, subject, ...) {
   standardGeneric("canRead")
 })
 
+## TODO: is this method really necessary? Can it be implemented more fully? (looking at rightsHolder)
+## (want to be able to work prior to submission)
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
     jD1Object = x@jD1o
 	if(!is.jnull(jD1Object)) {

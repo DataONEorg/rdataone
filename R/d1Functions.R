@@ -144,12 +144,15 @@ d1.downloadCert <- function() {
     browseURL("https://cilogon.org/?skin=DataONE")
 }
 
-#' Obscures the client certificate CILogon installs, effectively making future
+#' Obscure the CILogon Client Certificate
+#' 
+#' Obscures the x509 certificate that CILogon installs, effectively making future
 #' interactions with the DataONE services anonymous.  Note, when the client
 #' certificate is obscured, you will not be able to create objects to DataONE,
 #' or build D1Objects, which uses the certificate to fill out fields in the
 #' system metadata.
-#' restoreCert is this method's inverse operation   
+#' 
+#' @note \code{restoreCert} is this method's inverse operation   
 # setGeneric("obscureCert", function(x) {
 #     standardGeneric("obscureCert")
 # })
@@ -167,7 +170,9 @@ d1.obscureCert <- function() {
     file.rename(filePath,paste0(filePath,"_obscured"))
 }
 
-#' Restores an obscured certificate to its original location.  The inverse
+#' Restore an Obscured Certificate
+#' 
+#' Restores an obscured certificate to its original location. The inverse
 #' operation to "obscureCert".  
 # setGeneric("restoreCert", function(x) {
 #     standardGeneric("restoreCert")
