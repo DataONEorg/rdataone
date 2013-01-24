@@ -29,7 +29,19 @@
 ### MNRead methods
 #########################################################
 
-## getPackage
+
+#' Download a DataPackage from the DataONE Cloud
+#' 
+#' Given a valid identifier for a ResourceMap, instantiate an R DataPackage
+#' object containing all of the package members.  
+#' @param x D1Client
+#' @param identifier character: identifier of the ResourceMap 
+#' @param ... 
+#' @returnType DataPackage
+#' @return the data package
+#' 
+#' @author rnahf
+#' @export
 setGeneric("getPackage", function(x, identifier, ...) { 
   standardGeneric("getPackage")
 })
@@ -52,10 +64,7 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
   return(dp)
 })
 
-solrEscapeCharacters <- function(querySegment) {
-    backslashed <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
-    return(backslashed)
-}
+
 
 #' encodes the reserved characters in a url query segment
 urlEncodeQuerySegment <- function(querySegment) {

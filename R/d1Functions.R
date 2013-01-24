@@ -21,6 +21,14 @@
 ### This file contains functions useful to the dataone package methods
 
 
+#' Convert a DataFrame to Standard CSV
+#' @param df : the dataFrame
+#' @param ... 
+#' @returnType character
+#' @return the dataframe serialized as a .csv
+#' 
+#' @author Matt Jones
+#' @export
 convert.csv <-function(df, ...) {
     con <- textConnection("data", "w")
     write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
@@ -31,56 +39,16 @@ convert.csv <-function(df, ...) {
 
 
 
-# encodeSolr <- function(querySegment) {
-#     backslashed <- gsub("([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",querySegment, perl=TRUE)
-#     return(backslashed)
-# }
 
-encodeSolr <- function(segment) {
-    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
-    if (grepl(" ",inter)) {
-        return(paste0("\"",inter,"\""))
-    }
-    return(inter)
-}
-
-#' encodes the reserved characters in a url query segment
-encodeUrlQuery <- function(querySegment) {
-    
-    #    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
-    #    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
-    
-    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    return(encoded)
-    
-    ## an R-only alternate implementation that only would work for ASCII characters
-    ## (may need to check the behavior of {,},[,] - they may need to be hidden also)
-    #    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
-    #    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
-    #    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
-}
-
-encodeUrlPath <- function(pathSegment) {
-    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlPathSegment", pathSegment)
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    return(encoded)
-}
-
-
-## showCurrentIdentity
-# setGeneric("showCurrentIdentity", function(x) { 
-#     standardGeneric("showCurrentIdentity")
-# })
-# 
-# setMethod("showCurrentIdentity", signature("D1Client"), function(x) {
-
+#' Get DataONE Identity as Stored in the CILogon Certificate
+#' 
+#' Returns Your Identity according to DataONE (and CILogon).  If the certificate
+#' is expired, the character string will be prefixed with "[EXPIRED]"
+#' @returnType character
+#' @return the DataONE Subject that is your client's identity
+#' 
+#' @author rnahf
+#' @export
 d1.getIdentity <- function() {
     
     jSubject <- J("org/dataone/client/auth/ClientIdentityManager")$getCurrentIdentity()
@@ -101,6 +69,12 @@ d1.getIdentity <- function() {
 }
 
 
+#' Is the CILogon Certificate Expired?
+#' @returnType logical
+#' @return true if expired
+#' 
+#' @author rnahf
+#' @export
 d1.isCertExpired <- function() {
     ## since there's a certificate, now check to see if its expired
     jExpDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
@@ -114,13 +88,14 @@ d1.isCertExpired <- function() {
 }
 
 
-##
-# setGeneric("showCertificateExpiration", function(x) {
-#     standardGeneric("showCertificateExpiration")
-# })
-# 
-# setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
 
+
+#' Show the Date and Time when the CILogon Certificate Expires
+#' @returnType character
+#' @return the expiration date
+#' 
+#' @author rnahf
+#' @export
 d1.getCertExpires <- function() {
     jDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
     if (!is.null(e<-.jgetEx())) {
@@ -135,14 +110,18 @@ d1.getCertExpires <- function() {
 
 
 #' open the CILogin Certificate download page in the default browser
-# setGeneric("launchCertificateDownload", function(x) {
-#     standardGeneric("launchCertificateDownload")
-# })
-# 
-# setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
+#' 
+#' A convenience method to take you to the CILogon download page:  
+#' https://cilogon.org/?skin=DataONE
+#' @returnType NULL
+#' 
+#' @author rnahf
+#' @export
 d1.downloadCert <- function() {
     browseURL("https://cilogon.org/?skin=DataONE")
 }
+
+
 
 #' Obscure the CILogon Client Certificate
 #' 
@@ -153,12 +132,10 @@ d1.downloadCert <- function() {
 #' system metadata.
 #' 
 #' @note \code{restoreCert} is this method's inverse operation   
-# setGeneric("obscureCert", function(x) {
-#     standardGeneric("obscureCert")
-# })
-# 
-# setMethod("obscureCert", signature("D1Client"), function(x) {
-
+#' @returnType NULL
+#' 
+#' @author rnahf
+#' @export
 d1.obscureCert <- function() {
     jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
     # check for FileNotFound
@@ -170,16 +147,18 @@ d1.obscureCert <- function() {
     file.rename(filePath,paste0(filePath,"_obscured"))
 }
 
+
+
+
 #' Restore an Obscured Certificate
 #' 
 #' Restores an obscured certificate to its original location. The inverse
 #' operation to "obscureCert".  
-# setGeneric("restoreCert", function(x) {
-#     standardGeneric("restoreCert")
-# })
-# 
-# setMethod("restoreCert", signature("D1Client"), function(x) {
-   
+#' 
+#' @returnType NULL
+#' 
+#' @author rnahf
+#' @export
 d1.restoreCert <- function() {
     # check for FileNotFound
     tryCatch({
@@ -199,5 +178,34 @@ d1.restoreCert <- function() {
     })
 }
 
+
+##
+# setGeneric("showCertificateExpiration", function(x) {
+#     standardGeneric("showCertificateExpiration")
+# })
+# 
+# setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
+
+
+
+# setGeneric("launchCertificateDownload", function(x) {
+#     standardGeneric("launchCertificateDownload")
+# })
+# 
+# setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
+
+
+# setGeneric("obscureCert", function(x) {
+#     standardGeneric("obscureCert")
+# })
+# 
+# setMethod("obscureCert", signature("D1Client"), function(x) {
+
+
+# setGeneric("restoreCert", function(x) {
+#     standardGeneric("restoreCert")
+# })
+# 
+# setMethod("restoreCert", signature("D1Client"), function(x) {
 
 
