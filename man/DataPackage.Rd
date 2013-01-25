@@ -14,7 +14,7 @@ new("DataPackage", jDataPackage = jDataPackage)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{identifier}{
+  \item{packageId}{
     The identifier for the data package, that corresponds to the DataONE identifier
     for the resourceMap object. If a new package is being built, this should be
     a new identifier not already registered in DataONE.
@@ -34,20 +34,12 @@ new("DataPackage", jDataPackage = jDataPackage)
   and has no corresponding java method.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  a DataPackage object
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+%\references{
+%}
 \author{
   Rob Nahf
-}
-\note{
-%%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

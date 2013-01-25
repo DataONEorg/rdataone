@@ -1,55 +1,20 @@
 \name{getD1Object}
 \alias{getD1Object}
-\title{
-    Get an object from the DataONE system with the given identifier, along with
-    its associated system metadata.
-}
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
-\usage{
-getD1Object(x, identifier, ...)
-}
-%- maybe also 'usage' for other objects documented here.
+\title{Download a D1Object from the DataONE Cloud}
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
-}
-  \item{identifier}{
-%%     ~~Describe \code{identifier} here~~
-}
-  \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
-}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
+  \item{x}{: D1Client}
+
+  \item{identifier}{: the identifier of the object to get}
+
+  \item{...}{(not yet used)}
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  the DataONE object
 }
-\references{
-%% ~put references to the literature/web site here ~
+\description{
+  Download a D1Object from the DataONE Cloud
 }
 \author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+  rnahf
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

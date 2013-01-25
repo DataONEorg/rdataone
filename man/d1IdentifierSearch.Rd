@@ -1,0 +1,32 @@
+\name{d1IdentifierSearch}
+\alias{d1IdentifierSearch}
+\title{A method to query the DataONE solr endpoint of the Coordinating Node, and
+return a character vector of identifiers.
+It expects a fully encoded character string as input (with lucene-reserved
+characters backslash escaped and url-reserved characters percent-encoded).}
+\arguments{
+  \item{x}{D1Client: representing the DataONE environment
+  being queried}
+
+  \item{solrQuery}{character: a fully encoded query string}
+}
+\value{
+  a vector of identifiers found
+}
+\description{
+  A method to query the DataONE solr endpoint of the
+  Coordinating Node, and return a character vector of
+  identifiers. It expects a fully encoded character string
+  as input (with lucene-reserved characters backslash
+  escaped and url-reserved characters percent-encoded).
+}
+\note{
+  users should not provide the leading '?' to the query
+}
+\examples{
+\dontrun{ d1IdentifierSearch(client,"q=\%2Bspecies\%20population\%20diversity" }
+}
+\author{
+  rnahf
+}
+

@@ -40,7 +40,7 @@ setClass("D1Client",
 #' 
 #' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param mn_nodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType D1Client  
 #' @return the D1Client object representing the DataONE environment
 #' 

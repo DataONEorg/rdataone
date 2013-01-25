@@ -3,17 +3,11 @@
 \alias{CILogon}
 \alias{CILogin}
 \alias{identity}
-\alias{d1.getIdentity}
-\alias{d1.downloadCert}
-\alias{d1.getCertExpires}
-\alias{d1.isCertExpired}
-\alias{d1.obscureCert}
-\alias{d1.restoreCert}
 \title{Client Identity in DataONE}
 \description{
   The dataone R package provides several functions for managing your DataONE
   identity (authorization status). Understanding how your identity is managed is 
-  important for working with DataONE, especially when you get unexpected results. 
+  important for working with DataONE, especially to avoid unexpected results. 
   For example, depending your authorization status, searches may or may return
   only public records, or the full set of public and private records. Object and 
   package retrievals might fail if some or all of the objects being retrieved are

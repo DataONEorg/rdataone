@@ -75,7 +75,7 @@ setGeneric("dataTable.characterEncoding", function(x, index, ...) {
 #' returns whether the data table has attributes arranged in 'columns' or 'rows'
 #' @param x - the DataTableDescriber instance
 #' @param index - the index of the dataTable to get results for
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return columns | rows
 #' 
@@ -96,7 +96,7 @@ setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
 #' the specified data table
 #' @param x - the DataTableDescriber instance
 #' @param index - the index of the dataTable to get results for
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return vector of missing value codes
 #' 
@@ -111,7 +111,7 @@ setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
 #' the specified data table
 #' @param x - the DataTableDescriber instance
 #' @param index - the index of the dataTable to get results for
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return the attribute (column) names of the data
 #' 
@@ -126,7 +126,7 @@ setGeneric("dataTable.attributeNames", function(x, index, ...) {
 #' the specified data table
 #' @param x - the DataTableDescriber instance
 #' @param index - the index of the dataTable to get results for
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return the data types of the attributes
 #' 
@@ -140,7 +140,7 @@ setGeneric("dataTable.attributeTypes", function(x, index, ...) {
 #' the specified data table
 #' @param x - the DataTableDescriber instance
 #' @param index - the index of the dataTable to get results for
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return the data storage types of the attributes
 #' 

@@ -7,7 +7,7 @@
 \arguments{
   \item{df}{: the dataFrame}
 
-  \item{...}{}
+  \item{...}{: additional params passed to write.csv}
 }
 \value{
   the dataframe serialized as a .csv

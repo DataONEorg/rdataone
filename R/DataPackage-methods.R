@@ -45,7 +45,7 @@ setMethod("getData", signature("DataPackage", "character"), function(x, id) {
 
 #' Get the Count of Objects in the Package
 #' @param x DataPackage
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType numeric
 #' @return the number of object in the Package
 #' 
@@ -63,7 +63,7 @@ setMethod("getSize", "DataPackage", function(x) {
 #' 
 #' Return the identifiers of the package members, as defined by the ResourceMap
 #' @param x : DataPackage
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return list of identifiers
 #' 
@@ -84,8 +84,18 @@ setMethod("getIdentifiers", "DataPackage", function(x) {
 
 
 
-## addData adds a D1Object to the underlying Java DataPackage
-## takes the DataPackage and rD1Object as input
+
+#' Add a D1Object to the DataPackage
+#' 
+#' Includes the D1Object in the DataPackage data Map, making it available for
+#' retrieval and eventual upload (via createPackage)
+#' 
+#' @param x : DataPackage
+#' @param d1object : D1Object
+#' @param ... : (not yet used)
+#' 
+#' @author rnahf
+#' @export
 setGeneric("addData", function(x, d1object, ...) { 
     standardGeneric("addData")
 })
@@ -95,9 +105,20 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, d1object)
   x@jDataPackage$addData(jD1object)
 })
 
-## addAndDownloadData downloads a D1Object to the DataPackage, using the provided identifier
-## string to retrieve from the DataONE system.
-## takes the DataPackage and a character string representing the identfier  as input
+
+
+
+#' Add a Pre-Existing Object to the Package
+#' 
+#' addAndDownloadData downloads a D1Object to the DataPackage, using the provided identifier
+#' string to retrieve from the DataONE system.
+#' 
+#' @param x : DataPackage
+#' @param identifier : character - the identifier of the object to act upon
+#' @param ... (not yet used)
+#' 
+#' @author rnahf
+#' @export
 setGeneric("addAndDownloadData", function(x, identifier, ...) { 
     standardGeneric("addAndDownloadData")
 })
@@ -109,13 +130,13 @@ setMethod("addAndDownloadData", signature("DataPackage", "character"), function(
 })
 
 
+
+
 #' Associates Data Objects to the Science Metadata Objects that Describe Them
 #' 
 #' @note Since the resource map that defines a package is separate from the items
 #' it associates, it is possible to use identifiers that have not been defined 
 #' as members of the package.
-
-
 setGeneric("insertRelationship", function(x, metadataID, dataIDs, ...) {
   standardGeneric("insertRelationship")
 })

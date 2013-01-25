@@ -7,7 +7,7 @@
 
   \item{id}{Missing or character: if}
 
-  \item{...}{}
+  \item{...}{(not yet used)}
 }
 \value{
   character representation of the data

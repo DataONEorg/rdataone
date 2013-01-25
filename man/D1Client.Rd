@@ -10,7 +10,7 @@
   node.  Should be already registered to the corresponding
   'env'}
 
-  \item{...}{}
+  \item{...}{(not yet used)}
 }
 \value{
   the D1Client object representing the DataONE environment

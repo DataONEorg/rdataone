@@ -36,7 +36,7 @@
 #' object containing all of the package members.  
 #' @param x D1Client
 #' @param identifier character: identifier of the ResourceMap 
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType DataPackage
 #' @return the data package
 #' 
@@ -65,28 +65,35 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
+#' Download a D1Object from the DataONE Cloud
+#' @param x : D1Client
+#' @param identifier : the identifier of the object to get
+#' @param ... (not yet used)
+#' @returnType D1Object
+#' @return the DataONE object
+#' 
+#' @author rnahf
+#' @export
+setGeneric("getD1Object", function(x, identifier, ...) { 
+			standardGeneric("getD1Object")
+		})
 
-#' encodes the reserved characters in a url query segment
-urlEncodeQuerySegment <- function(querySegment) {
-
-#    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
-#    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
-
-    message("querySegment: ", querySegment)
-    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    message("encoded: ", encoded)
-    return(encoded)
-    
-    ## an R-only alternate implementation that only would work for ASCII characters
-    ## (may need to check the behavior of {,},[,] - they may need to be hidden also)
-    #    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
-    #    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
-    #    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
-}
+setMethod("getD1Object", "D1Client", function(x, identifier) {
+			client <- x@client
+			session <- x@session
+			jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+			jPid$setValue(identifier)
+			
+			## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+			## jNodeRef$setValue(x@mn.nodeid)
+			
+			# Use libclient D1Object to get the object
+			jD1Object <- J("org/dataone/client/D1Object")$download(jPid)
+			.jcheck(silent = FALSE)
+			
+			d1o <- new("D1Object",jD1Object)
+			return(d1o)
+		})
 
 
 
@@ -193,30 +200,20 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 })
 
 
-## getD1Object
-setGeneric("getD1Object", function(x, identifier, ...) { 
-  standardGeneric("getD1Object")
-})
-
-setMethod("getD1Object", "D1Client", function(x, identifier) {
-  client <- x@client
-  session <- x@session
-  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
-  jPid$setValue(identifier)
-  
-  ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-  ## jNodeRef$setValue(x@mn.nodeid)
-
-  # Use libclient D1Object to get the object
-  jD1Object <- J("org/dataone/client/D1Object")$download(jPid)
-  .jcheck(silent = FALSE)
-  
-  d1o <- new("D1Object",jD1Object)
-  return(d1o)
-})
 
 
 ## reserveIdentifier
+#' Reserve an Identifier in the DataONE System
+#' 
+#' Reserve an identifier for future use in the DataONE System.
+#' @param x : D1Client
+#' @param id : identifier to reserve
+#' @param ... (not yet used)
+#' @returnType logical
+#' @return true if reserved
+#' 
+#' @author rnahf
+#' @export
 setGeneric("reserveIdentifier", function(x, id, ...) { 
   standardGeneric("reserveIdentifier")
 })
@@ -247,13 +244,23 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 
 
 
+#' Create the Object in the DataONE System
+#' 
+#' Creates a D1Object on the MemberNode determined by the object's systemMetadata.
+#' 
+#' @param x : D1Client
+#' @param d1Object : the object to create in DataONE
+#' @param ... (not yet used)
+#' @returnType logical
+#' @return TRUE if success
+#' 
+#' @author rnahf
+#' @export
 setGeneric("createD1Object", function(x, d1Object, ...) { 
   standardGeneric("createD1Object")
 })
 
-#' creates a D1Object on the MemberNode determined by the object's systemMetadata.
-#' returns FALSE on exceptions
-#' 
+
 setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
     message("--> createD1Object(D1Client, D1Object)")
 
@@ -309,6 +316,30 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 })
 
 
+#' Create the Data Package in the DataONE System
+#' 
+#' Creates the D1Objects contained in the DataPackage by calling the createD1Object()
+#' on each of the members, as well as assembling the resourceMap object from the
+#' recorded relationships, and calling create() on it as well. 
+#' Any objects in the data map that have a dataUploaded value are assumed to be 
+#' pre-existing in the system, and skipped.
+#' @param x : D1Client
+#' @param dataPackage : The DataPackage instance to be submitted to DataONE for creation.
+#' @param ... (not yet used)
+#' @details The DataPackage describes the collection of data object and their associated 
+#' metadata object, with the relationships and members serialized into a document
+#' stored under, and retrievable with, the packageId as it's own distinct object.
+#' 
+#' Members are created serially, and most errors in creating one object will 
+#' interrupt the create process for the whole, resulting in some members will 
+#' getting created, and the remainder not.
+#' 
+#' @returnType NULL
+#' @return NULL
+#' @references See d1_libclient_java documentation D1Client.create()
+#'   	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create"}
+#' @author rnahf
+#' @export
 setGeneric("createDataPackage", function(x, dataPackage, ...) { 
             standardGeneric("createDataPackage")
         })

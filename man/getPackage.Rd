@@ -7,7 +7,7 @@
   \item{identifier}{character: identifier of the
   ResourceMap}
 
-  \item{...}{}
+  \item{...}{(not yet used)}
 }
 \value{
   the data package

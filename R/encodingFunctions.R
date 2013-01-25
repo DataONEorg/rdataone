@@ -27,7 +27,7 @@
 #' 
 #' Treating all special characters and spaces as literals, backslash escape special
 #' characters, and double-quote if necessary 
-#' @param segment 
+#' @param segment : a string to encode
 #' @returnType character
 #' @return the encoded form of the input
 #' @examples encodeSolr("this & that")
@@ -49,7 +49,7 @@ encodeSolr <- function(segment) {
 #' 
 #' Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
-#' @param querySegment 
+#' @param querySegment : a string to encode
 #' @returnType character
 #' @return the encoded form of the input
 #' @examples fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
@@ -81,7 +81,7 @@ encodeUrlQuery <- function(querySegment) {
 #' 
 #' Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
-#' @param pathSegment 
+#' @param pathSegment : a string to encode
 #' @returnType character
 #' @return the encoded form of the input
 #' @examples fullyEncodedPath <- paste0("cn/v1/object/",encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))

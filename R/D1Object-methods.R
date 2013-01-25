@@ -94,7 +94,7 @@
 #' @param x  D1Object or DataPackage: the data structure from where to get the data
 #' @param id Missing or character: if @code{x} is DataPackage, the identifier of the
 #' package member to get data from
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character 
 #' @return character representation of the data
 #' 
@@ -105,11 +105,8 @@ setGeneric("getData", function(x, id, ...) {
 })
  
 setMethod("getData", signature("D1Object"), function(x) {
-    message("@@r1")
 	jD1Object = x@jD1o
-	message("@@r2")
 	if(!is.jnull(jD1Object)) {
-		print ("@@r3")
 		databytes <- jD1Object$getData()
 		if(is.null(databytes)) {
 			print(paste("Didn't find data in:", id))
@@ -130,7 +127,7 @@ setMethod("getData", signature("D1Object"), function(x) {
 
 #' Get the Identifier of the D1Object
 #' @param x D1Object
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return the identifier
 #' 
@@ -154,7 +151,7 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 
 #' Get the FormatId of the D1Object
 #' @param x D1Object
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType character
 #' @return the formatId
 #' 
@@ -183,7 +180,7 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' publicly readable.  If called after creation, it will only change the system
 #' metadata locally, and will not have any affect. 
 #' @param x D1Object
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType NULL
 #' @return NULL
 #' 
@@ -218,7 +215,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' which always can read.)
 #' @param x D1Client
 #' @param subject : character
-#' @param ... 
+#' @param ... (not yet used)
 #' @returnType logical
 #' @return TRUE or FALSE
 #' 
