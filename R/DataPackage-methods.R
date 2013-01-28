@@ -209,20 +209,4 @@ setMethod("getMember", signature("DataPackage", "character"), function(x, identi
   return(rD1o)
 })
 
-#' returns a DataFrame from the specified data object
-#' 
-#' Given the identifier of a member of the data package, return a data frame
-#' using any parsing instructions contained in its describing science metadata
-#' 
-setMethod("asDataFrame", signature("DataPackage", "character"), function(x, reference) {
- 
-    ## find the dataObject and the metadata that Documents it
-    d1o <- getMember(x,reference)
-	jMetadataId <- x@jDataPackage$getDocumentedBy(d1o@jD1o$getIdentifier())
-	documenterObject <- getMember(x,jMetadataId$getValue())
-    message("@@ asDataFrame / DP")
-##	message(documenterObject)
-	df <- asDataFrame(d1o,documenterObject)
-	return(df)
-})
 
