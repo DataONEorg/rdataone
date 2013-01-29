@@ -22,6 +22,18 @@
 ##############################
 ## EMLParser class definition - note that it inherits from DataTableDescriber
 ##############################
+
+#' Handler for Parsing Table Format Details from Metadata
+#' 
+#' @description
+#' Implements methods to provide parsing instructions for asDataFrame.  
+#' @details 
+#' handles eml formats 2.0.0 through 2.1.1
+#' 
+#' @slot d1Object the metadata object 
+#' @slot xmlDocRoot the xml representation of the metadata
+#' @author rnahf
+#' @export
 setClass("EMLParser", 
         representation(d1Object = "D1Object", xmlDocRoot = "XMLNode"),
         contains="DataTableDescriber",

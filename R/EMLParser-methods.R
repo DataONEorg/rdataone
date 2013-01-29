@@ -25,28 +25,39 @@
 #########################################################
 
 
-##
+ 
+#' @name documented.entityNames
+#' @alias documented.entityNames,-method
 setMethod("documented.entityNames", signature("EMLParser"), function(x) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
 		})
 
-##
+
+
+#' @name documented.d1Identifiers
+#' @alias documented.d1Identifiers,-method
 setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/distribution/online")
    return(sapply(aList, function(x) { 
-					   gsub("ecogrid://knb/","",xmlValue(x[["url"]]))
-				   	   
-				   }))
+			gsub("ecogrid://knb/","",xmlValue(x[["url"]]))	   	   
+		}))
 })
 
 
+
+#' @name documented.sizes
+#' @alias documented.sizes,-method
 setMethod("documented.sizes", signature("EMLParser"), function(x) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
     return(sapply(aList, function(x) xmlValue(x[["size"]])))
 })
 
 
+
+
+#' @name dataTable.dataFormat
+#' @alias dataTable.dataFormat,-method
 setMethod("dataTable.dataFormat", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
     bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")
