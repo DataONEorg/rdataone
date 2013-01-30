@@ -22,8 +22,8 @@
 
 
 #' Convert a DataFrame to Standard CSV
-#' @param df : the dataFrame
-#' @param ... : additional params passed to write.csv
+#' @param df the dataFrame
+#' @param ... additional params passed to write.csv
 #' @returnType character
 #' @return the dataframe serialized as a .csv
 #' 

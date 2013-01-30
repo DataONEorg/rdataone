@@ -35,13 +35,13 @@
 #' For example, the EMLParser registers itself as a handler for eml v2.0.0 - v2.1.1
 #' with the following.
 #' 
-#' \code{\dontrun{
+#' \code{
 #' if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
 #' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
 #' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser"
 #' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
 #' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
-#' }}
+#' }
 #' 
 #' Note that the key in the list is the DataONE formatIdentifier that can be 
 #' found at \link{https://cn.dataone.org/cn/v1/formats}
@@ -50,11 +50,11 @@
 #' in the generic.
 #' 
 #' @examples
-#' \code{\dontrun{
+#' \dontrun{
 #'    ## asDataFrame(D1Object,D1Object) implementation uses the following:
 #'    dtdClassName <- dataTableDescriber.registry[[ metadataFormatId ]]
 #'    dtd <- do.call(dtdClassName, list(metadata.d1Object))
-#' }}
+#' }
 #'  
 #' @author rnahf
 #' @export

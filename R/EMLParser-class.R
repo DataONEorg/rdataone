@@ -33,7 +33,8 @@
 #' @slot d1Object the metadata object 
 #' @slot xmlDocRoot the xml representation of the metadata
 #' @author rnahf
-#' @export
+#' @import XML
+#' @exportClass EMLParser
 setClass("EMLParser", 
         representation(d1Object = "D1Object", xmlDocRoot = "XMLNode"),
         contains="DataTableDescriber",

@@ -1,3 +1,4 @@
+\docType{class}
 \name{DataPackage}
 \alias{DataPackage}
 \title{
@@ -8,12 +9,7 @@
   series of data objects, the science metadata objects that documents them, 
   and the resourceMap object that defines the relationships.
 }
-\usage{
-new("DataPackage", packageId = pid)
-new("DataPackage", jDataPackage = jDataPackage)
-}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
+\slots{
   \item{packageId}{
     The identifier for the data package, that corresponds to the DataONE identifier
     for the resourceMap object. If a new package is being built, this should be
@@ -36,14 +32,9 @@ new("DataPackage", jDataPackage = jDataPackage)
 \value{
   a DataPackage object
 }
-%\references{
-%}
 \author{
   Rob Nahf
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }

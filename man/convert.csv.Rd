@@ -5,9 +5,9 @@
   convert.csv(df, ...)
 }
 \arguments{
-  \item{df}{: the dataFrame}
+  \item{df}{the dataFrame}
 
-  \item{...}{: additional params passed to write.csv}
+  \item{...}{additional params passed to write.csv}
 }
 \value{
   the dataframe serialized as a .csv
