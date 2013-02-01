@@ -20,7 +20,7 @@
 
 
 ##############################
-## EMLParser class definition - note that it inherits from DataTableDescriber
+## EMLParser class definition - note that it inherits from TableDescriber
 ##############################
 
 #' Handler for Parsing Table Format Details from Metadata
@@ -37,18 +37,18 @@
 #' @exportClass EMLParser
 setClass("EMLParser", 
         representation(d1Object = "D1Object", xmlDocRoot = "XMLNode"),
-        contains="DataTableDescriber",
-        prototype=prototype(new("DataTableDescriber")))
+        contains="AbstractTableDescriber",
+        prototype=prototype(new("AbstractTableDescriber")))
 
 
 ###########################################################
 ### define here which DataONE FormatIds this class handles
 ###########################################################
-if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
-dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser" 
-dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser" 
-dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser" 
-dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser" 
+if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
+tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser" 
+tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser" 
+tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser" 
+tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser" 
 
 
 

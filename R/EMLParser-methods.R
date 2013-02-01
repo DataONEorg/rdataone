@@ -56,9 +56,9 @@ setMethod("documented.sizes", signature("EMLParser"), function(x) {
 
 
 
-#' @name dataTable.dataFormat
-#' @alias dataTable.dataFormat,-method
-setMethod("dataTable.dataFormat", signature("EMLParser", "numeric"), function(x, index) {
+#' @name data.formatFamily
+#' @alias data.formatFamily,-method
+setMethod("data.formatFamily", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
     bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")
     if (length(bList) == 1) { 
@@ -79,14 +79,14 @@ setMethod("dataTable.dataFormat", signature("EMLParser", "numeric"), function(x,
     return(format)
 })
 
-setMethod("dataTable.fieldDelimiter", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableFieldDelimiter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["fieldDelimiter"]])))
         })
 
 
 
-setMethod("dataTable.quoteCharacter", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableQuoteCharacter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["quoteCharacter"]])))
         })
@@ -94,21 +94,21 @@ setMethod("dataTable.quoteCharacter", signature("EMLParser", "numeric"), functio
 
 
 
-setMethod("dataTable.characterEncoding", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.characterEncoding", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
             return(sapply(aList, function(x) xmlValue(x[["characterEncoding"]])))
         })
 
 
  
-setMethod("dataTable.attributeOrientation", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableAttributeOrientation", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
 			return( sapply(aList, function(x) xmlValue(x[["attributeOrientation"]]))[index])
 		})
 
 
  
-setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableSkipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
 			result <- sapply(aList, function(x) { 
 						v <- xmlValue(x[["numHeaderLines"]])
@@ -119,7 +119,7 @@ setMethod("dataTable.skipLinesHeader", signature("EMLParser", "numeric"), functi
 
 #########  EML-attribute items
 ##
-setMethod("dataTable.missingValueCodes", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableMissingValueCodes", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
             bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
                         
@@ -127,7 +127,7 @@ setMethod("dataTable.missingValueCodes", signature("EMLParser", "numeric"), func
         })
 
 ##
-setMethod("dataTable.attributeNames", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableAttributeNames", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
 			
@@ -135,7 +135,7 @@ setMethod("dataTable.attributeNames", signature("EMLParser", "numeric"), functio
 		})
 
 ##
-setMethod("dataTable.attributeTypes", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableAttributeTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
 			
@@ -144,7 +144,7 @@ setMethod("dataTable.attributeTypes", signature("EMLParser", "numeric"), functio
 
 
 ##
-setMethod("dataTable.attributeStorageTypes", signature("EMLParser", "numeric"), function(x, index) {
+setMethod("data.tableAttributeStorageTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
 			

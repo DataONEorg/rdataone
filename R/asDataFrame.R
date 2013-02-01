@@ -43,14 +43,14 @@
 ## Most users will use the implementation that takes the DataPackage and the member
 ## identifier of the data object to read into a dataFrame.  In this case, the 
 ## the dataPackage isolates the appropriate science metadata object, finds the 
-## appropriate DataTableDescriber for it, and passes it to the single-argument
+## appropriate TableDescriber for it, and passes it to the single-argument
 ## \code{asDataFrame(D1Object,...)} method.
 ## 
 ## The other double-argument methods are progressively more direct, and are most
 ## useful when there is not a DataPackage that can associate the metadata to the
 ## data.  
 ## 
-## The DataTableDescriber class is abstract, with data-format-specific subclasses
+## The TableDescriber class is abstract, with data-format-specific subclasses
 ## providing the specific logic for parsing that particular data format (for example
 ## EMLParser for reading and parsing EML documents).  If there is no metadata parser
 ## for the metadata that describes the object, you will have to determine the 
@@ -64,7 +64,7 @@
 ## 
 ## @param x : of type DataPackage or D1Object. Where the object is.
 ## @param reference : either the identifier for the data, the D1Object of the metadata
-## that describes it, the DataTableDescriber object, or missing
+## that describes it, the TableDescriber object, or missing
 ## @param ... : overriding parameters for read.csv
 ## 
 ## @returnType dataFrame
@@ -127,7 +127,7 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 			## reference is a metadata D1Object
 			mdFormat <- getFormatId(reference)
 			
-			dtdClassName <- dataTableDescriber.registry[[ mdFormat ]]
+			dtdClassName <- tableDescriber.registry[[ mdFormat ]]
 			message(paste("@@ asDataFrame/Object", getIdentifier(reference), dtdClassName))
 			if (!is.na(dtdClassName)) {
 				dtd <-	do.call(dtdClassName, list(reference))
@@ -141,43 +141,43 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 
 
 ## @rdname asDataFrame-methods
-## aliases asDataFrame,D1Object,DataTableDescriber
-setMethod("asDataFrame", signature("D1Object", "DataTableDescriber"), function(x, reference, ...) {
+## aliases asDataFrame,D1Object,TableDescriber
+setMethod("asDataFrame", signature("D1Object", "TableDescriber"), function(x, reference, ...) {
 			
 			message("asDataFrame / D1Object-dtd",class(reference))
-			## reference is a DataTableDescriber
+			## reference is a TableDescriber
 			pids <- documented.d1Identifiers(reference)
 			jDataId <- x@jD1o$getIdentifier()$getValue()
 			index <- which(pids == jDataId)
 			message(paste("Index of data item is",index))
 			
 			## is this a datatype that we can handle?
-			dataFormat <- dataTable.dataFormat(reference,index)
+			dataFormat <- data.formatFamily(reference,index)
 			if (dataFormat != "text/simpleDelimited") {
 				print(paste("cannot process data of type", dataFormat))
 				return()
-			} else if (dataTable.attributeOrientation(reference, index) == 'row') {
+			} else if (data.tableAttributeOrientation(reference, index) == 'row') {
 				print(paste("cannot process text/simpleDelimited file where attributes are by row"))
 			}
 			
-			fieldSeparator <- dataTable.fieldDelimiter(reference, index)
+			fieldSeparator <- data.tableFieldDelimiter(reference, index)
 			if (is.na(fieldSeparator))
 				fieldSeparator <- ","
 			
-			quoteChar <- dataTable.quoteCharacter(reference, index)
+			quoteChar <- data.tableQuoteCharacter(reference, index)
 			if (is.na(quoteChar))
 				quotChar <- "\""
 			
-			missingValues <- dataTable.missingValueCodes(reference,index)
+			missingValues <- data.tableMissingValueCodes(reference,index)
 			missingValues <- subset(missingValues, !is.na(missingValues))
 			if(length(missingValues)==0)
 				missingValues <- "NA"
 			
-			encoding <- dataTable.characterEncoding(reference, index)
+			encoding <- data.characterEncoding(reference, index)
 			if (is.na(encoding))
 				encoding <- "unknown"
 			
-			skip <- dataTable.skipLinesHeader(reference, index)
+			skip <- data.tableSkipLinesHeader(reference, index)
 			if (is.na(skip))
 				skip <- 0
 			

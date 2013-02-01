@@ -1,9 +1,9 @@
 import("rJava")
 # commenting out this import, to avoid build (check) errors
-
+import("XML")
 
 # Classes
-exportClasses(D1Client, DataPackage, D1Object, EMLParser)
+exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, Foo)
 
 # constructor methods
 exportMethods(D1Client, DataPackage, D1Object, EMLParser)
@@ -25,16 +25,16 @@ exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, ins
 exportMethods(getData, getIdentifier, getFormatId, setPublicAccess, canRead, asDataFrame)
 
 # EMLParser methods
-exportMethods(documents.d1FormatIds, 
+exportMethods(documented.d1FormatIds, 
 	documented.entityNames, documented.d1Identifiers, documented.sizes,
-    dataTable.dataFormat, dataTable.fieldDelimiter, dataTable.quoteCharacter, dataTable.characterEncoding, 
-    dataTable.missingValueCodes, dataTable.attributeOrientation, 
-    dataTable.attributeNames, dataTable.attributeTypes, dataTable.attributeStorageTypes)
+    data.formatFamily, data.tableFieldDelimiter, data.tableQuoteCharacter, data.characterEncoding, 
+    data.tableMissingValueCodes, data.tableAttributeOrientation, 
+    data.tableAttributeNames, data.tableAttributeTypes, data.tableAttributeStorageTypes)
 
 # Misc testing methods
 export("d1.test")
 export("d1.javaversion")
-export("dataTableDescriber.registry")
+export("tableDescriber.registry")
 export("convert.csv")
 export("d1.getCertExpires", "d1.isCertExpired")
 export("d1.getIdentity", "d1.downloadCert")

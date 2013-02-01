@@ -28,7 +28,7 @@
 #' This class defines the generic methods metadata parser classes need to implement
 #' to allow proper parsing of tabular data objects.  Subclasses should:
 #' 1. provide method implementations for all generics
-#' 2. register the class to the dataTableDescriber.registry for the formats they claim to parse.
+#' 2. register the class to the tableDescriber.registry for the formats they claim to parse.
 #' 3. provide a 'constructor' method that accepts a D1Object as the first argument - the 
 #' D1Object will be the metadata object to be parsed
 #' 
@@ -36,11 +36,11 @@
 #' with the following.
 #' 
 #' \code{
-#' if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
-#' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
-#' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser"
-#' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
-#' dataTableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
+#' if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
+#' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
+#' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser"
+#' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
+#' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
 #' }
 #' 
 #' Note that the key in the list is the DataONE formatIdentifier that can be 
@@ -52,19 +52,19 @@
 #' @examples
 #' \dontrun{
 #'    ## asDataFrame(D1Object,D1Object) implementation uses the following:
-#'    dtdClassName <- dataTableDescriber.registry[[ metadataFormatId ]]
+#'    dtdClassName <- tableDescriber.registry[[ metadataFormatId ]]
 #'    dtd <- do.call(dtdClassName, list(metadata.d1Object))
 #' }
 #'  
 #' @author rnahf
 #' @export
-setClass("DataTableDescriber", representation=representation(dataoneFormatIds = "character"))
+setClass("AbstractTableDescriber", representation=representation(dataoneFormatIds = "character"))
 
 ## create a global where implementing classes will map the formats they handle
 ## in the form:
-##     dataTableDescriber.registry[[ <d1FormatId> ]] <- <implementing class>
+##     tableDescriber.registry[[ <d1FormatId> ]] <- <implementing class>
 
-if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list()
+if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
 
 
 ##########################
@@ -74,21 +74,21 @@ if (!exists("dataTableDescriber.registry")) dataTableDescriber.registry <- list(
 
 #' Get the DataONE formatIdentifier associated with each table
 #' 
-#' @param x the DataTableDescriber
+#' @param x the TableDescriber
 #' @param ... 
 #' @returnType character
 #' @return vector of dataONE formatIds
 #' 
 #' @author rnahf
 #' @export
-setGeneric("documents.d1FormatIds", function(x, ...) {
-    standardGeneric("documents.d1FormatIds")
+setGeneric("documented.d1FormatIds", function(x, ...) {
+    standardGeneric("documented.d1FormatIds")
 })
 
 
 #' Get the entity names associated with each table
 #' 
-#' @param x the DataTableDescriber
+#' @param x the TableDescriber
 #' @param ... 
 #' @returnType character
 #' @return vector of entity names
@@ -102,7 +102,7 @@ setGeneric("documented.entityNames", function(x, ...) {
 
 #' Get the DataONE identifiers associated with each table
 #' 
-#' @param x the DataTableDescriber
+#' @param x the TableDescriber
 #' @param ... 
 #' @returnType character
 #' @return vector of dataONE identifiers
@@ -116,7 +116,7 @@ setGeneric("documented.d1Identifiers", function(x, ...) {
 
 #' Get the sizes of the described data tables.
 #' 
-#' @param x the DataTableDescriber
+#' @param x the TableDescriber
 #' @param ... 
 #' @returnType character
 #' @return vector of data table sizes (in bytes)
@@ -130,47 +130,47 @@ setGeneric("documented.sizes", function(x, ...) {
 
 #' Data Format
 #' 
-#' @param x the DataTableDescriber
-#' @param index index of the dataTable within the document
+#' @param x the TableDescriber
+#' @param index index of the table within the document
 #' @param ... 
 #' @returnType character
-#' @return the dataFormat of the data object being described
+#' @return the format of the data object being described
 #' TODO: list valid values
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.dataFormat", function(x, index, ...) {
-    standardGeneric("dataTable.dataFormat")
+setGeneric("data.formatFamily", function(x, index, ...) {
+    standardGeneric("data.formatFamily")
 })
 
 
 #' Field Delimiter
 #' 
-#' @param x the DataTableDescriber
-#' @param index index of the dataTable within the document
+#' @param x the TableDescriber
+#' @param index index of the table within the document
 #' @param ... 
 #' @returnType character
 #' @return the field delimiter(s) of the data object being described
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.fieldDelimiter", function(x, index, ...) {
-    standardGeneric("dataTable.fieldDelimiter")
+setGeneric("data.tableFieldDelimiter", function(x, index, ...) {
+    standardGeneric("data.tableFieldDelimiter")
 })
 
 
 #' Quote Character
 #' 
-#' @param x the DataTableDescriber
-#' @param index index of the dataTable within the document
+#' @param x the TableDescriber
+#' @param index index of the table within the document
 #' @param ... 
 #' @returnType character
 #' @return the quote characters(s) for the data object being described
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.quoteCharacter", function(x, index, ...) {
-    standardGeneric("dataTable.quoteCharacter")
+setGeneric("data.tableQuoteCharacter", function(x, index, ...) {
+    standardGeneric("data.tableQuoteCharacter")
 })
 
 
@@ -178,16 +178,16 @@ setGeneric("dataTable.quoteCharacter", function(x, index, ...) {
 #' 
 #' For example "UTF-8"
 #' 
-#' @param x the DataTableDescriber
-#' @param index index of the dataTable within the document
+#' @param x the TableDescriber
+#' @param index index of the table within the document
 #' @param ... 
 #' @returnType character
 #' @return the encoding used when serializing the data
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.characterEncoding", function(x, index, ...) {
-    standardGeneric("dataTable.characterEncoding")
+setGeneric("data.characterEncoding", function(x, index, ...) {
+    standardGeneric("data.characterEncoding")
 })
 
 
@@ -198,91 +198,91 @@ setGeneric("dataTable.characterEncoding", function(x, index, ...) {
 #' return value for this method should be "columns."
 #' 
 #' @note this is the opposite question from how records are organized!!
-#' @param x - the DataTableDescriber 
-#' @param index - the index of the dataTable within the document
+#' @param x - the TableDescriber 
+#' @param index - the index of the table within the document
 #' @param ... 
 #' @returnType character
 #' @return legal values  are "columns" | "rows"
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.attributeOrientation", function(x, index, ...) {
-    standardGeneric("dataTable.attributeOrientation")
+setGeneric("data.tableAttributeOrientation", function(x, index, ...) {
+    standardGeneric("data.tableAttributeOrientation")
 })
 
 
 ## TODO - does this include the header line or not? what does value of 1 mean?, 0?
 #' Number of lines to skip before reading data
 #' 
-#' @param x - the DataTableDescriber 
-#' @param index - the index of the dataTable within the document
+#' @param x - the TableDescriber 
+#' @param index - the index of the table within the document
 #' @param ... 
 #' @returnType numeric
 #' @return the number of lines to skip
 #' @seealso \code{help(read.table)}
 #' @author rnahf
 #' @export
-setGeneric("dataTable.skipLinesHeader", function(x, index, ...) {
-    standardGeneric("dataTable.skipLinesHeader")
+setGeneric("data.tableSkipLinesHeader", function(x, index, ...) {
+    standardGeneric("data.tableSkipLinesHeader")
 })
 
 #########  EML-attribute items
 
 #' returns the missing value codes defined in the metadata document for 
 #' the specified data table
-#' @param x - the DataTableDescriber instance
-#' @param index - the index of the dataTable to get results for
+#' @param x - the TableDescriber instance
+#' @param index - the index of the table to get results for
 #' @param ... (not yet used)
 #' @returnType character
 #' @return vector of missing value codes
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.missingValueCodes", function(x, index, ...) {
-    standardGeneric("dataTable.missingValueCodes")
+setGeneric("data.tableMissingValueCodes", function(x, index, ...) {
+    standardGeneric("data.tableMissingValueCodes")
 })
 
 
 #' returns the attribute names defined in the metadata document for 
 #' the specified data table
-#' @param x - the DataTableDescriber instance
-#' @param index - the index of the dataTable to get results for
+#' @param x - the TableDescriber instance
+#' @param index - the index of the table to get results for
 #' @param ... (not yet used)
 #' @returnType character
 #' @return the attribute (column) names of the data
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.attributeNames", function(x, index, ...) {
-    standardGeneric("dataTable.attributeNames")
+setGeneric("data.tableAttributeNames", function(x, index, ...) {
+    standardGeneric("data.tableAttributeNames")
 })
 
 
 #' returns the attributes' data types defined in the metadata document for 
 #' the specified data table
-#' @param x - the DataTableDescriber instance
-#' @param index - the index of the dataTable to get results for
+#' @param x - the TableDescriber instance
+#' @param index - the index of the table to get results for
 #' @param ... (not yet used)
 #' @returnType character
 #' @return the data types of the attributes
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.attributeTypes", function(x, index, ...) {
-    standardGeneric("dataTable.attributeTypes")
+setGeneric("data.tableAttributeTypes", function(x, index, ...) {
+    standardGeneric("data.tableAttributeTypes")
 })
 
 #' returns the attributes' data storage types defined in the metadata document for 
 #' the specified data table
-#' @param x - the DataTableDescriber instance
-#' @param index - the index of the dataTable to get results for
+#' @param x - the TableDescriber instance
+#' @param index - the index of the table to get results for
 #' @param ... (not yet used)
 #' @returnType character
 #' @return the data storage types of the attributes
 #' 
 #' @author rnahf
 #' @export
-setGeneric("dataTable.attributeStorageTypes", function(x, index, ...) {
-    standardGeneric("dataTable.attributeStorageTypes")
+setGeneric("data.tableAttributeStorageTypes", function(x, index, ...) {
+    standardGeneric("data.tableAttributeStorageTypes")
 })
 
