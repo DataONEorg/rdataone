@@ -3,7 +3,7 @@ import("rJava")
 import("XML")
 
 # Classes
-exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, Foo)
+exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser)
 
 # constructor methods
 exportMethods(D1Client, DataPackage, D1Object, EMLParser)

@@ -312,7 +312,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
         message("      - pid is null")
     }
     message("<--  create(D1Client, D1Object)")
-    return(is.jnull(jNewPid))
+    return(!is.jnull(jNewPid))
 })
 
 
@@ -454,7 +454,6 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
     ## remove CN
     return (mnIDset)
 })
-
 
 #########################################################
 ### Utility methods
