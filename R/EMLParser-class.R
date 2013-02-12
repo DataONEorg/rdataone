@@ -23,6 +23,9 @@
 ## EMLParser class definition - note that it inherits from TableDescriber
 ##############################
 
+library(XML)
+
+
 #' Handler for Parsing Table Format Details from Metadata
 #' 
 #' @description
