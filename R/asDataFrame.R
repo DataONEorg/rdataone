@@ -141,8 +141,8 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
 
 
 ## @rdname asDataFrame-methods
-## aliases asDataFrame,D1Object,TableDescriber
-setMethod("asDataFrame", signature("D1Object", "TableDescriber"), function(x, reference, ...) {
+## aliases asDataFrame,D1Object,AbstractTableDescriber
+setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), function(x, reference, ...) {
 			
 			message("asDataFrame / D1Object-dtd",class(reference))
 			## reference is a TableDescriber

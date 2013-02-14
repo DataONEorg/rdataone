@@ -23,8 +23,6 @@
 ## EMLParser class definition - note that it inherits from TableDescriber
 ##############################
 
-library(XML)
-
 
 #' Handler for Parsing Table Format Details from Metadata
 #' 
@@ -40,8 +38,9 @@ library(XML)
 #' @exportClass EMLParser
 setClass("EMLParser", 
         representation(d1Object = "D1Object", xmlDocRoot = "XMLNode"),
-        contains="AbstractTableDescriber",
-        prototype=prototype(new("AbstractTableDescriber")))
+        contains="AbstractTableDescriber")
+##        contains="AbstractTableDescriber",
+##        prototype=prototype(new("AbstractTableDescriber")))
 
 
 ###########################################################

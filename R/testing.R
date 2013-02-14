@@ -445,7 +445,7 @@ a.kgordon <- function(mydf) {
   title(ylab="Density")
 }
 
-d1.analyze <- function() {
+d1.analyze <- function(bfdata) {
    print(tapply(bfdata[[1]]$count, bfdata[[1]]$species, mean, na.rm = TRUE))
    print(tapply(bfdata[[1]]$count, bfdata[[1]]$species, sd, na.rm = TRUE))
    print(tapply(bfdata[[1]]$reprod_state, bfdata[[1]]$species, mean, na.rm = TRUE))

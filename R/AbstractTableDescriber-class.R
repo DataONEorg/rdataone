@@ -58,7 +58,8 @@
 #'  
 #' @author rnahf
 #' @export
-setClass("AbstractTableDescriber", representation=representation(dataoneFormatIds = "character"))
+##setClass("AbstractTableDescriber", representation=representation(dataoneFormatIds = "character"))
+setClass("AbstractTableDescriber")
 
 ## create a global where implementing classes will map the formats they handle
 ## in the form:
