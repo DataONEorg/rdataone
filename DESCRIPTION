@@ -1,6 +1,6 @@
 Package: dataone
 Version: 1.0.0
-Date: 2013-0214
+Date: 2013-02-14
 Title: DataONE R Client
 Author: Matthew Jones, Rob Nahf
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
