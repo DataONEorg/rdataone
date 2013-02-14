@@ -21,21 +21,7 @@
 ### This file contains functions useful to the dataone package methods
 
 
-#' Convert a DataFrame to Standard CSV
-#' @param df the dataFrame
-#' @param ... additional params passed to write.csv
-#' @returnType character
-#' @return the dataframe serialized as a .csv
-#' 
-#' @author Matt Jones
-#' @export
-convert.csv <-function(df, ...) {
-    con <- textConnection("data", "w")
-    write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
-    close(con)
-    csvdata <- paste(data, collapse="\n")
-    return(csvdata)
-}
+
 
 
 

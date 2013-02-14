@@ -459,15 +459,22 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 ### Utility methods
 #########################################################
 
-## convert.csv
-# setGeneric("convert.csv", function(x, ...) {
-#   standardGeneric("convert.csv")} 
-# )
-# 
-# setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
-#   con <- textConnection("data", "w")
-#   write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
-#   close(con)
-#   csvdata <- paste(data, collapse="\n")
-#   return(csvdata)
-# })
+## Convert a DataFrame to Standard CSV
+## @param df the dataFrame
+## @param ... additional params passed to write.csv
+## @returnType character
+## @return the dataframe serialized as a .csv
+## 
+## @author Matt Jones
+## @export
+setGeneric("convert.csv", function(x, ...) {
+  standardGeneric("convert.csv")
+})
+ 
+setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
+   con <- textConnection("data", "w")
+   write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
+   close(con)
+   csvdata <- paste(data, collapse="\n")
+   return(csvdata)
+})

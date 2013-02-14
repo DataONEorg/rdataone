@@ -3,7 +3,7 @@
 \alias{asDataFrame}
 \alias{asDataFrame,DataPackage,character-method}
 \alias{asDataFrame,D1Object,D1Object-method}
-\alias{asDataFrame,D1Object,DataTableDescriber-method}
+\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 \alias{asDataFrame,D1Object,ANY-method}
 \title{Build a DataFrame From a Data Object}
 \usage{
@@ -32,7 +32,10 @@
   DataONE object as a DataFrame, assuming that the object
   represents scientific data and can be coerced into
   tabular form.  Several implementations of this method
-  exist to accomplish this.
+  exist to accomplish this in slightly different ways.
+  Most exist to allow any parsing instructions
+  contained in the object's describing science metadata to 
+  be used in the conversion.
 }
 \details{
   In many cases, a science metadata object includes in its
@@ -45,7 +48,7 @@
   DataPackage and the member identifier of the data object
   to read into a dataFrame.  In this case, the the
   dataPackage isolates the appropriate science metadata
-  object, finds the appropriate DataTableDescriber for it,
+  object, finds the appropriate AbstractTableDescriber for it,
   and passes it to the single-argument
   \code{asDataFrame(D1Object,...)} method.
 
@@ -60,6 +63,7 @@
   If there is no metadata parser for the metadata that
   describes the object, you will have to determine the
   correct parameters for read.csv manually.
+  
 }
 \value{
   a dataFrame representation of the object's data

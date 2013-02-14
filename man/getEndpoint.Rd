@@ -5,6 +5,8 @@
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+     Get the URI endpoint of the CN service which D1Client is using.
+     This value is determined from the env parameter
 }
 \usage{
 getEndpoint(x, ...)
