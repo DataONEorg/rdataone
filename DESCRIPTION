@@ -1,17 +1,17 @@
 Package: dataone
-Version: 0.9.1
-Date: 2011-0216
+Version: 1.0.0
+Date: 2013-0214
 Title: DataONE R Client
-Author: Matthew Jones, Dave Vieglais, Ben Leinfelder, Chris Jones, Robert Waltz, Rob Nahf
+Author: Matthew Jones, Rob Nahf
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
-Description: A package that provides access to data and metadata from the 
-        DataONE network of Member Node data providers.
+Description: A package that provides read/write access to data and metadata from 
+		the DataONE network of Member Node data repositories.
 Depends: R (>= 2.9.2), rJava (>= 0.8-5), XML (>= 3.95-0.1), methods
 Imports: rJava, XML
 SystemRequirements: Java (>= 1.6)
 License: file LICENSE
-Packaged: 2012-03-29 20:54:27 UTC; jones
+Packaged: 2013-02-14 20:54:27 UTC; jones
 Repository: CRAN
-Date/Publication: 2012-03-29 20:49:45
-URL: http://www.dataone.org
-BugReports: http://redmine.dataone.org
+Date/Publication: 2013-02-14 20:49:45
+URL: http://www.dataone.org/investigator-toolkit/dataone_r
+BugReports: https://redmine.dataone.org
