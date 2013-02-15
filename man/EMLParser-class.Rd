@@ -62,7 +62,7 @@ Class \code{"\linkS4class{AbstractTableDescriber}"}, directly.
 
 \seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+  \code{\linkS4class{AbstractTableDescriber}} for method descriptions 
 }
 \examples{
 showClass("EMLParser")
