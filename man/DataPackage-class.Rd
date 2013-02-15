@@ -40,17 +40,48 @@ Objects can be created by calls of the form \code{new("DataPackage", packageId, 
 }
 \section{Methods}{
   \describe{
-    \item{addAndDownloadData}{\code{signature(x = "DataPackage", identifier = "character")}: ... }
-    \item{addData}{\code{signature(x = "DataPackage", d1object = "D1Object")}: ... }
-    \item{asDataFrame}{\code{signature(x = "DataPackage", reference = "character")}: ... }
-    \item{contains}{\code{signature(x = "DataPackage", identifier = "character")}: ... }
-    \item{createDataPackage}{\code{signature(x = "D1Client", dataPackage = "DataPackage")}: ... }
-    \item{getData}{\code{signature(x = "DataPackage", id = "character")}: ... }
-    \item{getIdentifiers}{\code{signature(x = "DataPackage")}: ... }
-    \item{getMember}{\code{signature(x = "DataPackage", identifier = "character")}: ... }
-    \item{getSize}{\code{signature(x = "DataPackage")}: ... }
-    \item{insertRelationship}{\code{signature(x = "DataPackage", metadataID = "character", dataIDs = "character")}: ... }
-    \item{removeMember}{\code{signature(x = "DataPackage", identifier = "character")}: ... }
+    \item{addAndDownloadData}{\code{signature(x = "DataPackage", identifier = "character")}: 
+    downloads a pre-existing D1Object to the DataPackage, using the provided 
+    identifier string to retrieve from the DataONE system, and adds it to the 
+    local representation.
+    }
+    \item{addData}{\code{signature(x = "DataPackage", d1object = "D1Object")}: 
+    Add the D1Object to the DataPackage's object store, usually in preparation 
+	for upcoming submission.
+    }
+    \item{asDataFrame}{\code{signature(x = "DataPackage", reference = "character")}: 
+    return the content of the referenced DataPackage member as a dataFrame, using 
+    parsing instructions contained in the object's metadata.  The metadata found via
+    the DataPackage resource map. 
+    }
+    \item{contains}{\code{signature(x = "DataPackage", identifier = "character")}: 
+    Returns true if the specified object is a member of the package
+    }
+    \item{createDataPackage}{\code{signature(x = "D1Client", dataPackage = "DataPackage")}: 
+    ... 
+    }
+    \item{getData}{\code{signature(x = "DataPackage", id = "character")}: 
+    Returns the content of the DataPackage member identified by id. 
+    }
+    \item{getIdentifiers}{\code{signature(x = "DataPackage")}: 
+    Return the identifiers of the package members, as defined by the ResourceMap
+    }
+    \item{getMember}{\code{signature(x = "DataPackage", identifier = "character")}: 
+    Given the identifier of a member of the data package, return the D1Object 
+    representation of the member.
+    }
+    \item{getSize}{\code{signature(x = "DataPackage")}: 
+    Get the count of D1Objects in the DataPackage
+    }
+    \item{insertRelationship}{\code{signature(x = "DataPackage", metadataID = "character", dataIDs = "character")}: 
+    associate data Objects to the science metadata objects that describe them.  Note 
+    that since the resource map that defines a package is separate from the items 
+    it associates, it is possible to use identifiers that have not been defined 
+    as members of the package, though not recommended.
+     }
+    \item{removeMember}{\code{signature(x = "DataPackage", identifier = "character")}: 
+    removes a D1Object from the object map. 
+    }
 	 }
 }
 \references{

@@ -43,14 +43,14 @@ setMethod("getData", signature("DataPackage", "character"), function(x, id) {
 
 
 
-#' Get the Count of Objects in the Package
-#' @param x DataPackage
-#' @param ... (not yet used)
-#' @returnType numeric
-#' @return the number of object in the Package
-#' 
-#' @author rnahf
-#' @export
+## Get the Count of Objects in the Package
+## @param x DataPackage
+## @param ... (not yet used)
+## @returnType numeric
+## @return the number of object in the Package
+## 
+## @author rnahf
+## @export
 setGeneric("getSize", function(x, ...) { standardGeneric("getSize")} )
 
 setMethod("getSize", "DataPackage", function(x) {
@@ -59,16 +59,16 @@ setMethod("getSize", "DataPackage", function(x) {
 
 
 
-#' Get the Identifiers of Package Members
-#' 
-#' Return the identifiers of the package members, as defined by the ResourceMap
-#' @param x : DataPackage
-#' @param ... (not yet used)
-#' @returnType character
-#' @return list of identifiers
-#' 
-#' @author rnahf
-#' @export
+## Get the Identifiers of Package Members
+## 
+## Return the identifiers of the package members, as defined by the ResourceMap
+## @param x : DataPackage
+## @param ... (not yet used)
+## @returnType character
+## @return list of identifiers
+## 
+## @author rnahf
+## @export
 setGeneric("getIdentifiers", function(x, ...) { standardGeneric("getIdentifiers")} )
 
 setMethod("getIdentifiers", "DataPackage", function(x) {
@@ -85,17 +85,17 @@ setMethod("getIdentifiers", "DataPackage", function(x) {
 
 
 
-#' Add a D1Object to the DataPackage
-#' 
-#' Includes the D1Object in the DataPackage data Map, making it available for
-#' retrieval and eventual upload (via createPackage)
-#' 
-#' @param x : DataPackage
-#' @param d1object : D1Object
-#' @param ... : (not yet used)
-#' 
-#' @author rnahf
-#' @export
+## Add a D1Object to the DataPackage
+## 
+## Includes the D1Object in the DataPackage data Map, making it available for
+## retrieval and eventual upload (via createPackage)
+## 
+## @param x : DataPackage
+## @param d1object : D1Object
+## @param ... : (not yet used)
+## 
+## @author rnahf
+## @export
 setGeneric("addData", function(x, d1object, ...) { 
     standardGeneric("addData")
 })
@@ -108,17 +108,17 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, d1object)
 
 
 
-#' Add a Pre-Existing Object to the Package
-#' 
-#' addAndDownloadData downloads a D1Object to the DataPackage, using the provided identifier
-#' string to retrieve from the DataONE system.
-#' 
-#' @param x : DataPackage
-#' @param identifier : character - the identifier of the object to act upon
-#' @param ... (not yet used)
-#' 
-#' @author rnahf
-#' @export
+## Add a Pre-Existing Object to the Package
+## 
+## addAndDownloadData downloads a D1Object to the DataPackage, using the provided identifier
+## string to retrieve from the DataONE system.
+## 
+## @param x : DataPackage
+## @param identifier : character - the identifier of the object to act upon
+## @param ... (not yet used)
+## 
+## @author rnahf
+## @export
 setGeneric("addAndDownloadData", function(x, identifier, ...) { 
     standardGeneric("addAndDownloadData")
 })
@@ -132,11 +132,11 @@ setMethod("addAndDownloadData", signature("DataPackage", "character"), function(
 
 
 
-#' Associates Data Objects to the Science Metadata Objects that Describe Them
-#' 
-#' @note Since the resource map that defines a package is separate from the items
-#' it associates, it is possible to use identifiers that have not been defined 
-#' as members of the package.
+## Associates Data Objects to the Science Metadata Objects that Describe Them
+## 
+## @note Since the resource map that defines a package is separate from the items
+## it associates, it is possible to use identifiers that have not been defined 
+## as members of the package.
 setGeneric("insertRelationship", function(x, metadataID, dataIDs, ...) {
   standardGeneric("insertRelationship")
 })
@@ -160,8 +160,8 @@ setMethod("insertRelationship", signature("DataPackage", "character", "character
 })
 
 
-#' Returns true if the specified object is a member of the package
-#'  
+## Returns true if the specified object is a member of the package
+##  
 setGeneric("contains", function(x, identifier, ...) {
   standardGeneric("contains")
 })
@@ -174,11 +174,11 @@ setMethod("contains", signature("DataPackage", "character"), function(x, identif
 })
 
 
-#' Remove the Specified Member from the Package
-#' 
-#' Given the identifier of a member of the data package, return the D1Object
-#' representation of the member.
-#' 
+## Remove the Specified Member from the Package
+## 
+## Given the identifier of a member of the data package, return the D1Object
+## representation of the member.
+## 
 setGeneric("removeMember", function(x, identifier, ...) {
   standardGeneric("removeMember")
 })
@@ -191,11 +191,11 @@ setMethod("removeMember", signature("DataPackage", "character"), function(x, ide
 })
 
 
-#' Return the Package Member by Identifier
-#' 
-#' Given the identifier of a member of the data package, return the D1Object
-#' representation of the member.
-#' 
+## Return the Package Member by Identifier
+## 
+## Given the identifier of a member of the data package, return the D1Object
+## representation of the member.
+## 
 setGeneric("getMember", function(x, identifier, ...) {
   standardGeneric("getMember")
 })

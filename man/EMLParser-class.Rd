@@ -18,6 +18,8 @@
 \title{Class \code{"EMLParser"}}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the class is. ~~
+Class that implements methods to provide parsing instructions for
+  asDataFrame for EML metadata documents v2.0.0 - v.2.1.1
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("EMLParser", ...)}.
