@@ -48,7 +48,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     }
     
     ## since there's a certificate, now check to see if its expired
-    if (d1.isCertExpired()) {
+    if (isCertExpired(x)) {
         return(paste("[EXPIRED]", jSubject$getValue()))
     }
     return(jSubject$getValue())

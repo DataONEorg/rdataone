@@ -18,13 +18,13 @@
 #   limitations under the License.
 #
 
-#' 
-#' @slot endpoint The baseurl of the CN in that environment
-#' @slot mn.nodeid The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.
-#' @slot client The reference to the internally held Java D1Client instance
-#' @slot session The reference to the internally held Java Session instance
-#' @author rnahf
-#' @export
+## 
+## @slot endpoint The baseurl of the CN in that environment
+## @slot mn.nodeid The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.
+## @slot client The reference to the internally held Java D1Client instance
+## @slot session The reference to the internally held Java Session instance
+## @author rnahf
+## @export
 setClass("D1Client",
          representation(endpoint = "character",
                         mn.nodeid = "character",
@@ -37,30 +37,30 @@ setClass("D1Client",
 #########################
 
 ## Generic function with 0, 1, or 2 parameters
-#' 
-#' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
-#' @param mn_nodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
-#' @param ... (not yet used)
-#' @returnType D1Client  
-#' @return the D1Client object representing the DataONE environment
-#' 
-#' @author mbjones
-#' @export
+## 
+## @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
+## @param mn_nodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
+## @param ... (not yet used)
+## @returnType D1Client  
+## @return the D1Client object representing the DataONE environment
+## 
+## @author mbjones
+## @export
 setGeneric("D1Client", function(env, mnNodeid, ...) {
   standardGeneric("D1Client")
 })
 
 ## 
-#' Construct a D1Client, using default env ("PROD") and nodeid ("")
-#' @name D1Client
-#' @alias D1Client,-method
-#' 
-#' @returnType D1Client  
-#' @return the D1Client object representing the DataONE environment
-#' 
-#' @author rnahf
-#' @docType methods
-#' @export
+## Construct a D1Client, using default env ("PROD") and nodeid ("")
+## @name D1Client
+## @alias D1Client,-method
+## 
+## @returnType D1Client  
+## @return the D1Client object representing the DataONE environment
+## 
+## @author rnahf
+## @docType methods
+## @export
 setMethod("D1Client", , function() {
     result <- D1Client("PROD", "")
     return(result)
@@ -74,8 +74,8 @@ setMethod("D1Client", signature("character"), function(env, ...) {
     return(result)
 })
 
-#' Pass in the environment to be used by this D1Client, plus the 
-#' id of the member node to be used for primary interactions such as creates
+## Pass in the environment to be used by this D1Client, plus the 
+## id of the member node to be used for primary interactions such as creates
 setMethod("D1Client", signature("character", "character"), function(env, mnNodeid) {
 
   ## Define the default CNs for each environment.
@@ -107,7 +107,8 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
   ## instantiating any Java objects, which might interact with the DataONE environment
   ## while setting things up.  (It will be called in this routine when 
   ## validating the member node id)
-  if (d1.isCertExpired()) {
+  cm <- new("CertificateManager",something="")
+  if (isCertExpired(cm)) {
       message("Your client certificate is expired.  Please download new one before continuing...")
       return(NULL)
   }

@@ -17,6 +17,9 @@
 \title{Class \code{"D1Object"}}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the class is. ~~
+This class encapsulates a DataONE object and it's associated systemMetadata, and
+provides methods for building one for submission and methods for getting at its
+data and system metadata.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("D1Object", id, data, format, mnNodeId)}.
@@ -83,6 +86,10 @@ Objects can be created by calls of the form \code{new("D1Object", id, data, form
 }
 \note{
 %%  ~~further notes~~
+As of Feb 2013, there is only one AbstractTableDescriber subclass
+  for parsing metadata: EMLParser.  It can handle EML version
+  2.0.0 - 2.1.1 formatted metadata files. Other parsers should become 
+  available as separate packages that can be loaded as needed.
 }
 \seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
@@ -90,5 +97,20 @@ Objects can be created by calls of the form \code{new("D1Object", id, data, form
 }
 \examples{
 showClass("D1Object")
+
+
+\dontrun{
+  ## asDataFrame
+  df <- asDataFrame(data.package, dataMember.id)
+
+  df <- asDataFrame(data.object, its.metadata)
+
+  table.describer <- EMLParser(its.metadata)
+  df <- asDataFrame(data.object, table.describer)
+
+  df <- asDataFrame(data.object, sep="\\t", ...)
+
+  df <- asDataFrame(data.object)
+}
 }
 \keyword{classes}

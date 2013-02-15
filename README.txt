@@ -1,71 +1,94 @@
 dataone
 -------
-A client for DataONE, written in R. Uses the Java DataONE client lib for
+A client for DataONE, written in R. Uses the Java DataONE client library for
 accessing DataONE services.
 
 Dependencies
 -------------
-rJava
+rJava v0.8-5 or later
 
 Installation Notes
 ------------------
-We need rJava to bind to the Java client libraries, be sure to install from
-version 0.8-5 or later because prior versions have a classpath bug
+This package uses rJava to bind to the Java client libraries.  Be sure to install 
+from version 0.8-5 or later because prior versions have a classpath bug
 > install.packages("rJava",,"http://rforge.net/",type="source")
 
-Build notes
------------
-1. Include Java jars and classes in d1_client_r/inst/java
+Developer notes
+---------------
+1. Include any Java jars and classes in d1_client_r/inst/java
 2. use "R CMD INSTALL d1_client_r" to install in the local R env
 3. use "R CMD check d1_client_r" to check package validity
 4. use "R CMD build d1_client_r" to build a distribution
 
 Once installed, the package can be run in R using:
-$ R
+$ R 
 > library(dataone)
 Loading required package: rJava
-> d1.get("knb:testid:201017503654464")
-restURL: http://localhost:8080/knb/session/?username=uid=kepler,o=unaffiliated,dc=ecoinformatics,dc=org&password=kepler&qformat=xml&op=login
-method: POST
-restURL: http://localhost:8080/knb/object/knb:testid:201017503654464?sessionid=D5E407E1348AFAA75B003B286AB3FAF6
-method: GET
-[1] "x,y,z\n1,2,3"
->
+> help("dataone-package")
 
-Troubleshooting
----------------
+
+Installation Verification
+-------------------------
+
 1. Java version on Mac OS X
   -- even though my user default for Java was 1.6, at times rJava still uses 1.5
   -- even switching to 1.6 under root doesn't help
   -- thus, classes compiled under 1.6 sometimes won't run in rJava
-  -- recompile with -source 1.5 -target 1.5 and things should work
-  -- in recent versions of rJava, Java 1.6 code is working fine
-  -- I wrote a utility method to determine the java version used in rJava,
-     execute it as:
+  -- recompiling the java code under 1.5 will fix the problem
+     -- recompile using -source 1.5 -target 1.5 parameters
+
+  -- the data one package contains a utility method to determine the java version 
+     used by rJava.
+     execute is as:
+     > library(dataone)
      > d1.javaversion()
      [1] "1.5.0_24"
      [1] "1.5.0_24-b02-357-9M3165"
-2. The doc and man directories still contain only stub documentation
+
+
 
 
 Getting Started  (from email on 12/12/12)
 ---------------
-I think there's probably 4 primary functional areas the R Client addresses:
+The R Client addresses 5 broad functional areas: client setup, search, data retrieval,
+data submission, and dataFrame interoperability.
 
-1. setting the environment and your member node (the one where you publish to)
-The D1Client 'constructor' method builds a D1Client object configured to the chosen
-environment and membernode.
-
-It's also the class that retrieves objects from that environment with either 
-getD1Object, or getPackage.
+1. Client Setup
+----------------
+Client setup includes setting your member node (where submissions will go), and 
+setting up your client subject.  (You are identified to DataONE by your client subject).
+Most interaction with the DataONE system is mediated by the D1Client class - retrievals,
+searches, submissions.  The D1Client 'constructor' method builds a D1Client object 
+configured to the chosen environment and membernode.
 
 examples:
 
-d1.client <- D1Client("STAGING","urn:node:WERSDF")
+> cli <- D1Client() # builds a client to the production environment
 
-d1.client <- D1Client("DEV")  # set the environment to DEV, no member node set
+> cli <- D1Client("urn:node:WERSDF")   # builds a client to the production environment and sets the default member node
 
-d1.client <- D1Client()  # builds a client to the production environemnt
+> cli <- D1Client("urn:node:UIYOP", env="DEV")  # sets the environment to DEV, and sets the submission member node 
+
+There are some helper functions as well for managing your client subject.
+
+> d1.downloadCert() - opens the CILogon page in your default browser, to assist in certificate download
+> d1.getCertExpires() - displays the date-time that your current certificate is valid until.
+
+For more information on these functions:
+> help(certificate)
+
+2. Data Search
+--------------
+DataONE coordinating nodes expose a SOLR query endpoint that can be queried against
+to get information about stored objects.  Those familiar with SOLR queries can use
+the D1Client method
+> results <- d1SolrQuery(cli, list(q="foo",fl="identifier,etc...")) 
+to return solr results for their own interpretation.
+
+For more streamlined searches:
+> d1IdentifierSearch("foo")
+returns a character vector of the identifiers of records found.
+
 
 
 2. submitting data to the member node:
@@ -135,7 +158,7 @@ the reason you don't need the member node set in D1Client is that the R Client
 methods consult CN resolve to get the nodes that hold the requested object. 
 
 4. converting data objects into useful things in R, specifically dataFrames.
-This is currently limited to converting csv-like files.
+This currently supports csv-like files
 
 examples:
 

@@ -11,11 +11,11 @@ exportMethods(D1Client, DataPackage, D1Object, EMLParser)
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,
 		      createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN,
-              d1SolrQuery, d1IdentifierSearch, listMemberNodes)
+              d1SolrQuery, d1IdentifierSearch, listMemberNodes,
+              encodeSolr, encodeUrlQuery, encodeUrlPath,
+              convert.csv)
 
-     #         showCertificateExpiration, showCurrentIdentity, launchCertificateDownload, 
-     #         obscureCert, restoreCert,
-     #         )
+
 
 # DataPackage methods
 exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, insertRelationship,
@@ -32,11 +32,10 @@ exportMethods(documented.d1FormatIds,
     data.tableAttributeNames, data.tableAttributeTypes, data.tableAttributeStorageTypes)
 
 # CertificateManager methods
-exportMethods("getCertExpires", "isCertExpired", "showClientSubject", "downloadCert", "obscureCert", "restoreCert")
+exportMethods(getCertExpires, isCertExpired, showClientSubject, downloadCert, obscureCert, restoreCert)
 
 # Misc testing methods
 export("d1.test")
 export("d1.javaversion")
 export("tableDescriber.registry")
-export("convert.csv")
-export("encodeUrlQuery", "encodeUrlPath", "encodeSolr")
+

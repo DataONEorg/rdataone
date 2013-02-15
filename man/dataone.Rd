@@ -13,7 +13,7 @@
   a set of convenience classes and functions for accessing these DataONE services.
 }
 \details{
-  This package defines 3 classes: \code{D1Client}, \code{D1Object}, and \code{DataPackage}. 
+  This package defines 3 main classes: \code{D1Client}, \code{D1Object}, and \code{DataPackage}. 
   The D1Client object represents the DataONE system, and is used to interact with DataONE.
   A D1Object is a discrete data-object with a unique identifier in DataONE.
   A DataPackage is simply a collection of related D1Objects with the relationships
@@ -28,10 +28,10 @@
   content not explicitly made public, nor can you submit new content or make any
   content modifications.
   
-  This package provides methods for managing your client certificate.  For details
-  type \code{??certificate}.  CILogon certificates are short-lived, lasting less
-  than 24 hours, so typically you will want to download a fresh certificate the 
-  first time you interact with DataONE each day.
+  The package also defines a CertificateManager package for managing your client 
+  certificate.  CILogon certificates are short-lived, lasting less than 24 hours, 
+  so typically you will want to download a fresh certificate the first time you 
+  interact with DataONE each day.
 }
 \author{Matthew Jones, Rob Nahf}
 \examples{

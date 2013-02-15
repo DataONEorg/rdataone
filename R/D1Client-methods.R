@@ -30,18 +30,18 @@
 #########################################################
 
 
-#' Download a DataPackage from the DataONE Cloud
-#' 
-#' Given a valid identifier for a ResourceMap, instantiate an R DataPackage
-#' object containing all of the package members.  
-#' @param x D1Client
-#' @param identifier character: identifier of the ResourceMap 
-#' @param ... (not yet used)
-#' @returnType DataPackage
-#' @return the data package
-#' 
-#' @author rnahf
-#' @export
+## Download a DataPackage from the DataONE Cloud
+## 
+## Given a valid identifier for a ResourceMap, instantiate an R DataPackage
+## object containing all of the package members.  
+## @param x D1Client
+## @param identifier character: identifier of the ResourceMap 
+## @param ... (not yet used)
+## @returnType DataPackage
+## @return the data package
+## 
+## @author rnahf
+## @export
 setGeneric("getPackage", function(x, identifier, ...) { 
   standardGeneric("getPackage")
 })
@@ -65,15 +65,15 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
-#' Download a D1Object from the DataONE Cloud
-#' @param x : D1Client
-#' @param identifier : the identifier of the object to get
-#' @param ... (not yet used)
-#' @returnType D1Object
-#' @return the DataONE object
-#' 
-#' @author rnahf
-#' @export
+## Download a D1Object from the DataONE Cloud
+## @param x : D1Client
+## @param identifier : the identifier of the object to get
+## @param ... (not yet used)
+## @returnType D1Object
+## @return the DataONE object
+## 
+## @author rnahf
+## @export
 setGeneric("getD1Object", function(x, identifier, ...) { 
 			standardGeneric("getD1Object")
 		})
@@ -101,20 +101,20 @@ setGeneric("d1SolrQuery", function(x, solrQuery) {
             standardGeneric("d1SolrQuery")
         })
 
-#' A method to query the DataONE solr endpoint of the Coordinating Node.
-#' It expects any lucene reserved characters to already be escaped with backslash.
-#' @param x  the D1Client (environment) being queried
-#' @param solrQuery  list
-#' @returnType character
-#' @return the solr response (XML)
-#' @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
-#' @author rnahf
-#' @export
+## A method to query the DataONE solr endpoint of the Coordinating Node.
+## It expects any lucene reserved characters to already be escaped with backslash.
+## @param x  the D1Client (environment) being queried
+## @param solrQuery  list
+## @returnType character
+## @return the solr response (XML)
+## @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
+## @author rnahf
+## @export
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 
     encodedKVs <- character()
     for(key in attributes(solrQuery)$names) {
-        kv <- paste0(urlEncodeQuerySegment(key), "=", urlEncodeQuerySegment(solrQuery[[key]]))
+        kv <- paste0(encodeUrlQuery(x,key), "=", encodeUrlQuery(x,solrQuery[[key]]))
         if (!is.null(e<-.jgetEx())) {
             print("Java exception was raised")
             print(paste("Exception detail code:", e$getDetail_code()))
@@ -132,17 +132,17 @@ setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 })
 
 
-#' A method to query the DataONE solr endpoint of the Coordinating Node.
-#' It expects a fully encoded character string as input (with lucene-reserved 
-#' characters backslash escaped and url-reserved characters %-encoded).
-#' @param x  D1Client: representing the DataONE environment being queried
-#' @param solrQuery  character: a fully encoded query string 
-#' @returnType character
-#' @return the solr response (XML)
-#' @note users should not provide the leading '?' to the query
-#' @examples \dontrun{ d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier" }
-#' @author rnahf
-#' @export
+## A method to query the DataONE solr endpoint of the Coordinating Node.
+## It expects a fully encoded character string as input (with lucene-reserved 
+## characters backslash escaped and url-reserved characters %-encoded).
+## @param x  D1Client: representing the DataONE environment being queried
+## @param solrQuery  character: a fully encoded query string 
+## @returnType character
+## @return the solr response (XML)
+## @note users should not provide the leading '?' to the query
+## @examples \dontrun{ d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier" }
+## @author rnahf
+## @export
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
     
     packagedQuery <- paste0("?", solrQuery)
@@ -166,24 +166,25 @@ setGeneric("d1IdentifierSearch", function(x, solrQuery) {
 })
 
 
-#' A method to query the DataONE solr endpoint of the Coordinating Node, and 
-#' return a character vector of identifiers.  
-#' It expects a fully encoded character string as input (with lucene-reserved 
-#' characters backslash escaped and url-reserved characters percent-encoded).
-#' @param x  D1Client: representing the DataONE environment being queried
-#' @param solrQuery  character: a fully encoded query string 
-#' @returnType character
-#' @return a vector of identifiers found
-#' @note users should not provide the leading '?' to the query
-#' @examples \dontrun{ d1IdentifierSearch(client,"q=%2Bspecies%20population%20diversity" }
-#' @author rnahf
-#' @export
+## A method to query the DataONE solr endpoint of the Coordinating Node, and 
+## return a character vector of identifiers.  
+## It expects a fully encoded character string as input (with lucene-reserved 
+## characters backslash escaped and url-reserved characters percent-encoded).
+## @param x  D1Client: representing the DataONE environment being queried
+## @param solrQuery  character: a fully encoded query string 
+## @returnType character
+## @return a vector of identifiers found
+## @note users should not provide the leading '?' to the query
+## @examples \dontrun{ d1IdentifierSearch(client,"q=%2Bspecies%20population%20diversity" }
+## @author rnahf
+## @export
 setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
 	
 	## empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
 	## negates any other fl or wr values that might be part of the passed in solrQuery
 	## (need to do this for parsing the reponse)
-	finalQuery = paste0("fl=identifier&wt=json&",solrQuery)
+	if (solrQuery)
+	finalQuery = paste0("fl=identifier&wt=json&q=",solrQuery)
 	message("final query: ", finalQuery)
 	jsonResponse <- d1SolrQuery(x, finalQuery)
 	
@@ -203,17 +204,17 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 
 
 ## reserveIdentifier
-#' Reserve an Identifier in the DataONE System
-#' 
-#' Reserve an identifier for future use in the DataONE System.
-#' @param x : D1Client
-#' @param id : identifier to reserve
-#' @param ... (not yet used)
-#' @returnType logical
-#' @return true if reserved
-#' 
-#' @author rnahf
-#' @export
+## Reserve an Identifier in the DataONE System
+## 
+## Reserve an identifier for future use in the DataONE System.
+## @param x : D1Client
+## @param id : identifier to reserve
+## @param ... (not yet used)
+## @returnType logical
+## @return true if reserved
+## 
+## @author rnahf
+## @export
 setGeneric("reserveIdentifier", function(x, id, ...) { 
   standardGeneric("reserveIdentifier")
 })
@@ -244,18 +245,18 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 
 
 
-#' Create the Object in the DataONE System
-#' 
-#' Creates a D1Object on the MemberNode determined by the object's systemMetadata.
-#' 
-#' @param x : D1Client
-#' @param d1Object : the object to create in DataONE
-#' @param ... (not yet used)
-#' @returnType logical
-#' @return TRUE if success
-#' 
-#' @author rnahf
-#' @export
+## Create the Object in the DataONE System
+## 
+## Creates a D1Object on the MemberNode determined by the object's systemMetadata.
+## 
+## @param x : D1Client
+## @param d1Object : the object to create in DataONE
+## @param ... (not yet used)
+## @returnType logical
+## @return TRUE if success
+## 
+## @author rnahf
+## @export
 setGeneric("createD1Object", function(x, d1Object, ...) { 
   standardGeneric("createD1Object")
 })
@@ -312,34 +313,34 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
         message("      - pid is null")
     }
     message("<--  create(D1Client, D1Object)")
-    return(!is.jnull(jNewPid))
+    return(jNewPid$getValue())
 })
 
 
-#' Create the Data Package in the DataONE System
-#' 
-#' Creates the D1Objects contained in the DataPackage by calling the createD1Object()
-#' on each of the members, as well as assembling the resourceMap object from the
-#' recorded relationships, and calling create() on it as well. 
-#' Any objects in the data map that have a dataUploaded value are assumed to be 
-#' pre-existing in the system, and skipped.
-#' @param x : D1Client
-#' @param dataPackage : The DataPackage instance to be submitted to DataONE for creation.
-#' @param ... (not yet used)
-#' @details The DataPackage describes the collection of data object and their associated 
-#' metadata object, with the relationships and members serialized into a document
-#' stored under, and retrievable with, the packageId as it's own distinct object.
-#' 
-#' Members are created serially, and most errors in creating one object will 
-#' interrupt the create process for the whole, resulting in some members will 
-#' getting created, and the remainder not.
-#' 
-#' @returnType NULL
-#' @return NULL
-#' @references See d1_libclient_java documentation D1Client.create()
-#'   	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create"}
-#' @author rnahf
-#' @export
+## Create the Data Package in the DataONE System
+## 
+## Creates the D1Objects contained in the DataPackage by calling the createD1Object()
+## on each of the members, as well as assembling the resourceMap object from the
+## recorded relationships, and calling create() on it as well. 
+## Any objects in the data map that have a dataUploaded value are assumed to be 
+## pre-existing in the system, and skipped.
+## @param x : D1Client
+## @param dataPackage : The DataPackage instance to be submitted to DataONE for creation.
+## @param ... (not yet used)
+## @details The DataPackage describes the collection of data object and their associated 
+## metadata object, with the relationships and members serialized into a document
+## stored under, and retrievable with, the packageId as it's own distinct object.
+## 
+## Members are created serially, and most errors in creating one object will 
+## interrupt the create process for the whole, resulting in some members will 
+## getting created, and the remainder not.
+## 
+## @returnType NULL
+## @return NULL
+## @references See d1_libclient_java documentation D1Client.create()
+##   	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create"}
+## @author rnahf
+## @export
 setGeneric("createDataPackage", function(x, dataPackage, ...) { 
             standardGeneric("createDataPackage")
         })
@@ -477,4 +478,90 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
    close(con)
    csvdata <- paste(data, collapse="\n")
    return(csvdata)
+})
+
+## Encode the Input for Solr Queries
+## 
+## Treating all special characters and spaces as literals, backslash escape special
+## characters, and double-quote if necessary 
+## @param segment : a string to encode
+## @returnType character
+## @return the encoded form of the input
+## @examples encodeSolr("this & that")
+## 
+## @author rnahf
+## @export
+setGeneric("encodeSolr", function(x, segment, ... ) {
+			standardGeneric("encodeSolr")
+		})
+
+setMethod("encodeSolr", signature(x="D1Client", segment="character"), function(x, segment, ...) {
+	inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
+	if (grepl(" ",inter)) {
+		return(paste0("\"",inter,"\""))
+	}
+	return(inter)
+})
+
+
+
+
+## Encode the Input for a URL Query Segment
+## 
+## Encodes the characters of the input so they are not interpretted as reserved
+## characters in url strings.  Will also encode non-ASCII unicode characters.
+## @param querySegment : a string to encode
+## @returnType character
+## @return the encoded form of the input
+## @examples fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
+## @author rnahf
+## @export
+setGeneric("encodeUrlQuery", function(x, querySegment, ...) {
+			standardGeneric("encodeUrlQuery")
+		})
+
+setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), function(x, querySegment, ...) {
+	
+	#    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
+	#    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
+	
+	encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
+	if (!is.null(e<-.jgetEx())) {
+		print("Java exception was raised")
+		print(.jcheck(silent=FALSE))
+	}
+	return(encoded)
+	
+	## an R-only alternate implementation that only would work for ASCII characters
+	## (may need to check the behavior of {,},[,] - they may need to be hidden also)
+	#    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
+	#    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
+	#    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
+})
+
+
+
+
+## Encode the Input for a URL Path Segment
+## 
+## Encodes the characters of the input so they are not interpretted as reserved
+## characters in url strings.  Will also encode non-ASCII unicode characters.
+## @param pathSegment : a string to encode
+## @returnType character
+## @return the encoded form of the input
+## @examples fullyEncodedPath <- paste0("cn/v1/object/",encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
+## @author rnahf
+## @export
+
+setGeneric("encodeUrlPath", function(x, pathSegment, ...) {
+			standardGeneric("encodeUrlPath")
+		})
+
+setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), function(x, pathSegment, ...) {
+	encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlPathSegment", pathSegment)
+	if (!is.null(e<-.jgetEx())) {
+		print("Java exception was raised")
+		print(.jcheck(silent=FALSE))
+	}
+	return(encoded)
 })
