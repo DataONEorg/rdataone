@@ -21,21 +21,21 @@
 ### This file contains functions useful to the dataone package methods
 
 
+## Get DataONE Identity as Stored in the CILogon Certificate
+## 
+## Returns Your Identity according to DataONE (and CILogon).  If the certificate
+## is expired, the character string will be prefixed with "[EXPIRED]"
+## @returnType character
+## @return the DataONE Subject that is your client's identity
+## 
+## @author rnahf
+## @export
 
+setGeneric("showClientSubject", function(x, ...) { 
+            standardGeneric("showClientSubject")
+        })
 
-
-
-
-#' Get DataONE Identity as Stored in the CILogon Certificate
-#' 
-#' Returns Your Identity according to DataONE (and CILogon).  If the certificate
-#' is expired, the character string will be prefixed with "[EXPIRED]"
-#' @returnType character
-#' @return the DataONE Subject that is your client's identity
-#' 
-#' @author rnahf
-#' @export
-d1.getIdentity <- function() {
+setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     
     jSubject <- J("org/dataone/client/auth/ClientIdentityManager")$getCurrentIdentity()
     if (!is.null(e<-.jgetEx())) {
@@ -52,16 +52,24 @@ d1.getIdentity <- function() {
         return(paste("[EXPIRED]", jSubject$getValue()))
     }
     return(jSubject$getValue())
-}
+})
 
 
-#' Is the CILogon Certificate Expired?
-#' @returnType logical
-#' @return true if expired
-#' 
-#' @author rnahf
-#' @export
-d1.isCertExpired <- function() {
+
+
+## Is the CILogon Certificate Expired?
+## @returnType logical
+## @return true if expired
+## 
+## @author rnahf
+## @export
+
+
+setGeneric("isCertExpired", function(x, ...) { 
+            standardGeneric("isCertExpired")
+        })
+
+setMethod("isCertExpired", signature("CertificateManager"), function(x) {
     ## since there's a certificate, now check to see if its expired
     jExpDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
     if (!is.null(jExpDate)) {
@@ -71,18 +79,23 @@ d1.isCertExpired <- function() {
         }
     }
     return(FALSE)
-}
+})
 
 
 
 
-#' Show the Date and Time when the CILogon Certificate Expires
-#' @returnType character
-#' @return the expiration date
-#' 
-#' @author rnahf
-#' @export
-d1.getCertExpires <- function() {
+## Show the Date and Time when the CILogon Certificate Expires
+## @returnType character
+## @return the expiration date
+## 
+## @author rnahf
+## @export
+
+setGeneric("getCertExpires", function(x, ...) { 
+            standardGeneric("getCertExpires")
+        })
+
+setMethod("getCertExpires", signature("CertificateManager"), function(x) {
     jDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
@@ -92,37 +105,45 @@ d1.getCertExpires <- function() {
         return(NULL)
     }
     return(jDate$toString())
-}
+})
 
 
-#' open the CILogin Certificate download page in the default browser
-#' 
-#' A convenience method to take you to the CILogon download page:  
-#' https://cilogon.org/?skin=DataONE
-#' @returnType NULL
-#' 
-#' @author rnahf
-#' @export
-d1.downloadCert <- function() {
+## open the CILogin Certificate download page in the default browser
+## 
+## A convenience method to take you to the CILogon download page:  
+## https://cilogon.org/?skin=DataONE
+## @returnType NULL
+## 
+## @author rnahf
+## @export
+setGeneric("downloadCert", function(x, ...) { 
+            standardGeneric("downloadCert")
+        })
+
+setMethod("downloadCert", signature("CertificateManager"), function(x) {
     browseURL("https://cilogon.org/?skin=DataONE")
-}
+})
 
 
 
-#' Obscure the CILogon Client Certificate
-#' 
-#' Obscures the x509 certificate that CILogon installs, effectively making future
-#' interactions with the DataONE services anonymous.  Note, when the client
-#' certificate is obscured, you will not be able to create objects to DataONE,
-#' or build D1Objects, which uses the certificate to fill out fields in the
-#' system metadata.
-#' 
-#' @note \code{restoreCert} is this method's inverse operation   
-#' @returnType NULL
-#' 
-#' @author rnahf
-#' @export
-d1.obscureCert <- function() {
+## Obscure the CILogon Client Certificate
+## 
+## Obscures the x509 certificate that CILogon installs, effectively making future
+## interactions with the DataONE services anonymous.  Note, when the client
+## certificate is obscured, you will not be able to create objects to DataONE,
+## or build D1Objects, which uses the certificate to fill out fields in the
+## system metadata.
+## 
+## @note \code{restoreCert} is this method's inverse operation   
+## @returnType NULL
+## 
+## @author rnahf
+## @export
+setGeneric("obscureCert", function(x, ...) { 
+            standardGeneric("obscureCert")
+        })
+
+setMethod("obscureCert", signature("CertificateManager"), function(x) {
     jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
     # check for FileNotFound
     if (!is.null(e<-.jgetEx())) {
@@ -131,21 +152,26 @@ d1.obscureCert <- function() {
     }
     filePath <- jFile$getAbsolutePath()
     file.rename(filePath,paste0(filePath,"_obscured"))
-}
+})
 
 
 
 
-#' Restore an Obscured Certificate
-#' 
-#' Restores an obscured certificate to its original location. The inverse
-#' operation to "obscureCert".  
-#' 
-#' @returnType NULL
-#' 
-#' @author rnahf
-#' @export
-d1.restoreCert <- function() {
+## Restore an Obscured Certificate
+## 
+## Restores an obscured certificate to its original location. The inverse
+## operation to "obscureCert".  
+## 
+## @returnType NULL
+## 
+## @author rnahf
+## @export
+setGeneric("restoreCert", function(x, ...) { 
+            standardGeneric("restoreCert")
+        })
+
+setMethod("restoreCert", signature("CertificateManager"), function(x) {
+
     # check for FileNotFound
     tryCatch({
         jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
@@ -162,36 +188,6 @@ d1.restoreCert <- function() {
             message("No obscured certificate to restore at", obscured)
         }
     })
-}
-
-
-##
-# setGeneric("showCertificateExpiration", function(x) {
-#     standardGeneric("showCertificateExpiration")
-# })
-# 
-# setMethod("showCertificateExpiration", signature("D1Client"), function(x) {
-
-
-
-# setGeneric("launchCertificateDownload", function(x) {
-#     standardGeneric("launchCertificateDownload")
-# })
-# 
-# setMethod("launchCertificateDownload", signature("D1Client"), function(x) {
-
-
-# setGeneric("obscureCert", function(x) {
-#     standardGeneric("obscureCert")
-# })
-# 
-# setMethod("obscureCert", signature("D1Client"), function(x) {
-
-
-# setGeneric("restoreCert", function(x) {
-#     standardGeneric("restoreCert")
-# })
-# 
-# setMethod("restoreCert", signature("D1Client"), function(x) {
+})
 
 

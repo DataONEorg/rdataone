@@ -3,7 +3,7 @@ import("rJava")
 import("XML")
 
 # Classes
-exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser)
+exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager)
 
 # constructor methods
 exportMethods(D1Client, DataPackage, D1Object, EMLParser)
@@ -31,12 +31,12 @@ exportMethods(documented.d1FormatIds,
     data.tableMissingValueCodes, data.tableAttributeOrientation, 
     data.tableAttributeNames, data.tableAttributeTypes, data.tableAttributeStorageTypes)
 
+# CertificateManager methods
+exportMethods("getCertExpires", "isCertExpired", "showClientSubject", "downloadCert", "obscureCert", "restoreCert")
+
 # Misc testing methods
 export("d1.test")
 export("d1.javaversion")
 export("tableDescriber.registry")
 export("convert.csv")
-export("d1.getCertExpires", "d1.isCertExpired")
-export("d1.getIdentity", "d1.downloadCert")
-export("d1.obscureCert", "d1.restoreCert")
 export("encodeUrlQuery", "encodeUrlPath", "encodeSolr")
