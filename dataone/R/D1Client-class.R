@@ -107,7 +107,7 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
   ## instantiating any Java objects, which might interact with the DataONE environment
   ## while setting things up.  (It will be called in this routine when 
   ## validating the member node id)
-  cm <- new("CertificateManager",something="")
+  cm <- CertificateManager()
   if (isCertExpired(cm)) {
       message("Your client certificate is expired.  Please download new one before continuing...")
       return(NULL)

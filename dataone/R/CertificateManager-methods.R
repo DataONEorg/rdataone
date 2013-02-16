@@ -37,7 +37,7 @@ setGeneric("showClientSubject", function(x, ...) {
 
 setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     
-    jSubject <- J("org/dataone/client/auth/ClientIdentityManager")$getCurrentIdentity()
+    jSubject <- x@jClientIdManager$getCurrentIdentity()
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
         print(.jcheck(silent=FALSE))
@@ -71,7 +71,7 @@ setGeneric("isCertExpired", function(x, ...) {
 
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
     ## since there's a certificate, now check to see if its expired
-    jExpDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
+    jExpDate <- x@jClientIdManager$getCertificateExpiration()
     if (!is.null(jExpDate)) {
         jNowDate <- .jnew("java/util/Date")
         if (jExpDate$before(jNowDate)) {
@@ -96,7 +96,7 @@ setGeneric("getCertExpires", function(x, ...) {
         })
 
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
-    jDate <- J("org/dataone/client/auth/ClientIdentityManager")$getCertificateExpiration()
+    jDate <- x@jClientIdManager$getCertificateExpiration()
     if (!is.null(e<-.jgetEx())) {
         print("Java exception was raised")
         print(.jcheck(silent=FALSE))

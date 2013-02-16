@@ -4,7 +4,7 @@
 \docType{package}
 \title{
 DataONE R Client
-~~ package title ~~
+%% ~~ package title ~~
 }
 \description{
 A package that provides read/write access to data and metadata from 
@@ -41,8 +41,8 @@ EMLParser-class         Class '"EMLParser"'
 dataone-package         Package to access data and metadata in the
                         DataONE repository federation.
 }
-~~ An overview of how to use the package, including the most important ~~
-~~ functions ~~
+%%~~ An overview of how to use the package, including the most important ~~
+%%~~ functions ~~
 
 This package provides facilities to manage data and metadata within the DataONE
   federation of data repositories.  DataONE defines four tiers of standard
@@ -78,20 +78,20 @@ This package defines 3 main classes: \code{D1Client}, \code{D1Object}, and \code
 Matthew Jones, Rob Nahf
 
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
-~~ The author and/or maintainer of the package ~~
+%% ~~ The author and/or maintainer of the package ~~
 }
 \references{
-~~ Literature or other references for background information ~~
+%% ~~ Literature or other references for background information ~~
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
-~~ the R documentation directory ~~
+%% ~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
+%% ~~ the R documentation directory ~~
 \keyword{ package }
 \seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
+%% ~~ Optional links to other man pages, e.g. ~~
+%% ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-~~ simple examples of the most important functions ~~
+%% ~~ simple examples of the most important functions ~~
  \dontrun{
     library(dataone)
     d1 <- D1Client("DEV")

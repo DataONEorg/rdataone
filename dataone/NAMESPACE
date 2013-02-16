@@ -6,7 +6,7 @@ import("XML")
 exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager)
 
 # constructor methods
-exportMethods(D1Client, DataPackage, D1Object, EMLParser)
+exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager)
 
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,

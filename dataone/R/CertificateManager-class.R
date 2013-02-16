@@ -22,9 +22,22 @@
 
 
 setClass("CertificateManager",
-        representation(something = "character")
+    representation(jClientIdManager = "jclassName")
+
 )
+
+setGeneric("CertificateManager", function(...) {
+    standardGeneric("CertificateManager")
+})
+
 
 setGeneric("CertificateManager", function(...) {
             standardGeneric("CertificateManager")
         })
+
+
+setMethod("CertificateManager", , function() {
+   result <- new("CertificateManager")
+   result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
+   return(result)
+})
