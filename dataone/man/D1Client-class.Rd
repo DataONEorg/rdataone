@@ -29,7 +29,8 @@ A D1Client object represents the high-level interface to the DataONE system,
 and its methods mediate most all interaction with the system.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("D1Client", ...)}.
+Objects can be created by calls of the form \code{new("D1Client", ...)} or 
+using one of the constructor methods:  \code{\link{D1Client}}
 %%  ~~ describe objects here ~~ 
 }
 \section{Slots}{

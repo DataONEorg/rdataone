@@ -25,12 +25,13 @@ private.  Creates and identifier reservations might fail because your authorizat
 certificate is missing or expired.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("CertificateManager", ...)}.
+Objects can be created by calls of the form \code{new("CertificateManager", ...)}
+or \code{CertificateManager()}
 %%  ~~ describe objects here ~~ 
 }
 \section{Slots}{
   \describe{
-    \item{\code{something}:}{Object of class \code{"character"} ~~ }
+    \item{\code{jClientIdManager}:}{Object of class \code{"jclassName"} ~~ }
   }
 }
 \section{Methods}{

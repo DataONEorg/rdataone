@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{AbstractTableDescriber-class}
-\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
+%%\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 
 \title{Class \code{"AbstractTableDescriber"}}
 \description{

@@ -2,12 +2,12 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{D1Object-class}
-\alias{addData,DataPackage,D1Object-method}
+%%\alias{addData,DataPackage,D1Object-method}
 \alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 \alias{asDataFrame,D1Object,ANY-method}
 \alias{asDataFrame,D1Object,D1Object-method}
 \alias{canRead,D1Object,character-method}
-\alias{createD1Object,D1Client,D1Object-method}
+%%\alias{createD1Object,D1Client,D1Object-method}
 \alias{EMLParser,D1Object-method}
 \alias{getData,D1Object,ANY-method}
 \alias{getFormatId,D1Object-method}

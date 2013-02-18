@@ -81,6 +81,7 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
   ## Define the default CNs for each environment.
   PROD <- "https://cn.dataone.org/cn"
   STAGING <- "https://cn-stage.test.dataone.org/cn"
+  STAGING2 <- "https://cn-stage-2.test.dataone.org/cn"
   SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
   DEV <- "https://cn-dev.test.dataone.org/cn"
 
@@ -92,6 +93,7 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
   } else {
     if (env == "DEV") CN_URI <- DEV
     if (env == "STAGING") CN_URI <- STAGING
+    if (env == "STAGING2") CN_URI <- STAGING2
     if (env == "SANDBOX") CN_URI <- SANDBOX
     if (env == "PROD") CN_URI <- PROD
   }

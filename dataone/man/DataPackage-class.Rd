@@ -6,7 +6,7 @@
 \alias{addData,DataPackage,D1Object-method}
 \alias{asDataFrame,DataPackage,character-method}
 \alias{contains,DataPackage,character-method}
-\alias{createDataPackage,D1Client,DataPackage-method}
+%%\alias{createDataPackage,D1Client,DataPackage-method}
 \alias{getData,DataPackage,character-method}
 \alias{getIdentifiers,DataPackage-method}
 \alias{getMember,DataPackage,character-method}
