@@ -16,15 +16,15 @@ from version 0.8-5 or later because prior versions have a classpath bug
 Developer notes
 ---------------
 1. Include any Java jars and classes in d1_client_r/inst/java
-2. use "R CMD INSTALL d1_client_r" to install in the local R env
-3. use "R CMD check d1_client_r" to check package validity
-4. use "R CMD build d1_client_r" to build a distribution
+2. use "R CMD INSTALL dataone" to install in the local R env
+3. use "R CMD check dataone" to check package validity
+4. use "R CMD build dataone" to build a distribution
 
 Once installed, the package can be run in R using:
 $ R 
 > library(dataone)
 Loading required package: rJava
-> help("dataone-package")
+> help("dataone")
 
 
 Installation Verification
