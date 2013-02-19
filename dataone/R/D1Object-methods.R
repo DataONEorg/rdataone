@@ -1,4 +1,4 @@
-#
+ #
 #   This work was created by participants in the DataONE project, and is
 #   jointly copyrighted by participating institutions in DataONE. For
 #   more information on DataONE, see our web site at http://dataone.org.
@@ -287,12 +287,13 @@ setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), functi
             message(paste("Index of data item is",index))
             
             ## is this a datatype that we can handle?
+			## trust the metadata, not the d1FormatId of the object
             dataFormat <- data.formatFamily(reference,index)
             if (dataFormat != "text/simpleDelimited") {
-                print(paste("cannot process data of type", dataFormat))
+				message("cannot process data of type", dataFormat)
                 return()
             } else if (data.tableAttributeOrientation(reference, index) == 'row') {
-                print(paste("cannot process text/simpleDelimited file where attributes are by row"))
+				message("cannot process text/simpleDelimited file where attributes are by row")
             }
             
             fieldSeparator <- data.tableFieldDelimiter(reference, index)

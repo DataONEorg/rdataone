@@ -56,8 +56,8 @@ setMethod("documented.sizes", signature("EMLParser"), function(x) {
 
 
 
-#' @name data.formatFamily
-#' @alias data.formatFamily,-method
+## @name data.formatFamily
+## @alias data.formatFamily,-method
 setMethod("data.formatFamily", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
     bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")

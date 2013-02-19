@@ -1,6 +1,16 @@
 \name{D1Object-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{D1Object}
+%%\alias{addData}
+\alias{asDataFrame}
+\alias{canRead}
+%%\alias{createD1Object}
+%%\alias{EMLParser}
+%%\alias{getData}
+\alias{getFormatId}
+\alias{getIdentifier}
+\alias{setPublicAccess}
 \alias{D1Object-class}
 %%\alias{addData,DataPackage,D1Object-method}
 \alias{asDataFrame,D1Object,AbstractTableDescriber-method}
@@ -39,7 +49,8 @@ Objects can be created by calls of the form \code{new("D1Object", id, data, form
     \item{asDataFrame}{\code{signature(x = "D1Object", reference =
 	"AbstractTableDescriber")}: 
 	return the D1Object's content as a dataFrame, using parsing instructions 
-	from the specific AbstractTableDescriber 
+	from the specific AbstractTableDescriber. see addition method implementation
+	in \code{\link{DataPackage-class}}
 	}
     \item{asDataFrame}{\code{signature(x = "D1Object", reference = "ANY")}: 
 	return the D1Object's content as a dataFrame  

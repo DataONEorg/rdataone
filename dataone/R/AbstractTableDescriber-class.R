@@ -82,9 +82,10 @@ if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
 ## 
 ## @author rnahf
 ## @export
-setGeneric("documented.d1FormatIds", function(x, ...) {
-    standardGeneric("documented.d1FormatIds")
-})
+##setGeneric("documented.d1FormatIds", function(x, ...) {
+##    standardGeneric("documented.d1FormatIds")
+##})
+## see formatFamily generic instead.
 
 
 ## Get the entity names associated with each table

@@ -2,6 +2,19 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{AbstractTableDescriber-class}
+\alias{data.characterEncoding}
+\alias{data.formatFamily}
+\alias{data.tableAttributeNames}
+\alias{data.tableAttributeOrientation}
+\alias{data.tableAttributeStorageTypes}
+\alias{data.tableAttributeTypes}
+\alias{data.tableFieldDelimiter}
+\alias{data.tableMissingValueCodes}
+\alias{data.tableQuoteCharacter}
+\alias{documented.d1Identifiers}
+\alias{documented.d1FormatIds}
+\alias{documented.entityNames}
+\alias{documented.sizes}
 %%\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 
 \title{Class \code{"AbstractTableDescriber"}}
@@ -28,7 +41,8 @@ read the metadata.
     return the character encoding entry from the metadata 
     }
     \item{data.formatFamily}{\code{signature(x = "AbstractTableDescriber", index = "numeric")}: 
-    return the dataFormat of the data object being described  
+    return the formatFamily of the data object being described.  asDataFrame methods only work
+    on 'text/simpleDelimited'
     }
     \item{data.tableAttributeNames}{\code{signature(x = "AbstractTableDescriber", index = "numeric")}: 
     returns the attribute names defined in the metadata document for the specified data table 
@@ -51,7 +65,8 @@ read the metadata.
     returns the missing value codes defined in the metadata document for the specified data table 
     }
     \item{data.tableQuoteCharacter}{\code{signature(x = "AbstractTableDescriber", index = "numeric")}: 
-    returns the quote characters(s) for the data object being described }
+    returns the quote characters(s) for the data object being described 
+    }
     \item{documented.d1Identifiers}{\code{signature(x = "AbstractTableDescriber")}:
     return a vector of dataONE identifiers associated with each table
     }

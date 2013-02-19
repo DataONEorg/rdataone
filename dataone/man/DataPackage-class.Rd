@@ -1,6 +1,18 @@
 \name{DataPackage-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{DataPackage}
+\alias{addAndDownloadData}
+\alias{addData}
+%%\alias{asDataFrame}
+\alias{contains}
+%%\alias{createDataPackage}
+\alias{getData}
+\alias{getIdentifiers}
+\alias{getMember}
+\alias{getSize}
+\alias{insertRelationship}
+\alias{removeMember}
 \alias{DataPackage-class}
 \alias{addAndDownloadData,DataPackage,character-method}
 \alias{addData,DataPackage,D1Object-method}
@@ -61,7 +73,8 @@ Objects can be created by calls of the form \code{new("DataPackage", packageId, 
     ... 
     }
     \item{getData}{\code{signature(x = "DataPackage", id = "character")}: 
-    Returns the content of the DataPackage member identified by id. 
+    Returns the content of the DataPackage member identified by id. see additional
+    implementation in \code{link{D1Object-class}}
     }
     \item{getIdentifiers}{\code{signature(x = "DataPackage")}: 
     Return the identifiers of the package members, as defined by the ResourceMap

@@ -25,7 +25,7 @@ exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, ins
 exportMethods(getData, getIdentifier, getFormatId, setPublicAccess, canRead, asDataFrame)
 
 # EMLParser methods
-exportMethods(documented.d1FormatIds, 
+exportMethods( 
 	documented.entityNames, documented.d1Identifiers, documented.sizes,
     data.formatFamily, data.tableFieldDelimiter, data.tableQuoteCharacter, data.characterEncoding, 
     data.tableMissingValueCodes, data.tableAttributeOrientation, 
@@ -35,7 +35,7 @@ exportMethods(documented.d1FormatIds,
 exportMethods(getCertExpires, isCertExpired, showClientSubject, downloadCert, obscureCert, restoreCert)
 
 # Misc testing methods
-export("d1.test")
-export("d1.javaversion")
+#export("d1.test")
+#export("d1.javaversion")
 export("tableDescriber.registry")
 

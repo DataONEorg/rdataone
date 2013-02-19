@@ -1,6 +1,13 @@
 \name{CertificateManager-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{CertificateManager}
+\alias{downloadCert}
+\alias{getCertExpires}
+\alias{isCertExpired}
+\alias{obscureCert}
+\alias{restoreCert}
+\alias{showClientSubject}
 \alias{CertificateManager-class}
 \alias{downloadCert,CertificateManager-method}
 \alias{getCertExpires,CertificateManager-method}

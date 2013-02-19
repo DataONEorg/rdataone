@@ -1,6 +1,7 @@
 \name{EMLParser-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{EMLParser}
 \alias{EMLParser-class}
 \alias{data.characterEncoding,EMLParser,numeric-method}
 \alias{data.formatFamily,EMLParser,numeric-method}

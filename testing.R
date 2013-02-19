@@ -18,8 +18,6 @@
 #   limitations under the License.
 #
 
-
-
 #+----------------------------------------------------------------------+#
 #|	                                                                    |# 
 #|	           the top-level testing function                           |# 
@@ -32,7 +30,7 @@ d1.test <- function() {
   cn_env <- Sys.getenv("CN_ENV")
 
   if(cn_env == "") cn_env <- "DEV"
-  if(cn_env != "DEV") print(paste("** Using the", cn_env, "environment."))
+  print(paste("** Using the", cn_env, "environment."))
 
   mn_nodeid <- Sys.getenv("MN_NODE_ID")
   if (mn_nodeid =="") 
@@ -207,7 +205,7 @@ d1.buildDataPackage <- function(env, mn_nodeid) {
   # Read a text file from disk
   message("@@ testing.R 02: Reading text file from disk...")
   libPath <- .libPaths()
-  tfiles.directory <- file.path(libPath[1], .packageName, "testfiles",
+  tfiles.directory <- file.path(libPath[1], "dataone", "testfiles",
 			        fsep=.Platform$file.sep)
   filenames <- list.files(tfiles.directory)
 
