@@ -1,183 +1,63 @@
-dataone
--------
-A client for DataONE, written in R. Uses the Java DataONE client library for
-accessing DataONE services.
+DataONE R Client
+================
 
-Dependencies
--------------
-rJava v0.8-5 or later
+A package that provides read/write access to data and metadata from the DataONE network of Member Node data repositories. Member Nodes in DataONE are independent data repositories that have adopted the DataONE services for interoperability, making each of the repositories accessible to client tools such as the DataONE R Client using a standard interface.  The DataONE R Client can be used to access data files and to write new data and metadata files to nodes in the DataONE network.  
+
+Downloads
+---------
+The currently supported version is:
+
+- DataONE R Client (dataone_1.0.0.tar.gz_)
+
+Documentation for the DataONE R Client is provided as help files within the R framework, and is downloadable in PDF format:
+
+- DataONE R Client Manual (dataone_1.0.0-manual.pdf_)
+
+.. _dataone_1.0.0.tar.gz: https://releases.dataone.org/dist/dataone_1.0.0.tar.gz
+
+.. _dataone_1.0.0-manual.pdf: https://releases.dataone.org/dist/dataone_1.0.0-manual.pdf
 
 Installation Notes
 ------------------
-This package uses rJava to bind to the Java client libraries.  Be sure to install 
-from version 0.8-5 or later because prior versions have a classpath bug
-> install.packages("rJava",,"http://rforge.net/",type="source")
+The easiest way to install the client is via the CRAN_ repository:
 
-Developer notes
----------------
-1. Include any Java jars and classes in d1_client_r/inst/java
-2. use "R CMD INSTALL dataone" to install in the local R env
-3. use "R CMD check dataone" to check package validity
-4. use "R CMD build dataone" to build a distribution
+..  > install.packages("dataone")
+
+
+.. _CRAN: http://cran.r-project.org
+
+Alternatively, you can download and install the package manually from this web
+site.  
+
+After downloading the package, install it using:
+
+.. 
+
+  $ R CMD install dataone_1.0.0.tar.gz
+
+This package uses rJava to bind to the Java client libraries.  Be sure to install 
+rJava for your particular version of R and Java.
+
+.. > install.packages("rJava",,"http://rforge.net/",type="source")
 
 Once installed, the package can be run in R using:
-$ R 
-> library(dataone)
-Loading required package: rJava
-> help("dataone")
+
+..
+
+	$ R 
+
+	> library(dataone)
+
+	Loading required package: rJava
+
+	> help("dataone")
 
 
-Installation Verification
--------------------------
+License
+-------
+The DataONE R Client is licensed as open source software under the Apache 2.0 license.
 
-1. Java version on Mac OS X
-  -- even though my user default for Java was 1.6, at times rJava still uses 1.5
-  -- even switching to 1.6 under root doesn't help
-  -- thus, classes compiled under 1.6 sometimes won't run in rJava
-  -- recompiling the java code under 1.5 will fix the problem
-     -- recompile using -source 1.5 -target 1.5 parameters
-
-  -- the data one package contains a utility method to determine the java version 
-     used by rJava.
-     execute is as:
-     > library(dataone)
-     > d1.javaversion()
-     [1] "1.5.0_24"
-     [1] "1.5.0_24-b02-357-9M3165"
-
-
-
-
-Getting Started  (from email on 12/12/12)
----------------
-The R Client addresses 5 broad functional areas: client setup, search, data retrieval,
-data submission, and dataFrame interoperability.
-
-1. Client Setup
-----------------
-Client setup includes setting your member node (where submissions will go), and 
-setting up your client subject.  (You are identified to DataONE by your client subject).
-Most interaction with the DataONE system is mediated by the D1Client class - retrievals,
-searches, submissions.  The D1Client 'constructor' method builds a D1Client object 
-configured to the chosen environment and membernode.
-
-examples:
-
-> cli <- D1Client() # builds a client to the production environment
-
-> cli <- D1Client("urn:node:WERSDF")   # builds a client to the production environment and sets the default member node
-
-> cli <- D1Client("urn:node:UIYOP", env="DEV")  # sets the environment to DEV, and sets the submission member node 
-
-There are some helper functions as well for managing your client subject.
-
-> d1.downloadCert() - opens the CILogon page in your default browser, to assist in certificate download
-> d1.getCertExpires() - displays the date-time that your current certificate is valid until.
-
-For more information on these functions:
-> help(certificate)
-
-2. Data Search
---------------
-DataONE coordinating nodes expose a SOLR query endpoint that can be queried against
-to get information about stored objects.  Those familiar with SOLR queries can use
-the D1Client method
-> results <- d1SolrQuery(cli, list(q="foo",fl="identifier,etc...")) 
-to return solr results for their own interpretation.
-
-For more streamlined searches:
-> d1IdentifierSearch("foo")
-returns a character vector of the identifiers of records found.
-
-
-
-2. submitting data to the member node:
-The best practice is to submit new data as part of a package containing the data, 
-the metadata that describes it, and the ORE resource map that defines the relationship 
-between the two (or more) to dataONE.  Typically, a scope of a package is 1 metadata 
-object along with 1 or more data objects it documents, but it could contain multiple 
-metadata objects and their data. 
-
-The DataPackage class provides methods for assembling the data and metadata objects 
-and defining the "documents / documented-by" relationships that get fed into the 
-resource map.  All you do is add the members of the data package, and tell it which 
-(metadata) members document which (data) members.  After that you submit, or 
-"create" the dataPackage.
-
-example:
-
-env.label <- "STAGING"
-mn.nodeid <- "urn:node:foo"
-d1.client <- D1Client(env.label, mn.nodeid)
-
-d1o.d1 <- new("D1Object", id.d1, table.1.data, data.formatID, mn.nodeid)
-d1o.d2 <- new("D1Object", id.d2, table.2.data, data.formatID, mn.nodeid)
-d1o.d3 <- new("D1Object", id.d3, table.3.data, data.formatID, mn.nodeid)
-d1o.md1 <- new("D1Object", id.md1, metadata, md.formatID, mn.nodeid)
-
-setPublicAccess(d1o.d1)
-setPublicAccess(d1o.d2)
-setPublicAccess(d1o.d3)
-setPublicAccess(d1o.md1)
-
-data.package <- new("DataPackage",packageId=packageId)
-
-addData(data.package,d1o.d1)
-addData(data.package,d1o.d2)
-addData(data.package,d1o.d3)
-addData(data.package,d1o.md1)
-insertRelationship(data.package, id.md1, c(id.d1, id.d2, id.d3))
-
-create(d1.client, data.package)
-
-When you build a new D1Object, only a minimal system metadata object is created.  
-Typically, you'd want to add an AccessPolicy before posting it to the member node. 
-The method setPublicAccess is a convenience method for adding an accessRule to the 
-system metadata making an object publicly readable. For more thorough accessPolicy 
-setting, for now, you'd have to work directly with the wrapped Java D1Object, but 
-setPublicAccess is probably good enough for demonstrations and test objects.
-
-You might notice too, that there's no mechanism to make the resourceMap itself a 
-public object.  Currently, the DataPackage create method makes all of the resourceMaps 
-it creates public (after it creates the resourceMap.)  We need to design a way to 
-set access for all members of a DataPackage. Alas, not there yet.
-
-
-3. getting data / metadata from DataONE:
-
-d1.client <- D1Client("STAGING")
-d1o <- getD1Object(d1.client, pid)
-content <- getData(d1o)
-
-dp <- getPackage(d1.client, pid)
-members <- getIdentifiers(dp)
-d1o <- getMember(dp,members[1])
-content <- getData(d1o)
-
-the reason you don't need the member node set in D1Client is that the R Client 
-methods consult CN resolve to get the nodes that hold the requested object. 
-
-4. converting data objects into useful things in R, specifically dataFrames.
-This currently supports csv-like files
-
-examples:
-
-df <- asDataFrame(data.package, dataMember.id)
-
-df <- asDataFrame(data.object, its.metadata)
-
-table.describer <- EMLParser(its.metadata)
-df <- asDataFrame(data.object, table.describer)
-
-df <- asDataFrame(data.object, sep="\t", ...)
-
-df <- asDataFrame(data.object)
-
-
-4a. importing / registering DataTableDescribers - the things that read the metadata 
-and pull out the elements that give information on how the dataTable should be parsed.  
-The dataone package currently includes the DataTableDescriber for EML documents, but 
-the intention is to split it out into it's own package.  Something simple is set up 
-to allow other metadata providers to build their own metadata parsers, and for the 
-dataone package to find them when they are loaded, but further work is definitely 
-needed.
+Authors
+-------
+- Matthew Jones <jones@nceas.ucsb.edu>
+- Rob Nahf <nahf@dataone.unm.edu>
