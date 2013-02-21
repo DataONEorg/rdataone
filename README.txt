@@ -25,15 +25,15 @@ Installation Notes
 ------------------
 The easiest way to install the client is via the CRAN_ repository:
 
-..  > install.packages("dataone")
+..  
+
+	> install.packages("dataone")
 
 
 .. _CRAN: http://cran.r-project.org
 
 Alternatively, you can download and install the package manually from this web
-site.  
-
-After downloading the package, install it using:
+site above and, after downloading the package, install it using:
 
 .. 
 
@@ -54,7 +54,7 @@ Once installed, the package can be run in R using:
 
 	Loading required package: rJava
 
-    Loading required package: XML
+	Loading required package: XML
 
 	> help(dataone)
 
