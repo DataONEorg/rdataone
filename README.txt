@@ -49,8 +49,9 @@ Once installed, the package can be run in R using:
 	> library(dataone)
 
 	Loading required package: rJava
+    Loading required package: XML
 
-	> help("dataone")
+	> help(dataone)
 
 
 License
