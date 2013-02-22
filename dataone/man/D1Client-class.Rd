@@ -149,7 +149,7 @@ using one of the constructor methods:  \code{\link{D1Client}}
 
 }
 \author{
-%%  ~~who you are~~
+Matthew Jones and Rob Nahf
 }
 \note{
 %%  ~~further notes~~
@@ -167,12 +167,6 @@ users should not provide the leading '?' to any query methods
   and the remainder not.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-}
 \examples{
 showClass("D1Client")
 \dontrun{ 

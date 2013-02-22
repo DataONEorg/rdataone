@@ -51,18 +51,9 @@ Class \code{"\linkS4class{AbstractTableDescriber}"}, directly.
     \item{documented.sizes}{\code{signature(x = "EMLParser")}: ... }
 	 }
 }
-\references{
-%%  ~~put references to the literature/web site here~~
-}
 \author{
-%%  ~~who you are~~
+  Matthew Jones and Rob Nahf
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
   \code{\linkS4class{AbstractTableDescriber}} for method descriptions 

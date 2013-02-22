@@ -97,11 +97,8 @@ Objects can be created by calls of the form \code{new("DataPackage", packageId, 
     }
 	 }
 }
-\references{
-%%  ~~put references to the literature/web site here~~
-}
 \author{
-%%  ~~who you are~~
+  Matthew Jones and Rob Nahf
 }
 \note{
 %%  ~~further notes~~
@@ -113,12 +110,6 @@ Objects can be created by calls of the form \code{new("DataPackage", packageId, 
   and has no corresponding java method.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-}
 \examples{
 showClass("DataPackage")
 

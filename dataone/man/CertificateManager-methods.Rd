@@ -15,5 +15,8 @@
 this method returns a CertificateManager object.
 }
 }}
+\author{
+Matthew Jones and Rob Nahf
+}
 \keyword{methods}
 \keyword{ ~~ other possible keyword(s) ~~ }

@@ -88,12 +88,8 @@ Objects can be created by calls of the form \code{new("D1Object", id, data, form
     }
 	}
 }
-\references{
-%%  ~~put references to the literature/web site here~~
-}
 \author{
-  %%  ~~who you are~~
-  Rob Nahf
+  Matthew Jones and Rob Nahf
 }
 \note{
 %%  ~~further notes~~
@@ -101,10 +97,6 @@ As of Feb 2013, there is only one AbstractTableDescriber subclass
   for parsing metadata: EMLParser.  It can handle EML version
   2.0.0 - 2.1.1 formatted metadata files. Other parsers should become 
   available as separate packages that can be loaded as needed.
-}
-\seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
 }
 \examples{
 showClass("D1Object")
