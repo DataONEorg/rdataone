@@ -1,0 +1,2 @@
+# This is a Java-library only package, and contains no R code other than the .onLoad() hook to set up Java libraries
+import("rJava")
