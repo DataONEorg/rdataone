@@ -9,6 +9,7 @@ An R_ package that provides read/write access to data and metadata from the Data
 
 Downloads
 ---------
+
 The currently supported version requires two R packages, dataone and dataonelibs (which provides the Java libraries necessary for the dataone package to function):
 
 - DataONE R Client (dataone_1.0.0.tar.gz_)
@@ -26,53 +27,47 @@ Documentation for the DataONE R Client is provided as help files within the R fr
 
 Installation Notes
 ------------------
-The easiest way to install the client is via the CRAN_ repository:
 
-..  
+The easiest way to install the client is via the CRAN_ repository::
 
-	> install.packages("dataonelibs")
 
-	> install.packages("dataone")
+  > install.packages("dataonelibs")
+
+  > install.packages("dataone")
 
 
 .. _CRAN: http://cran.r-project.org
 
 Alternatively, you can download and install the package manually from this web
-site above and, after downloading the package, install it using:
+site above and, after downloading the package, install it using::
 
-.. 
+  $ R CMD install dataonelibs_1.0.0.tar.gz
 
-	$ R CMD install dataonelibs_1.0.0.tar.gz
-
-	$ R CMD install dataone_1.0.0.tar.gz
+  $ R CMD install dataone_1.0.0.tar.gz
 
 This package uses rJava to bind to the Java client libraries.  Be sure to install 
 rJava for your particular version of R and Java.
 
 .. > install.packages("rJava",,"http://rforge.net/",type="source")
 
-Once installed, the package can be run in R using:
+Once installed, the package can be run in R using::
 
-..
+  $ R 
+  > library(dataone)
+  Loading required package: rJava
+  Loading required package: XML
+  Loading required package: dataonelibs
 
-	$ R 
-
-	> library(dataone)
-
-	Loading required package: rJava
-
-	Loading required package: XML
-
-	Loading required package: dataonelibs
-
-	> help(dataone)
+  > help(dataone)
 
 
 License
 -------
+
 The DataONE R Client is licensed as open source software under the Apache 2.0 license.
 
 Authors
 -------
+
 - Matthew Jones <jones@nceas.ucsb.edu>
 - Rob Nahf <nahf@dataone.unm.edu>
