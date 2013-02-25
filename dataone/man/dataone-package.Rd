@@ -16,7 +16,7 @@ the DataONE network of Member Node data repositories.
 Package: \tab dataone\cr
 Version: \tab 1.0.0\cr
 Date: \tab 2013-02-14\cr
-Depends: \tab R (>= 2.9.2), rJava (>= 0.8-5), XML (>= 3.95-0.1), methods\cr
+Depends: \tab R (>= 2.9.2), rJava (>= 0.8-5), XML (>= 3.95-0.1), methods, dataonelibs\cr
 Imports: \tab rJava, XML\cr
 SystemRequirements: \tab Java (>= 1.6)\cr
 License: \tab file LICENSE\cr

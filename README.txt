@@ -9,15 +9,18 @@ An R_ package that provides read/write access to data and metadata from the Data
 
 Downloads
 ---------
-The currently supported version is:
+The currently supported version requires two R packages, dataone and dataonelibs (which provides the Java libraries necessary for the dataone package to function):
 
 - DataONE R Client (dataone_1.0.0.tar.gz_)
+- DataONE Libraries (dataonelibs_1.0.0.tar.gz_)
 
 Documentation for the DataONE R Client is provided as help files within the R framework, and is downloadable in PDF format:
 
 - DataONE R Client Manual (dataone_1.0.0-manual.pdf_)
 
 .. _dataone_1.0.0.tar.gz: https://releases.dataone.org/dist/dataone_1.0.0.tar.gz
+
+.. _dataonelibs_1.0.0.tar.gz: https://releases.dataone.org/dist/dataonelibs_1.0.0.tar.gz
 
 .. _dataone_1.0.0-manual.pdf: https://releases.dataone.org/dist/dataone_1.0.0-manual.pdf
 
@@ -26,6 +29,8 @@ Installation Notes
 The easiest way to install the client is via the CRAN_ repository:
 
 ..  
+
+	> install.packages("dataonelibs")
 
 	> install.packages("dataone")
 
@@ -37,7 +42,9 @@ site above and, after downloading the package, install it using:
 
 .. 
 
-  $ R CMD install dataone_1.0.0.tar.gz
+	$ R CMD install dataonelibs_1.0.0.tar.gz
+
+	$ R CMD install dataone_1.0.0.tar.gz
 
 This package uses rJava to bind to the Java client libraries.  Be sure to install 
 rJava for your particular version of R and Java.
@@ -55,6 +62,8 @@ Once installed, the package can be run in R using:
 	Loading required package: rJava
 
 	Loading required package: XML
+
+	Loading required package: dataonelibs
 
 	> help(dataone)
 
