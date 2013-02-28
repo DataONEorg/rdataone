@@ -183,8 +183,7 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 	## empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
 	## negates any other fl or wr values that might be part of the passed in solrQuery
 	## (need to do this for parsing the reponse)
-	if (solrQuery)
-	finalQuery = paste0("fl=identifier&wt=json&q=",solrQuery)
+	finalQuery = paste0("fl=identifier&wt=json&",solrQuery)
 	message("final query: ", finalQuery)
 	jsonResponse <- d1SolrQuery(x, finalQuery)
 	
