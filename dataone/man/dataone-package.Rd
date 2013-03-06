@@ -70,12 +70,12 @@ some examples:
 \preformatted{
     > cli <- D1Client() # builds a client to the production environment
 
-    > cli <- D1Client(,"urn:node:WERSDF")   # builds a client to the 
-                                            # production environment and sets
-                                            # the default member node
+    > cli <- D1Client(,"urn:node:KNB")   # builds a client to the 
+                                         # production environment and sets
+                                         # the default member node
 
-    > cli <- D1Client("DEV", "urn:node:UIYOP")  # sets the environment to DEV, 
-                                                # and sets the default member node 
+    > cli <- D1Client("DEV", "urn:node:mnDemo5")  # sets the environment to DEV, 
+                                                  # and sets the default member node 
 }
 
 There are also some helper functions for managing your client subject.
@@ -97,13 +97,21 @@ DataONE coordinating nodes expose a SOLR query endpoint that can be queried agai
 to get information about stored objects.  Those familiar with SOLR queries can use
 the D1Client methods \code{d1SolrQuery}
 \preformatted{
-    > results <- d1SolrQuery(cli, list(q="foo",fl="identifier,etc...")) 
+    > results <- d1SolrQuery(cli,list(q="+species population diversity", fl="identifier"))
+  
 }
 to return solr results for their own interpretation.
 
+To perform the same search but get the results in a format more readily read by R, one can retrive the results using the JSON format and then use the rjson library to parse the results.  For example:
+\preformatted{
+	> library(rjson)
+	> results <- fromJSON(d1SolrQuery(cli, list(q="+species population diversity",wt="json")))
+  
+}
+
 For more streamlined searches to get just the identifiers:
 \preformatted{
-    > d1IdentifierSearch(cli, "q=foo")
+    > d1IdentifierSearch(cli, "q=species")
 }
 returns a character vector of the identifiers of records found using the word 'foo' 
 as a search term.
@@ -117,19 +125,29 @@ either from a data search within R, from ONEMercury, or even in a published pape
 
 Ideally, the data you want to retrieve has been submitted as part of a package,
 and you will be retrieving the entire package.
-  
+
+To retrieve a single data file based on its identifier, one can create a D1Object and then, for certain file types like CSV, automatically convert that to a data frame:
+
+\preformatted{
+	> library(dataone)
+	> cli <- D1Client()
+	> d1o <- getD1Object(cli, "doi:10.5063/AA/hstuar01.10.1")
+	> mydf <- asDataFrame(d1o)
+}
+
 A package in DataONE terminology is a set of individual objects (files, usually)
 that relate to each other, and whose relationships to each other are defined in 
-a separate object called a Resource Map.  To retrieve a data package, use the following:
+a separate object called an Resource Map (see OAI-ORE).  Packages are used to bundle a set of scientifically related files together, and often represent what scientists think of as a 'data set'.  To retrieve a data package from its identifier, use the following:
 \preformatted{
-    > cli <- D1Client()
-    > packageOfInterest <- getPackage(cli,"interestingStuff")
+	> library(dataone)
+	> cli <- D1Client()
+	> pkg <- getPackage(cli, "resourceMap_hstuar01.6.3")
 }
-the object 'packageOfInterest' is of type "DataPackage", and once you have it, you 
+the object 'pkg' is of type "DataPackage", and once you have it, you 
 can start looking at the individual objects that make it up:
 \preformatted{
-    > members <- getIdentifiers(packageOfInterest)
-    > member1 <- getMember(packageOfInterest,members[1])
+    > members <- getIdentifiers(pkg)
+    > member1 <- getMember(pkg,members[1])
     > member1[0]
     "D1Object"
 }
@@ -143,13 +161,7 @@ At times you may wish to retrieve an individual object directly, without retriev
 the entire package.  Use the following method, \code{getD1Object}.
 \preformatted{
     > cli <- D1Client()
-    > item <- getD1Object(cli,"interestingObject")
-}
-A list of methods used for working with DataPackages and their member D1Objects 
-can be found with:
-\preformatted{
-    > methods ? DataPackage
-    > methods ? D1Object
+    > item <- getD1Object(cli,"doi:10.5063/AA/hstuar01.10.1")
 }
 }
 \subsection{4. Submitting Data}{
@@ -201,8 +213,7 @@ you submit the dataPackage. For example:
 
 You might have noticed that there is no mechanism to make the resourceMap itself 
 a public object.  Currently, the DataPackage create method makes all of the 
-resourceMaps it creates public (after it creates the resourceMap.)  This definitely 
-needs to change.
+resourceMaps it creates public (after it creates the resourceMap.)  This will be more flexible in future releases. 
 }
 \subsection{5. dataFrame Interoperability}{
 Once you have access to dataone content in R, it would be nice to have that data
