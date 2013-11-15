@@ -118,3 +118,11 @@ setMethod("MNode", signature("character"), function(nodeid) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
 # public Identifier generateIdentifier(String scheme, String fragment)
 
+# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.query
+# public InputStream query(String queryEngine, String query)
+
+# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.getQueryEngineDescription
+# public QueryEngineDescription getQueryEngineDescription(String queryEngine)
+
+# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.listQueryEngines
+# public QueryEngineList listQueryEngines()
