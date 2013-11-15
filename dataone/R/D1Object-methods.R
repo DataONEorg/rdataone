@@ -104,7 +104,7 @@ setGeneric("getData", function(x, id, ...) {
     standardGeneric("getData")
 })
  
-setMethod("getData", signature("D1Object"), function(x) {
+setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
 	jD1Object = x@jD1o
 	if(!is.jnull(jD1Object)) {
 		databytes <- jD1Object$getData()
@@ -112,14 +112,27 @@ setMethod("getData", signature("D1Object"), function(x) {
 			print(paste("Didn't find data in:", id))
 			return()
 		}
-		jDataString <- .jnew("java/lang/String",databytes,"UTF-8")
-		if (!is.null(e<-.jgetEx())) {
-			print("Java exception was raised")
-			print(e)
-			print(.jcheck(silent=FALSE))
-		}
-		dataString <- jDataString$toString()
-		return(dataString)
+        
+        if (!is.na(fileName)) {
+            ## Write data to file
+            jFileOutputStream <- .jnew("java/io/FileOutputStream", fileName)
+            jInputStream <- .jnew("java/io/ByteArrayInputStream", databytes)
+            ioUtils <- .jnew("org/apache/commons/io/IOUtils")
+            ioUtils$copy(jInputStream, jFileOutputStream)
+            returnVal = fileName
+        } else {
+            ## return data as string
+            jDataString <- .jnew("java/lang/String",databytes,"UTF-8")
+            if (!is.null(e<-.jgetEx())) {
+                print("Java exception was raised")
+                print(e)
+                print(.jcheck(silent=FALSE))
+            }
+            dataString <- jDataString$toString()
+            returnVal = dataString
+        }
+        
+		return(returnVal)
 	}
 })
 
