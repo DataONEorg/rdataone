@@ -32,45 +32,31 @@ setClass("MNode",
 ## MNode constructors
 #########################
 
-## @param nodeid The node identifier with which this node is registered in DataONE
+## @param baseurl The node URL with which this node is registered in DataONE
 ## @param ... (not yet used)
 ## @returnType MNode  
 ## @return the MNode object representing the DataONE environment
 ## 
 ## @author jones
 ## @export
-setGeneric("MNode", function(nodeid, ...) {
+setGeneric("MNode", function(baseurl, ...) {
   standardGeneric("MNode")
 })
 
-## 
-## Construct a MNode, using default ("KNB")
-## @name MNode
-## 
-## @returnType MNode  
-## @return the MNode object representing repository in DataONE
-## 
-## @author jones
-## @docType methods
-## @export
-setMethod("MNode", , function() {
-    result <- MNode("urn:node:KNB")
-    return(result)
-})
-
-## Construct a MNode, using a passed in node identifier
-## @param nodeid The node identifier with which this node is registered in DataONE
+## Construct a MNode, using a passed in node url
+## @param baseurl The node url with which this node is registered in DataONE
 ## @returnType MNode  
 ## @return the MNode object representing the DataONE environment
 ## 
 ## @author jones
 ## @export
-setMethod("MNode", signature("character"), function(nodeid) {
+setMethod("MNode", signature("character"), function(baseurl) {
 
   ## create new MNode object and insert uri endpoint
   result <- new("MNode")
-  result@nodeid <- nodeid
-  result@endpoint <- CN_URI
+  result@endpoint <- baseurl
+
+  ## Lookup the rest of the node information
 
   return(result)
 })
@@ -85,8 +71,22 @@ setMethod("MNode", signature("character"), function(nodeid) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities
-# public Node getCapabilities() 
+## Get the node capabilities description, and store the information in the MNode
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities
+## @param nodeid The node identifier with which this node is registered in DataONE
+## @returnType MNode  
+## @return the MNode object representing the DataONE environment
+## 
+## @author jones
+## @export
+setGeneric("getCapabilities", function(mnode, ...) {
+    standardGeneric("getCapabilities")
+})
+
+setMethod("getCapabilities", signature("MNode"), function(mnode) {
+	url <- paste(mnode@endpoint, "node", sep="/")
+	GET(url)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
 # public InputStream get(Identifier pid)
