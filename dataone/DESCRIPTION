@@ -1,13 +1,18 @@
 Package: dataone
-Version: 1.0.0
+Version: 2.0.0
 Date: 2013-02-14
-Title: DataONE R Client
-Author: Matthew Jones, Rob Nahf
+Title: R interface to the DataONE REST API
+Authors@R: c(person("Matthew", "Jones", role = c("aut", "cre"), email =
+    "jones@nceas.ucsb.edu"), c(person("Rob", "Nahf", role = "aut", email =
+    "rnahf"), c(person("Carl", "Boettiger", role = c("aut"), email =
+    "cboettig@gmail.com")
 Maintainer: Matthew Jones <jones@nceas.ucsb.edu>
+VignetteBuilder: knitr
 Description: A package that provides read/write access to data and metadata from 
 		the DataONE network of Member Node data repositories.
 Depends: R (>= 2.9.2), rJava (>= 0.8-5), XML (>= 3.95-0.1), methods, dataonelibs
-Imports: rJava, XML
+Suggests: knitr, reml, testthat
+Imports: rJava, XML, httr
 SystemRequirements: Java (>= 1.6)
 License: Apache License 2.0
 Packaged: 2013-02-14 20:54:27 UTC; jones
