@@ -1,12 +1,13 @@
 import("rJava")
 # commenting out this import, to avoid build (check) errors
 import("XML")
+import("httr")
 
 # Classes
-exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager)
+exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager, CNode, MNode)
 
 # constructor methods
-exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager)
+exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode)
 
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,
