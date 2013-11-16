@@ -106,7 +106,6 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 		return(null)
 	}
 	xml <- content(response)
-	print(xml)
 	return(xml)
 })
 
