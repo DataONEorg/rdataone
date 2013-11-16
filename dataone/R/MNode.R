@@ -109,8 +109,29 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	return(xml)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
-# public InputStream get(Identifier pid)
+## Get the data associated with an object on this Member Node
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.get
+## @param mnode The MNode instance from which the pid will be downloaded
+## @param pid The object identifier to be downloaded
+## @returnType data  
+## @return the data object or a parsed representation of it
+## 
+## @author jones
+## @export
+setGeneric("get", function(mnode, pid, ...) {
+    standardGeneric("get")
+})
+
+setMethod("get", signature("MNode", "character"), function(mnode, pid) {
+	# TODO: add authentication to call if a certificate is available
+	# TODO: need to properly URL-escape the PID
+	url <- paste(mnode@endpoint, "object", pid, sep="/")
+	response <- GET(url)
+    if(response$status != "200") {
+		return(null)
+	}
+	return(content(response))
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getSystemMetadata
 # public SystemMetadata getSystemMetadata(Identifier pid)
