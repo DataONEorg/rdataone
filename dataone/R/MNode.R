@@ -19,12 +19,22 @@
 #
 
 ## A class representing a Member Node repository, which can expose and store data
-## @slot nodeid The node identifier of the MN
-## @slot endpoint The baseurl of the MN
+## @slot identifier The node identifier of the MN
+## @slot name The node name
+## @slot description The node description
+## @slot subject The Distinguished Name of this node, used for authentication
+## @slot contactSubject The Distinguished Name of contact person for this node
+## @slot baseURL The registered baseURL for the node, which does not include the version string
+## @slot endpoint The url to access node services, which is the baseURL plus the version string
 ## @author jones
 ## @export
 setClass("MNode",
-         representation(nodeid = "character",
+         representation(identifier = "character",
+						name = "character",
+						description = "character",
+						baseURL = "character",
+						subject = "character",
+						contactSubject = "character",
 						endpoint = "character")
 )
 
@@ -52,13 +62,19 @@ setGeneric("MNode", function(baseurl, ...) {
 ## @export
 setMethod("MNode", signature("character"), function(baseurl) {
 
-  ## create new MNode object and insert uri endpoint
-  result <- new("MNode")
-  result@endpoint <- baseurl
+	## create new MNode object and insert uri endpoint
+	mnode <- new("MNode")
+	mnode@endpoint <- baseurl
 
-  ## Lookup the rest of the node information
-
-  return(result)
+	## Lookup the rest of the node information
+	xml <- getCapabilities(mnode)
+	mnode@identifier <- xmlValue(xmlRoot(xml)[["identifier"]])
+	mnode@name <- xmlValue(xmlRoot(xml)[["name"]])
+	mnode@description <- xmlValue(xmlRoot(xml)[["description"]])
+	mnode@baseURL <- xmlValue(xmlRoot(xml)[["baseURL"]])
+	mnode@subject <- xmlValue(xmlRoot(xml)[["subject"]])
+	mnode@contactSubject <- xmlValue(xmlRoot(xml)[["contactSubject"]])
+	return(mnode)
 })
 
 ##########################
@@ -73,7 +89,7 @@ setMethod("MNode", signature("character"), function(baseurl) {
 
 ## Get the node capabilities description, and store the information in the MNode
 ## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities
-## @param nodeid The node identifier with which this node is registered in DataONE
+## @param identifier The node identifier with which this node is registered in DataONE
 ## @returnType MNode  
 ## @return the MNode object representing the DataONE environment
 ## 
@@ -85,7 +101,13 @@ setGeneric("getCapabilities", function(mnode, ...) {
 
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	url <- paste(mnode@endpoint, "node", sep="/")
-	GET(url)
+	response <- GET(url)
+    if(response$status != "200") {
+		return(null)
+	}
+	xml <- content(response)
+	print(xml)
+	return(xml)
 })
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
