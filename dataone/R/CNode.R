@@ -19,13 +19,15 @@
 #
 
 ## 
-## @slot endpoint The baseurl of the CN in this environment
+## @slot endpoint The endpoint of the CN in this environment, including the version specifier
+## @slot baseURL The baseURL of the CN in this environment
 ## @slot client The reference to the internally held Java D1Client instance
 ## @slot session The reference to the internally held Java Session instance
 ## @author jones
 ## @export
 setClass("CNode",
          representation(endpoint = "character",
+                        baseURL = "character",
                         client = "jobjRef",
                         session = "jobjRef")
 )
@@ -89,7 +91,8 @@ setMethod("CNode", signature("character"), function(env) {
 
   ## create new D1Client object and insert uri endpoint
   result <- new("CNode")
-  result@endpoint <- CN_URI
+  result@baseURL <- CN_URI
+  result@endpoint <- paste(CN_URI, "v1", sep="/")
 
   ## an expired certificate can crash the R session, so want to check before 
   ## instantiating any Java objects, which might interact with the DataONE environment
@@ -130,8 +133,32 @@ setMethod("CNode", signature("character"), function(env) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listNodes
-# public NodeList listNodes()
+## Get the list of nodes associated with a CN
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listNodes
+## @param cnode The coordinating node to query for its registered Member Nodes
+## @returnType list of node identifiers and names
+## @return the list of nodes in the DataONE CN environment
+## 
+## @author jones
+## @export
+setGeneric("listNodes", function(cnode, ...) {
+    standardGeneric("listNodes")
+})
+
+setMethod("listNodes", signature("CNode"), function(cnode) {
+	url <- paste(cnode@endpoint, "node", sep="/")
+	response <- GET(url)
+    if(response$status != "200") {
+		return(NULL)
+	}
+	xml <- content(response)
+    #str(xml)
+    #idlist <- xmlSApply(xml[["//identifier"]], xmlValue)
+	#root <- xmlRoot(xml)
+	#rv <- xmlSApply(rot, function(x) xmlSApply(x, xmlChildren))
+	return(xml)
+})
+
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.reserveIdentifier
 # public Identifier reserveIdentifier(Identifier pid)

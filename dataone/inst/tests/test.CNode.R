@@ -11,3 +11,10 @@ test_that("CNode constructors work", {
 	cn <- CNode("DEV")
 	expect_that(cn@endpoint, matches("https://cn-dev.test.dataone.org/cn"))
 })
+test_that("CNode listNodes() works", {
+	library(dataone)
+	cn <- CNode()
+    xml <- listNodes(cn)
+	val <- xmlName(xmlRoot(xml))
+	expect_that(val, matches("nodeList"))
+})
