@@ -18,7 +18,74 @@
 #   limitations under the License.
 #
 
-### This file contains the methods and accessors for D1Object objects
+setClass("D1Object", representation(jD1o = "jobjRef") )
+
+#####################
+## D1Object constructors
+#####################
+
+## generic
+setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
+
+## no arguments in the signature
+## setMethod("D1Object", , function() {
+##   result <- new("D1Object")
+##   return(result)
+## })
+
+
+setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId) {
+
+  if (typeof(id) == "character") {
+    message("@@ D1Object-class:R initialize as character")
+    
+    ## build identifier to be used in system metadata
+    pid <- .jnew("org/dataone/service/types/v1/Identifier")
+    pid$setValue(id)
+    
+    ## Convert incoming data to byte array (byte[])
+    ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
+    byteArray <- ioUtils$toByteArray(data)
+    
+    ## build the ObjectFormatIdentifier.
+    formatId <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
+    formatId$setValue(format)
+    
+    
+    ## build a submitter Subject from the certificate
+    certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+    cert <- certman$loadCertificate()
+    submitter <- .jnew("org/dataone/service/types/v1/Subject")
+    submitter$setValue(certman$getSubjectDN(cert))
+    
+    ## build the NodeReference
+    mnNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+    mnNodeRef$setValue(mnNodeId)
+    
+    jd1o <- .jnew("org/dataone/client/D1Object",
+                  pid, byteArray, formatId, submitter, mnNodeRef,
+                  check=FALSE)
+    
+    if (!is.null(e <- .jgetEx())) {
+      print("Java exception was raised")
+      print(.jcheck(silent=TRUE))
+      print(.jcheck(silent=TRUE))
+      print(e)
+      jd1o = .jnull("org/dataone/client/D1Object")
+    }
+  }
+  else {
+    message("@@ D1Object-class:R initialize as something else")
+    if (.jinstanceof(id,"org/dataone/client/D1Object")) {
+      message("@@ D1Object-class:R initialize with jobjRef")
+      jd1o <- id
+    }
+  }
+  
+  .Object@jD1o <- jd1o
+  return(.Object)
+})
+
 
 #########################################################
 ### MNRead and MNStorage methods

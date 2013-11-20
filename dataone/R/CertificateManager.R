@@ -21,6 +21,27 @@
 ### This file contains functions useful to the dataone package methods
 
 
+setClass("CertificateManager",
+    representation(jClientIdManager = "jclassName")
+
+)
+
+setGeneric("CertificateManager", function(...) {
+    standardGeneric("CertificateManager")
+})
+
+
+setGeneric("CertificateManager", function(...) {
+            standardGeneric("CertificateManager")
+        })
+
+
+setMethod("CertificateManager", , function() {
+   result <- new("CertificateManager")
+   result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
+   return(result)
+})
+
 ## Get DataONE Identity as Stored in the CILogon Certificate
 ## 
 ## Returns Your Identity according to DataONE (and CILogon).  If the certificate
@@ -53,9 +74,6 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     }
     return(jSubject$getValue())
 })
-
-
-
 
 ## Is the CILogon Certificate Expired?
 ## @returnType logical
