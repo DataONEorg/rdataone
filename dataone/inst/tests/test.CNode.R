@@ -14,7 +14,10 @@ test_that("CNode constructors work", {
 test_that("CNode listNodes() works", {
 	library(dataone)
 	cn <- CNode()
-  nodelist <- listNodes(cn)
-	foundMatch <- grep("urn:node:", nodelist)
-	expect_that(length(foundMatch) > 0, is_true())
+	nodelist <- listNodes(cn)
+	expect_that(length(nodelist) > 0, is_true())
+	expect_that(class(nodelist[[1]]), matches("Node"))
+	expect_that(nodelist[[1]]@identifier, matches("urn:node:"))
+	expect_that(nodelist[[1]]@type, matches("cn|mn"))
+	expect_that(nodelist[[1]]@state, matches("up"))
 })

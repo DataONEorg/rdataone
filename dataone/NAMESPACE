@@ -4,10 +4,10 @@ import("XML")
 import("httr")
 
 # Classes
-exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager, CNode, MNode)
+exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager, CNode, MNode, Node)
 
 # constructor methods
-exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode)
+exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node)
 
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,

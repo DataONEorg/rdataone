@@ -153,12 +153,9 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 	}
 	xml <- content(response)
 	node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
-  #print(node_identifiers)
-  #str(xml)
-  #idlist <- xmlSApply(xml[["//identifier"]], xmlValue)
-	#root <- xmlRoot(xml)
-	#rv <- xmlSApply(rot, function(x) xmlSApply(x, xmlChildren))
-	return(node_identifiers)
+	nodes <- getNodeSet(xml, "//node")
+	nobj <- sapply(nodes, Node)
+	return(nobj)
 })
 
 
