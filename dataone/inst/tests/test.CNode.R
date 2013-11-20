@@ -14,7 +14,7 @@ test_that("CNode constructors work", {
 test_that("CNode listNodes() works", {
 	library(dataone)
 	cn <- CNode()
-    xml <- listNodes(cn)
-	val <- xmlName(xmlRoot(xml))
-	expect_that(val, matches("nodeList"))
+  nodelist <- listNodes(cn)
+	foundMatch <- grep("urn:node:", nodelist)
+	expect_that(length(foundMatch) > 0, is_true())
 })
