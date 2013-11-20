@@ -29,13 +29,13 @@
 ## @author jones
 ## @export
 setClass("MNode",
-         representation(identifier = "character",
-						name = "character",
-						description = "character",
-						baseURL = "character",
-						subject = "character",
-						contactSubject = "character",
-						endpoint = "character")
+         slots = c(	identifier = "character",
+					name = "character",
+					description = "character",
+					baseURL = "character",
+					subject = "character",
+					contactSubject = "character",
+					endpoint = "character")
 )
 
 #########################

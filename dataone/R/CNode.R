@@ -26,10 +26,10 @@
 ## @author jones
 ## @export
 setClass("CNode",
-         representation(endpoint = "character",
-                        baseURL = "character",
-                        client = "jobjRef",
-                        session = "jobjRef")
+         slots = c(	endpoint = "character",
+                    baseURL = "character",
+                    client = "jobjRef",
+                    session = "jobjRef")
 )
 
 #########################
