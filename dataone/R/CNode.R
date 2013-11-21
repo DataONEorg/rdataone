@@ -108,7 +108,7 @@ setMethod("CNode", signature("character"), function(env) {
 ## Get the list of nodes associated with a CN
 ## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listNodes
 ## @param cnode The coordinating node to query for its registered Member Nodes
-## @returnType list of node identifiers
+## @returnType list
 ## @return the list of nodes in the DataONE CN environment
 ## 
 ## @author jones
@@ -126,8 +126,8 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 	xml <- content(response)
 	node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
 	nodes <- getNodeSet(xml, "//node")
-	nobj <- sapply(nodes, Node)
-	return(nobj)
+	nodelist <- sapply(nodes, Node)
+	return(nodelist)
 })
 
 
