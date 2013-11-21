@@ -20,17 +20,9 @@
 
 ## 
 ## @slot endpoint The endpoint of the CN in this environment, including the version specifier
-## @slot baseURL The baseURL of the CN in this environment
-## @slot client The reference to the internally held Java D1Client instance
-## @slot session The reference to the internally held Java Session instance
 ## @author jones
 ## @export
-setClass("CNode",
-         slots = c(	endpoint = "character",
-                    baseURL = "character",
-                    client = "jobjRef",
-                    session = "jobjRef")
-)
+setClass("CNode", slots = c(endpoint = "character"), contains="Node")
 
 #########################
 ## CNode constructors
@@ -86,30 +78,10 @@ setMethod("CNode", signature("character"), function(env) {
     if (env == "PROD") CN_URI <- PROD
   }
 
-  config <- J("org/dataone/configuration/Settings")$getConfiguration()
-  config$setProperty("D1Client.CN_URL", CN_URI)
-
   ## create new D1Client object and insert uri endpoint
   result <- new("CNode")
   result@baseURL <- CN_URI
   result@endpoint <- paste(CN_URI, "v1", sep="/")
-
-  ## an expired certificate can crash the R session, so want to check before 
-  ## instantiating any Java objects, which might interact with the DataONE environment
-  ## while setting things up.  (It will be called in this routine when 
-  ## validating the member node id)
-  cm <- CertificateManager()
-  if (isCertExpired(cm)) {
-      message("Your client certificate is expired.  Please download new one before continuing...")
-      return(NULL)
-  }
-  
-  ## Create a Java D1Client object to use for contacting the server
-  client <- .jnew("org/dataone/client/D1Client") 
-  result@client <- client
-  
-  ## initialize the session, but not sure where it's used
-  result@session <- .jnull("org/dataone/service/types/v1/Session") 
 
   return(result)
 })

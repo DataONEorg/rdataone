@@ -73,18 +73,7 @@ setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 
 	## create new Node object
 	node <- new("Node")
-	
-	## Parse the rest of the node information
-	node@identifier <- xmlValue(xml[["identifier"]])
-	node@name <- xmlValue(xml[["name"]])
-	node@description <- xmlValue(xml[["description"]])
-	node@baseURL <- xmlValue(xml[["baseURL"]])
-	node@subject <- xmlValue(xml[["subject"]])
-	node@contactSubject <- xmlValue(xml[["contactSubject"]])
-    attrs <- xmlAttrs(xml)
-	node@replicate <- attrs[["replicate"]]
-	node@type <- attrs[["type"]]
-	node@state <- attrs[["state"]]
+	parseCapabilities(node, xml)
 	return(node)
 })
 
@@ -92,3 +81,36 @@ setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 ## Methods
 ##########################
 
+## @param baseurl The node URL with which this node is registered in DataONE
+## @param ... (not yet used)
+## @returnType Node  
+## @return the Node object representing the DataONE environment
+## 
+## @author jones
+## @export
+setGeneric("parseCapabilities", function(node, xml, ...) {
+  standardGeneric("parseCapabilities")
+})
+
+## Construct a Node, using a passed in node url
+## @param baseurl The node url with which this node is registered in DataONE
+## @returnType Node  
+## @return the Node object representing the DataONE environment
+## 
+## @author jones
+## @export
+setMethod("parseCapabilities", signature("Node", "XMLInternalElementNode"), function(node, xml) {
+  
+  ## Parse the rest of the node information
+  node@identifier <- xmlValue(xml[["identifier"]])
+  node@name <- xmlValue(xml[["name"]])
+  node@description <- xmlValue(xml[["description"]])
+  node@baseURL <- xmlValue(xml[["baseURL"]])
+  node@subject <- xmlValue(xml[["subject"]])
+  node@contactSubject <- xmlValue(xml[["contactSubject"]])
+  attrs <- xmlAttrs(xml)
+  node@replicate <- attrs[["replicate"]]
+  node@type <- attrs[["type"]]
+  node@state <- attrs[["state"]]
+  return(node)
+})

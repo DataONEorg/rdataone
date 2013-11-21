@@ -19,24 +19,10 @@
 #
 
 ## A class representing a Member Node repository, which can expose and store data
-## @slot identifier The node identifier of the MN
-## @slot name The node name
-## @slot description The node description
-## @slot subject The Distinguished Name of this node, used for authentication
-## @slot contactSubject The Distinguished Name of contact person for this node
-## @slot baseURL The registered baseURL for the node, which does not include the version string
 ## @slot endpoint The url to access node services, which is the baseURL plus the version string
 ## @author jones
 ## @export
-setClass("MNode",
-         slots = c(	identifier = "character",
-					name = "character",
-					description = "character",
-					baseURL = "character",
-					subject = "character",
-					contactSubject = "character",
-					endpoint = "character")
-)
+setClass("MNode", slots = c(endpoint = "character"), contains="Node")
 
 #########################
 ## MNode constructors
@@ -49,31 +35,26 @@ setClass("MNode",
 ## 
 ## @author jones
 ## @export
-setGeneric("MNode", function(baseurl, ...) {
+setGeneric("MNode", function(endpoint, ...) {
   standardGeneric("MNode")
 })
 
 ## Construct a MNode, using a passed in node url
-## @param baseurl The node url with which this node is registered in DataONE
+## @param endpoint The node url with which this node is registered in DataONE, including version
 ## @returnType MNode  
 ## @return the MNode object representing the DataONE environment
 ## 
 ## @author jones
 ## @export
-setMethod("MNode", signature("character"), function(baseurl) {
+setMethod("MNode", signature("character"), function(endpoint) {
 
 	## create new MNode object and insert uri endpoint
 	mnode <- new("MNode")
-	mnode@endpoint <- baseurl
+	mnode@endpoint <- endpoint
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
-	mnode@identifier <- xmlValue(xmlRoot(xml)[["identifier"]])
-	mnode@name <- xmlValue(xmlRoot(xml)[["name"]])
-	mnode@description <- xmlValue(xmlRoot(xml)[["description"]])
-	mnode@baseURL <- xmlValue(xmlRoot(xml)[["baseURL"]])
-	mnode@subject <- xmlValue(xmlRoot(xml)[["subject"]])
-	mnode@contactSubject <- xmlValue(xmlRoot(xml)[["contactSubject"]])
+  parseCapabilities(mnode, xmlRoot(xml))
 	return(mnode)
 })
 
