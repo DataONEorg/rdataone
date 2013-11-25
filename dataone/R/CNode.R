@@ -123,8 +123,9 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
     if(response$status != "200") {
 		return(NULL)
 	}
+  
 	xml <- content(response)
-	node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
+  node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
 	nodes <- getNodeSet(xml, "//node")
 	nodelist <- sapply(nodes, Node)
 	return(nodelist)
@@ -178,3 +179,27 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.listQueryEngines
 # public QueryEngineList listQueryEngines()
+
+## Get a reference to a node based on its identifier
+## @param cnode The coordinating node to query for its registered Member Nodes
+## @returnType list
+## @return the list of nodes in the DataONE CN environment
+## 
+## @author jones
+## @export
+setGeneric("getMN", function(cnode, identifier, ...) {
+  standardGeneric("getMN")
+})
+
+setMethod("getMN", signature("CNode", "character"), function(cnode, identifier) {
+  nodelist <- listNodes(cnode)
+  match <- sapply(nodelist, function(node) { 
+        if (node@identifier == identifier && node@type == "mn") {
+              newnode <- MNode(node@endpoint)
+              return(newnode)
+        } else {
+              return(NULL)
+        }
+    })
+  return(match)
+})

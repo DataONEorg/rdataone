@@ -9,14 +9,21 @@ exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParse
 # constructor methods
 exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node)
 
+# CNode methods
+exportMethods(listNodes, getMN)
+
+# MNode methods
+exportMethods(getCapabilities, get)
+
+# Node methods
+exportMethods(listNodes, getMN)
+
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,
 		      createDataPackage, getEndpoint, getMNodeId, setMNodeId, getMN, getCN,
               d1SolrQuery, d1IdentifierSearch, listMemberNodes,
               encodeSolr, encodeUrlQuery, encodeUrlPath,
               convert.csv)
-
-
 
 # DataPackage methods
 exportMethods(getData, getSize, getIdentifiers, addData, addAndDownloadData, insertRelationship,

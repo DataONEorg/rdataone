@@ -71,10 +71,10 @@ setGeneric("Node", function(xml, ...) {
 ## @export
 setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 
-	## create new Node object
+  ## create new Node object
 	node <- new("Node")
-	parseCapabilities(node, xml)
-	return(node)
+	newnode <- parseCapabilities(node, xml)
+	return(newnode)
 })
 
 ##########################
