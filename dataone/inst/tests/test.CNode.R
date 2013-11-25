@@ -20,4 +20,8 @@ test_that("CNode listNodes() works", {
 	expect_that(nodelist[[1]]@identifier, matches("urn:node:"))
 	expect_that(nodelist[[1]]@type, matches("cn|mn"))
 	expect_that(nodelist[[1]]@state, matches("up"))
+	expect_that(nodelist[[length(nodelist)]]@identifier, matches("urn:node:"))
+	expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
+	expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
+	expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
 })
