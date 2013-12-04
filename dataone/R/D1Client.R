@@ -532,15 +532,17 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 })
 
 
-## Get a member node client.
+## Deprecated. Get a member node client.
 ## Allow for optionally passing the nodeid.
 setGeneric("getMN", function(x, nodeid, ...) { 
     standardGeneric("getMN")
 })
 setMethod("getMN", signature("D1Client"), function(x, ...) {
+  .Deprecated("MNode")
   mn <- getMN(x, x@mn.nodeid)
 })
 setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
+  .Deprecated("MNode")
   # Validate nodeid.
   if(is.null(nodeid) || (nodeid == "")) {
     print("ERROR: No member node id is defined.")
@@ -556,11 +558,12 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 })
 
 
-## Get a coordinating node client.
+## Deprecated. Get a coordinating node client.
 setGeneric("getCN", function(x) { 
   standardGeneric("getCN")
 })
 setMethod("getCN", signature("D1Client"), function(x) {
+  .Deprecated("CNode")
   cn <- J("org/dataone/client/D1Client")$getCN()
   return(cn)
 })
@@ -573,6 +576,7 @@ setGeneric("listMemberNodes", function(x) {
 })
 
 setMethod("listMemberNodes", signature("D1Client"), function(x) {
+    .Deprecated("listNodes")
     mnIDset <- x@client$getCN()$listNodeIds()$toArray(.jarray(""))
     ## remove CN
     return (mnIDset)
