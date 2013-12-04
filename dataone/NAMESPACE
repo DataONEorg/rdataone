@@ -10,13 +10,13 @@ exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParse
 exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node)
 
 # CNode methods
-exportMethods(listNodes, getMN)
+exportMethods(listNodes, getMNode)
 
 # MNode methods
 exportMethods(getCapabilities, get)
 
 # Node methods
-exportMethods(listNodes, getMN)
+exportMethods()
 
 # D1Client methods
 exportMethods(getPackage, getD1Object, reserveIdentifier, createD1Object,

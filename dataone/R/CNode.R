@@ -120,7 +120,7 @@ setGeneric("listNodes", function(cnode, ...) {
 setMethod("listNodes", signature("CNode"), function(cnode) {
 	url <- paste(cnode@endpoint, "node", sep="/")
 	response <- GET(url)
-    if(response$status != "200") {
+  if(response$status != "200") {
 		return(NULL)
 	}
   
@@ -182,24 +182,25 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 
 ## Get a reference to a node based on its identifier
 ## @param cnode The coordinating node to query for its registered Member Nodes
-## @returnType list
-## @return the list of nodes in the DataONE CN environment
+## @param nodeid The standard identifier string for this node
+## @returnType MNode
+## @return the Member Node as an MNode reference, or NULL if not found
 ## 
 ## @author jones
 ## @export
-setGeneric("getMN", function(cnode, identifier, ...) {
-  standardGeneric("getMN")
+setGeneric("getMNode", function(cnode, nodeid, ...) {
+  standardGeneric("getMNode")
 })
 
-setMethod("getMN", signature("CNode", "character"), function(cnode, identifier) {
+setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function(cnode, nodeid) {
   nodelist <- listNodes(cnode)
   match <- sapply(nodelist, function(node) { 
-        if (node@identifier == identifier && node@type == "mn") {
-              newnode <- MNode(node@endpoint)
-              return(newnode)
-        } else {
-              return(NULL)
-        }
-    })
-  return(match)
+    node@identifier == nodeid && node@type == "mn"
+  })
+  output.list <- nodelist[match]
+  if (length(output.list) == 1) {
+    return(output.list[[1]])  
+  } else {
+    return(NULL)
+  }
 })

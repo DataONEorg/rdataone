@@ -35,14 +35,14 @@ setClass("MNode", slots = c(endpoint = "character"), contains="Node")
 ## 
 ## @author jones
 ## @export
-setGeneric("MNode", function(endpoint, ...) {
+setGeneric("MNode", function(endpoint) {
   standardGeneric("MNode")
 })
 
 ## Construct a MNode, using a passed in node url
 ## @param endpoint The node url with which this node is registered in DataONE, including version
 ## @returnType MNode  
-## @return the MNode object representing the DataONE environment
+## @return the MNode object representing the member node
 ## 
 ## @author jones
 ## @export
@@ -56,6 +56,34 @@ setMethod("MNode", signature("character"), function(endpoint) {
 	xml <- getCapabilities(mnode)
   parseCapabilities(mnode, xmlRoot(xml))
 	return(mnode)
+})
+
+## Construct a MNode, using a Node reference
+## @param node The Node to be converted to a MNode
+## @returnType MNode  
+## @return the MNode object representing the member node, or NULL if not an MN
+## 
+## @author jones
+## @export
+setMethod("MNode", signature("Node"), function(node) {
+  
+  if (node@type == "mn") {
+    ## create new MNode object and insert uri endpoint
+    mnode <- new("MNode")
+    mnode@identifier = node@identifier
+    mnode@name = node@name    
+    mnode@description = node@description
+    mnode@baseURL = node@baseURL
+    mnode@subject = node@subject
+    mnode@contactSubject = node@contactSubject
+    mnode@replicate = node@replicate
+    mnode@type = node@type
+    mnode@state = node@state
+    mnode@endpoint <- paste(node@baseURL, "v1", sep="/")    
+    return(mnode)
+  } else {
+    return(NULL)
+  }
 })
 
 ##########################

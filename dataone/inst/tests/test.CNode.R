@@ -2,7 +2,7 @@ context("CNode tests")
 test_that("dataone library loads", {
 	library(dataone)
 })
-test_that("CNode constructors work", {
+test_that("CNode constructors", {
 	library(dataone)
 	cn <- CNode()
 	expect_that(cn@endpoint, matches("https://cn.dataone.org/cn"))
@@ -11,7 +11,7 @@ test_that("CNode constructors work", {
 	cn <- CNode("DEV")
 	expect_that(cn@endpoint, matches("https://cn-dev.test.dataone.org/cn"))
 })
-test_that("CNode listNodes() works", {
+test_that("CNode listNodes()", {
 	library(dataone)
 	cn <- CNode()
 	nodelist <- listNodes(cn)
@@ -24,4 +24,18 @@ test_that("CNode listNodes() works", {
 	expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
 	expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
 	expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
+})
+test_that("CNode getMNode()", {
+  library(dataone)
+  cn <- CNode()
+  nodelist <- listNodes(cn)
+  nodeid <- nodelist[[length(nodelist)]]@identifier
+  newnode <- getMNode(cn, nodeid)
+  expect_that(class(newnode), matches("Node"))
+  expect_that(newnode@identifier, matches("urn:node:"))
+  expect_that(newnode@type, matches("cn|mn"))
+  expect_that(newnode@baseURL, matches("http"))
+  expect_that(newnode@subject, matches("urn:node:"))
+  newnode <- getMNode(cn, "NOT_A_NODE_ID")
+  expect_that(newnode, is_a("NULL"))
 })
