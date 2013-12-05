@@ -199,7 +199,8 @@ setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function
   })
   output.list <- nodelist[match]
   if (length(output.list) == 1) {
-    return(output.list[[1]])  
+    mn <- MNode(output.list[[1]])
+    return(mn)  
   } else {
     return(NULL)
   }
