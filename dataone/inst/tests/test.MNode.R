@@ -21,18 +21,27 @@ test_that("MNode get()", {
 	library(dataone)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 	mn <- MNode(mn_uri)
-  pid <- "doi:10.5063/F1QN64NZ"
-  xml <- get(mn, pid)
+    pid <- "doi:10.5063/F1QN64NZ"
+    xml <- get(mn, pid)
 	cname <- class(xml)[1]
 	expect_that(cname, matches("XML"))
-  pid <- "solson.5.1"
-  obj <- get(mn, pid)
+    pid <- "solson.5.1"
+    obj <- get(mn, pid)
 	cname <- class(obj)[1]
 	expect_that(cname, matches("character"))
-  cn <- CNode()
-  knb <- getMNode(cn, "urn:node:KNB")
+    cn <- CNode()
+    knb <- getMNode(cn, "urn:node:KNB")
 	pid <- "doi:10.5063/F1QN64NZ"
 	xml <- get(mn, pid)
 	cname <- class(xml)[1]
 	expect_that(cname, matches("XML"))
+})
+test_that("MNode getSystemMetadata()", {
+    library(dataone)
+    cn <- CNode()
+    mn <- getMNode(cn, "urn:node:KNB")
+    pid <- "doi:10.5063/F1QN64NZ"
+    xml <- getSystemMetadata(mn, pid)
+    cname <- class(xml)[1]
+    expect_that(cname, matches("XML"))
 })

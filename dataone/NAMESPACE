@@ -13,7 +13,7 @@ exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CN
 exportMethods(listNodes, getMNode)
 
 # MNode methods
-exportMethods(getCapabilities, get)
+exportMethods(getCapabilities, get, getSystemMetadata)
 
 # Node methods
 exportMethods()

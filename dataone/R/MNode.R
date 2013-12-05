@@ -142,8 +142,30 @@ setMethod("get", signature("MNode", "character"), function(mnode, pid) {
 	return(content(response))
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getSystemMetadata
-# public SystemMetadata getSystemMetadata(Identifier pid)
+## Get the metadata describing system properties associated with an object on this Member Node
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getSystemMetadata
+## @param mnode The MNode instance from which the metadata will be downloaded
+## @param pid The object identifier to be downloaded
+## @returnType SystemMetadata  
+## @return the SystemMetadata associated with the object
+## 
+## @author jones
+## @export
+setGeneric("getSystemMetadata", function(mnode, pid, ...) {
+    standardGeneric("getSystemMetadata")
+})
+
+setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, pid) {
+    # TODO: add authentication to call if a certificate is available
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "meta", pid, sep="/")
+    response <- GET(url)
+    if(response$status != "200") {
+        return(null)
+    }
+    # TODO: convert the response into a SystemMetadata object
+    return(content(response))
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.describe
 # public DescribeResponse describe(Identifier pid)
