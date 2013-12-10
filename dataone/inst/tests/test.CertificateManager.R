@@ -1,5 +1,13 @@
 context("CertificateManager tests")
 
+test_that("CertificateManager getCertLocation()", {
+    cm <- CertificateManager()
+    expect_that(is.null(cm), is_false())
+    location <- getCertLocation(cm)
+    cname <- class(location)
+    expect_that(cname, matches("character"))
+})
+
 test_that("CertificateManager loads", {
   cm <- CertificateManager()
   expect_that(is.null(cm), is_false())

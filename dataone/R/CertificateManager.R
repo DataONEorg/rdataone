@@ -208,4 +208,34 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
     })
 })
 
+## Get the location on disk of the client certificate file
+## 
+## @returnType character
+## 
+## @author jones
+## @export
+setGeneric("getCertLocation", function(x, ...) { 
+    standardGeneric("getCertLocation")
+})
+
+setMethod("getCertLocation", signature("CertificateManager"), function(x) {
+    cm <- J("org/dataone/client/auth/CertificateManager")$getInstance()
+    
+    # Look for a custom cert location
+    location <- cm$getCertificateLocation()
+    
+    # if not found, look up the default location
+    if (is.null(location)) {
+        jFile <- cm$locateDefaultCertificate()
+        # check for FileNotFound
+        if (is.null(e<-.jgetEx())) {
+            location <- jFile$getAbsolutePath()
+        } else {
+            print("Java exception was raised")
+            print(.jcheck(silent=FALSE))
+            location <- NULL
+        }
+    }
+    return(location)
+})
 
