@@ -54,7 +54,7 @@ setMethod("MNode", signature("character"), function(endpoint) {
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
-  parseCapabilities(mnode, xmlRoot(xml))
+    parseCapabilities(mnode, xmlRoot(xml))
 	return(mnode)
 })
 
@@ -188,8 +188,41 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.archive
 # public Identifier archive(Identifier pid)
     
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
-# public Identifier generateIdentifier(String scheme, String fragment)
+## Request a unique identifier from the Member Node repository
+## in subsequent calls
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
+## @param mnode The MNode instance from which the identifier will be generated
+## @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
+## @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
+## @returnType character  
+## @return the character string of the unique identifier
+## 
+## @author jones
+## @export
+setGeneric("generateIdentifier", function(mnode, ...) {
+    standardGeneric("generateIdentifier")
+})
+
+setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
+    # TODO: add authentication to call if a certificate is available
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "generate", sep="/")
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    #cert = "/tmp/x509up_u501"
+    body = list(scheme = scheme, fragment = fragment)
+    if (is.null(fragment)) {
+        body = list(scheme = scheme)
+    }
+    response <- POST(url, body, multipart = TRUE, config=config(sslcert = cert))
+    if(response$status != "200") {
+        return(null)
+    }
+    # convert the response into a character string
+    xml <- content(response)
+    new_identifier <- xmlValue(xmlRoot(xml))
+    return(new_identifier)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.query
 # public InputStream query(String queryEngine, String query)

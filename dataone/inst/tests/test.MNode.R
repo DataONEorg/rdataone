@@ -45,3 +45,12 @@ test_that("MNode getSystemMetadata()", {
     cname <- class(xml)[1]
     expect_that(cname, matches("XML"))
 })
+test_that("MNode generateIdentifier()", {
+    library(dataone)
+    cn <- CNode("DEV")
+    mn <- getMNode(cn, "urn:node:mnDemo5")
+    newid <- generateIdentifier(mn, "UUID")
+    cname <- class(newid)
+    expect_that(cname, matches("character"))
+    expect_that(newid, matches("urn:uuid:"))
+})
