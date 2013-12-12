@@ -112,7 +112,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	url <- paste(mnode@endpoint, "node", sep="/")
 	response <- GET(url)
     if(response$status != "200") {
-		return(null)
+		return(NULL)
 	}
 	xml <- content(response)
 	return(xml)
@@ -146,7 +146,7 @@ setMethod("get", signature("MNode", "character"), function(mnode, pid) {
     }
 	
     if(response$status != "200") {
-		return(null)
+		return(NULL)
 	}
 	return(content(response))
 })
@@ -168,9 +168,17 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, 
     # TODO: add authentication to call if a certificate is available
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "meta", pid, sep="/")
-    response <- GET(url)
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        response <- GET(url, config=config(sslcert = cert))
+    } else {
+        response <- GET(url)
+    }
     if(response$status != "200") {
-        return(null)
+        return(NULL)
     }
     # TODO: convert the response into a SystemMetadata object
     return(content(response))
@@ -224,7 +232,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     }
     response <- POST(url, body, multipart = TRUE, config=config(sslcert = cert))
     if(response$status != "200") {
-        return(null)
+        return(NULL)
     }
     # convert the response into a character string
     xml <- content(response)
