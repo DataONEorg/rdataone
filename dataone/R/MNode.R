@@ -35,7 +35,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="Node")
 ## 
 ## @author jones
 ## @export
-setGeneric("MNode", function(endpoint) {
+setGeneric("MNode", function(x) {
   standardGeneric("MNode")
 })
 
@@ -46,11 +46,11 @@ setGeneric("MNode", function(endpoint) {
 ## 
 ## @author jones
 ## @export
-setMethod("MNode", signature("character"), function(endpoint) {
+setMethod("MNode", signature("character"), function(x) {
 
 	## create new MNode object and insert uri endpoint
 	mnode <- new("MNode")
-	mnode@endpoint <- endpoint
+	mnode@endpoint <- x
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
@@ -65,21 +65,21 @@ setMethod("MNode", signature("character"), function(endpoint) {
 ## 
 ## @author jones
 ## @export
-setMethod("MNode", signature("Node"), function(node) {
+setMethod("MNode", signature("Node"), function(x) {
   
-  if (node@type == "mn") {
+  if (x@type == "mn") {
     ## create new MNode object and insert uri endpoint
     mnode <- new("MNode")
-    mnode@identifier = node@identifier
-    mnode@name = node@name    
-    mnode@description = node@description
-    mnode@baseURL = node@baseURL
-    mnode@subject = node@subject
-    mnode@contactSubject = node@contactSubject
-    mnode@replicate = node@replicate
-    mnode@type = node@type
-    mnode@state = node@state
-    mnode@endpoint <- paste(node@baseURL, "v1", sep="/")    
+    mnode@identifier = x@identifier
+    mnode@name = x@name    
+    mnode@description = x@description
+    mnode@baseURL = x@baseURL
+    mnode@subject = x@subject
+    mnode@contactSubject = x@contactSubject
+    mnode@replicate = x@replicate
+    mnode@type = x@type
+    mnode@state = x@state
+    mnode@endpoint <- paste(x@baseURL, "v1", sep="/")    
     return(mnode)
   } else {
     return(NULL)
@@ -132,10 +132,19 @@ setGeneric("get", function(mnode, pid, ...) {
 })
 
 setMethod("get", signature("MNode", "character"), function(mnode, pid) {
-	# TODO: add authentication to call if a certificate is available
-	# TODO: need to properly URL-escape the PID
-	url <- paste(mnode@endpoint, "object", pid, sep="/")
-	response <- GET(url)
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "object", pid, sep="/")
+    
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        response <- GET(url, config=config(sslcert = cert))
+    } else {
+        response <- GET(url)   # the anonymous access case
+    }
+	
     if(response$status != "200") {
 		return(null)
 	}
@@ -209,7 +218,6 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     url <- paste(mnode@endpoint, "generate", sep="/")
     cm = CertificateManager()
     cert <- getCertLocation(cm)
-    #cert = "/tmp/x509up_u501"
     body = list(scheme = scheme, fragment = fragment)
     if (is.null(fragment)) {
         body = list(scheme = scheme)
