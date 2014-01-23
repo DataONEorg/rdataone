@@ -4,5 +4,5 @@
 # architecture docs
 
 curl "https://repository.dataone.org/software/tools/trunk/docutils/css/dataone.css" > /tmp/dataone.css
-rst2html.py --stylesheet /tmp/dataone.css README.txt > README.html
+rst2html.py --stylesheet /tmp/dataone.css README.rst > README.html
 
