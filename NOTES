@@ -1,5 +1,10 @@
 == Current Status ==============================================================
 
+1/28/2014 - mbjones
+  * Operating under the current release 1.0.0 that is available in CRAN
+  * Working on refactoring to use httr/rCurl for http over SSL to eliminate the 
+	dependency on rJava -- partially complete
+
 2/19/2013 - rnahf
   * fully cleaned up code with most documentation in the <class>-class.Rd files
   * using the v1.1.0 tag of d1_libclient_java
