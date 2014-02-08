@@ -221,7 +221,6 @@ setGeneric("generateIdentifier", function(mnode, ...) {
 })
 
 setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
-    # TODO: add authentication to call if a certificate is available
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "generate", sep="/")
     cm = CertificateManager()
