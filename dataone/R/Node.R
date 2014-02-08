@@ -81,10 +81,11 @@ setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 ## Methods
 ##########################
 
-## @param baseurl The node URL with which this node is registered in DataONE
+## Construct a Node, using a passed in capabilities XML
+## @param node The node to which capabilities should be applied.
 ## @param ... (not yet used)
 ## @returnType Node  
-## @return the Node object representing the DataONE environment
+## @return the Node object with modified capabilities properties from the XML
 ## 
 ## @author jones
 ## @export
@@ -92,10 +93,11 @@ setGeneric("parseCapabilities", function(node, xml, ...) {
   standardGeneric("parseCapabilities")
 })
 
-## Construct a Node, using a passed in node url
-## @param baseurl The node url with which this node is registered in DataONE
+## Construct a Node, using a passed in capabilities XML
+## @param node The node to which capabilities should be applied.
+## @param xml The XML capabilities representing the node to be created
 ## @returnType Node  
-## @return the Node object representing the DataONE environment
+## @return the Node object with modified capabilities properties from the XML
 ## 
 ## @author jones
 ## @export
