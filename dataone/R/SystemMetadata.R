@@ -99,5 +99,41 @@ setMethod("SystemMetadata", signature(), function(x) {
 
 # TODO: method to parse SystemMetadata from XML
 
+## Parse an XML representation of system metadata, and set the object slots with obtained values.
+## @param xml the XML representation of the capabilities, as an XMLInternalElementNode
+## @returnType SystemMetadata  
+## @return the SystemMetadata object representing an object
+## 
+## @author jones
+## @export
+parseSystemMetadata <- function(sysmeta, xml) {
+
+    sysmeta@serialVersion <- xmlValue(xml[["serialVersion"]])
+    sysmeta@identifier <- xmlValue(xml[["identifier"]])
+    sysmeta@formatId <- xmlValue(xml[["formatId"]])
+    sysmeta@size <- xmlValue(xml[["size"]])
+    sysmeta@checksum <- xmlValue(xml[["checksum"]])
+    #TODO: sysmeta@checksumAlgorithm
+    sysmeta@submitter <- xmlValue(xml[["submitter"]])
+    sysmeta@rightsHolder <- xmlValue(xml[["rightsHolder"]])
+    #TODO: sysmeta@accessPolicy  
+    #TODO: sysmeta@replicationPolicy
+    sysmeta@obsoletes <- xmlValue(xml[["obsoletes"]])
+    sysmeta@obsoletedBy <- xmlValue(xml[["obsoletedBy"]])
+    sysmeta@archived <- xmlValue(xml[["archived"]])
+    sysmeta@dateUploaded <- xmlValue(xml[["dateUploaded"]])
+    sysmeta@dateSysMetadataModified <- xmlValue(xml[["dateSysMetadataModified"]])
+    sysmeta@originMemberNode <- xmlValue(xml[["originMemberNode"]])
+    sysmeta@authoritativeMemberNode <- xmlValue(xml[["authoritativeMemberNode"]])
+    #TODO: sysmeta@replica    
+    
+    #attrs <- xmlAttrs(xml)
+    #sysmeta@replicate <- attrs[["replicate"]]
+    #sysmeta@type <- attrs[["type"]]
+    #sysmeta@state <- attrs[["state"]]
+
+    return(sysmeta)
+}
+
 # TODO: method to serialize XML from object
 
