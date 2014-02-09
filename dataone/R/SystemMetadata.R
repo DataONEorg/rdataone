@@ -106,7 +106,11 @@ setMethod("SystemMetadata", signature(), function(x) {
 ## 
 ## @author jones
 ## @export
-parseSystemMetadata <- function(sysmeta, xml) {
+setGeneric("parseSystemMetadata", function(sysmeta, xml, ...) {
+    standardGeneric("parseSystemMetadata")
+})
+
+setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElementNode"), function(sysmeta, xml) {
 
     sysmeta@serialVersion <- as.numeric(xmlValue(xml[["serialVersion"]]))
     sysmeta@identifier <- xmlValue(xml[["identifier"]])
@@ -133,7 +137,7 @@ parseSystemMetadata <- function(sysmeta, xml) {
     #sysmeta@state <- attrs[["state"]]
 
     return(sysmeta)
-}
+})
 
 # TODO: method to serialize XML from object
 
