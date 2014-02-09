@@ -67,7 +67,7 @@ setClass("SystemMetadata", slots = c(
 ## MNode constructors
 #########################
 
-## Construct a SystemMetadata, with all fields as null
+## Construct SystemMetadata, with all fields as null
 ## @returnType SystemMetadata  
 ## @return the SystemMetadata object representing an object
 ## 
@@ -92,6 +92,19 @@ setMethod("SystemMetadata", signature(), function(x) {
 })
 
 ## TODO: Constructor that  takes XML as input
+## Construct a SystemMetadata, with all fields as null
+## @returnType SystemMetadata  
+## @return the SystemMetadata object representing an object
+## 
+## @author jones
+## @export
+#setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
+#    
+#    ## create new SystemMetadata object, and parse the XML to populate fields
+#    sysmeta <- new("SystemMetadata")
+#    sysmeta <- parseSystemMetadata(x)
+#    return(sysmeta)
+#})
 
 ##########################
 ## Methods

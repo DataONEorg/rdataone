@@ -17,4 +17,8 @@ test_that("XML SystemMetadata parsing works", {
   sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
   expect_that(sysmeta@identifier, matches(testid))
   expect_that(sysmeta@archived, is_true())
+  
+#  sysmeta <- SystemMetadata(xmlRoot(xml))
+#  expect_that(sysmeta@identifier, matches(testid))
+#  expect_that(sysmeta@archived, is_true())
 })
