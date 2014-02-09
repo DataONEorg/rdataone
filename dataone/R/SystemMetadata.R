@@ -108,10 +108,10 @@ setMethod("SystemMetadata", signature(), function(x) {
 ## @export
 parseSystemMetadata <- function(sysmeta, xml) {
 
-    sysmeta@serialVersion <- xmlValue(xml[["serialVersion"]])
+    sysmeta@serialVersion <- as.numeric(xmlValue(xml[["serialVersion"]]))
     sysmeta@identifier <- xmlValue(xml[["identifier"]])
     sysmeta@formatId <- xmlValue(xml[["formatId"]])
-    sysmeta@size <- xmlValue(xml[["size"]])
+    sysmeta@size <- as.numeric(xmlValue(xml[["size"]]))
     sysmeta@checksum <- xmlValue(xml[["checksum"]])
     #TODO: sysmeta@checksumAlgorithm
     sysmeta@submitter <- xmlValue(xml[["submitter"]])
@@ -120,7 +120,7 @@ parseSystemMetadata <- function(sysmeta, xml) {
     #TODO: sysmeta@replicationPolicy
     sysmeta@obsoletes <- xmlValue(xml[["obsoletes"]])
     sysmeta@obsoletedBy <- xmlValue(xml[["obsoletedBy"]])
-    sysmeta@archived <- xmlValue(xml[["archived"]])
+    sysmeta@archived <- as.logical(xmlValue(xml[["archived"]]))
     sysmeta@dateUploaded <- xmlValue(xml[["dateUploaded"]])
     sysmeta@dateSysMetadataModified <- xmlValue(xml[["dateSysMetadataModified"]])
     sysmeta@originMemberNode <- xmlValue(xml[["originMemberNode"]])

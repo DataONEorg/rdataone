@@ -7,12 +7,14 @@ test_that("SystemMetadata constructors", {
 	sysmeta <- SystemMetadata()
 	expect_that(sysmeta@serialVersion, equals(1))
 })
-#test_that("MNode getCapabilities()", {
-#	library(dataone)
-#	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-#	mn <- MNode(mn_uri)
-#    xml <- getCapabilities(mn)
-#	val <- xmlName(xmlRoot(xml))
-#	expect_that(val, matches("node"))
-#	expect_that(mn@identifier, matches("urn:node"))
-#})
+test_that("XML SystemMetadata parsing works", {
+  library(dataone)
+  testid <- "doi:10.xxyy/AA/tesdoc123456789"
+  sysmeta <- SystemMetadata()
+  expect_that(sysmeta@serialVersion, equals(1))
+  xml <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
+  expect_that(xmlValue(xmlRoot(xml)[["identifier"]]), matches(testid))
+  newsysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
+  expect_that(newsysmeta@identifier, matches(testid))
+  expect_that(newsysmeta@archived, is_true())
+})
