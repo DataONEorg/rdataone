@@ -21,24 +21,25 @@
 ## A class representing DataONE SystemMetadata, which is core information about objects stored in a repository
 ## and needed to manage those objects across systems.  SystemMetadata contains basic identification, ownership,
 ## access policy, replication policy, and related metadata.
-## @slot serialVersion 
-## @slot identifier              = "character",
-## @slot formatId                = "character",
-## @slot size                    = "numeric",
-## @slot checksum                = "character",
-## @slot checksumAlgorithm       = "character",
-## @slot submitter               = "character",
-## @slot rightsHolder            = "character",
-## @slot accessPolicy            = "character",
-## @slot replicationPolicy       = "character",
-## @slot obsoletes               = "character",
-## @slot obsoletedBy             = "character",
-## @slot archived                = "logical",
-## @slot dateUploaded            = "date",
-## @slot dateSysMetadataModified = "date",
-## @slot originMemberNode        = "character",
-## @slot authoritativeMemberNode = "character",
-## @slot replica                 = "character",
+##
+## @slot serialVersion the current version of this system metadata; only update the current version
+## @slot identifier the identifier of the object that thhis system metadata describes
+## @slot formatId the DataONE object format for the object
+## @slot size the size of the object in bytes
+## @slot checksum the checksum for the object using the designated checksum algorithm
+## @slot checksumAlgorithm the name of the hash function used to generate a checksum, from the DataONE controlled list
+## @slot submitter the Distinguished Name or identifier of the person submitting the object
+## @slot rightsHolder the Distinguished Name or identifier of the person who holds access rights to the object
+## @slot accessPolicy a list of access rules to be applied to the object
+## @slot replicationPolicy a list of replication rules to be applied to the object
+## @slot obsoletes the identifier of an object which this object replaces
+## @slot obsoletedBy the identifier of an object that replaces this object
+## @slot archived a boolean flag indicating whether the object has been archived and thus hidden
+## @slot dateUploaded the date on which the object was uploaded to a member node
+## @slot dateSysMetadataModified the last date on which this system metadata was modified
+## @slot originMemberNodethe node identifier of the node on which the object was originally registered
+## @slot authoritativeMemberNode the node identifier of the node which currently is authoritative for the object
+## @slot replica a list of nodes on which replicas of this object exist (see CN.resolve())
 ##
 ## @author jones
 ## @export
