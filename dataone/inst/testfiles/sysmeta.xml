@@ -17,7 +17,11 @@
       <permission>write</permission>
     </allow>
   </accessPolicy>
-  <replicationPolicy replicationAllowed="true"/>
+  <replicationPolicy replicationAllowed="true" numberReplicas="2">
+        <preferredMemberNode>urn:node:KNB</preferredMemberNode>
+        <preferredMemberNode>urn:node:mnUNM1</preferredMemberNode>
+        <blockedMemberNode>urn:node:BADNODE</blockedMemberNode>
+  </replicationPolicy>
   <archived>true</archived>
   <dateUploaded>2011-08-31T15:59:50.071163</dateUploaded>
   <dateSysMetadataModified>2011-08-31T15:59:50.072921</dateSysMetadataModified>

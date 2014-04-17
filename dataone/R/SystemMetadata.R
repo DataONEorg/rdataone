@@ -54,6 +54,10 @@ setClass("SystemMetadata", slots = c(
     rightsHolder            = "character",
     #accessPolicy            = "AccessPolicy",
     #replicationPolicy       = "ReplicationPolicy",
+    replicationAllowed       = "logical",
+    numberReplicas          = "numeric",
+    preferredNodes          = "list",
+    blockedNodes            = "list",
     obsoletes               = "character",
     obsoletedBy             = "character",
     archived                = "logical",
@@ -135,8 +139,22 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
     sysmeta@checksumAlgorithm <- csattrs[[1]]
     sysmeta@submitter <- xmlValue(xml[["submitter"]])
     sysmeta@rightsHolder <- xmlValue(xml[["rightsHolder"]])
-    #TODO: sysmeta@accessPolicy  
-    #TODO: sysmeta@replicationPolicy
+    #TODO: sysmeta@accessPolicy
+    rpattrs <- xmlAttrs(xml[["replicationPolicy"]])
+    repAllowed <- grep('true', rpattrs[["replicationAllowed"]], ignore.case=TRUE)
+    if (repAllowed) {
+        sysmeta@replicationAllowed = TRUE
+        sysmeta@numberReplicas = as.numeric(rpattrs[["numberReplicas"]])
+        pbMNList <- xmlChildren(xml[["replicationPolicy"]])
+        for (pbNode in pbMNList) {
+            nodeName <- xmlName(pbNode)
+            if (grepl("preferredMemberNode", nodeName)) {
+                sysmeta@preferredNodes <- lappend(sysmeta@preferredNodes, xmlValue(pbNode))
+            } else if (grepl("blockedMemberNode", nodeName)) {
+                sysmeta@blockedNodes <- lappend(sysmeta@blockedNodes, xmlValue(pbNode))
+            }
+        }
+    }
     sysmeta@obsoletes <- xmlValue(xml[["obsoletes"]])
     sysmeta@obsoletedBy <- xmlValue(xml[["obsoletedBy"]])
     sysmeta@archived <- as.logical(xmlValue(xml[["archived"]]))
@@ -146,11 +164,6 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
     sysmeta@authoritativeMemberNode <- xmlValue(xml[["authoritativeMemberNode"]])
     #TODO: sysmeta@replica    
     
-    #attrs <- xmlAttrs(xml)
-    #sysmeta@replicate <- attrs[["replicate"]]
-    #sysmeta@type <- attrs[["type"]]
-    #sysmeta@state <- attrs[["state"]]
-
     return(sysmeta)
 })
 
@@ -179,7 +192,11 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("submitter", sysmeta@submitter))
     root <- addChildren(root, xmlNode("rightsHolder", sysmeta@rightsHolder))
     #TODO: sysmeta@accessPolicy  
-    #TODO: sysmeta@replicationPolicy
+    if (sysmeta@replicationAllowed) {
+        root <- addChildren(root, xmlNode("replicationPolicy", attrs = c(replicationAllowed="true", numberReplicas=sysmeta@numberReplicas)))
+        
+        #TODO: add preferred and blocked nodes
+    }
     if (!is.na(sysmeta@obsoletes)) {
         root <- addChildren(root, xmlNode("obsoletes", sysmeta@obsoletes))
     }
@@ -191,9 +208,14 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("dateSysMetadataModified", sysmeta@dateSysMetadataModified))
     root <- addChildren(root, xmlNode("originMemberNode", sysmeta@originMemberNode))
     root <- addChildren(root, xmlNode("authoritativeMemberNode", sysmeta@authoritativeMemberNode))
-    #TODO: sysmeta@replica    
+    #TODO: sysmeta@replica
 
-    xml <- saveXML(root)
+    xml <- saveXML(root, encoding="UTF-8")  # NB: Currently saveXML ignores the encoding parameter
 
     return(xml)
 })
+
+lappend <- function(lst, obj) {
+    lst[[length(lst)+1]] <- obj
+    return(lst)
+}
