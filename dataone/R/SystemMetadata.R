@@ -131,7 +131,8 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
     sysmeta@formatId <- xmlValue(xml[["formatId"]])
     sysmeta@size <- as.numeric(xmlValue(xml[["size"]]))
     sysmeta@checksum <- xmlValue(xml[["checksum"]])
-    #TODO: sysmeta@checksumAlgorithm
+    csattrs <- xmlAttrs(xml[["checksum"]])
+    sysmeta@checksumAlgorithm <- csattrs[[1]]
     sysmeta@submitter <- xmlValue(xml[["submitter"]])
     sysmeta@rightsHolder <- xmlValue(xml[["rightsHolder"]])
     #TODO: sysmeta@accessPolicy  
@@ -179,8 +180,12 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("rightsHolder", sysmeta@rightsHolder))
     #TODO: sysmeta@accessPolicy  
     #TODO: sysmeta@replicationPolicy
-    root <- addChildren(root, xmlNode("obsoletes", sysmeta@obsoletes))
-    root <- addChildren(root, xmlNode("obsoletedBy", sysmeta@obsoletedBy))
+    if (!is.na(sysmeta@obsoletes)) {
+        root <- addChildren(root, xmlNode("obsoletes", sysmeta@obsoletes))
+    }
+    if (!is.na(sysmeta@obsoletedBy)) {
+        root <- addChildren(root, xmlNode("obsoletedBy", sysmeta@obsoletedBy))
+    }
     root <- addChildren(root, xmlNode("archived", sysmeta@archived))
     root <- addChildren(root, xmlNode("dateUploaded", sysmeta@dateUploaded))
     root <- addChildren(root, xmlNode("dateSysMetadataModified", sysmeta@dateSysMetadataModified))

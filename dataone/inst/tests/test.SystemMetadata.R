@@ -17,10 +17,8 @@ test_that("XML SystemMetadata parsing works", {
   sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
   expect_that(sysmeta@identifier, matches(testid))
   expect_that(sysmeta@archived, is_true())
-  
-#  sysmeta <- SystemMetadata(xmlRoot(xml))
-#  expect_that(sysmeta@identifier, matches(testid))
-#  expect_that(sysmeta@archived, is_true())
+  csattrs <- xmlAttrs(xmlRoot(xml)[["checksum"]])
+  expect_that(sysmeta@checksumAlgorithm, matches(csattrs[[1]]))
 })
 
 test_that("XML SystemMetadata serialization works", {
@@ -33,8 +31,9 @@ test_that("XML SystemMetadata serialization works", {
     sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
     expect_that(sysmeta@identifier, matches(testid))
     expect_that(sysmeta@archived, is_true())
-    
     xml <- serialize(sysmeta)
-    #print(xml)
+    cat(xml)
     expect_that(xml, matches("<d1:systemMetadata"))
+    # TODO: check document validity
+    # TODO: check tree equivalence with original XML document
 })
