@@ -155,3 +155,40 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 
 # TODO: method to serialize XML from object
 
+## Serialize an XML representation of system metadata, and set the object slots with obtained values.
+## @param sysmeta the SystemMetadata instance to be serialized
+## @returnType character  
+## @return the character string representing a SystemMetadata object
+## 
+## @export
+setGeneric("serialize", function(sysmeta, ...) {
+    standardGeneric("serialize")
+})
+
+setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
+    
+    root <- xmlNode("systemMetadata",
+                      namespace="d1",
+                      namespaceDefinitions = c(d1 = "http://ns.dataone.org/service/types/v1"))
+    root <- addChildren(root, xmlNode("serialVersion", sysmeta@serialVersion))
+    root <- addChildren(root, xmlNode("identifier", sysmeta@identifier))
+    root <- addChildren(root, xmlNode("formatId", sysmeta@formatId))
+    root <- addChildren(root, xmlNode("size", sysmeta@size))
+    root <- addChildren(root, xmlNode("checksum", sysmeta@checksum, attrs = c(algorithm = sysmeta@checksumAlgorithm)))
+    root <- addChildren(root, xmlNode("submitter", sysmeta@submitter))
+    root <- addChildren(root, xmlNode("rightsHolder", sysmeta@rightsHolder))
+    #TODO: sysmeta@accessPolicy  
+    #TODO: sysmeta@replicationPolicy
+    root <- addChildren(root, xmlNode("obsoletes", sysmeta@obsoletes))
+    root <- addChildren(root, xmlNode("obsoletedBy", sysmeta@obsoletedBy))
+    root <- addChildren(root, xmlNode("archived", sysmeta@archived))
+    root <- addChildren(root, xmlNode("dateUploaded", sysmeta@dateUploaded))
+    root <- addChildren(root, xmlNode("dateSysMetadataModified", sysmeta@dateSysMetadataModified))
+    root <- addChildren(root, xmlNode("originMemberNode", sysmeta@originMemberNode))
+    root <- addChildren(root, xmlNode("authoritativeMemberNode", sysmeta@authoritativeMemberNode))
+    #TODO: sysmeta@replica    
+
+    xml <- saveXML(root)
+
+    return(xml)
+})
