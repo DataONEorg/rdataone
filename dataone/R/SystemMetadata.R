@@ -192,10 +192,12 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("submitter", sysmeta@submitter))
     root <- addChildren(root, xmlNode("rightsHolder", sysmeta@rightsHolder))
     #TODO: sysmeta@accessPolicy  
-    if (sysmeta@replicationAllowed) {
-        root <- addChildren(root, xmlNode("replicationPolicy", attrs = c(replicationAllowed="true", numberReplicas=sysmeta@numberReplicas)))
-        
-        #TODO: add preferred and blocked nodes
+    if (!is.null(sysmeta@replicationAllowed)) {
+        rpolicy <- xmlNode("replicationPolicy", attrs = c(replicationAllowed=tolower(as.character(sysmeta@replicationAllowed)), numberReplicas=sysmeta@numberReplicas))
+        pnodes <- lapply(sysmeta@preferredNodes, xmlNode, name="preferredMemberNode")
+        bnodes <- lapply(sysmeta@blockedNodes, xmlNode, name="blockedMemberNode")
+        rpolicy <- addChildren(rpolicy, kids=c(pnodes, bnodes))
+        root <- addChildren(root, rpolicy)
     }
     if (!is.na(sysmeta@obsoletes)) {
         root <- addChildren(root, xmlNode("obsoletes", sysmeta@obsoletes))
@@ -203,7 +205,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     if (!is.na(sysmeta@obsoletedBy)) {
         root <- addChildren(root, xmlNode("obsoletedBy", sysmeta@obsoletedBy))
     }
-    root <- addChildren(root, xmlNode("archived", sysmeta@archived))
+    root <- addChildren(root, xmlNode("archived", tolower(as.character(sysmeta@archived))))
     root <- addChildren(root, xmlNode("dateUploaded", sysmeta@dateUploaded))
     root <- addChildren(root, xmlNode("dateSysMetadataModified", sysmeta@dateSysMetadataModified))
     root <- addChildren(root, xmlNode("originMemberNode", sysmeta@originMemberNode))
@@ -211,7 +213,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     #TODO: sysmeta@replica
 
     xml <- saveXML(root, encoding="UTF-8")  # NB: Currently saveXML ignores the encoding parameter
-
+    
     return(xml)
 })
 

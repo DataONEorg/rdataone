@@ -39,6 +39,8 @@ test_that("XML SystemMetadata serialization works", {
     xml <- serialize(sysmeta)
     #cat(xml)
     expect_that(xml, matches("<d1:systemMetadata"))
+    expect_that(xml, matches("<preferredMemberNode>urn:node:KNB</preferredMemberNode>"))
+    expect_that(xml, matches("<blockedMemberNode>urn:node:BADNODE</blockedMemberNode>"))
     # TODO: check document validity
     # TODO: check tree equivalence with original XML document
 })
