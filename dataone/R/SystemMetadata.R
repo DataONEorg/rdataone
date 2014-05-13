@@ -52,8 +52,9 @@ setClass("SystemMetadata", slots = c(
     checksumAlgorithm       = "character",
     submitter               = "character",
     rightsHolder            = "character",
-    #accessPolicy            = "AccessPolicy",  # accessPolicy (rule+ (subject+, permission+))
-    accessPolicy            = "data.frame",
+    #accessPolicy            = "AccessPolicy",  # accessPolicy (allow+ (subject+, permission+))
+    #accessPolicy            = "data.frame",
+    accessPolicy            = "list",
     #replicationPolicy       = "ReplicationPolicy",
     replicationAllowed       = "logical",
     numberReplicas          = "numeric",
@@ -140,7 +141,24 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
     sysmeta@checksumAlgorithm <- csattrs[[1]]
     sysmeta@submitter <- xmlValue(xml[["submitter"]])
     sysmeta@rightsHolder <- xmlValue(xml[["rightsHolder"]])
-    #TODO: sysmeta@accessPolicy
+    accessList <- xmlChildren(xml[["accessPolicy"]])
+    for (accessNode in accessList) {
+        nodeName <- xmlName(accessNode)
+        if (grepl("allow", nodeName)) {
+            accessRule <- list()
+            nodeList <- xmlChildren(accessNode)
+            for (node in nodeList) {
+                nodeName <- xmlName(node)
+                if (grepl("subject", nodeName)) {
+                    accessRule <- lappend(accessRule, xmlValue(node))
+                } else if (grepl("permission", nodeName)) {
+                    accessRule <- lappend(accessRule, xmlValue(node))
+                }
+            }
+            sysmeta@accessPolicy <- lappend(sysmeta@accessPolicy, accessRule)
+        }
+    }
+    str(sysmeta@accessPolicy)
     rpattrs <- xmlAttrs(xml[["replicationPolicy"]])
     repAllowed <- grep('true', rpattrs[["replicationAllowed"]], ignore.case=TRUE)
     if (repAllowed) {
