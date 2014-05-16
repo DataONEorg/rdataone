@@ -18,6 +18,8 @@ test_that("XML SystemMetadata parsing works", {
   #getEncoding(doc)
   sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
   expect_that(sysmeta@identifier, matches(testid))
+  expect_that(nrow(sysmeta@accessPolicy), equals(5))
+  expect_that(as.character(sysmeta@accessPolicy$permission[[1]]), matches("read"))
   expect_that(sysmeta@archived, is_true())
   csattrs <- xmlAttrs(xml[["checksum"]])
   expect_that(sysmeta@checksumAlgorithm, matches(csattrs[[1]]))

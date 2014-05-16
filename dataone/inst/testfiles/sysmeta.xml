@@ -14,7 +14,9 @@
 	</allow>
     <allow>
       <subject>CN=Matt Jones A729,O=Google,C=US,DC=cilogon,DC=org</subject>
+      <subject>CN=Subject2,O=Google,C=US,DC=cilogon,DC=org</subject>
       <permission>write</permission>
+      <permission>changePermission</permission>
     </allow>
   </accessPolicy>
   <replicationPolicy replicationAllowed="true" numberReplicas="2">
