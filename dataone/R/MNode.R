@@ -54,7 +54,7 @@ setMethod("MNode", signature("character"), function(x) {
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
-    parseCapabilities(mnode, xmlRoot(xml))
+    mnode <- parseCapabilities(mnode, xmlRoot(xml))
 	return(mnode)
 })
 
