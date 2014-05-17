@@ -28,7 +28,7 @@ test_that("MNode get()", {
     pid <- "solson.5.1"
     obj <- get(mn, pid)
 	cname <- class(obj)[1]
-	expect_that(cname, matches("character"))
+	expect_that(cname, matches("data.frame"))
     cn <- CNode()
     knb <- getMNode(cn, "urn:node:KNB")
 	pid <- "doi:10.5063/F1QN64NZ"
