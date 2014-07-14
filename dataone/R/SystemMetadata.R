@@ -193,7 +193,7 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 
 # TODO: method to serialize XML from object
 
-## Serialize an XML representation of system metadata, and set the object slots with obtained values.
+## Serialize an XML representation of system metadata.
 ## @param sysmeta the SystemMetadata instance to be serialized
 ## @returnType character  
 ## @return the character string representing a SystemMetadata object
@@ -215,7 +215,18 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("checksum", sysmeta@checksum, attrs = c(algorithm = sysmeta@checksumAlgorithm)))
     root <- addChildren(root, xmlNode("submitter", sysmeta@submitter))
     root <- addChildren(root, xmlNode("rightsHolder", sysmeta@rightsHolder))
-    #TODO: sysmeta@accessPolicy  
+
+    if (nrow(sysmeta@accessPolicy) > 0) {
+        accessPolicy <- xmlNode("accessPolicy")
+        for(i in 1:nrow(sysmeta@accessPolicy)) {
+            accessRule <- xmlNode("allow")
+            accessRule <- addChildren(accessRule, xmlNode("subject", sysmeta@accessPolicy[i,]$subject))
+            accessRule <- addChildren(accessRule, xmlNode("permission", sysmeta@accessPolicy[i,]$permission))
+            accessPolicy <- addChildren(accessPolicy, accessRule)
+        }
+        root <- addChildren(root, accessPolicy)
+    }
+    
     if (!is.null(sysmeta@replicationAllowed)) {
         rpolicy <- xmlNode("replicationPolicy", attrs = c(replicationAllowed=tolower(as.character(sysmeta@replicationAllowed)), numberReplicas=sysmeta@numberReplicas))
         pnodes <- lapply(sysmeta@preferredNodes, xmlNode, name="preferredMemberNode")
