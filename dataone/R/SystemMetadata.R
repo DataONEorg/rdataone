@@ -245,7 +245,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     root <- addChildren(root, xmlNode("dateSysMetadataModified", sysmeta@dateSysMetadataModified))
     root <- addChildren(root, xmlNode("originMemberNode", sysmeta@originMemberNode))
     root <- addChildren(root, xmlNode("authoritativeMemberNode", sysmeta@authoritativeMemberNode))
-    #TODO: sysmeta@replica
+    #TODO: sysmeta@replica (but not really needed for anything, so low priority)
 
     xml <- saveXML(root, encoding="UTF-8")  # NB: Currently saveXML ignores the encoding parameter
     
