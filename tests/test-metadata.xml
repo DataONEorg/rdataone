@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml packageId="df35d.93.14" system="knb" xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 eml.xsd"> <access authSystem="knb" order="allowFirst"><allow><principal>public</principal>
+ <permission>read</permission>
+ </allow>
+ <allow><principal>cn=evos,o=NCEAS,dc=ecoinformatics,dc=org</principal>
+ <permission>read</permission>
+ <permission>write</permission>
+ <permission>changePermission</permission>
+ </allow>
+ </access>
+ <dataset>  <title>Estimating forage fish distribution and abundance using aerial surveys in Prince William Sound, Alaska: 1995 - 1999</title>
+<creator id="1358467075175"><individualName><givenName>Brenda</givenName>
+ <surName>Norcross</surName>
+ </individualName>
+ </creator>
+ <creator id="1358535040756"><individualName><givenName>Gary</givenName>
+ <surName>Borstad</surName>
+ </individualName>
+ </creator>
+ <creator id="1358467051386"><individualName><givenName>Evelyn</givenName>
+ <surName>Brown</surName>
+ </individualName>
+ <organizationName>Alaska Department of Fish and Game</organizationName>
+ <address><country>United States</country>
+ </address>
+ </creator>
+ <creator id="1358467065497"><individualName><givenName>Stephanie</givenName>
+ <surName>Moreland</surName>
+ </individualName>
+ </creator>
+ <associatedParty id="1365724820291"><individualName><givenName>Sarah</givenName>
+ <surName>Clark</surName>
+ </individualName>
+ <organizationName>National Center for Ecological Analysis and Synthesis</organizationName>
+ <positionName>Projects Data Coordinator</positionName>
+ <address><deliveryPoint>735 State Street, Suite 300</deliveryPoint>
+ <city>Santa Barbara</city>
+ <administrativeArea>California</administrativeArea>
+ <postalCode>93101</postalCode>
+ </address>
+ <phone phonetype="voice">(805) 892-2500</phone>
+ <electronicMailAddress>sclark@nceas.ucsb.edu</electronicMailAddress>
+ <role>Metadata Provider</role>
+ </associatedParty>
+<abstract><para>[Missing plankton, jellyfish, seine, trawl, bird and CTD data sets from this study]
+
+Sound Ecosystem Assessment (SEA) aerial surveys, 1995 - 1997:
+We show that aerial visual surveys are a cost-effective method to assess distribution and abundance of forage fish and seabirds and produce repeatable results with an acceptable level of error. We fulfilled our main objectives concerning forage fish assessment: 1) develop an appropriate survey design incorporating detection error, surveyor bias, and survey constraints, 2) determine the accuracy of fish species and age class discrimination, 3) determine the repeatability of aerial measurements, and 4) determine the spatial resolution of aerial measurements needed for ecological analyses. We also fulfilled our secondary objective to develop abundance estimates for jellyfish aggregations and seabirds. We developed an adaptive modified line transect methodology and model incorporating a detection curve for Pacific herring (Clupea pallusi), Pacific sand lance (Ammodytes hempems), and black-legged kittiwakes (Rissu triductylu) and a detection correction factor for fish schools. We established survey condition constraints and an optimal survey altitude range of 274 - 366 m based on school size and sightability of seabirds. We developed logging software to obtain flight path and sighting coordinates and incorporated measurements of schools using a sighting tube. The altitude dependent flight swath or transect width for fish schools was estimated from the detection curve at 474 m at an altitude of 305 m. The detection correction factor was estimated at 0.727 resulting in an undercounting rate of approximately 37.5%. Using double counting, individual surveyor bias was estimated at 6.5% for school counts and 7.0% for school surface area estimates; these rates are lower than those reported for wildlife aerial surveys. Error in fish species identification was estimated from validation data at 3.9% for herring, and 20. 2% for sand lance; we were not able to discriminate age classes of herring and a model did not improve discrimination. We recommended methods to reduce the cost of obtaining validation samples for future surveys. We determined the precision of fish abundance estimates by performing repeat flyovers; our error rate was 14.6% for school counts and 18.3% for total school surface area estimates within a 36 hr period; surveyor bias is imbedded in this estimate. The variance of the density estimates will be mainly influenced by the variability of biological occurrence since the variance of the detection correction factor including surveyor bias was very low. The additional contribution of error from identification and repeatability of measurements is species specific. For herring the additional error for schools counts, 12 - 18.5%, and surface area estimates, 15.2 - 22.2%, should be applied depending on whether or not the redundancy for surveyor bias is removed. For sand lance, the additional error is 27.7 - 34.2% for school counts and 30.9 - 37.9% for school surface area estimates. The spatial resolution of our data was established at approximately 500 m, but could be reduced with uninterrupted coordinate logging to 80 m. If a finer resolution or degree of precision is required, the technique can be combined with electronic imaging methods reviewed here. Finally, we recommended a field survey design combining new and old technology to provide cost-effective, yet reasonably accurate and precise results.
+
+Alaska Predator Ecosystem Experiment (APEX) surveys, 1998 - 1999:
+Study History: Restoration Project 99163-T was initiated after a round of data sharing between the Sound Ecosystem Assessment (SEA) project, Restoration Project 99320, and the Alaska Predator Ecosystem Experiment (APEX) project, Restoration Project 99163. In the 1998 annual meeting and review for Exxon Valdez Oil Spill (EVOS) science the principal investigator of this project present data on broad-scale distributions of surface schooling forage fishes in Prince William Sound from 1995-1997. In addition, modelers working with the APEX project found a significant correlation between foraging activity of sea birds and the fish distributions from the aerial surveys. It was decided at that meeting that an aerial component should be added to the APEX program to provide additional information on fish distribution for modelers and other researchers with the APEX umbrella. Therefore, this project was conceived to as a service and data delivery project for that program. The first field season was 1998 and a second (final) field season was completed in 1999. 
+
+Abstract: The objective of this project was to provide information on pelagic schooling fishes in the surface waters of Prince William Sound in order to better understand reproductive and foraging dynamics of various sea bird species. The scope of the project focuses on the study areas of the APEX project within Prince William Sound, Alaska. The individual objectives for this project were completed between the dates of July 1 and August 9, 1998. Preliminary data was delivered to the APEX program via Glen Ford, APEX modeler. Net catches from our survey and other APEX projects were compiled to provide corrections for species identification. Final edited data was delivered on December 14, 1998. We were not able to over fly the acoustics program within APEX due to a non- overlap in over flights and cruises. However, we were able to conduct a single broad-scale survey within Prince William Sound during the course of July, 1998. In meeting our objectives, we flew 15 repeat surveys over the northern and central study regions and 5 repeat surveys (coordinating with kittiwake researchers) over the Jackpot study region (coordinating with marbled murrelet researchers).
+
+Publications:
+Ainley, D. G., Ford, R. G., Brown, E. D., Suryan, R. M., &amp; Irons, D. B. (2003). Prey resources, competition, and geographic structure of kittiwake colonies in Prince William Sound. Ecology, 84(3), 709-723.
+
+Brenda L. Norcross, Evelyn D. Brown, Robert J. Foy, Michele Frandsen, Jody Seitz and Kevin Stokesbury. 1999. Juvenile Herring Growth and Habitats, Exxon Valdez Oil Spill Restoration Project Final Report (Restoration Project 99320T), Institute of Marine Science, University of Alaska-Fairbanks, Fairbanks, Alaska.
+
+Brown, E.D. and B.L. Norcross. 1999. Aerial Survey Support for the APEX Project, Exxon Valdez Oil Spill Restoration Project Annual Report (Restoration Project 97163T), Institute of Marine Science, University of Alaska Fairbanks, Fairbanks, Alaska
+
+Irons, D.B. and R.M. Suryan. 1996. Kittiwakes as indicators of change in forage fish. Preliminary results of 1995 field season. APEX Component 95163E, US Fish andWildlife Service, 1011 E. Tudor Rd. Anchorage, AK 99503.
+
+Purcell, J.E.,  E.D. Brown, K.D.E. Stokesbury, L.H. Haldorson, and T.C. Shirley. 2000. Aggregations of the jellyfish Aurelia labiata: Abundance, distribution, association with age-0 walleye pollock, and heavers promoting aggregation in Prince William Sound, Alaska, USA. Marine Ecology Progress Series. 195:145-158.</para>
+</abstract>
+<keywordSet><keyword>aerial survey</keyword>
+<keyword>line transects</keyword>
+<keyword>forage fish</keyword>
+<keyword>pacific herring</keyword>
+<keyword>juvenile</keyword>
+<keyword>sand lance</keyword>
+<keyword>capelin</keyword>
+<keyword>eulachon</keyword>
+<keyword>prince william sound</keyword>
+<keyword>distribution</keyword>
+</keywordSet>
+<keywordSet><keyword>EVOSTC</keyword>
+<keyword>Exxon Valdez Oil Spill Trustee Council</keyword>
+<keyword>Oil Spill</keyword>
+<keyword>Exxon Valdez</keyword>
+<keyword>Alaska</keyword>
+<keyword>Pelagic</keyword>
+<keyword>Fish</keyword>
+<keywordThesaurus>Gulf Watch Alaska Thesaurus</keywordThesaurus>
+</keywordSet>
+   <intellectualRights><para>This material is based upon work funded by the Exxon Valdez Oil Spill Trustee Council.  Any opinions, findings, conclusions, or recommendations expressed herein are those of the author(s) and do not necessarily reflect the views or positions of the Trustee Council.
+
+Standard scientific norms for attribution and credit should be followed when using these data including to the Owners, Exxon Valdez Oil Spill Trustee Council and other sources of funding. Please let the Owner know when these data are used.
+ 
+These data are licensed under CC0. The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.</para>
+ </intellectualRights>
+ <coverage><geographicCoverage><geographicDescription>Prince William Sound, Alaska USA</geographicDescription>
+ <boundingCoordinates><westBoundingCoordinate>-150.7</westBoundingCoordinate>
+ <eastBoundingCoordinate>-144.2</eastBoundingCoordinate>
+ <northBoundingCoordinate>61.12</northBoundingCoordinate>
+ <southBoundingCoordinate>59.29</southBoundingCoordinate>
+ </boundingCoordinates>
+ </geographicCoverage>
+ <temporalCoverage><rangeOfDates><beginDate><calendarDate>1995-05-05</calendarDate>
+ </beginDate>
+ <endDate><calendarDate>1999-08-04</calendarDate>
+ </endDate>
+ </rangeOfDates>
+ </temporalCoverage>
+ <taxonomicCoverage><taxonomicClassification><taxonRankName>Genus</taxonRankName>
+ <taxonRankValue>Aequorea</taxonRankValue>
+ <commonName>jellyfish</commonName>
+ <taxonomicClassification><taxonRankName>Species</taxonRankName>
+ <taxonRankValue>spp</taxonRankValue>
+ <commonName>jellyfish</commonName>
+ </taxonomicClassification>
+ </taxonomicClassification>
+ <taxonomicClassification><taxonRankName>Genus</taxonRankName>
+ <taxonRankValue>Ammodytes</taxonRankValue>
+ <taxonomicClassification><taxonRankName>Species</taxonRankName>
+ <taxonRankValue>hexapterus</taxonRankValue>
+ <commonName>pacific sand lance</commonName>
+ </taxonomicClassification>
+ </taxonomicClassification>
+ <taxonomicClassification><taxonRankName>Genus</taxonRankName>
+ <taxonRankValue>Clupea</taxonRankValue>
+ <taxonomicClassification><taxonRankName>Species</taxonRankName>
+ <taxonRankValue>pallasi</taxonRankValue>
+ <commonName>pacific herring</commonName>
+ </taxonomicClassification>
+ </taxonomicClassification>
+ <taxonomicClassification><taxonRankName>Genus</taxonRankName>
+ <taxonRankValue>Mallotus</taxonRankValue>
+ <taxonomicClassification><taxonRankName>Species</taxonRankName>
+ <taxonRankValue>villosus</taxonRankValue>
+ <commonName>capelin</commonName>
+ </taxonomicClassification>
+ </taxonomicClassification>
+ <taxonomicClassification><taxonRankName>Genus</taxonRankName>
+ <taxonRankValue>Thaleichthys</taxonRankValue>
+ <taxonomicClassification><taxonRankName>Species</taxonRankName>
+ <taxonRankValue>pacificus</taxonRankValue>
+ <commonName>eulachon</commonName>
+ </taxonomicClassification>
+ </taxonomicClassification>
+ </taxonomicCoverage>
+ </coverage>
+ <contact><references>1358467051386</references>
+ </contact>
+ <contact id="1358467105164"><individualName><givenName>Scott</givenName>
+ <surName>Pegau</surName>
+ </individualName>
+ <organizationName>Oil Spill Recovery Institute</organizationName>
+ <positionName>Research Program Manager</positionName>
+ <address><country>United States</country>
+ </address>
+ <electronicMailAddress>wspegau@pwssc.org</electronicMailAddress>
+ </contact>
+ <methods><methodStep><description><section><title>APEX Aerial Surveys</title>
+ <para>Prior to each survey, we established the flight and weather. In order to minimize the effect of survey condition bias on accuracy of the results, criteria were established for determining whether or not to proceed with a survey. We flew if the winds were under 25 knots (creating a sea state of less than 1 Beauport scale and no white capping), if the average ceiling (cloud cover) was at least 250m, and precipitation was either absent or very patchy. Conditions outside the criteria can significantly affect the quality and accuracy of the survey data.</para>
+ <para>At the start of the field season, flight paths were established in the northern, central, and Jackpot APEX study regions. During the survey, the pilot stayed on the established flight path as closely as possible. Both flight path (transect) and features along path were recorded using the DLog program provided by Glen Ford. A GPS mounted to the dash of the aircraft was connected to a lap top computer and dumped latitude, longitude, and date in 2-second intervals. Time was recorded from the computers internal clock. At the beginning of each flight, header information including weather, water visibility, wind, wind direction, tide stage, wave height and other notes concerning the survey were recorded in the log program. Information or &quot;sightings&quot; such as numbers of fish schools or jellyfish aggregations, species of fish, surface area of schools or jellyfish aggregations, numbers of birds or mammals, and behavior of birds were recorded on the computer log program.</para>
+ <para>Validations were conducted with net catches and aircraft video. A small number of net captures by small mesh purse seine and anchovy purse seine were guided from the aircraft to be used to validate and correct species assignments. However, a number of validations were obtained from other projects sampling fish during the time period of the aerial surveys. In that case, matching validations was a post-processing procedure using GIS and matching date codes. Digital video images of many schools and foraging flock configurations were collected and used in identifying validations and evaluating schools shape. Although there is more we can accomplish with the images in terms of sea bird/forage fish school dynamics, that analysis was not covered within the scope of this study.</para>
+ <para>Single or double letter codes were developed for fish, bird and mammal species (such as h for herring, sd for sand lance, kw for kittiwakes, hs for harbor seals etc). Bird behavior was recorded as foraging or plunging (pl), resting on water (rw), resting on shore (rs), aggregated tightly on water over school (tw), traveling (tr) or flying in a &quot;broad area search&quot; (bs). We used gridded maps to facilitate communication between aerial and ground crews concerning the location of birds and fish.</para>
+ <para>Fish schools were counted and surface area estimated using a sighting tube. The sighting tube is constructed of PVC pipe with a grid drawn on mylar on the end. The focal length of the tube is 216 mm and can be calibrated for ground distance covered by reference line (X) for any survey altitude, when length of the grid reference line (L), focal length of the tube (F), and survey altitude (A) are known, by using the equation from (Lebida and Whitmore 1985; Brady 1987).</para>
+ <para>The use of the grid is particularly important for large schools. For elliptical shaped schools, maximum length and maximum width provided a rough estimate of surface area; for irregularly shaped schools (U-shaped, long wavy bands, etc.) length and width of separate sections were measured and combined to give a total estimate. The sighting angle established from fish survey protocols and a detection curve analysis was established at between 20 and 40 degrees from the wing tip with optimal sighting occurring at 30 degrees. The sighting angle for sea birds can be decreased. The swath or effective transect width is calculated using standard geometry from the wing angles and altitude.</para>
+ <para>For estimating total school or sea bird density and forage fish abundance available at the surface (not including subsurface fish), the appropriate model is outlined by Quang and Lanctot (1991).</para>
+ <para>Estimates of variance should include estimates of variance for p and surveyor bias (calculated via double counting, Brown and Norcross 1997; Brown et al., in prep). For this study, only one parameter needed to be estimated (f(d)). The estimate of p (0.83) was obtained in an earlier study using independent sampling techniques and is described in a publication in preparation that will appear in the EVOS final report for SEA project 99320T (Brown et al., in prep; also in Brown and Borstad 1998). In order to estimate f(d), we collected angles on a subset of sightings. This was accomplished by marking the strut of the aircraft with a series of graduated marks indicating angle off the wing and collecting the angles by flattening the aircraft (using the gyroscope) and taking a measurement. The angles were converted to distance from transect centerline using simple geometry and the frequency distribution of the distances (x) were plotted (i.e. the f(x)). In this model, a beta curve best represents the probability density function of x and f(d) is obtained from the plot of x. In order to expand the estimate to include subsurface distributions, acoustics must be incorporated. That was outside the scope of this study.</para>
+ </section>
+ </description>
+ </methodStep>
+ <methodStep><description><section><title>SEA Spatial Resolution</title>
+ <para>We determined the minimum resolution of features sighted along the transect lines. When sightings were being recorded, coordinate logging was interrupted and the resulting time gap between coordinates was even greater. This resulted in variability in the resolution or exact locations of features. To estimate the scale of resolution, we randomly sampled approximately 1500 pairs of coordinates from the flight path data set. We also sampled the coordinates before and after each sighting resulting in a total of 4800 pairs. We estimated the linear distance (m) between each pair. The distribution of the distances sampled were skewed, but natural log transformations resulted in near normal distributions. We calculated the 95% confidence intervals for the ln-transformed distances for coordinate pairs with and without sightings, then reported on the back-transformed intervals.</para>
+ </section>
+ </description>
+ </methodStep>
+ <methodStep><description><section><title>SEA Survey Constraints</title>
+ <para>Criteria were established for determining whether a survey should be flown to minimize the bias created by variable survey conditions. We did not fly if winds were over 25 knots causing white-capping, if the average ceiling (cloud cover) was below 240 m (800 ft), or on rainy days.</para>
+ <para>Initially, we flew at an altitude of 457 m as recommended for other surveys of this type (Lebida and Whitmore, 1985; Carscaddenet al. 1994). We determined the species-specific school size distribution in order to evaluate the appropriate altitude as were no literature values for juvenile herring or sand lance.</para>
+ <para>The preferred altitude range was established at 274 - 366 m (900-1200 ft) based on ability to discriminate foraging seabird flocks and fish school size. There were many small schools observed less than 10 m2 total surface area. Juvenile herring schools (modal frequency 3-50 m2) were much smaller than spawning aggregations (modal frequency 100 - 300 m2 measured in Bristol Bay; Funk et al. 1995). Therefore the initial altitude of 457 m (1500 ft) was too high to distinguish the small schools and their associated predators. An altitude of 305 m (1000 ft) provided a swath width of 325 m, using a fixed angle of 30 degrees, allowed distinction of an object as small as a single seabird or the smallest school observed. The swath width was increased through the recalculation of the detection curve.</para>
+ </section>
+ </description>
+ </methodStep>
+ <methodStep><description><section><title>SEA Aerial Surveys</title>
+ <para>During the initial planning phase of this study, we incorporated information from fishermen and aerial surveyors (Seitz 1998) about the distribution of surface schools of fish in Prince William Sound (PWS) and the Outer Kenai, Alaska. They reported that the surface schools occur most frequently during the summer months (May to August). Most of the fish shoals and seabird feeding activity was reported to occur in the near shore region (less than 1 km from the beaches). The main forage fish species reported in the summer in PWS were juvenile Pacific herring (Clupea pallasi) and Pacific sand lance (Ammodytes hexapterus). The distribution of juvenile herring in the near-shore region was confirmed by recent studies in PWS (Stokesbury et al. 1999). Capelin (Mallotus villosus) and eulachon (Thaleichthys pacificus) were reported to occur only sporadically, for a limited period in June, and only on the fringe of the study area (outside PWS adjacent to the Gulf of Alaska).</para>
+ <para>Fish schools were counted and their surface area was estimated using a sighting tube constructed of PVC pipe with a grid drawn on mylar on the end. Dimensions of fish schools were measured to the nearest tick mark on the mylar grid. The length of the tube was 197 mm, the focal length 216 mm, and the inside width 50 mm. The tube was calibrated for ground distance covered by reference line (X) for any survey altitude, when length of the grid reference line (L), focal length of the tube (F), and survey altitude (A) are known, by using the equation X=A(L/F) (Lebida and Whitmore 1985; Brady 1987).</para>
+ <para>Length and width of fish schools were measured with the sighting tube. For circular schools, the diameter was measured and the surface area calculated for a circle. For oblong, crescent or U-shaped, or irregular school shapes, length and width were multiplied to yield the surface area of a rectangle as an estimate of school size.</para>
+ <para>We estimated the school’s distance (m) from the nearest shore. We calibrated ourselves for distance estimation by flying repeatedly over objects of known dimensions or by using the sighting tube to measure ground distances.</para>
+ <para>The visual swath or transect width, dependent on altitude, was initially established in 1995. We flew repeatedly over a reference site with known distances marked (an airport runway with numbers and letters) at a series of altitudes beginning at 137 m (450 ft). In this way, the swath width was established perpendicular to the airplane. The swath width included the area that could be measured at a fixed angle of 30 degrees. Ground reference points of known or easily measurable distances and surface areas, such as a helipad, were used to train observers to the scale on the sighting tube grid for the specific altitude flown during a particular survey.</para>
+ <para>The swath width for data analysis was recalculated after the collection of perpendicular distances from the transect centerline. After the detection curve was estimated from the distances, the swath width was recalculated as the distance between c and h specific to altitude. The distances were estimated from markings on the strut off the aircraft indicating the sighting angle (from the wings). In order to record a distance, the aircraft was leveled using the gyroscope on the instrument panel, the sighting was lined up with one of the marks on the strut, and the angle recorded. The angles were used to estimate ground distances by simple geometry.</para>
+ <para>Aerial survey transects were flown approximately parallel to shore within a broad-scale region covering PWS and the Outer Kenai from Hinchinbrook Entrance to Nuka Point. A survey of the entire area required flying 6 days,3-6 hrs each day, in a Cessna 185 float plane at approximately 203.7 km/hr (110 knots). Areas inaccessible due to insufficient space to perform a 360 degree turn or weather were not sampled. The shoreline was followed in a single line but flat 360 degree turns were allowed when recorded feature density was high to ensure complete counts within a given swath area.</para>
+ <para>Both flight path and features along path were recorded during the survey. A log program was specially designed for the project, and run from a lap top computer during the flight. The program downloaded latitude, longitude, date and time of day in 2-second intervals from a GPS connected to the computer. At the beginning of each flight, the pilot identity, weather, water visibility, wind, wind direction, tidal stage, wave height and other notes concerning the survey were recorded. During the flight, data recorded included: “sightings” such as numbers of fish or jellyfish schools, species of fish, surface area of schools, numbers of birds or mammals, behavior of birds, or oceanographic features (tidal fronts), estimates of distance(m) to shore, and changes in altitude (needed to estimate transect width). For each observation, the computer logging was interrupted, the sighting noted and the approximate location linked via the program to the last latitude and longitude recorded.</para>
+ </section>
+ </description>
+ </methodStep>
+ <methodStep><description><section><title>SEA Detection Probability</title>
+ <para>Using the available information about forage fish distribution, we adopted an adaptive sampling method using a modified line transect (Thompson 1992; Krebs 1989) parallel to the shoreline. We based our initial design on earlier aerial surveys of Pacific herring in Alaska that used a similar line transect survey along shorelines (Lebida and Whitmore 1985; Brady 1987). The detection of fish schools was assumed to be perfect (p=l) along the sighting angle fixed at 30 degrees from the wing of the aircraft when level. This was equivalent to the narrow-strip transect method (Thompson 1992) based on the assumption that there was perfect detection within a maximum width (~0) from the transect centerline. All fish sighting was done from the right side of the plane.</para>
+ <para>There are two limitations to the narrow-strip method. The width of the transect is limited to the area falling within the visual range when sighting at 30 degrees. Secondly, detectability may vary by species, school configuration and by distance from the centerline (directly underneath the aircraft) of the transect. In order to avoid those limitations, we adopted a line transect model designed for aerial surveys (Quang and Lanctot 1991) that allowed variable detection and thus removed the sighting angle limitation maximizing transect or swath width.</para>
+ <para>The corrected probability of detection (pCorr) was estimated by two separate methods. For the first method, we compared our visual estimates to an independent data set collected in the exact same space and time. The independent data we adopted were images of schools collected along the transect line using a Compact Airborne Spectrographic Imager (CASI). The imager has no bias, has visual accuracy up to twice that of the human eye (Borstad et al. 1992), and for the purposes of this study, assumed to have perfect detection of surface schools within the image swath. The estimate and uncertainty of pCorr is the slope and its variance derived from linear regressions of log-transformed data on school number and size where CASI data represent the independent variable and the visual estimates the dependent. The log transformation was required to normalize the skewed distribution of shoal size (number of schools at a given location) and total school surface area.</para>
+ <para>The second method used to derive the corrected probability of detection(pCorr) was similar to the double counting method developed by Rivest et al. (1995) for counting deer in harvest areas. For this method, two surveyors collect counts of schools and make estimates of school surface area simultaneously from a single aircraft without communicating with one another. This method eliminates the confounding effects of variable survey conditions.</para>
+ <para>In wildlife applications, this correction factor is often estimated for individual stratum representing areas with varying visibility (e.g. woods versus field). In this study, we pooled all observations as a single stratum. However, for future applications, stratification can be accomplished if warranted by varying ocean conditions affecting sightability.</para>
+ <para>It may be important to single out bias caused by individual surveyors. Individual bias is a measure of calibration when training for new surveyors and used for comparison of individual surveyors if more than one are involved. The actual contribution of individual bias to overall error in aerial survey results is difficult to estimate and often goes unmeasured in aerial surveys. Surveyor bias is often a function of density as counting error generally increases with counting rate (Gunderson 1993) causing most surveyors to undercount (Krebs 1989). It is for these reasons that a measure of survey bias is critical.</para>
+ <para>In order to establish individual surveyor bias, we used double counts and the CASI data to produce independent estimates. Using the double count data, bias was measured as a direct comparison of results from two individual surveyors to one another, in order to estimate a level of error or bias. Since both surveyors experienced the same survey conditions during each count, simultaneous double counts eliminated the confounding bias from variable survey conditions generally encountered when estimating individual surveyor bias.</para>
+ <para>The bias was estimated as the proportion of error not explained by a linear regression (SSE/SSTO) between the counts of the two surveyors or between the CASI and visual surveyor. This can be estimated by subtracting the proportion of the total variance explained by the regression (SSR/SSTO or R-squared) from one.</para>
+ <para>The main data output was a measure of relative rather than absolute density of fish and jellyfish since we did not measure the ratio of surface to subsurface (not observed) schools or</para>
+ <para>aggregations. Transects were not selected randomly due to the increased sampling effort and waste of aircraft charter time. We chose, instead to over-fly the entire region of interest with no “dead” air time and therefore did not attempt to expand the density estimates to areas not surveyed. In our study, the length of a transect line (L) was determined to be all or part of a flight path on a given day and the density of features estimated from sightings along that segment only. We sampled offshore areas when crossing bays and bodies of water to reach other shorelines in order to test the assumption of nearshore distribution.</para>
+ <para>In summary, density or abundance estimates derived from this study were a function of: 1) effective area surveyed estimated from altitude and distance flown along a flight path or transect length, 2) the estimate off f(d) and pCorr and 3) the actual density of the sightings along the transect line.</para>
+ </section>
+ </description>
+ </methodStep>
+ <methodStep><description><section><title>SEA Compact Airborne Spectrographic Imager (CASI)</title>
+ <para>For the surveys in which the CASI was deployed, two aircraft were used simultaneously to produce synoptic results. We flew the visual surveys in the Cessna 185. The CASI equipment was mounted in a Dehavilland Beaver 216GB aircraft on floats with a hole cut in the bottom of the plane for the sensor array. The surveyors in the 185 performed a reconnaissance survey setting up straight line transect passes for the CASI. Then the two aircraft flew in formation at a distance apart where the visual swath and image swath overlapped. Because the swaths did not always overlap perfectly, school locations derived from visual and CASI surveys were compared within a defined geographic region rather than for each transect.</para>
+ <para>The CASI system acquired digital multispectral imagery of fish schools (Borstad et al. 1992). The resulting images were radiometrically calibrated (Borstad Associates, Sidney, B.C., Canada, Program CVTD3-3), corrected for aircraft roll, and scaled uniformly. Because the herring schools were small, the CASI instrument was configured to acquire data with the highest spatial resolution (small pixels) possible. The number of spectral channels and the aircraft speed determined the along-track pixel length. Only three channels were used allowing a 30 msec integration time: 1 at 405-455 wavelength (nm), 2 at 460-590, and 3 at 600-675. Wide spectral bands were defined, which gathered as much light as possible while still differentiating the schools from their surroundings. On some lines, the fore optics fstop were changed from 4 to 5.6 in order to further increase the signal levels.</para>
+ <para>The settings resulted in single pixel dimensions of 0.3 - 0.5 m wide and 1 - 2 m long. With these setting only a tiny school would be represented by a single pixel (as were seabirds). For the vast majority of schools measured, the settings provided in excess of 10 pixels per school. The altitude flown affected the image swath, but generally at 305 m the CASI image was 200 m wide. In order to prevent the images from becoming too large to handle on the computer, transects were restricted to less than 10 km and preferably between 4-6 km long. During post- processing, the 8 bit unsigned images were examined and the area for each school calculated. School dimensions and statistics were obtained using a custom program designed for the CASI on a Sun-Sparc5 Unix system. A full 512 X 1900 resolution window was used to process the images. Statistics were first recorded by transect line and checked for errors. Later, sections with concentrations of schools were extracted and geocoded so they could be linked in space with the ￼visual sightings, since the two aircraft were not always lined up perfectly to record the same features at exactly the same time.</para>
+ </section>
+ </description>
+ </methodStep>
+ </methods>
+<project><title>APEX/SEA Aerial Surveys</title>
+<personnel id="1365724718072"><individualName><givenName>Brenda</givenName>
+<surName>Norcross</surName>
+</individualName>
+<role>Principal Investigator</role>
+</personnel>
+<personnel id="1365724731312"><individualName><givenName>Evelyn</givenName>
+<surName>Brown</surName>
+</individualName>
+<organizationName>Alaska Department of Fish and Game</organizationName>
+<address><country>United States</country>
+</address>
+<role>Principal Investigator</role>
+</personnel>
+<personnel id="1365724750136"><individualName><givenName>Gary</givenName>
+<surName>Borstad</surName>
+</individualName>
+<role>Principal Investigator</role>
+</personnel>
+<personnel id="1365724764744"><individualName><givenName>Stephanie</givenName>
+<surName>Moreland</surName>
+</individualName>
+<role>Principal Investigator</role>
+</personnel>
+<funding><para>Exxon Valdez Oil Spill Trustee Council project numbers 99320-T, 98320-T, 97320-T, 96320-T, 95320-T, 00163-T, 99163-T, 98163-T</para>
+</funding>
+</project>
+  <dataTable id="1358470070266"><entityName>aerialSurveyFinal.csv</entityName>
+ <entityDescription>Forage fish aerial survey data, collected by APEX (1998-1999) and SEA (1995-1997)  projects</entityDescription>
+ <physical id="1358469674031"><objectName>aerialSurveyFinal.csv</objectName>
+ <size unit="byte">862718</size>
+ <dataFormat><textFormat><numHeaderLines>1</numHeaderLines>
+ <recordDelimiter>#x0A</recordDelimiter>
+ <attributeOrientation>column</attributeOrientation>
+ <simpleDelimited><fieldDelimiter>,</fieldDelimiter>
+ </simpleDelimited>
+ </textFormat>
+ </dataFormat>
+ <distribution><online><url>ecogrid://knb/df35d.94.5</url>
+ </online>
+ </distribution>
+ </physical>
+ <attributeList><attribute id="1358470070267"><attributeName>latitude</attributeName>
+ <attributeDefinition>latitude</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070268"><attributeName>longitude</attributeName>
+ <attributeDefinition>longitude</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>degree</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070269"><attributeName>Date</attributeName>
+ <attributeDefinition>Date of sample collection</attributeDefinition>
+ <measurementScale><dateTime><formatString>MM/DD/YYYY</formatString>
+ </dateTime>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070272"><attributeName>Time</attributeName>
+ <attributeDefinition>Military time  of sample collection</attributeDefinition>
+ <measurementScale><dateTime><formatString>HH:MM</formatString>
+ </dateTime>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070274"><attributeName>Numschool</attributeName>
+ <attributeDefinition>Number of schools of fish counted</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>dimensionless</standardUnit>
+ </unit>
+ <numericDomain><numberType>whole</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070275"><attributeName>Shape</attributeName>
+ <attributeDefinition>Shape of the school of fish, for species identification. Codes were defined by Sarah Clark (NCEAS) as a best guess. Open for interpretation based on literature. '?' indicates no guess.</attributeDefinition>
+ <measurementScale><nominal><nonNumericDomain><enumeratedDomain><codeDefinition><code>r</code>
+ <definition>round</definition>
+ </codeDefinition>
+ <codeDefinition><code>i</code>
+ <definition>irregular?</definition>
+ </codeDefinition>
+ <codeDefinition><code>o</code>
+ <definition>oval</definition>
+ </codeDefinition>
+ <codeDefinition><code>u</code>
+ <definition>u-shaped</definition>
+ </codeDefinition>
+ <codeDefinition><code>s</code>
+ <definition>square?</definition>
+ </codeDefinition>
+ <codeDefinition><code>st</code>
+ <definition>string?</definition>
+ </codeDefinition>
+ <codeDefinition><code>?</code>
+ <definition>?</definition>
+ </codeDefinition>
+ <codeDefinition><code>t</code>
+ <definition>?</definition>
+ </codeDefinition>
+ <codeDefinition><code>sp</code>
+ <definition>?</definition>
+ </codeDefinition>
+ <codeDefinition><code>str</code>
+ <definition>string?</definition>
+ </codeDefinition>
+ <codeDefinition><code>c</code>
+ <definition>circle</definition>
+ </codeDefinition>
+ </enumeratedDomain>
+ </nonNumericDomain>
+ </nominal>
+ </measurementScale>
+ <missingValueCode><code>-0-</code>
+ <codeExplanation>no data</codeExplanation>
+ </missingValueCode>
+ </attribute>
+ <attribute id="1358470070276"><attributeName>Species</attributeName>
+ <attributeDefinition>Fish species.  Codes were defined by Sarah Clark (NCEAS) as a best guess. Open for interpretation based on literature. '?' indicates no guess.</attributeDefinition>
+ <measurementScale><nominal><nonNumericDomain><enumeratedDomain><codeDefinition><code>h</code>
+ <definition>pacific herring</definition>
+ </codeDefinition>
+ <codeDefinition><code>c</code>
+ <definition>capelin</definition>
+ </codeDefinition>
+ <codeDefinition><code>sd</code>
+ <definition>sand lance</definition>
+ </codeDefinition>
+ <codeDefinition><code>uf</code>
+ <definition>unidentified fish?</definition>
+ </codeDefinition>
+ <codeDefinition><code>j</code>
+ <definition>jellyfish</definition>
+ </codeDefinition>
+ <codeDefinition><code>sa</code>
+ <definition>salmon?</definition>
+ </codeDefinition>
+ <codeDefinition><code>e</code>
+ <definition>eulachon</definition>
+ </codeDefinition>
+ <codeDefinition><code>js</code>
+ <definition>juvenile salmon?</definition>
+ </codeDefinition>
+ </enumeratedDomain>
+ </nonNumericDomain>
+ </nominal>
+ </measurementScale>
+ <missingValueCode><code>-0-</code>
+ <codeExplanation>no data</codeExplanation>
+ </missingValueCode>
+ </attribute>
+ <attribute id="1358470070277"><attributeName>distshore</attributeName>
+ <attributeDefinition>Distance of fish from shore in meters</attributeDefinition>
+ <measurementScale><ratio><unit><standardUnit>meter</standardUnit>
+ </unit>
+ <numericDomain><numberType>whole</numberType>
+ </numericDomain>
+ </ratio>
+ </measurementScale>
+ <missingValueCode><code>-0-</code>
+ <codeExplanation>no data</codeExplanation>
+ </missingValueCode>
+ </attribute>
+ <attribute id="1358470070278"><attributeName>Altitude</attributeName>
+ <attributeDefinition>Altitude of flight at sample collection</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>foot</standardUnit>
+ </unit>
+ <numericDomain><numberType>natural</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070279"><attributeName>Length</attributeName>
+ <attributeDefinition>Length of the school of fish</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>meter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070280"><attributeName>Width</attributeName>
+ <attributeDefinition>Width of the school of fish</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>meter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070281"><attributeName>SA</attributeName>
+ <attributeDefinition>Surface area of the school of fish</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>squareMeter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ <attribute id="1358470070282"><attributeName>TotSA</attributeName>
+ <attributeDefinition>Total surface area of the school of fish (surface area times the number of schools of fish)</attributeDefinition>
+ <measurementScale><interval><unit><standardUnit>squareMeter</standardUnit>
+ </unit>
+ <numericDomain><numberType>real</numberType>
+ </numericDomain>
+ </interval>
+ </measurementScale>
+ </attribute>
+ </attributeList>
+ <numberOfRecords>8126</numberOfRecords>
+ </dataTable>
+ </dataset>
+ </eml:eml>
