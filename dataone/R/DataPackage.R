@@ -185,17 +185,17 @@ setMethod("addAndDownloadData", signature("DataPackage", "character"), function(
 ## @note Since the resource map that defines a package is separate from the items
 ## it associates, it is possible to use identifiers that have not been defined 
 ## as members of the package.
-setGeneric("insertRelationship", function(x, metadataID, dataIDs, ...) {
+setGeneric("insertRelationship", function(x, subjectID, objectIDs, predicateNS, predicateURI, ...) {
   standardGeneric("insertRelationship")
 })
 
 
-setMethod("insertRelationship", signature("DataPackage", "character", "character"), function(x, metadataID, dataIDs) {
+setMethod("insertRelationship", signature("DataPackage", "character", "character"), function(x, subjectID, objectIDs, ...) {
   jMetaPid <- .jnew("org/dataone/service/types/v1/Identifier")
-  jMetaPid$setValue(metadataID)
+  jMetaPid$setValue(subjectID)
   
   jList <- .jnew("java/util/LinkedList")
-  for (id in dataIDs) {
+  for (id in objectIDs) {
     jPid <- .jnew("org/dataone/service/types/v1/Identifier")
     jPid$setValue(id)
     jList$add(jPid)
@@ -207,6 +207,22 @@ setMethod("insertRelationship", signature("DataPackage", "character", "character
   }
 })
 
+setMethod("insertRelationship", signature("DataPackage", "character", "character", "character", "character"), function(x, subjectID, objectIDs, predicateNS, predicateURI) {
+  jSubjPid <- .jnew("org/dataone/service/types/v1/Identifier")
+  jSubjPid$setValue(subjectID)
+  
+  jList <- .jnew("java/util/LinkedList")
+  for (id in objectIDs) {
+    jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+    jPid$setValue(id)
+    jList$add(jPid)
+  }
+  x@jDataPackage$insertRelationship(jSubjPid, jList, predicateNS, predicateURI)
+  if (!is.jnull(e <- .jgetEx())) {
+    print("    ** Java exception was raised")
+    print(.jcheck(silent=FALSE))
+  }
+})
 
 ## Returns true if the specified object is a member of the package
 ##  
