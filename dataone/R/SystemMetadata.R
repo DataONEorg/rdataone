@@ -1,24 +1,3 @@
-#
-#   This work was created by participants in the DataONE project, and is
-#   jointly copyrighted by participating institutions in DataONE. For
-#   more information on DataONE, see our web site at http://dataone.org.
-#
-#     Copyright 2011-2014
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-
-
 
 setClass("SystemMetadata", slots = c(
     serialVersion           = "numeric",
@@ -111,19 +90,24 @@ setMethod("SystemMetadata", signature(), function(x) {
 ## Methods
 ##########################
 
-# TODO: method to parse SystemMetadata from XML
+## TODO: method to parse SystemMetadata from XML
 
-## Parse an XML representation of system metadata, and set the object slots with obtained values.
-## @param xml the XML representation of the capabilities, as an XMLInternalElementNode
-## @returnType SystemMetadata  
-## @return the SystemMetadata object representing an object
-## 
-## @author jones
-## @export
+
+#' @description
+#' Parse an XML representation of system metadata, and set the object slots with obtained values.
+#' @param sysmeta the \code{SystemMetadata} object
+#' @param xml the XML representation of the capabilities, as an XMLInternalElementNode
+#' @param ... additional arguments passed to ??? (where are these passed to?)
+#' @return the SystemMetadata object representing an object
+#' 
+#' @author jones
+#' @export
 setGeneric("parseSystemMetadata", function(sysmeta, xml, ...) {
     standardGeneric("parseSystemMetadata")
 })
 
+#' @rdname parseSystemMetadata-methods
+#' @aliases parseSystemMetadata, SystemMetadata-method
 setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElementNode"), function(sysmeta, xml) {
 
     sysmeta@serialVersion <- as.numeric(xmlValue(xml[["serialVersion"]]))
@@ -190,16 +174,17 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 
 # TODO: method to serialize XML from object
 
-## Serialize an XML representation of system metadata.
-## @param sysmeta the SystemMetadata instance to be serialized
-## @returnType character  
-## @return the character string representing a SystemMetadata object
-## 
-## @export
+#' @description
+#' Serialize an XML representation of system metadata.
+#' @param sysmeta the SystemMetadata instance to be serialized
+#' @return the character string representing a SystemMetadata object
+#' @author jones 
+#' @export
 setGeneric("serialize", function(sysmeta, ...) {
     standardGeneric("serialize")
 })
-
+#' @rdname serialize-methods
+#' @aliases serialize, SystemMetadata-method
 setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
     
     root <- xmlNode("systemMetadata",
