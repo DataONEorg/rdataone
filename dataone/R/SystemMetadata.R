@@ -72,7 +72,7 @@ setClass("SystemMetadata", slots = c(
     ), )
 
 
-setGeneric(name = "SystemMetadata", def = function(x) {
+setGeneric("SystemMetadata", function(x) {
   standardGeneric("SystemMetadata")
 })
 
