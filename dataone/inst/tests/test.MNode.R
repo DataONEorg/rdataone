@@ -54,3 +54,11 @@ test_that("MNode generateIdentifier()", {
     expect_that(cname, matches("character"))
     expect_that(newid, matches("urn:uuid:"))
 })
+test_that("MNode describe()", {
+  library(dataone)
+  mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+  mn <- MNode(mn_uri)
+  res <- describe(mn, "knb.473.1")
+  expect_is(res, "list")
+  expect_equal(res$`content-type`, "text/xml")
+})
