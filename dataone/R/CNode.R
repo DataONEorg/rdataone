@@ -161,6 +161,32 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.resolve
 # public ObjectLocationList resolve(Identifier pid)
+
+#' Get a list of coordinating nodes holding a given pid
+#' @description Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
+#' @param cnode a valid CNode object
+#' @param pid the id of the identified object
+#' @docType methods
+#' @author hart
+#' @example /dontrun{
+#' cn <- CNode("SANDBOX")
+#' id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
+#' resolve(cn,id)
+#' }
+#' @export
+
+setGeneric("resolve", function(cnode,pid) {
+  standardGeneric("resolve")
+})
+
+#' @rdname resolve-method
+#' @aliases resolve
+
+setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid)){
+  url <- paste(cnode@endpoint,"resolve",pid,sep="/")
+  out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))
+  return(xmlToList(content(z,as="parsed")))
+})
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum
 # public Checksum getChecksum(Identifier pid)
