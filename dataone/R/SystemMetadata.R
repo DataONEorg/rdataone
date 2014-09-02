@@ -1,5 +1,4 @@
 
-## TODO: method to parse SystemMetadata from XML
 #
 #   This work was created by participants in the DataONE project, and is
 #   jointly copyrighted by participating institutions in DataONE. For
