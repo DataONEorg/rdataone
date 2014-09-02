@@ -214,7 +214,7 @@ setMethod("describe", signature("MNode", "character"), function(mnode, pid) {
   response <- HEAD(url)
   if(response$status != "200") {
     d1_errors(response)
-  } else { return(response$headers) }
+  } else { return(unclass(response$headers)) }
 })
 
 d1_errors <- function(x){
