@@ -186,6 +186,48 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, 
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.describe
 # public DescribeResponse describe(Identifier pid)
+
+## This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+## determine basic properties of the referenced object.
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe
+## @param mnode The MNode instance from which the identifier will be generated
+## @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
+## part of the URL path and must be escaped accordingly.
+## @returnType character
+## @return A list of header elements
+## @examples \dontrun{
+## mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+## mn <- MNode(mn_uri)
+## pid <- "knb.473.1"
+## describe(mn, pid)
+## describe(mn, "adfadf") # warning message when wrong pid
+## }
+##
+## @author Scott Chamberlain
+## @export
+setGeneric("describe", function(mnode, pid, ...) {
+  standardGeneric("describe")
+})
+
+setMethod("describe", signature("MNode", "character"), function(mnode, pid) {
+  url <- file.path(mnode@endpoint, "object", pid)
+  response <- HEAD(url)
+  if(response$status != "200") {
+    d1_errors(response)
+  } else { return(unclass(response$headers)) }
+})
+
+d1_errors <- function(x){
+  headnames <- names(x$headers)
+  tmp <- grep('dataone-exception-description', headnames, value = TRUE)
+  exc_name <- x$headers$`dataone-exception-name`
+  detailcode <- x$headers$`dataone-exception-detailcode`
+  mssg <- sub('dataone-exception-description: ', '', tmp)
+  cat(sprintf('Exception name: %s', exc_name), "\n")
+  cat(sprintf('Exception detail code: %s', detailcode), "\n")
+  cat(sprintf('Exception description: %s', mssg), "\n")
+  #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
+}
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getChecksum
 # public Checksum getChecksum(Identifier pid, String checksumAlgorithm)
