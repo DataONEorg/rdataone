@@ -39,3 +39,10 @@ test_that("CNode getMNode()", {
   newnode <- getMNode(cn, "NOT_A_NODE_ID")
   expect_that(newnode, is_a("NULL"))
 })
+test_that("CNode resolve()",{
+  library(dataone) 
+  cn <- CNode()
+  id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
+  res <- resolve(cn,id)
+  expect_that(res$identifier, matches(id) )
+})

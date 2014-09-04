@@ -95,7 +95,7 @@ setMethod("CNode", signature("character"), function(env) {
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
 # public ObjectFormatList listFormats()
-#x
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
 # public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
 # x   
@@ -185,7 +185,7 @@ setGeneric("resolve", function(cnode,pid) {
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))
-  return(xmlToList(content(z,as="parsed")))
+  return(xmlToList(content(out,as="parsed")))
 })
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum
