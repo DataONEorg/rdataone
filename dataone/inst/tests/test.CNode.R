@@ -44,5 +44,12 @@ test_that("CNode resolve()",{
   cn <- CNode()
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cn,id)
-  expect_that(res$identifier, matches(id) )
+  expect_that(res$id, matches(id) )
+  expect_that(typeof(res$data),matches("list") )
+})
+test_that("CNode listFormats",{
+  library(dataone) 
+  cn <- CNode()
+  f <- listFormats(cn)
+  expect_that(is.data.frame(f),is_true())
 })
