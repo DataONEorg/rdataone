@@ -83,15 +83,16 @@ setMethod(f = "initialize", signature = "SystemMetadata",
 #' 
 #' @export
 #' 
-SystemMetadata = function() {
-	## create new SystemMetadata object
-	sysmeta <- new("SystemMetadata")
-	return(sysmeta)
-}
-setGeneric("newSystemMetadata", function(...) {
-    standardGeneric("newSystemMetadata")
+setGeneric("SystemMetadata", function(...) {
+    standardGeneric("SystemMetadata")
 })
-setMethod("newSystemMetadata", signature(), SystemMetadata)
+#' @rdname SystemMetadata-methods
+#' @aliases SystemMetadata,SystemMetadata-method
+setMethod("SystemMetadata", signature(), function() {
+    ## create new SystemMetadata object
+    sysmeta <- new("SystemMetadata")
+    return(sysmeta)
+})
 
 ## TODO: Constructor that  takes XML as input
 ## Construct a SystemMetadata, with all fields as null
