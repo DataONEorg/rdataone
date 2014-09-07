@@ -15,6 +15,7 @@ Depends:
     XML (>= 3.95-0.1),
     methods,
     dataonelibs
+Collate: 'SystemMetadata.R' 'Node.R' 'CNode.R' 'MNode.R' 'AbstractTableDescriber.R' 'CertificateManager.R' 'D1Object.R' 'DataPackage.R' 'EMLParser.R' 'D1Client.R' 'onLoad.R'
 Suggests:
     knitr,
     reml,
