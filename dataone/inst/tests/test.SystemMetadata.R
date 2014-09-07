@@ -4,6 +4,8 @@ test_that("dataone library loads", {
 })
 test_that("SystemMetadata constructors", {
 	library(dataone)
+	sysmeta <- newSystemMetadata()
+	expect_that(sysmeta@serialVersion, equals(1))
 	sysmeta <- SystemMetadata()
 	expect_that(sysmeta@serialVersion, equals(1))
 })

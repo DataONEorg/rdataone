@@ -8,7 +8,7 @@ exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParse
 
 export(SystemMetadata)
 # constructor methods
-exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node)
+exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node, newSystemMetadata)
 
 # CNode methods
 exportMethods(listNodes, getMNode)

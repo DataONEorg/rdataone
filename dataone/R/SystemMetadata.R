@@ -88,10 +88,10 @@ SystemMetadata = function() {
 	sysmeta <- new("SystemMetadata")
 	return(sysmeta)
 }
-setGeneric("SystemMetadata", function(sysmeta, ...) {
-    standardGeneric("SystemMetadata")
+setGeneric("newSystemMetadata", function(...) {
+    standardGeneric("newSystemMetadata")
 })
-setMethod("SystemMetadata", signature(), SystemMetadata)
+setMethod("newSystemMetadata", signature(), SystemMetadata)
 
 ## TODO: Constructor that  takes XML as input
 ## Construct a SystemMetadata, with all fields as null
