@@ -52,5 +52,6 @@ test_that("CNode listFormats",{
   cn <- CNode()
   f <- listFormats(cn)
   expect_that(is.data.frame(f),is_true())
+  expect_that(length(grep("eml", f$ID)), is_more_than(0))
 })
 
