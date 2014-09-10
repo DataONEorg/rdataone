@@ -106,8 +106,6 @@ setMethod("CNode", signature("character"), function(env) {
 #' listFormats(cn)
 #' }
 #' @export
-
-
 setGeneric("listFormats", function(cnode, ...) {
   standardGeneric("listFormats")
 })
@@ -116,9 +114,7 @@ setGeneric("listFormats", function(cnode, ...) {
 #' @rdname listFormats-method
 #' @aliases listFormats
 #' @export
-
-
-setMethod("listFormats", signature("CNode"), function(cnode){
+setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
   out <- GET(url)
   out <- xmlToList(content(out,as="parsed"))
@@ -131,6 +127,7 @@ setMethod("listFormats", signature("CNode"), function(cnode){
   colnames(df) <- c("ID","Name","Type")
   return(df)
 })
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
 # public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
    
