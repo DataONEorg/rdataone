@@ -35,4 +35,4 @@ Packaged: 2013-02-14 20:54:27 UTC; jones
 Repository: CRAN
 Date/Publication: 2013-02-14 20:49:45
 URL: http://releases.dataone.org/online/dataone_r
-BugReports: https://redmine.dataone.org/projects/dataone_r
+BugReports: https://github.com/DataONEorg/rdataone/issues
