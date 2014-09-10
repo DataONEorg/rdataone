@@ -71,3 +71,9 @@ Authors
 
 - Matthew Jones <jones@nceas.ucsb.edu>
 - Rob Nahf <nahf@dataone.unm.edu>
+- Chris Jones <cjones@nceas.ucsb.edu>
+- Carl Boettiger <cboettig@gmail.com>
+- Lauren Walker <walker@nceas.ucsb.edu>
+- Scott Chamberlain <myrmecocystus@gmail.com>
+- Edmund Hart <edmund.m.hart@gmail.com>
+- Jordan Read <jread@usgs.gov>
