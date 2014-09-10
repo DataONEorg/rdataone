@@ -6,6 +6,7 @@ import("httr")
 # Classes
 exportClasses(D1Client, D1Object, DataPackage,  AbstractTableDescriber, EMLParser, CertificateManager, CNode, MNode, Node, SystemMetadata)
 
+export(SystemMetadata)
 # constructor methods
 exportMethods(D1Client, DataPackage, D1Object, EMLParser, CertificateManager, CNode, MNode, Node, SystemMetadata)
 
