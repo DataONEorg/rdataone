@@ -18,7 +18,7 @@
 #   limitations under the License.
 #
 
-## 
+##
 ## @slot endpoint The endpoint of the CN in this environment, including the version specifier
 ## @author jones
 ## @export
@@ -30,22 +30,22 @@ setClass("CNode", slots = c(endpoint = "character"), contains="Node")
 
 ## @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 ## @param ... (not yet used)
-## @returnType CNode  
+## @returnType CNode
 ## @return the CNode object representing the DataONE environment
-## 
+##
 ## @author jones
 ## @export
 setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
 
-## 
+##
 ## Construct a CNode, using default env ("PROD")
 ## @name CNode
-## 
-## @returnType CNode  
+##
+## @returnType CNode
 ## @return the CNode object representing the DataONE environment
-## 
+##
 ## @author jones
 ## @docType methods
 ## @export
@@ -54,7 +54,7 @@ setMethod("CNode", , function() {
     return(result)
 })
 
-## Pass in the environment to be used by this D1Client, plus the 
+## Pass in the environment to be used by this D1Client, plus the
 ## id of the member node to be used for primary interactions such as creates
 setMethod("CNode", signature("character"), function(env) {
 
@@ -93,24 +93,65 @@ setMethod("CNode", signature("character"), function(env) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CN_core.ping
 # public Date ping()
 
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
 # public ObjectFormatList listFormats()
+<<<<<<< HEAD
+
+#' list formats
+#' @description list of all object formats registered in the DataONE Object Format Vocabulary.
+#' @param cnode a valid CNode object
+#' @docType methods
+#' @author hart
+#' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @example /dontrun{
+#' cn <- CNode()
+#' listFormats(cn)
+#' }
+#' @export
+
+
+setGeneric("listFormats", function(cnode, ...) {
+  standardGeneric("listFormats")
+})
+
+
+#' @rdname listFormats-method
+#' @aliases listFormats
+#' @export
+
+
+setMethod("listFormats", signature("CNode"), function(cnode){
+  url <- paste(cnode@endpoint,"formats",sep="/")
+  out <- GET(url)
+  out <- xmlToList(content(out,as="parsed"))
+  ## Below could be done with plyr functionality, but I want to reduce
+  ## dependencies in the package
+  df <- data.frame(matrix(NA,ncol=3,nrow=(length(out)-1)))
+  for(i in 1:(length(out)-1)){
+    df[i,] <- c(unlist(out[[i]]))
+  }
+  colnames(df) <- c("ID","Name","Type")
+  return(df)
+})
+=======
+>>>>>>> upstream/master
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
 # public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
-   
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getChecksumAlgorithms
 # public ChecksumAlgorithmList listChecksumAlgorithms()
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
-# public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
+# public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count)
 
 ## Get the list of nodes associated with a CN
 ## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listNodes
 ## @param cnode The coordinating node to query for its registered Member Nodes
 ## @returnType list
 ## @return the list of nodes in the DataONE CN environment
-## 
+##
 ## @author jones
 ## @export
 setGeneric("listNodes", function(cnode, ...) {
@@ -123,7 +164,7 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
   if(response$status != "200") {
 		return(NULL)
 	}
-  
+
 	xml <- content(response)
   node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
 	nodes <- getNodeSet(xml, "//node")
@@ -181,22 +222,31 @@ setGeneric("resolve", function(cnode,pid) {
 
 #' @rdname resolve-method
 #' @aliases resolve
+#' @export
 
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))
-  return(xmlToList(content(z,as="parsed")))
+  out <- xmlToList(content(out,as="parsed"))
+  # Using a loop when plyr would work to reduce dependencies.
+  df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))
+  for(i in 2:length(out)){
+    df[(i-1),] <- c(unlist(out[[i]]))
+  }
+  colnames(df) <- c("identifier","baseURL","version","url")
+  toret <- list(id = pid, data = df)
+  return(toret)
 })
-    
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum
 # public Checksum getChecksum(Identifier pid)
-    
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.listObjects
-# public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatId, Boolean replicaStatus, Integer start, Integer count) 
-    
+# public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatId, Boolean replicaStatus, Integer start, Integer count)
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.search
 # public ObjectList search(String queryType, String query)
-    
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.query
 # public InputStream query(String queryEngine, String query)
 
@@ -211,7 +261,7 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
 ## @param nodeid The standard identifier string for this node
 ## @returnType MNode
 ## @return the Member Node as an MNode reference, or NULL if not found
-## 
+##
 ## @author jones
 ## @export
 setGeneric("getMNode", function(cnode, nodeid, ...) {
@@ -220,13 +270,13 @@ setGeneric("getMNode", function(cnode, nodeid, ...) {
 
 setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function(cnode, nodeid) {
   nodelist <- listNodes(cnode)
-  match <- sapply(nodelist, function(node) { 
+  match <- sapply(nodelist, function(node) {
     node@identifier == nodeid && node@type == "mn"
   })
   output.list <- nodelist[match]
   if (length(output.list) == 1) {
     mn <- MNode(output.list[[1]])
-    return(mn)  
+    return(mn)
   } else {
     return(NULL)
   }
