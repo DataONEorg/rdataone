@@ -47,8 +47,8 @@ test_that("MNode getSystemMetadata()", {
 })
 test_that("MNode generateIdentifier()", {
     library(dataone)
-    cn <- CNode("SANDBOX")
-    mn <- getMNode(cn, "urn:node:mnSandboxUCSB1")
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnTestKNB")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
