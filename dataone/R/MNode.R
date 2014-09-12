@@ -165,7 +165,6 @@ setGeneric("getSystemMetadata", function(mnode, pid, ...) {
 })
 
 setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, pid) {
-    # TODO: add authentication to call if a certificate is available
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "meta", pid, sep="/")
     # Use an authenticated connection if a certificate is available
