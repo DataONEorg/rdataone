@@ -52,3 +52,20 @@ test_that("XML SystemMetadata serialization works", {
     # TODO: check document validity
     # TODO: check tree equivalence with original XML document
 })
+test_that("SystemMetadata XML constructor works", {
+    library(dataone)
+    testid <- "doi:10.xxyy/AA/tesdoc123456789"
+    doc <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
+    expect_that(xmlValue(xmlRoot(doc)[["identifier"]]), matches(testid))
+    xml <- xmlRoot(doc)
+    sysmeta <- SystemMetadata(xmlRoot(xml))
+    expect_that(sysmeta@identifier, matches(testid))
+    expect_that(nrow(sysmeta@accessPolicy), equals(5))
+    expect_that(as.character(sysmeta@accessPolicy$permission[[1]]), matches("read"))
+    expect_that(sysmeta@archived, is_true())
+    csattrs <- xmlAttrs(xml[["checksum"]])
+    expect_that(sysmeta@checksumAlgorithm, matches(csattrs[[1]]))
+    expect_that(grep("urn:node:KNB", sysmeta@preferredNodes) > 0, is_true())
+    expect_that(grep("urn:node:mnUNM1", sysmeta@preferredNodes) > 0, is_true())
+    expect_that(grep("urn:node:BADNODE", sysmeta@blockedNodes) > 0, is_true())
+})

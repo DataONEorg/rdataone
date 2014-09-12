@@ -101,13 +101,14 @@ setMethod("SystemMetadata", signature(), function() {
 ## 
 ## @author jones
 ## @export
-#setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
-#    
-#    ## create new SystemMetadata object, and parse the XML to populate fields
-#    sysmeta <- new("SystemMetadata")
-#    sysmeta <- parseSystemMetadata(x)
-#    return(sysmeta)
-#})
+setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
+    
+    ## create new SystemMetadata object, and parse the XML to populate fields
+    sysmeta <- new("SystemMetadata")
+    sysmeta <- parseSystemMetadata(sysmeta, x)
+    return(sysmeta)
+})
+
 
 ##########################
 ## Methods
