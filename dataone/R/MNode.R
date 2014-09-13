@@ -245,7 +245,30 @@ d1_errors <- function(x){
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.archive
 # public Identifier archive(Identifier pid)
-    
+setGeneric("archive", function(mnode, pid, ...) {
+    standardGeneric("archive")
+})
+
+setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "archive", pid, sep="/")
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        response <- PUT(url, config=config(sslcert = cert))
+    } else {
+        # This is an error, one must be authenticated
+    }
+    if(response$status != "200") {
+        d1_errors(response)
+        return(NULL)
+    } else {
+        return(content(response))
+    }
+})
+
 ## Request a unique identifier from the Member Node repository
 ## in subsequent calls
 ## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
