@@ -236,6 +236,30 @@ d1_errors <- function(x){
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.create
 # public Identifier create(Identifier pid, InputStream object, SystemMetadata sysmeta) 
+setGeneric("create", function(mnode, pid, ...) {
+    standardGeneric("create")
+})
+
+setMethod("create", signature("MNode", "character"), function(mnode, pid, object, sysmeta) {
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "create", pid, sep="/")
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        # TODO: get POST syntax to be correct
+        # response <- POST(url, encode="multipart", config=config(sslcert = cert))
+    } else {
+        # This is an error, one must be authenticated
+    }
+    if(response$status != "200") {
+        d1_errors(response)
+        return(NULL)
+    } else {
+        return(content(response))
+    }
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.update
 # public Identifier update(Identifier pid, InputStream object, Identifier newPid, SystemMetadata sysmeta) 

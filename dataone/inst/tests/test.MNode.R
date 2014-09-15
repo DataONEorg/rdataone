@@ -62,3 +62,18 @@ test_that("MNode describe()", {
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
+test_that("MNode create(), archive(), and delete()", {
+    library(dataone)
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnTestKNB")
+    newid <- generateIdentifier(mn, "UUID")
+    cname <- class(newid)
+    expect_that(cname, matches("character"))
+    expect_that(newid, matches("urn:uuid:"))
+    #TODO: create an object with the given UUID
+    
+    #TODO: archive the object
+    
+    #TODO: delete the object
+    
+})
