@@ -113,6 +113,35 @@ setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
 ##########################
 ## Methods
 ##########################
+setGeneric("setDefaults", function(...) {
+    standardGeneric("setDefaults")
+})
+setMethod(f = "setDefaults", signature = signature(), definition = function(.Object, 
+            identifier=NULL, formatId=NULL, size=NULL, checksum=NULL, checksumAlgorithm="SHA-1", 
+            submitter=NULL, rightsHolder=NULL, replicationAllowed=TRUE, numberReplicas=3, 
+            obsoletes="", obsoletedBy="", archived=FALSE, dateUploaded=NULL, dateSysMetadataModified=NULL, 
+            originMemberNode=NULL, authoritativeMemberNode=NULL) {
+            # defaults here
+            .Object@serialVersion <- 1
+            .Object@identifier <- as.character(identifier)
+            .Object@formatId <- as.character(formatId)
+            .Object@size <- as.numeric(size)
+            .Object@checksum <- as.character(checksum)
+            .Object@checksumAlgorithm <- as.character(checksumAlgorithm)
+            .Object@submitter <- as.character(submitter)
+            .Object@rightsHolder <- as.character(rightsHolder)
+            #accessList <- xmlChildren(xml[["accessPolicy"]])
+            .Object@replicationAllowed = as.logical(replicationAllowed)
+            .Object@numberReplicas = as.numeric(numberReplicas)
+            .Object@obsoletes <- as.character(obsoletes)
+            .Object@obsoletedBy <- as.character(obsoletedBy)
+            .Object@archived <- as.logical(archived)
+            .Object@dateUploaded <- defaultUTCDate(dateUploaded)
+            .Object@dateSysMetadataModified <- defaultUTCDate(dateSysMetadataModified)
+            .Object@originMemberNode <- as.character(originMemberNode)
+            .Object@authoritativeMemberNode <- as.character(authoritativeMemberNode)
+            return(.Object)
+})
 
 #' @title parse metadata 
 #' @description
@@ -261,6 +290,19 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
   
   return(xml)
 })
+
+########################################################################################
+# Private methods; not intended to be called by external applications
+########################################################################################
+
+defaultUTCDate <- function(date=NULL) {
+    if (is.null(date)) {
+        ct <- format(Sys.time(), format="%FT%X%z", tz="UTC")
+        return(ct)
+    } else {
+        return(date)
+    }
+}
 
 lappend <- function(lst, obj) {
   lst[[length(lst)+1]] <- obj

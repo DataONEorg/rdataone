@@ -3,11 +3,11 @@ test_that("dataone library loads", {
 	library(dataone)
 })
 test_that("SystemMetadata constructors", {
-	library(dataone)
-	#sysmeta <- newSystemMetadata()
-	#expect_that(sysmeta@serialVersion, equals(1))
-	sysmeta <- SystemMetadata()
-	expect_that(sysmeta@serialVersion, equals(1))
+    library(dataone)
+    sysmeta <- SystemMetadata()
+    sysmeta <- setDefaults(sysmeta, identifier="Hello", formatId="text/csv")
+    expect_that(sysmeta@serialVersion, equals(1))
+    expect_that(length(sysmeta@identifier), is_more_than(0))
 })
 test_that("XML SystemMetadata parsing works", {
   library(dataone)
@@ -69,3 +69,4 @@ test_that("SystemMetadata XML constructor works", {
     expect_that(grep("urn:node:mnUNM1", sysmeta@preferredNodes) > 0, is_true())
     expect_that(grep("urn:node:BADNODE", sysmeta@blockedNodes) > 0, is_true())
 })
+
