@@ -5,9 +5,11 @@ test_that("dataone library loads", {
 test_that("SystemMetadata constructors", {
     library(dataone)
     sysmeta <- SystemMetadata()
-    sysmeta <- setDefaults(sysmeta, identifier="Hello", formatId="text/csv")
     expect_that(sysmeta@serialVersion, equals(1))
-    expect_that(length(sysmeta@identifier), is_more_than(0))
+    expect_that(length(sysmeta@identifier), equals(0))
+    sysmeta <- new("SystemMetadata", identifier="TestId", formatId="text/csv")
+    expect_that(sysmeta@identifier, equals("TestId"))
+    expect_that(sysmeta@formatId, equals("text/csv"))
 })
 test_that("XML SystemMetadata parsing works", {
   library(dataone)

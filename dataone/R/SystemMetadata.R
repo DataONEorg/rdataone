@@ -45,12 +45,32 @@ setClass("SystemMetadata", slots = c(
 
 
 
-setMethod(f = "initialize", signature = "SystemMetadata",
-          definition = function(.Object){
-            # defaults here
-            .Object@serialVersion <- 1
-          return(.Object)
-          })
+setMethod(f = "initialize", signature = "SystemMetadata", definition = function(.Object,
+    identifier=NULL, formatId=NULL, size=NULL, checksum=NULL, checksumAlgorithm="SHA-1", 
+    submitter=NULL, rightsHolder=NULL, replicationAllowed=TRUE, numberReplicas=3, 
+    obsoletes=NULL, obsoletedBy=NULL, archived=FALSE, dateUploaded=NULL, dateSysMetadataModified=NULL, 
+    originMemberNode=NULL, authoritativeMemberNode=NULL) {
+    # defaults here
+    .Object@serialVersion <- 1
+    .Object@identifier <- as.character(identifier)
+    .Object@formatId <- as.character(formatId)
+    .Object@size <- as.numeric(size)
+    .Object@checksum <- as.character(checksum)
+    .Object@checksumAlgorithm <- as.character(checksumAlgorithm)
+    .Object@submitter <- as.character(submitter)
+    .Object@rightsHolder <- as.character(rightsHolder)
+    #accessList <- xmlChildren(xml[["accessPolicy"]])
+    .Object@replicationAllowed = as.logical(replicationAllowed)
+    .Object@numberReplicas = as.numeric(numberReplicas)
+    .Object@obsoletes <- as.character(obsoletes)
+    .Object@obsoletedBy <- as.character(obsoletedBy)
+    .Object@archived <- as.logical(archived)
+    .Object@dateUploaded <- defaultUTCDate(dateUploaded)
+    .Object@dateSysMetadataModified <- defaultUTCDate(dateSysMetadataModified)
+    .Object@originMemberNode <- as.character(originMemberNode)
+    .Object@authoritativeMemberNode <- as.character(authoritativeMemberNode)
+    return(.Object)
+})
 
 #' Create DataONE SystemMetadata object
 #' @description A class representing DataONE SystemMetadata, which is core information about objects stored in a repository
@@ -88,7 +108,7 @@ setGeneric("SystemMetadata", function(...) {
 })
 #' @rdname SystemMetadata-methods
 #' @aliases SystemMetadata,SystemMetadata-method
-setMethod("SystemMetadata", signature(), function() {
+setMethod("SystemMetadata", signature(), function(...) {
     ## create new SystemMetadata object
     sysmeta <- new("SystemMetadata")
     return(sysmeta)
@@ -113,35 +133,6 @@ setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
 ##########################
 ## Methods
 ##########################
-setGeneric("setDefaults", function(...) {
-    standardGeneric("setDefaults")
-})
-setMethod(f = "setDefaults", signature = signature(), definition = function(.Object, 
-            identifier=NULL, formatId=NULL, size=NULL, checksum=NULL, checksumAlgorithm="SHA-1", 
-            submitter=NULL, rightsHolder=NULL, replicationAllowed=TRUE, numberReplicas=3, 
-            obsoletes="", obsoletedBy="", archived=FALSE, dateUploaded=NULL, dateSysMetadataModified=NULL, 
-            originMemberNode=NULL, authoritativeMemberNode=NULL) {
-            # defaults here
-            .Object@serialVersion <- 1
-            .Object@identifier <- as.character(identifier)
-            .Object@formatId <- as.character(formatId)
-            .Object@size <- as.numeric(size)
-            .Object@checksum <- as.character(checksum)
-            .Object@checksumAlgorithm <- as.character(checksumAlgorithm)
-            .Object@submitter <- as.character(submitter)
-            .Object@rightsHolder <- as.character(rightsHolder)
-            #accessList <- xmlChildren(xml[["accessPolicy"]])
-            .Object@replicationAllowed = as.logical(replicationAllowed)
-            .Object@numberReplicas = as.numeric(numberReplicas)
-            .Object@obsoletes <- as.character(obsoletes)
-            .Object@obsoletedBy <- as.character(obsoletedBy)
-            .Object@archived <- as.logical(archived)
-            .Object@dateUploaded <- defaultUTCDate(dateUploaded)
-            .Object@dateSysMetadataModified <- defaultUTCDate(dateSysMetadataModified)
-            .Object@originMemberNode <- as.character(originMemberNode)
-            .Object@authoritativeMemberNode <- as.character(authoritativeMemberNode)
-            return(.Object)
-})
 
 #' @title parse metadata 
 #' @description
