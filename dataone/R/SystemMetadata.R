@@ -133,7 +133,7 @@ setMethod(f = "initialize", signature = "SystemMetadata", definition = function(
 #' 
 #' @export
 #' 
-setGeneric("SystemMetadata", function(...) {
+setGeneric("SystemMetadata", function(sysmeta, ...) {
     standardGeneric("SystemMetadata")
 })
 
@@ -148,7 +148,7 @@ setMethod("SystemMetadata", signature(), function(...) {
 #' @title Construct a SystemMetadata object, with all fields set to the value found in an XML document
 #' @description Construct a new SystemMetadata instance by using the fields from an XML representation of the 
 #' SystemMetadata.  The XML should be 
-#' @param x value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
+#' @param sysmeta value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
 #' 
 #' @return the SystemMetadata object representing an object
 #' 
@@ -156,12 +156,12 @@ setMethod("SystemMetadata", signature(), function(...) {
 #' 
 #' @export
 #' 
-setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
+setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(sysmeta) {
     
     ## create new SystemMetadata object, and parse the XML to populate fields
-    sysmeta <- new("SystemMetadata")
-    sysmeta <- parseSystemMetadata(sysmeta, x)
-    return(sysmeta)
+    sm_obj <- new("SystemMetadata")
+    sm_obj <- parseSystemMetadata(sm_obj, sysmeta)
+    return(sm_obj)
 })
 
 
