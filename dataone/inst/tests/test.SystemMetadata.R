@@ -6,7 +6,7 @@ test_that("SystemMetadata constructors", {
     library(dataone)
     sysmeta <- SystemMetadata()
     expect_that(sysmeta@serialVersion, equals(1))
-    expect_that(length(sysmeta@identifier), equals(0))
+    expect_that(is.na(sysmeta@identifier), is_true())
     sysmeta <- new("SystemMetadata", identifier="TestId", formatId="text/csv")
     expect_that(sysmeta@identifier, equals("TestId"))
     expect_that(sysmeta@formatId, equals("text/csv"))
@@ -52,11 +52,10 @@ test_that("XML SystemMetadata serialization works", {
     expect_that(xml, matches("<subject>CN=Subject2,O=Google,C=US,DC=cilogon,DC=org</subject>"))
     expect_that(xml, matches("<permission>changePermission</permission>"))
     sysmeta@obsoletes <- ""
-    sysmeta <- new("SystemMetadata")
+    sysmeta <- new("SystemMetadata", obsoletes="foo")
     xml <- serialize(sysmeta)
-    foundObsoletes <- grep("<obsoletes>", xml, invert=FALSE)
+    foundObsoletes <- grep("<obsoletes>", xml)
     expect_that(foundObsoletes, is_false())
-    # TODO: check document validity
     # TODO: check tree equivalence with original XML document
 })
 test_that("SystemMetadata XML constructor works", {
@@ -75,5 +74,14 @@ test_that("SystemMetadata XML constructor works", {
     expect_that(grep("urn:node:KNB", sysmeta@preferredNodes) > 0, is_true())
     expect_that(grep("urn:node:mnUNM1", sysmeta@preferredNodes) > 0, is_true())
     expect_that(grep("urn:node:BADNODE", sysmeta@blockedNodes) > 0, is_true())
+})
+test_that("SystemMetadata validation works", {
+    library(dataone)
+    sysmeta <- new("SystemMetadata", identifier="foo", formatId="text/csv", size=59, checksum="jdhdjhfd", rightsHolder="ff")
+    isValid <- validate(sysmeta)
+    expect_that(isValid, is_true())
+    sysmeta <- new("SystemMetadata", identifier="foo", checksum="jdhdjhfd", rightsHolder="ff")
+    errors <- validate(sysmeta)
+    expect_that(length(errors), equals(2))
 })
 

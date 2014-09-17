@@ -320,7 +320,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 #' @description
 #' Validate an the system metadata object, ensuring that required fields are present and of the right type.
 #' @param x the instance to be validated
-#' @return logical, true if the SystemMetadata object is valid, else a list of strings detailing errors
+#' @return logical, \code{TRUE} if the SystemMetadata object is valid, else a list of strings detailing errors
 #' 
 #' @rdname validate-methods
 #' @docType methods
@@ -333,7 +333,18 @@ setGeneric("validate", function(x, ...) {
 #' @aliases validate,SystemMetadata-method
 setMethod("validate", signature("SystemMetadata"), function(x) {
     valid <- TRUE
-    return(valid)
+    required <- list(c("identifier", x@identifier), c("formatId", x@formatId), c("size", x@size), 
+                     c("checksum", x@checksum), c("rightsHolder", x@rightsHolder))
+    validFields <- lapply(X=required, FUN=function(fv) {
+        current <- fieldValid(fv[[1]], fv[[2]])
+        return(current)
+    })
+    validFields <- unlist(validFields)
+    if (length(validFields) > 0) {
+        return(validFields)
+    } else {
+        return(TRUE)
+    }
 })
 
 ########################################################################################
@@ -354,3 +365,12 @@ lappend <- function(lst, obj) {
   return(lst)
 }
 
+fieldValid <- function(field, value) {
+    errors <- list()
+    if (is.null(value) || is.na(value)) {
+        errors <- append(errors, paste("Invalid System Metadata:", field, "is missing or null."))
+    }
+    if (length(errors) > 0) {
+        return(errors)
+    }
+}
