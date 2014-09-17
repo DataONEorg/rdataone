@@ -80,6 +80,8 @@ test_that("SystemMetadata validation works", {
     sysmeta <- new("SystemMetadata", identifier="foo", formatId="text/csv", size=59, checksum="jdhdjhfd", rightsHolder="ff")
     isValid <- validate(sysmeta)
     expect_that(isValid, is_true())
+    isValid <- validObject(sysmeta)
+    expect_that(isValid, is_true())
     sysmeta <- new("SystemMetadata", identifier="foo", checksum="jdhdjhfd", rightsHolder="ff")
     errors <- validate(sysmeta)
     expect_that(length(errors), equals(2))

@@ -44,7 +44,7 @@ setClass("SystemMetadata", slots = c(
     originMemberNode        = "character",
     authoritativeMemberNode = "character"
     #replica                 = "character",
-    ), validity=validate)
+    ))
 
 
 #' Initialize a DataONE SystemMetadata object with default values or values passed in to the constructor.
@@ -326,26 +326,12 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 #' @docType methods
 #' @author jones
 #' @export
-setGeneric("validate", function(x, ...) {
+setGeneric("validate", function(object, ...) {
     standardGeneric("validate")
 })
 #' @rdname validate-methods
 #' @aliases validate,SystemMetadata-method
-setMethod("validate", signature("SystemMetadata"), function(x) {
-    valid <- TRUE
-    required <- list(c("identifier", x@identifier), c("formatId", x@formatId), c("size", x@size), 
-                     c("checksum", x@checksum), c("rightsHolder", x@rightsHolder))
-    validFields <- lapply(X=required, FUN=function(fv) {
-        current <- fieldValid(fv[[1]], fv[[2]])
-        return(current)
-    })
-    validFields <- unlist(validFields)
-    if (length(validFields) > 0) {
-        return(validFields)
-    } else {
-        return(TRUE)
-    }
-})
+setMethod("validate", signature("SystemMetadata"), validate)
 
 ########################################################################################
 # Private methods; not intended to be called by external applications
@@ -374,3 +360,20 @@ fieldValid <- function(field, value) {
         return(errors)
     }
 }
+
+validate <- function(object) {
+    valid <- TRUE
+    required <- list(c("identifier", object@identifier), c("formatId", object@formatId), c("size", object@size), 
+                     c("checksum", object@checksum), c("rightsHolder", object@rightsHolder))
+    validFields <- lapply(X=required, FUN=function(fv) {
+        current <- fieldValid(fv[[1]], fv[[2]])
+        return(current)
+    })
+    validFields <- unlist(validFields)
+    if (length(validFields) > 0) {
+        return(validFields)
+    } else {
+        return(TRUE)
+    }
+}
+setValidity("SystemMetadata", validate)
