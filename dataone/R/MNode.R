@@ -248,7 +248,6 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        # TODO: get POST syntax to be correct
         print("Ready to upload object!")
         sysmetaxml <- serialize(sysmeta)
         sm_file <- tempfile()
@@ -258,7 +257,9 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
                     config=config(sslcert = cert))
     } else {
         # This is an error, one must be authenticated
-        print("This would be an error!")
+        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
+        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        return(NULL)
     }
     if(response$status != "200") {
         d1_errors(response)
