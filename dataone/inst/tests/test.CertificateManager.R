@@ -30,11 +30,11 @@ test_that("isCertExpired", {
     cm <- CertificateManager()
     isExpired <- isCertExpired(cm)
     if (is.null(getCertExpires(cm))) {
-        ## if no certificate is installed, then should equal FALSE
-        ## TODO: Check this logic, seems suspect to me, but transfered from old test
-        expect_that(isExpired, is_false())
+        ## if no certificate is installed, then should equal TRUE
+        expect_that(isExpired, is_true())
     } else {
-        ## TODO: finish the logic here
+        ## if a valid certificate is installed, then it should be FALSE
+        expect_that(isExpired, is_false())
     }
 })
 
