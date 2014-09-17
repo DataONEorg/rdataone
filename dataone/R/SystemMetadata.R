@@ -339,7 +339,7 @@ setMethod("validate", signature("SystemMetadata"), validate)
 
 defaultUTCDate <- function(date=NULL) {
     if (is.null(date) || is.na(date)) {
-        ct <- format(Sys.time(), format="%FT%X%z", tz="UTC")
+        ct <- format(Sys.time(), format="%FT%XZ", tz="UTC")
         return(ct)
     } else {
         return(date)
