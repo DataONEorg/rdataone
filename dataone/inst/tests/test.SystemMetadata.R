@@ -52,10 +52,10 @@ test_that("XML SystemMetadata serialization works", {
     expect_that(xml, matches("<subject>CN=Subject2,O=Google,C=US,DC=cilogon,DC=org</subject>"))
     expect_that(xml, matches("<permission>changePermission</permission>"))
     sysmeta@obsoletes <- ""
-    sysmeta <- new("SystemMetadata", obsoletes="foo")
+    sysmeta <- new("SystemMetadata")
     xml <- serialize(sysmeta)
-    foundObsoletes <- grep("<obsoletes>", xml)
-    expect_that(foundObsoletes, is_false())
+    foundObsoletes <- grep("<obsoletes>", xml, invert=TRUE)
+    expect_that(as.logical(foundObsoletes), is_true())
     # TODO: check tree equivalence with original XML document
 })
 test_that("SystemMetadata XML constructor works", {
