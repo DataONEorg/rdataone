@@ -51,6 +51,11 @@ test_that("XML SystemMetadata serialization works", {
     expect_that(xml, matches("<permission>read</permission>"))
     expect_that(xml, matches("<subject>CN=Subject2,O=Google,C=US,DC=cilogon,DC=org</subject>"))
     expect_that(xml, matches("<permission>changePermission</permission>"))
+    sysmeta@obsoletes <- ""
+    sysmeta <- new("SystemMetadata")
+    xml <- serialize(sysmeta)
+    foundObsoletes <- grep("<obsoletes>", xml, invert=FALSE)
+    expect_that(foundObsoletes, is_false())
     # TODO: check document validity
     # TODO: check tree equivalence with original XML document
 })

@@ -44,7 +44,7 @@ setClass("SystemMetadata", slots = c(
     originMemberNode        = "character",
     authoritativeMemberNode = "character"
     #replica                 = "character",
-    ), )
+    ), validity=validate)
 
 
 #' Initialize a DataONE SystemMetadata object with default values or values passed in to the constructor.
@@ -75,10 +75,11 @@ setClass("SystemMetadata", slots = c(
 #' @export
 #' 
 setMethod(f = "initialize", signature = "SystemMetadata", definition = function(.Object,
-    identifier=NULL, formatId=NULL, size=NULL, checksum=NULL, checksumAlgorithm="SHA-1", 
-    submitter=NULL, rightsHolder=NULL, replicationAllowed=TRUE, numberReplicas=3, 
-    obsoletes=NULL, obsoletedBy=NULL, archived=FALSE, dateUploaded=NULL, dateSysMetadataModified=NULL, 
-    originMemberNode=NULL, authoritativeMemberNode=NULL) {
+    identifier=as.character(NA), formatId=as.character(NA), size=as.numeric(NA), checksum=as.character(NA), 
+    checksumAlgorithm="SHA-1", submitter=as.character(NA), rightsHolder=as.character(NA), replicationAllowed=TRUE, 
+    numberReplicas=3, obsoletes=as.character(NA), obsoletedBy=as.character(NA), archived=FALSE, 
+    dateUploaded=as.character(NA), dateSysMetadataModified=as.character(NA), 
+    originMemberNode=as.character(NA), authoritativeMemberNode=as.character(NA)) {
     # defaults here
     .Object@serialVersion <- 1
     .Object@identifier <- as.character(identifier)
@@ -251,8 +252,7 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 })
 
 
-
-#' @title serialize metadata 
+#' @title serialize system metadata 
 #' @description
 #' Serialize an XML representation of system metadata.
 #' @param sysmeta the SystemMetadata instance to be serialized
@@ -314,6 +314,26 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
   xml <- saveXML(root, encoding="UTF-8")  # NB: Currently saveXML ignores the encoding parameter
   
   return(xml)
+})
+
+#' @title validate system metadata 
+#' @description
+#' Validate an the system metadata object, ensuring that required fields are present and of the right type.
+#' @param x the instance to be validated
+#' @return logical, true if the SystemMetadata object is valid, else a list of strings detailing errors
+#' 
+#' @rdname validate-methods
+#' @docType methods
+#' @author jones
+#' @export
+setGeneric("validate", function(x, ...) {
+    standardGeneric("validate")
+})
+#' @rdname validate-methods
+#' @aliases validate,SystemMetadata-method
+setMethod("validate", signature("SystemMetadata"), function(x) {
+    valid <- TRUE
+    return(valid)
 })
 
 ########################################################################################
