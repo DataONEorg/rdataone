@@ -101,7 +101,8 @@ setMethod("CNode", signature("character"), function(env) {
 #' @docType methods
 #' @author hart
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
-#' @example /dontrun{
+#' @examples
+#' \dontrun {
 #' cn <- CNode()
 #' listFormats(cn)
 #' }
@@ -200,7 +201,8 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 #' @param pid the id of the identified object
 #' @docType methods
 #' @author hart
-#' @example /dontrun{
+#' @examples
+#' \dontrun {
 #' cn <- CNode("SANDBOX")
 #' id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
 #' resolve(cn,id)

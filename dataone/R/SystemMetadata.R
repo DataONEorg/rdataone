@@ -1,4 +1,3 @@
-
 #
 #   This work was created by participants in the DataONE project, and is
 #   jointly copyrighted by participating institutions in DataONE. For
@@ -19,6 +18,10 @@
 #   limitations under the License.
 #
 
+#' A DataONE SystemMetadata object containing basic identification, ownership, access policy, replication policy, and related metadata.
+#' @description A class representing DataONE SystemMetadata, which is core information about objects stored in a repository
+#' and needed to manage those objects across systems.  SystemMetadata contains basic identification, ownership,
+#' access policy, replication policy, and related metadata.
 setClass("SystemMetadata", slots = c(
     serialVersion           = "numeric",
     identifier              = "character",
@@ -44,7 +47,33 @@ setClass("SystemMetadata", slots = c(
     ), )
 
 
-
+#' Initialize a DataONE SystemMetadata object with default values or values passed in to the constructor.
+#' @description Initialize a SystemMetadata object by providing default values for core information 
+#' needed to manage objects across repository systems. SystemMetadata contains basic identification, ownership,
+#' access policy, replication policy, and related metadata.
+#'
+#' @param identifier value of type \code{"character"}, the identifier of the object that this system metadata describes.
+#' @param replicationAllowed value of type \code{"logical"}, for replication policy allows replicants.
+#' @param numberReplicas value of type \code{"numeric"}, for number of supported replicas.
+#' @param formatId value of type \code{"character"}, the DataONE object format for the object.
+#' @param size value of type \code{"numeric"}, the size of the object in bytes.
+#' @param checksum value of type \code{"character"}, the checksum for the object using the designated checksum algorithm.
+#' @param checksumAlgorithm value of type \code{"character"}, the name of the hash function used to generate a checksum, from the DataONE controlled list.
+#' @param submitter value of type \code{"character"}, the Distinguished Name or identifier of the person submitting the object.
+#' @param rightsHolder value of type \code{"character"}, the Distinguished Name or identifier of the person who holds access rights to the object.
+#' @param obsoletes value of type \code{"character"}, the identifier of an object which this object replaces.
+#' @param obsoletedBy value of type \code{"character"}, the identifier of an object that replaces this object.
+#' @param archived value of type \code{"logical"}, a boolean flag indicating whether the object has been archived and thus hidden.
+#' @param dateUploaded value of type \code{"character"}, the date on which the object was uploaded to a member node.
+#' @param dateSysMetadataModified value of type \code{"character"}, the last date on which this system metadata was modified.
+#' @param originMemberNode value of type \code{"character"}, the node identifier of the node on which the object was originally registered.
+#' @param authoritativeMemberNode value of type \code{"character"}, the node identifier of the node which currently is authoritative for the object.
+#'
+#' @return the SystemMetadata object representing an object
+#' @author jones
+#' 
+#' @export
+#' 
 setMethod(f = "initialize", signature = "SystemMetadata", definition = function(.Object,
     identifier=NULL, formatId=NULL, size=NULL, checksum=NULL, checksumAlgorithm="SHA-1", 
     submitter=NULL, rightsHolder=NULL, replicationAllowed=TRUE, numberReplicas=3, 
@@ -106,6 +135,7 @@ setMethod(f = "initialize", signature = "SystemMetadata", definition = function(
 setGeneric("SystemMetadata", function(...) {
     standardGeneric("SystemMetadata")
 })
+
 #' @rdname SystemMetadata-methods
 #' @aliases SystemMetadata,SystemMetadata-method
 setMethod("SystemMetadata", signature(), function(...) {
@@ -114,13 +144,17 @@ setMethod("SystemMetadata", signature(), function(...) {
     return(sysmeta)
 })
 
-## TODO: Constructor that  takes XML as input
-## Construct a SystemMetadata, with all fields as null
-## @returnType SystemMetadata  
-## @return the SystemMetadata object representing an object
-## 
-## @author jones
-## @export
+#' @title Construct a SystemMetadata object, with all fields set to the value found in an XML document
+#' @description Construct a new SystemMetadata instance by using the fields from an XML representation of the 
+#' SystemMetadata.  The XML should be 
+#' @param x value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
+#' 
+#' @return the SystemMetadata object representing an object
+#' 
+#' @author jones
+#' 
+#' @export
+#' 
 setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
     
     ## create new SystemMetadata object, and parse the XML to populate fields
