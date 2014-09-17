@@ -24,7 +24,8 @@ Collate: 'SystemMetadata.R' 'Node.R' 'CNode.R' 'MNode.R' 'AbstractTableDescriber
 Suggests:
     knitr,
     reml,
-    testthat
+    testthat,
+    digest
 Imports:
     rJava,
     XML,
