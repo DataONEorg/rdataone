@@ -324,7 +324,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
-    response <- POST(url = url, body = body, multipart = TRUE, config=config(sslcert = cert))
+    response <- POST(url = url, body = body, encode="multipart", config=config(sslcert = cert))
     if(response$status != "200") {
         return(NULL)
     }
