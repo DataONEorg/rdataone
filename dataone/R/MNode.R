@@ -248,7 +248,6 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        print("Ready to upload object!")
         sysmetaxml <- serialize(sysmeta)
         sm_file <- tempfile()
         writeLines(sysmetaxml, sm_file)
