@@ -15,19 +15,15 @@ VignetteBuilder: knitr
 Description: A package that provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
 Depends:
-    R (>= 2.9.2),
-    rJava (>= 0.8-5),
-    XML (>= 3.95-0.1),
-    methods,
-    dataonelibs
+    methods
 Suggests:
     knitr,
-    EML,
     testthat,
     digest
 Imports:
-    rJava,
-    XML,
+    rJava (>= 0.8-5),
+    XML (>= 3.95-0.1),
+    dataonelibs,
     httr
 SystemRequirements: Java (>= 1.6)
 License: Apache License 2.0
@@ -41,8 +37,8 @@ Collate:
     'Node.R'
     'CNode.R'
     'CertificateManager.R'
-    'D1Client.R'
     'D1Object.R'
+    'D1Client.R'
     'DataPackage.R'
     'EMLParser.R'
     'MNode.R'

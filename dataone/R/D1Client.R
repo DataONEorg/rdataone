@@ -18,6 +18,8 @@
 #   limitations under the License.
 #
 
+#' @include D1Object.R
+
 ## 
 ## @slot endpoint The baseurl of the CN in that environment
 ## @slot mn.nodeid The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.
