@@ -10,6 +10,7 @@ before_install:
   - cd dataone
   - ./travis-tool.sh bootstrap
   - ./travis-tool.sh install_r_binary rjava
+  - ./travis-tool.sh install_github DataONEorg/rdataone/dataonelibs
 
 install:
   - ./travis-tool.sh install_deps
