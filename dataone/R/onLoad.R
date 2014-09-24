@@ -18,6 +18,10 @@
 #   limitations under the License.
 #
 
-.onLoad <- function(libname, pkgname) {
+#' @import XML 
+#' @import rJava 
+#' @import httr 
+#' @import dataonelibs
+.onLoad <- function(libname = find.package("dataone"), pkgname="dataone") {
   .jpackage(pkgname, jars='*', lib.loc = libname)
 }

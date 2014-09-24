@@ -18,6 +18,7 @@
 #   limitations under the License.
 #
 
+#' @include Node.R
 ## 
 ## @slot endpoint The endpoint of the CN in this environment, including the version specifier
 ## @author jones
@@ -100,9 +101,10 @@ setMethod("CNode", signature("character"), function(env) {
 #' @param cnode a valid CNode object
 #' @docType methods
 #' @author hart
+#' @rdname listFormats-method
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' cn <- CNode()
 #' listFormats(cn)
 #' }
@@ -201,8 +203,9 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 #' @param pid the id of the identified object
 #' @docType methods
 #' @author hart
+#' @rdname resolve-method
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' cn <- CNode("SANDBOX")
 #' id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
 #' resolve(cn,id)
@@ -216,7 +219,6 @@ setGeneric("resolve", function(cnode,pid) {
 #' @rdname resolve-method
 #' @aliases resolve
 #' @export
-
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))

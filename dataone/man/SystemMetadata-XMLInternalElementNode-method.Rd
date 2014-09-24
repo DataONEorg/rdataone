@@ -4,10 +4,10 @@
 \alias{SystemMetadata,XMLInternalElementNode-method}
 \title{Construct a SystemMetadata object, with all fields set to the value found in an XML document}
 \usage{
-\S4method{SystemMetadata}{XMLInternalElementNode}(...)
+\S4method{SystemMetadata}{XMLInternalElementNode}(sysmeta)
 }
 \arguments{
-\item{x}{value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.}
+\item{sysmeta}{value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.}
 }
 \value{
 the SystemMetadata object representing an object

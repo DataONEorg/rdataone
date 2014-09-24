@@ -74,7 +74,7 @@ setClass("SystemMetadata", slots = c(
 #' 
 #' @export
 #' 
-setMethod(f = "initialize", signature = "SystemMetadata", definition = function(.Object,
+setMethod("initialize", signature = "SystemMetadata", definition = function(.Object,
     identifier=as.character(NA), formatId=as.character(NA), size=as.numeric(NA), checksum=as.character(NA), 
     checksumAlgorithm="SHA-1", submitter=as.character(NA), rightsHolder=as.character(NA), replicationAllowed=TRUE, 
     numberReplicas=3, obsoletes=as.character(NA), obsoletedBy=as.character(NA), archived=FALSE, 
@@ -130,6 +130,7 @@ setMethod(f = "initialize", signature = "SystemMetadata", definition = function(
 #'
 #' @return the SystemMetadata object representing an object
 #' @author jones
+#' @rdname SystemMetadata-methods
 #' 
 #' @export
 #' 
@@ -149,11 +150,8 @@ setMethod("SystemMetadata", signature(), function(...) {
 #' @description Construct a new SystemMetadata instance by using the fields from an XML representation of the 
 #' SystemMetadata.  The XML should be 
 #' @param sysmeta value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
-#' 
 #' @return the SystemMetadata object representing an object
-#' 
 #' @author jones
-#' 
 #' @export
 #' 
 setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(sysmeta) {
@@ -322,6 +320,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 #' @param object the instance to be validated
 #' @return logical, \code{TRUE} if the SystemMetadata object is valid, else a list of strings detailing errors
 #' 
+#' @name validate-methods
 #' @rdname validate-methods
 #' @docType methods
 #' @author jones
@@ -329,9 +328,10 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 setGeneric("validate", function(object, ...) {
     standardGeneric("validate")
 })
+
 #' @rdname validate-methods
 #' @aliases validate,SystemMetadata-method
-setMethod("validate", signature("SystemMetadata"), validate)
+setMethod("validate", signature("SystemMetadata"), function(object, ...) validate_function(object))
 
 ########################################################################################
 # Private methods; not intended to be called by external applications
@@ -361,7 +361,7 @@ fieldValid <- function(field, value) {
     }
 }
 
-validate <- function(object) {
+validate_function <- function(object) {
     valid <- TRUE
     required <- list(c("identifier", object@identifier), c("formatId", object@formatId), c("size", object@size), 
                      c("checksum", object@checksum), c("rightsHolder", object@rightsHolder))
@@ -376,4 +376,4 @@ validate <- function(object) {
         return(TRUE)
     }
 }
-setValidity("SystemMetadata", validate)
+setValidity("SystemMetadata", validate_function)

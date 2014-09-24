@@ -4,13 +4,16 @@
 \alias{initialize,SystemMetadata-method}
 \title{Initialize a DataONE SystemMetadata object with default values or values passed in to the constructor.}
 \usage{
-\S4method{initialize}{SystemMetadata}(.Object, identifier = NULL,
-  formatId = NULL, size = NULL, checksum = NULL,
-  checksumAlgorithm = "SHA-1", submitter = NULL, rightsHolder = NULL,
-  replicationAllowed = TRUE, numberReplicas = 3, obsoletes = NULL,
-  obsoletedBy = NULL, archived = FALSE, dateUploaded = NULL,
-  dateSysMetadataModified = NULL, originMemberNode = NULL,
-  authoritativeMemberNode = NULL)
+\S4method{initialize}{SystemMetadata}(.Object, identifier = as.character(NA),
+  formatId = as.character(NA), size = as.numeric(NA),
+  checksum = as.character(NA), checksumAlgorithm = "SHA-1",
+  submitter = as.character(NA), rightsHolder = as.character(NA),
+  replicationAllowed = TRUE, numberReplicas = 3,
+  obsoletes = as.character(NA), obsoletedBy = as.character(NA),
+  archived = FALSE, dateUploaded = as.character(NA),
+  dateSysMetadataModified = as.character(NA),
+  originMemberNode = as.character(NA),
+  authoritativeMemberNode = as.character(NA))
 }
 \arguments{
 \item{identifier}{value of type \code{"character"}, the identifier of the object that this system metadata describes.}
