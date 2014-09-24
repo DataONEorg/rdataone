@@ -23,7 +23,7 @@ script:
 
 env:
   global:
-    - R_BUILD_ARGS="--no-manual --no-vignettes"
+    - R_BUILD_ARGS="--no-manual --no-build-vignettes"
     - R_CHECK_ARGS="--as-cran --no-manual --no-build-vignettes --no-tests --no-examples"
     - BOOTSTRAP_LATEX="0"
 
