@@ -21,8 +21,8 @@ Suggests:
     testthat,
     digest
 Imports:
-    rJava (>= 0.8-5),
     XML (>= 3.95-0.1),
+    rJava (>= 0.8-5),
     dataonelibs,
     httr
 SystemRequirements: Java (>= 1.6)
