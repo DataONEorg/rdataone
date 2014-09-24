@@ -16,7 +16,6 @@ install:
   - ./travis-tool.sh install_deps
 
 script: 
-  - Rscript -e 'library("dataone")'
 ## depricated tests
   #- Rscript ../runTests.R
   #- Rscript ../testing.R
