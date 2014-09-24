@@ -9,13 +9,12 @@ before_install:
     #  - cp ./travis.tool.sh dataonelibs
   - cd dataone
   - ./travis-tool.sh bootstrap
+  - ./travis-tool.sh install_r_binary rjava
 
 install:
-  - pwd
   - ./travis-tool.sh install_deps
 
 script: 
-  - pwd
   - ./travis-tool.sh run_tests
 
 on_failure:
