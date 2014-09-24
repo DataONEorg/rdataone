@@ -19,7 +19,8 @@ Depends:
 Suggests:
     knitr,
     testthat,
-    digest
+    digest,
+    EML
 Imports:
     XML (>= 3.95-0.1),
     rJava (>= 0.8-5),
