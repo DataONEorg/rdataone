@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/ropensci/rdataone.svg?branch=master
+    :target: https://travis-ci.org/ropensci/rdataone
+
 DataONE R Client
 ================
 
@@ -28,12 +31,12 @@ Documentation for the DataONE R Client is provided as help files within the R fr
 Installation Notes
 ------------------
 
-The easiest way to install the client is via the CRAN_ repository::
+The easiest way to install the client is via the GitHub_ repository::
 
 
-  > install.packages("dataonelibs")
+  > devtools::install_github("DataONEorg/rdataone/dataonelibs")
 
-  > install.packages("dataone")
+  > devtools::install_github("DataONEorg/rdataone/dataone")
 
 
 .. _CRAN: http://cran.r-project.org
