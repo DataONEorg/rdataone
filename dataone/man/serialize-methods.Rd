@@ -3,7 +3,7 @@
 \name{serialize}
 \alias{serialize}
 \alias{serialize,SystemMetadata-method}
-\title{serialize metadata}
+\title{serialize system metadata}
 \usage{
 serialize(sysmeta, ...)
 

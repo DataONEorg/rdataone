@@ -130,6 +130,7 @@ setMethod(f = "initialize", signature = "SystemMetadata", definition = function(
 #'
 #' @return the SystemMetadata object representing an object
 #' @author jones
+#' @rdname SystemMetadata-methods
 #' 
 #' @export
 #' 
@@ -322,6 +323,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 #' @param object the instance to be validated
 #' @return logical, \code{TRUE} if the SystemMetadata object is valid, else a list of strings detailing errors
 #' 
+#' @name validate-methods
 #' @rdname validate-methods
 #' @docType methods
 #' @author jones
@@ -329,6 +331,7 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
 setGeneric("validate", function(object, ...) {
     standardGeneric("validate")
 })
+
 #' @rdname validate-methods
 #' @aliases validate,SystemMetadata-method
 setMethod("validate", signature("SystemMetadata"), validate)
