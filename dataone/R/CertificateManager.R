@@ -51,7 +51,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     PUBLIC="public"
     certfile <- getCertLocation(x)
     cert <- PKI.load.cert(file=certfile)
-    subject <- PKI.get_subject(cert)
+    subject <- PKI.get.subject(cert)
     
     ## since there's a certificate, now check to see if its expired, and if so, return PUBLIC
     if (isCertExpired(x)) {

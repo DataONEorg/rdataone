@@ -47,7 +47,7 @@ test_that("showClientSubject", {
         expect_that(result, matches("public"))
     } else if (isCertExpired(cm)) {
         # Testing expired certificate case
-        expect_that(result, matches("[EXPIRED]"))
+        expect_that(result, matches("public"))
     } else {
         # Testing normal case
         expect_that(length(result) > 0, is_true())
