@@ -18,23 +18,13 @@
 #   limitations under the License.
 #
 
-### This file contains functions useful to the dataone package methods
-
-
 setClass("CertificateManager",
     representation(jClientIdManager = "jclassName")
-
 )
 
 setGeneric("CertificateManager", function(...) {
     standardGeneric("CertificateManager")
 })
-
-
-setGeneric("CertificateManager", function(...) {
-            standardGeneric("CertificateManager")
-        })
-
 
 setMethod("CertificateManager", , function() {
    result <- new("CertificateManager")
@@ -58,21 +48,16 @@ setGeneric("showClientSubject", function(x, ...) {
 
 setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     
-    jSubject <- x@jClientIdManager$getCurrentIdentity()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    subjectValue <- jSubject$getValue()
-    if (subjectValue == J("org/dataone/service/util/Constants")$SUBJECT_PUBLIC) {
-        return(subjectValue)
-    }
+    PUBLIC="public"
+    certfile <- getCertLocation(x)
+    cert <- PKI.load.cert(file=certfile)
+    subject <- PKI.get_subject(cert)
     
-    ## since there's a certificate, now check to see if its expired
+    ## since there's a certificate, now check to see if its expired, and if so, return PUBLIC
     if (isCertExpired(x)) {
-        return(paste("[EXPIRED]", jSubject$getValue()))
+        return(PUBLIC)
     }
-    return(jSubject$getValue())
+    return(subject)
 })
 
 ## Is the CILogon Certificate Expired?
@@ -88,15 +73,19 @@ setGeneric("isCertExpired", function(x, ...) {
         })
 
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
-    ## since there's a certificate, now check to see if its expired
     jExpDate <- x@jClientIdManager$getCertificateExpiration()
     if (!is.null(jExpDate)) {
+        ## since there's a certificate, now check to see if its expired
         jNowDate <- .jnew("java/util/Date")
         if (jExpDate$before(jNowDate)) {
             return(TRUE)
+        } else {
+            return(FALSE)
         }
     }
-    return(FALSE)
+    # If we get here, there was no certificate, so by default it is expired
+    # This corresponds to 'public' credential access
+    return(TRUE)
 })
 
 
@@ -171,8 +160,6 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
     filePath <- jFile$getAbsolutePath()
     file.rename(filePath,paste0(filePath,"_obscured"))
 })
-
-
 
 
 ## Restore an Obscured Certificate
