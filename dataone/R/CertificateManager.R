@@ -152,14 +152,10 @@ setGeneric("obscureCert", function(x, ...) {
         })
 
 setMethod("obscureCert", signature("CertificateManager"), function(x) {
-    jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
-    # check for FileNotFound
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
+    certpath <- getCertLocation(x)
+    if (!is.null(certpath)) {
+        file.rename(certpath, paste0(certpath, "_obscured"))   
     }
-    filePath <- jFile$getAbsolutePath()
-    file.rename(filePath,paste0(filePath,"_obscured"))
 })
 
 
