@@ -19,7 +19,7 @@
 #
 
 setClass("CertificateManager",
-    representation(jClientIdManager = "jclassName")
+    representation(jClientIdManager = "jclassName", location="character")
 )
 
 setGeneric("CertificateManager", function(...) {
@@ -28,6 +28,7 @@ setGeneric("CertificateManager", function(...) {
 
 setMethod("CertificateManager", , function() {
    result <- new("CertificateManager")
+   result@location=as.character(NA)
    result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
    return(result)
 })
@@ -206,23 +207,43 @@ setGeneric("getCertLocation", function(x, ...) {
 })
 
 setMethod("getCertLocation", signature("CertificateManager"), function(x) {
-    cm <- J("org/dataone/client/auth/CertificateManager")$getInstance()
     
-    # Look for a custom cert location
-    location <- cm$getCertificateLocation()
+    # default Globus Grid Security Infrastructure (GSI) location, which is /tmp/x509up_u${UID} on Unix 
+    # or ${tmpdir}/x509up_u${UID} on Windows or ${tmpdir}/x509up_u${user.name} if ${UID} is not defined
     
-    # if not found, look up the default location
-    if (is.null(location)) {
-        jFile <- cm$locateDefaultCertificate()
-        # check for FileNotFound
-        if (is.null(e<-.jgetEx())) {
-            location <- jFile$getAbsolutePath()
-        } else {
-            print("Java exception was raised")
-            print(.jcheck(silent=FALSE))
-            location <- NULL
+    # If a custom location is set, then just return that
+    if (!is.na(x@location)) {
+        print(paste("Using custom location!"))
+        return(x@location)
+    }
+    
+    # Temp directory locations to check
+    loclist <- list(c('/tmp', Sys.getenv('TMPDIR', names=FALSE), Sys.getenv('TEMP', names=FALSE)))
+    
+    # Find the user's UID
+    uid <- as.numeric(system('id -u', intern=TRUE)) # TODO: this only works on *nix, not Windows!
+        
+    # If UID is null or not a number, try the username
+    if (is.null(uid)) {
+        uid <- Sys.info()['user']
+    }
+    
+    # Our default is to return NULL if a cert file is not found
+    location=NULL
+    
+    counter = 0
+    # Check each file path in order to see if the cert file exists, and if so, return it
+    for(dir in loclist) {
+        counter = counter+1
+        # Construct the default path to the filename
+        certpath <- paste(dir[[counter]], "/x509up_u", uid, sep="")
+        # Check if the file exists
+        if (file.exists(certpath)) {
+            location=certpath
+            break
         }
     }
+    
+    # No file exists in the default locations, so return NULL
     return(location)
 })
-
