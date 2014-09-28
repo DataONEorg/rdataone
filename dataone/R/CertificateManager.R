@@ -17,9 +17,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
+library(stringr)
 
 setClass("CertificateManager",
-    representation(jClientIdManager = "jclassName", location="character")
+    representation(jClientIdManager = "jclassName", location="character", obscuredpath="character")
 )
 
 setGeneric("CertificateManager", function(...) {
@@ -29,6 +30,7 @@ setGeneric("CertificateManager", function(...) {
 setMethod("CertificateManager", , function() {
    result <- new("CertificateManager")
    result@location=as.character(NA)
+   result@obscuredpath=as.character(NA)
    result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
    return(result)
 })
@@ -154,7 +156,8 @@ setGeneric("obscureCert", function(x, ...) {
 setMethod("obscureCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
-        file.rename(certpath, paste0(certpath, "_obscured"))   
+        x@obscuredpath <- paste0(certpath, "_obscured")
+        file.rename(certpath, obscuredpath)
     }
 })
 
@@ -174,22 +177,24 @@ setGeneric("restoreCert", function(x, ...) {
 
 setMethod("restoreCert", signature("CertificateManager"), function(x) {
 
-    # check for FileNotFound
-    tryCatch({
-        jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
+    certpath <- getCertLocation(x)
+    if (!is.null(certpath)) {
         ## if we got here, a new certificate is in the default location, so
         ## remove any obscured certificate
-        file.remove(paste0(jFile$getAbsolutePath,"_obscured"))
-    }, error=function(err) { 
-        expectedLoc <- sub("(.+expected location: )","",err$getMessage())
-        obscured <- paste0(expectedLoc,"_obscured")
-        message("expected:",expectedLoc," obscured: ", obscured)
-        if (file.exists(obscured)) {
-            file.rename(obscured, expectedLoc)
-        } else {
-            message("No obscured certificate to restore at", obscured)
+        if (!is.na(x@obscuredpath)) {
+            file.remove(x@obscuredpath)
+            x@obscuredpath = as.character(NA)
         }
-    })
+    } else { 
+        expectedLoc <- str_sub(x@obscuredpath, end=(str_locate(x@obscuredpath, "_obscured")[[1]]-1))
+        message("expected:",expectedLoc," obscured: ", x@obscuredpath)
+        if (file.exists(x@obscuredpath)) {
+            file.rename(x@obscuredpath, expectedLoc)
+        } else {
+            message("No obscured certificate to restore at", x@obscuredpath)
+        }
+        x@obscuredpath <- as.character(NA)
+    }
 })
 
 ## Get the location on disk of the client certificate file
