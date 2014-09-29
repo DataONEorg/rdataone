@@ -60,7 +60,7 @@ test_that("obscureCert and restoreCert", {
     if (subject1 == "public") {
         expect_that(obscureCert(cm), throws_error())
     } else {
-        obscureCert(cm)
+        cm <- obscureCert(cm)
         subject2 <- showClientSubject(cm)
         expect_that(subject2, matches("public"))
         restoreCert(cm)

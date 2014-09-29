@@ -42,7 +42,7 @@ setMethod("CertificateManager", , function() {
 ## @returnType character
 ## @return the DataONE Subject that is your client's identity
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 setGeneric("showClientSubject", function(x, ...) { 
@@ -53,9 +53,12 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     
     PUBLIC="public"
     certfile <- getCertLocation(x)
-    cert <- PKI.load.cert(file=certfile)
-    subject <- PKI.get.subject(cert)
-    
+    if (!is.null(certfile)) {
+        cert <- PKI.load.cert(file=certfile)
+        subject <- PKI.get.subject(cert)
+    } else {
+        subject=PUBLIC
+    }
     ## since there's a certificate, now check to see if its expired, and if so, return PUBLIC
     if (isCertExpired(x)) {
         return(PUBLIC)
@@ -67,7 +70,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
 ## @returnType logical
 ## @return true if expired
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 
@@ -76,29 +79,24 @@ setGeneric("isCertExpired", function(x, ...) {
         })
 
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
-    jExpDate <- x@jClientIdManager$getCertificateExpiration()
-    if (!is.null(jExpDate)) {
-        ## since there's a certificate, now check to see if its expired
-        jNowDate <- .jnew("java/util/Date")
-        if (jExpDate$before(jNowDate)) {
+    expires <- getCertExpires(x)
+    if (is.null(expires)) {
+        return(TRUE)
+    } else {
+        now <- Sys.time()
+        if (expires < now) {
             return(TRUE)
         } else {
             return(FALSE)
         }
     }
-    # If we get here, there was no certificate, so by default it is expired
-    # This corresponds to 'public' credential access
-    return(TRUE)
 })
-
-
-
 
 ## Show the Date and Time when the CILogon Certificate Expires
 ## @returnType character
 ## @return the expiration date
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 setGeneric("getCertExpires", function(x, ...) { 
@@ -106,15 +104,14 @@ setGeneric("getCertExpires", function(x, ...) {
         })
 
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
-    jDate <- x@jClientIdManager$getCertificateExpiration()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
+    certfile <- getCertLocation(x)
+    if (!is.null(certfile)) {
+        cert <- PKI.load.cert(file=certfile)
+        expires <- PKI.get.notAfter(cert)
+    } else {
+        expires=NULL
     }
-    if (is.null(jDate)) {
-        return(NULL)
-    }
-    return(jDate$toString())
+    return(expires)
 })
 
 
@@ -147,7 +144,7 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 ## @note \code{restoreCert} is this method's inverse operation   
 ## @returnType NULL
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 setGeneric("obscureCert", function(x, ...) { 
             standardGeneric("obscureCert")
@@ -157,8 +154,9 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
         x@obscuredpath <- paste0(certpath, "_obscured")
-        file.rename(certpath, obscuredpath)
+        file.rename(certpath, x@obscuredpath)
     }
+    return(x)
 })
 
 
@@ -169,7 +167,7 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 ## 
 ## @returnType NULL
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 setGeneric("restoreCert", function(x, ...) { 
             standardGeneric("restoreCert")
@@ -187,7 +185,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
         }
     } else { 
         expectedLoc <- str_sub(x@obscuredpath, end=(str_locate(x@obscuredpath, "_obscured")[[1]]-1))
-        message("expected:",expectedLoc," obscured: ", x@obscuredpath)
+        # message("expected:",expectedLoc," obscured: ", x@obscuredpath)
         if (file.exists(x@obscuredpath)) {
             file.rename(x@obscuredpath, expectedLoc)
         } else {
@@ -201,7 +199,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
 ## 
 ## @returnType character
 ## 
-## @author jones
+## @author Matt Jones
 ## @export
 setGeneric("getCertLocation", function(x, ...) { 
     standardGeneric("getCertLocation")
