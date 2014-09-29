@@ -67,3 +67,19 @@ test_that("obscureCert and restoreCert", {
         expect_that(subject3, matches(subject1))
     }
 })
+
+test_that("custom certificate location", {
+    cm <- CertificateManager()
+    subject1 <- showClientSubject(cm)
+    if (subject1 == "public") {
+        expect_that(obscureCert(cm), throws_error())
+    } else {
+        cert <- getCertLocation(cm)
+        custom_cert <- paste0(tempfile(), ".x509")
+        file.copy(cert, custom_cert)
+        cm@location <- custom_cert
+        subject2 <- showClientSubject(cm)
+        expect_that(subject2, matches(subject1))
+        expect_that(custom_cert, matches(getCertLocation(cm)))
+    }
+})

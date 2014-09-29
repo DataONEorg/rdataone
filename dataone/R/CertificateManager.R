@@ -211,7 +211,6 @@ setMethod("getCertLocation", signature("CertificateManager"), function(x) {
     
     # If a custom location is set, then just return that
     if (!is.na(x@location)) {
-        print(paste("Using custom location!"))
         return(x@location)
     }
     
