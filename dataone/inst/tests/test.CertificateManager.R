@@ -5,7 +5,8 @@ test_that("CertificateManager getCertLocation()", {
     expect_that(is.null(cm), is_false())
     location <- getCertLocation(cm)
     cname <- class(location)
-    expect_that(cname, matches("character"))
+    expect_that(cname, matches("character"), info="Tests require a valid X509 certificate")
+    expect_that(location, matches("x509"), info="Tests require a valid X509 certificate")
 })
 
 test_that("CertificateManager loads", {
