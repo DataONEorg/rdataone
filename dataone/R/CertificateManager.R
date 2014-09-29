@@ -20,7 +20,7 @@
 library(stringr)
 
 setClass("CertificateManager",
-    representation(jClientIdManager = "jclassName", location="character", obscuredpath="character")
+    representation(location="character", obscuredpath="character")
 )
 
 setGeneric("CertificateManager", function(...) {
@@ -31,7 +31,6 @@ setMethod("CertificateManager", , function() {
    result <- new("CertificateManager")
    result@location=as.character(NA)
    result@obscuredpath=as.character(NA)
-   result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
    return(result)
 })
 

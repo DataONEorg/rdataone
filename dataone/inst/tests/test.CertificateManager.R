@@ -11,8 +11,6 @@ test_that("CertificateManager getCertLocation()", {
 test_that("CertificateManager loads", {
   cm <- CertificateManager()
   expect_that(is.null(cm), is_false())
-  jclassName <- cm@jClientIdManager@name
-  expect_that(jclassName,matches("org.dataone.client.auth.ClientIdentityManager"))
 })
 
 test_that("getCertExpires", {
