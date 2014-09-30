@@ -17,28 +17,20 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-
-### This file contains functions useful to the dataone package methods
-
+library(stringr)
 
 setClass("CertificateManager",
-    representation(jClientIdManager = "jclassName")
-
+    representation(location="character", obscuredpath="character")
 )
 
 setGeneric("CertificateManager", function(...) {
     standardGeneric("CertificateManager")
 })
 
-
-setGeneric("CertificateManager", function(...) {
-            standardGeneric("CertificateManager")
-        })
-
-
 setMethod("CertificateManager", , function() {
    result <- new("CertificateManager")
-   result@jClientIdManager <- J("org/dataone/client/auth/ClientIdentityManager")
+   result@location=as.character(NA)
+   result@obscuredpath=as.character(NA)
    return(result)
 })
 
@@ -49,7 +41,7 @@ setMethod("CertificateManager", , function() {
 ## @returnType character
 ## @return the DataONE Subject that is your client's identity
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 setGeneric("showClientSubject", function(x, ...) { 
@@ -58,28 +50,26 @@ setGeneric("showClientSubject", function(x, ...) {
 
 setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     
-    jSubject <- x@jClientIdManager$getCurrentIdentity()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
+    PUBLIC="public"
+    certfile <- getCertLocation(x)
+    if (!is.null(certfile)) {
+        cert <- PKI.load.cert(file=certfile)
+        subject <- PKI.get.subject(cert)
+    } else {
+        subject=PUBLIC
     }
-    subjectValue <- jSubject$getValue()
-    if (subjectValue == J("org/dataone/service/util/Constants")$SUBJECT_PUBLIC) {
-        return(subjectValue)
-    }
-    
-    ## since there's a certificate, now check to see if its expired
+    ## since there's a certificate, now check to see if its expired, and if so, return PUBLIC
     if (isCertExpired(x)) {
-        return(paste("[EXPIRED]", jSubject$getValue()))
+        return(PUBLIC)
     }
-    return(jSubject$getValue())
+    return(subject)
 })
 
 ## Is the CILogon Certificate Expired?
 ## @returnType logical
 ## @return true if expired
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 
@@ -88,25 +78,24 @@ setGeneric("isCertExpired", function(x, ...) {
         })
 
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
-    ## since there's a certificate, now check to see if its expired
-    jExpDate <- x@jClientIdManager$getCertificateExpiration()
-    if (!is.null(jExpDate)) {
-        jNowDate <- .jnew("java/util/Date")
-        if (jExpDate$before(jNowDate)) {
+    expires <- getCertExpires(x)
+    if (is.null(expires)) {
+        return(TRUE)
+    } else {
+        now <- Sys.time()
+        if (expires < now) {
             return(TRUE)
+        } else {
+            return(FALSE)
         }
     }
-    return(FALSE)
 })
-
-
-
 
 ## Show the Date and Time when the CILogon Certificate Expires
 ## @returnType character
 ## @return the expiration date
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 
 setGeneric("getCertExpires", function(x, ...) { 
@@ -114,15 +103,14 @@ setGeneric("getCertExpires", function(x, ...) {
         })
 
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
-    jDate <- x@jClientIdManager$getCertificateExpiration()
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
+    certfile <- getCertLocation(x)
+    if (!is.null(certfile)) {
+        cert <- PKI.load.cert(file=certfile)
+        expires <- PKI.get.notAfter(cert)
+    } else {
+        expires=NULL
     }
-    if (is.null(jDate)) {
-        return(NULL)
-    }
-    return(jDate$toString())
+    return(expires)
 })
 
 
@@ -155,24 +143,20 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 ## @note \code{restoreCert} is this method's inverse operation   
 ## @returnType NULL
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 setGeneric("obscureCert", function(x, ...) { 
             standardGeneric("obscureCert")
         })
 
 setMethod("obscureCert", signature("CertificateManager"), function(x) {
-    jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
-    # check for FileNotFound
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
+    certpath <- getCertLocation(x)
+    if (!is.null(certpath)) {
+        x@obscuredpath <- paste0(certpath, "_obscured")
+        file.rename(certpath, x@obscuredpath)
     }
-    filePath <- jFile$getAbsolutePath()
-    file.rename(filePath,paste0(filePath,"_obscured"))
+    return(x)
 })
-
-
 
 
 ## Restore an Obscured Certificate
@@ -182,7 +166,7 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 ## 
 ## @returnType NULL
 ## 
-## @author rnahf
+## @author Matt Jones
 ## @export
 setGeneric("restoreCert", function(x, ...) { 
             standardGeneric("restoreCert")
@@ -190,52 +174,73 @@ setGeneric("restoreCert", function(x, ...) {
 
 setMethod("restoreCert", signature("CertificateManager"), function(x) {
 
-    # check for FileNotFound
-    tryCatch({
-        jFile <- J("org/dataone/client/auth/CertificateManager")$getInstance()$locateDefaultCertificate()
+    certpath <- getCertLocation(x)
+    if (!is.null(certpath)) {
         ## if we got here, a new certificate is in the default location, so
         ## remove any obscured certificate
-        file.remove(paste0(jFile$getAbsolutePath,"_obscured"))
-    }, error=function(err) { 
-        expectedLoc <- sub("(.+expected location: )","",err$getMessage())
-        obscured <- paste0(expectedLoc,"_obscured")
-        message("expected:",expectedLoc," obscured: ", obscured)
-        if (file.exists(obscured)) {
-            file.rename(obscured, expectedLoc)
-        } else {
-            message("No obscured certificate to restore at", obscured)
+        if (!is.na(x@obscuredpath)) {
+            file.remove(x@obscuredpath)
+            x@obscuredpath = as.character(NA)
         }
-    })
+    } else { 
+        expectedLoc <- str_sub(x@obscuredpath, end=(str_locate(x@obscuredpath, "_obscured")[[1]]-1))
+        # message("expected:",expectedLoc," obscured: ", x@obscuredpath)
+        if (file.exists(x@obscuredpath)) {
+            file.rename(x@obscuredpath, expectedLoc)
+        } else {
+            message("No obscured certificate to restore at", x@obscuredpath)
+        }
+        x@obscuredpath <- as.character(NA)
+    }
 })
 
 ## Get the location on disk of the client certificate file
 ## 
 ## @returnType character
 ## 
-## @author jones
+## @author Matt Jones
 ## @export
 setGeneric("getCertLocation", function(x, ...) { 
     standardGeneric("getCertLocation")
 })
 
 setMethod("getCertLocation", signature("CertificateManager"), function(x) {
-    cm <- J("org/dataone/client/auth/CertificateManager")$getInstance()
     
-    # Look for a custom cert location
-    location <- cm$getCertificateLocation()
+    # default Globus Grid Security Infrastructure (GSI) location, which is /tmp/x509up_u${UID} on Unix 
+    # or ${tmpdir}/x509up_u${UID} on Windows or ${tmpdir}/x509up_u${user.name} if ${UID} is not defined
     
-    # if not found, look up the default location
-    if (is.null(location)) {
-        jFile <- cm$locateDefaultCertificate()
-        # check for FileNotFound
-        if (is.null(e<-.jgetEx())) {
-            location <- jFile$getAbsolutePath()
-        } else {
-            print("Java exception was raised")
-            print(.jcheck(silent=FALSE))
-            location <- NULL
+    # If a custom location is set, then just return that
+    if (!is.na(x@location)) {
+        return(x@location)
+    }
+    
+    # Temp directory locations to check
+    loclist <- list(c('/tmp', Sys.getenv('TMPDIR', names=FALSE), Sys.getenv('TEMP', names=FALSE)))
+    
+    # Find the user's UID
+    uid <- as.numeric(system('id -u', intern=TRUE)) # TODO: this only works on *nix, not Windows!
+        
+    # If UID is null or not a number, try the username
+    if (is.null(uid)) {
+        uid <- Sys.info()['user']
+    }
+    
+    # Our default is to return NULL if a cert file is not found
+    location=NULL
+    
+    counter = 0
+    # Check each file path in order to see if the cert file exists, and if so, return it
+    for(dir in loclist) {
+        counter = counter+1
+        # Construct the default path to the filename
+        certpath <- paste(dir[[counter]], "/x509up_u", uid, sep="")
+        # Check if the file exists
+        if (file.exists(certpath)) {
+            location=certpath
+            break
         }
     }
+    
+    # No file exists in the default locations, so return NULL
     return(location)
 })
-

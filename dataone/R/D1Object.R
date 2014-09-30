@@ -159,10 +159,9 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 #' Get the Contents of the Specified Data Object
 #' 
 #' @param x  D1Object or DataPackage: the data structure from where to get the data
-#' @param id Missing or character: if @code{x} is DataPackage, the identifier of the
+#' @param id Missing or character: if \code{"x"} is DataPackage, the identifier of the
 #' package member to get data from
 #' @param ... (not yet used)
-#' @returnType character 
 #' @return character representation of the data
 #' 
 #' @author rnahf
@@ -208,7 +207,6 @@ setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
 #' Get the Identifier of the D1Object
 #' @param x D1Object
 #' @param ... (not yet used)
-#' @returnType character
 #' @return the identifier
 #' 
 #' @author rnahf
@@ -232,7 +230,6 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' Get the FormatId of the D1Object
 #' @param x D1Object
 #' @param ... (not yet used)
-#' @returnType character
 #' @return the formatId
 #' 
 #' @author rnahf
@@ -261,7 +258,6 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' metadata locally, and will not have any affect. 
 #' @param x D1Object
 #' @param ... (not yet used)
-#' @returnType NULL
 #' @return NULL
 #' 
 #' @author rnahf
@@ -296,7 +292,6 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @param x D1Client
 #' @param subject : character
 #' @param ... (not yet used)
-#' @returnType logical
 #' @return TRUE or FALSE
 #' 
 #' @author rnahf

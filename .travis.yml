@@ -1,0 +1,39 @@
+# Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
+
+language: c
+
+before_install:
+  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - chmod 755 ./travis-tool.sh
+  - cp ./travis-tool.sh dataone
+    #  - cp ./travis.tool.sh dataonelibs
+  - cd dataone
+  - ./travis-tool.sh bootstrap
+  - ./travis-tool.sh install_r_binary rjava
+  - ./travis-tool.sh install_github s-u/PKI
+  - ./travis-tool.sh install_github DataONEorg/rdataone/dataonelibs
+
+install:
+  - ./travis-tool.sh install_deps
+
+script: 
+## depricated tests
+  #- Rscript ../runTests.R
+  #- Rscript ../testing.R
+  - ./travis-tool.sh run_tests
+
+env:
+  global:
+    - R_BUILD_ARGS="--no-manual --no-build-vignettes"
+    - R_CHECK_ARGS="--as-cran --no-manual --no-build-vignettes --no-tests --no-examples"
+    - BOOTSTRAP_LATEX="0"
+
+
+
+on_failure:
+  - ./travis-tool.sh dump_logs
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change

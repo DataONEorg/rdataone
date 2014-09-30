@@ -18,6 +18,8 @@
 #   limitations under the License.
 #
 
+#' @include D1Object.R
+
 setClass("DataPackage",
          representation(packageId = "character",
                         jDataPackage = "jobjRef")

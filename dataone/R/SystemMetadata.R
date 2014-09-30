@@ -1,4 +1,3 @@
-
 #
 #   This work was created by participants in the DataONE project, and is
 #   jointly copyrighted by participating institutions in DataONE. For
@@ -19,6 +18,10 @@
 #   limitations under the License.
 #
 
+#' A DataONE SystemMetadata object containing basic identification, ownership, access policy, replication policy, and related metadata.
+#' @description A class representing DataONE SystemMetadata, which is core information about objects stored in a repository
+#' and needed to manage those objects across systems.  SystemMetadata contains basic identification, ownership,
+#' access policy, replication policy, and related metadata.
 setClass("SystemMetadata", slots = c(
     serialVersion           = "numeric",
     identifier              = "character",
@@ -41,16 +44,63 @@ setClass("SystemMetadata", slots = c(
     originMemberNode        = "character",
     authoritativeMemberNode = "character"
     #replica                 = "character",
-    ), )
+    ))
 
 
-
-setMethod(f = "initialize", signature = "SystemMetadata",
-          definition = function(.Object){
-            # defaults here
-            .Object@serialVersion <- 1
-          return(.Object)
-          })
+#' Initialize a DataONE SystemMetadata object with default values or values passed in to the constructor.
+#' @description Initialize a SystemMetadata object by providing default values for core information 
+#' needed to manage objects across repository systems. SystemMetadata contains basic identification, ownership,
+#' access policy, replication policy, and related metadata.
+#'
+#' @param identifier value of type \code{"character"}, the identifier of the object that this system metadata describes.
+#' @param replicationAllowed value of type \code{"logical"}, for replication policy allows replicants.
+#' @param numberReplicas value of type \code{"numeric"}, for number of supported replicas.
+#' @param formatId value of type \code{"character"}, the DataONE object format for the object.
+#' @param size value of type \code{"numeric"}, the size of the object in bytes.
+#' @param checksum value of type \code{"character"}, the checksum for the object using the designated checksum algorithm.
+#' @param checksumAlgorithm value of type \code{"character"}, the name of the hash function used to generate a checksum, from the DataONE controlled list.
+#' @param submitter value of type \code{"character"}, the Distinguished Name or identifier of the person submitting the object.
+#' @param rightsHolder value of type \code{"character"}, the Distinguished Name or identifier of the person who holds access rights to the object.
+#' @param obsoletes value of type \code{"character"}, the identifier of an object which this object replaces.
+#' @param obsoletedBy value of type \code{"character"}, the identifier of an object that replaces this object.
+#' @param archived value of type \code{"logical"}, a boolean flag indicating whether the object has been archived and thus hidden.
+#' @param dateUploaded value of type \code{"character"}, the date on which the object was uploaded to a member node.
+#' @param dateSysMetadataModified value of type \code{"character"}, the last date on which this system metadata was modified.
+#' @param originMemberNode value of type \code{"character"}, the node identifier of the node on which the object was originally registered.
+#' @param authoritativeMemberNode value of type \code{"character"}, the node identifier of the node which currently is authoritative for the object.
+#'
+#' @return the SystemMetadata object representing an object
+#' @author jones
+#' 
+#' @export
+#' 
+setMethod("initialize", signature = "SystemMetadata", definition = function(.Object,
+    identifier=as.character(NA), formatId=as.character(NA), size=as.numeric(NA), checksum=as.character(NA), 
+    checksumAlgorithm="SHA-1", submitter=as.character(NA), rightsHolder=as.character(NA), replicationAllowed=TRUE, 
+    numberReplicas=3, obsoletes=as.character(NA), obsoletedBy=as.character(NA), archived=FALSE, 
+    dateUploaded=as.character(NA), dateSysMetadataModified=as.character(NA), 
+    originMemberNode=as.character(NA), authoritativeMemberNode=as.character(NA)) {
+    # defaults here
+    .Object@serialVersion <- 1
+    .Object@identifier <- as.character(identifier)
+    .Object@formatId <- as.character(formatId)
+    .Object@size <- as.numeric(size)
+    .Object@checksum <- as.character(checksum)
+    .Object@checksumAlgorithm <- as.character(checksumAlgorithm)
+    .Object@submitter <- as.character(submitter)
+    .Object@rightsHolder <- as.character(rightsHolder)
+    #accessList <- xmlChildren(xml[["accessPolicy"]])
+    .Object@replicationAllowed = as.logical(replicationAllowed)
+    .Object@numberReplicas = as.numeric(numberReplicas)
+    .Object@obsoletes <- as.character(obsoletes)
+    .Object@obsoletedBy <- as.character(obsoletedBy)
+    .Object@archived <- as.logical(archived)
+    .Object@dateUploaded <- defaultUTCDate(dateUploaded)
+    .Object@dateSysMetadataModified <- defaultUTCDate(dateSysMetadataModified)
+    .Object@originMemberNode <- as.character(originMemberNode)
+    .Object@authoritativeMemberNode <- as.character(authoritativeMemberNode)
+    return(.Object)
+})
 
 #' Create DataONE SystemMetadata object
 #' @description A class representing DataONE SystemMetadata, which is core information about objects stored in a repository
@@ -80,29 +130,38 @@ setMethod(f = "initialize", signature = "SystemMetadata",
 #'
 #' @return the SystemMetadata object representing an object
 #' @author jones
+#' @rdname SystemMetadata-methods
 #' 
 #' @export
 #' 
-SystemMetadata = function(){
-	## create new SystemMetadata object
-	sysmeta <- new("SystemMetadata")
-	return(sysmeta)
-}
+setGeneric("SystemMetadata", function(sysmeta, ...) {
+    standardGeneric("SystemMetadata")
+})
 
-## TODO: Constructor that  takes XML as input
-## Construct a SystemMetadata, with all fields as null
-## @returnType SystemMetadata  
-## @return the SystemMetadata object representing an object
-## 
-## @author jones
-## @export
-#setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(x) {
-#    
-#    ## create new SystemMetadata object, and parse the XML to populate fields
-#    sysmeta <- new("SystemMetadata")
-#    sysmeta <- parseSystemMetadata(x)
-#    return(sysmeta)
-#})
+#' @rdname SystemMetadata-methods
+#' @aliases SystemMetadata,SystemMetadata-method
+setMethod("SystemMetadata", signature(), function(...) {
+    ## create new SystemMetadata object
+    sysmeta <- new("SystemMetadata")
+    return(sysmeta)
+})
+
+#' @title Construct a SystemMetadata object, with all fields set to the value found in an XML document
+#' @description Construct a new SystemMetadata instance by using the fields from an XML representation of the 
+#' SystemMetadata.  The XML should be 
+#' @param sysmeta value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
+#' @return the SystemMetadata object representing an object
+#' @author jones
+#' @export
+#' 
+setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(sysmeta) {
+    
+    ## create new SystemMetadata object, and parse the XML to populate fields
+    sm_obj <- new("SystemMetadata")
+    sm_obj <- parseSystemMetadata(sm_obj, sysmeta)
+    return(sm_obj)
+})
+
 
 ##########################
 ## Methods
@@ -191,8 +250,7 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 })
 
 
-
-#' @title serialize metadata 
+#' @title serialize system metadata 
 #' @description
 #' Serialize an XML representation of system metadata.
 #' @param sysmeta the SystemMetadata instance to be serialized
@@ -256,8 +314,66 @@ setMethod("serialize", signature("SystemMetadata"), function(sysmeta) {
   return(xml)
 })
 
+#' @title validate system metadata 
+#' @description
+#' Validate an the system metadata object, ensuring that required fields are present and of the right type.
+#' @param object the instance to be validated
+#' @return logical, \code{TRUE} if the SystemMetadata object is valid, else a list of strings detailing errors
+#' 
+#' @name validate-methods
+#' @rdname validate-methods
+#' @docType methods
+#' @author jones
+#' @export
+setGeneric("validate", function(object, ...) {
+    standardGeneric("validate")
+})
+
+#' @rdname validate-methods
+#' @aliases validate,SystemMetadata-method
+setMethod("validate", signature("SystemMetadata"), function(object, ...) validate_function(object))
+
+########################################################################################
+# Private methods; not intended to be called by external applications
+########################################################################################
+
+defaultUTCDate <- function(date=NULL) {
+    if (is.null(date) || is.na(date)) {
+        ct <- format(Sys.time(), format="%FT%XZ", tz="UTC")
+        return(ct)
+    } else {
+        return(date)
+    }
+}
+
 lappend <- function(lst, obj) {
   lst[[length(lst)+1]] <- obj
   return(lst)
 }
 
+fieldValid <- function(field, value) {
+    errors <- list()
+    if (is.null(value) || is.na(value)) {
+        errors <- append(errors, paste("Invalid System Metadata:", field, "is missing or null."))
+    }
+    if (length(errors) > 0) {
+        return(errors)
+    }
+}
+
+validate_function <- function(object) {
+    valid <- TRUE
+    required <- list(c("identifier", object@identifier), c("formatId", object@formatId), c("size", object@size), 
+                     c("checksum", object@checksum), c("rightsHolder", object@rightsHolder))
+    validFields <- lapply(X=required, FUN=function(fv) {
+        current <- fieldValid(fv[[1]], fv[[2]])
+        return(current)
+    })
+    validFields <- unlist(validFields)
+    if (length(validFields) > 0) {
+        return(validFields)
+    } else {
+        return(TRUE)
+    }
+}
+setValidity("SystemMetadata", validate_function)

@@ -18,6 +18,7 @@
 #   limitations under the License.
 #
 
+#' @include Node.R
 ## 
 ## @slot endpoint The endpoint of the CN in this environment, including the version specifier
 ## @author jones
@@ -95,6 +96,40 @@ setMethod("CNode", signature("character"), function(env) {
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
 # public ObjectFormatList listFormats()
+#' list formats
+#' @description list of all object formats registered in the DataONE Object Format Vocabulary.
+#' @param cnode a valid CNode object
+#' @docType methods
+#' @author hart
+#' @rdname listFormats-method
+#' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @examples
+#' \dontrun{
+#' cn <- CNode()
+#' listFormats(cn)
+#' }
+#' @export
+setGeneric("listFormats", function(cnode, ...) {
+  standardGeneric("listFormats")
+})
+
+
+#' @rdname listFormats-method
+#' @aliases listFormats
+#' @export
+setMethod("listFormats", signature("CNode"), function(cnode) {
+  url <- paste(cnode@endpoint,"formats",sep="/")
+  out <- GET(url)
+  out <- xmlToList(content(out,as="parsed"))
+  ## Below could be done with plyr functionality, but I want to reduce
+  ## dependencies in the package
+  df <- data.frame(matrix(NA,ncol=3,nrow=(length(out)-1)))
+  for(i in 1:(length(out)-1)){
+    df[i,] <- c(unlist(out[[i]]))
+  }
+  colnames(df) <- c("ID","Name","Type")
+  return(df)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
 # public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
@@ -168,7 +203,9 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 #' @param pid the id of the identified object
 #' @docType methods
 #' @author hart
-#' @example /dontrun{
+#' @rdname resolve-method
+#' @examples
+#' \dontrun{
 #' cn <- CNode("SANDBOX")
 #' id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
 #' resolve(cn,id)
@@ -181,11 +218,19 @@ setGeneric("resolve", function(cnode,pid) {
 
 #' @rdname resolve-method
 #' @aliases resolve
-
+#' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))
-  return(xmlToList(content(z,as="parsed")))
+  out <- xmlToList(content(out,as="parsed"))
+  # Using a loop when plyr would work to reduce dependencies.
+  df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))
+  for(i in 2:length(out)){
+    df[(i-1),] <- c(unlist(out[[i]]))
+  }
+  colnames(df) <- c("identifier","baseURL","version","url")
+  toret <- list(id = pid, data = df)
+  return(toret)
 })
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum

@@ -75,8 +75,8 @@ setMethod("EMLParser", signature("D1Object"), function(d1Object) {
 
 
  
-#' @name documented.entityNames
-#' @alias documented.entityNames,-method
+## @name documented.entityNames
+## @aliases documented.entityNames,-method
 setMethod("documented.entityNames", signature("EMLParser"), function(x) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
@@ -84,8 +84,8 @@ setMethod("documented.entityNames", signature("EMLParser"), function(x) {
 
 
 
-#' @name documented.d1Identifiers
-#' @alias documented.d1Identifiers,-method
+## @name documented.d1Identifiers
+## @aliases documented.d1Identifiers,-method
 setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/distribution/online")
    return(sapply(aList, function(x) { 
@@ -95,8 +95,8 @@ setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
 
 
 
-#' @name documented.sizes
-#' @alias documented.sizes,-method
+## @name documented.sizes
+## @aliases documented.sizes,-method
 setMethod("documented.sizes", signature("EMLParser"), function(x) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
     return(sapply(aList, function(x) xmlValue(x[["size"]])))
@@ -106,7 +106,7 @@ setMethod("documented.sizes", signature("EMLParser"), function(x) {
 
 
 ## @name data.formatFamily
-## @alias data.formatFamily,-method
+## @aliases data.formatFamily,-method
 setMethod("data.formatFamily", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
     bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")

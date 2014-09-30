@@ -165,7 +165,6 @@ setGeneric("getSystemMetadata", function(mnode, pid, ...) {
 })
 
 setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, pid) {
-    # TODO: add authentication to call if a certificate is available
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "meta", pid, sep="/")
     # Use an authenticated connection if a certificate is available
@@ -237,6 +236,37 @@ d1_errors <- function(x){
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.create
 # public Identifier create(Identifier pid, InputStream object, SystemMetadata sysmeta) 
+setGeneric("create", function(mnode, pid, ...) {
+    standardGeneric("create")
+})
+
+setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "object", sep="/")
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        sysmetaxml <- serialize(sysmeta)
+        sm_file <- tempfile()
+        writeLines(sysmetaxml, sm_file)
+        response <- POST(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
+                    sysmeta=upload_file(sm_file, type='text/xml')), 
+                    config=config(sslcert = cert))
+    } else {
+        # This is an error, one must be authenticated
+        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
+        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        return(NULL)
+    }
+    if(response$status != "200") {
+        d1_errors(response)
+        return(NULL)
+    } else {
+        return(content(response))
+    }
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.update
 # public Identifier update(Identifier pid, InputStream object, Identifier newPid, SystemMetadata sysmeta) 
@@ -246,7 +276,30 @@ d1_errors <- function(x){
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.archive
 # public Identifier archive(Identifier pid)
-    
+setGeneric("archive", function(mnode, pid, ...) {
+    standardGeneric("archive")
+})
+
+setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "archive", pid, sep="/")
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        response <- PUT(url, config=config(sslcert = cert))
+    } else {
+        # This is an error, one must be authenticated
+    }
+    if(response$status != "200") {
+        d1_errors(response)
+        return(NULL)
+    } else {
+        return(content(response))
+    }
+})
+
 ## Request a unique identifier from the Member Node repository
 ## in subsequent calls
 ## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
@@ -271,7 +324,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
-    response <- POST(url = url, body = body, multipart = TRUE, config=config(sslcert = cert))
+    response <- POST(url = url, body = body, encode="multipart", config=config(sslcert = cert))
     if(response$status != "200") {
         return(NULL)
     }

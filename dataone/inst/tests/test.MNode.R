@@ -47,8 +47,8 @@ test_that("MNode getSystemMetadata()", {
 })
 test_that("MNode generateIdentifier()", {
     library(dataone)
-    cn <- CNode("SANDBOX")
-    mn <- getMNode(cn, "urn:node:mnSandboxUCSB1")
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnTestKNB")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
@@ -61,4 +61,46 @@ test_that("MNode describe()", {
   res <- describe(mn, "knb.473.1")
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
+})
+test_that("MNode create(), archive(), and delete()", {
+    library(dataone)
+    library(digest)
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnTestKNB")
+    newid <- generateIdentifier(mn, "UUID")
+    cname <- class(newid)
+    expect_that(cname, matches("character"))
+    expect_that(newid, matches("urn:uuid:"))
+    
+    # Ensure the user is logged in before running the tests
+    cm <- CertificateManager()
+    user <- showClientSubject(cm)
+    isExpired <- isCertExpired(cm)
+    expect_that(user, matches("cilogon"))
+    expect_that(isExpired, is_false())
+    
+    # Create a data object, and convert it to csv format
+    testdf <- data.frame(x=1:10,y=11:20)
+    csvfile <- paste(tempfile(), ".csv", sep="")
+    write.csv(testdf, csvfile, row.names=FALSE)
+    
+    # Create SystemMetadata for the object
+    format <- "text/csv"
+    size <- file.info(csvfile)$size
+    sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    expect_that(sysmeta@checksum, equals(sha1))
+    expect_that(sysmeta@submitter, equals(user))
+    expect_that(sysmeta@rightsHolder, equals(user))
+    expect_that(sysmeta@originMemberNode, equals(mn@identifier))
+    expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
+    
+    # Upload the data to the MN using create(), checking for success and a returned identifier
+    response <- create(mn, newid, csvfile, sysmeta)
+    expect_that(xmlValue(xmlRoot(response)), matches(newid))
+    
+    #TODO: archive the object
+    
+    #TODO: delete the object
+    
 })
