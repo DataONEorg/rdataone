@@ -36,7 +36,7 @@ The easiest way to install the client is via the GitHub_ repository::
 
   > devtools::install_github("DataONEorg/rdataone/dataonelibs", ref="D1_CLIENT_R_v1.0.0")
 
-  > devtools::install_github("DataONEorg/rdataone/dataone"ref="D1_CLIENT_R_v1.0.0")
+  > devtools::install_github("DataONEorg/rdataone/dataone", ref="D1_CLIENT_R_v1.0.0")
 
 
 .. _CRAN: http://cran.r-project.org
