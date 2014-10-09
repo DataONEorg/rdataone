@@ -53,7 +53,10 @@ rJava for your particular version of R and Java.
 
 .. > install.packages("rJava",,"http://rforge.net/",type="source")
 
-Once installed, the package can be run in R using::
+Quick Start
+-----------
+
+See the full manual for documentation, but once installed, the package can be run in R using::
 
   $ R 
   > library(dataone)
@@ -63,13 +66,36 @@ Once installed, the package can be run in R using::
 
   > help(dataone)
 
+Reading a CSV data file from a DataONE node is as simple as::
+  
+  > library(dataone)
+  > cli <- D1Client()
+  > d1o <- getD1Object(cli, "doi:10.5063/AA/hstuar01.10.1")
+  > mydf <- asDataFrame(d1o)
+
+Writing a CSV file to a DataONE Member Node requires authentication via CILogon, but is similarly simple::
+
+  > library(uuid)
+  > mn_nodeid <- "urn:node:mnTestKNB"
+  > cli <- D1Client("STAGING2")
+  > id <- paste("urn:uuid:", UUIDgenerate(), sep="")
+  > testdf <- data.frame(x=1:10,y=11:20)
+  > csvdata <- convert.csv(cli, testdf)
+  > format <- "text/csv"
+
+  ## Build a D1Object containing the csv, and upload it to the MN
+  > d1Object <- new(Class="D1Object", id, csvdata, format, mn_nodeid)
+  > setPublicAccess(d1Object)
+  > createD1Object(cli, d1Object)
+
+
 Roadmap
 -------
 We are currently working on a `version 2 release milestone`_ that removes the dependency on rJava.  
 This work is partially complete and significantly changes the base API to correspond to the published 
 DataONE API.  Previous methods for accessing DataONE will be maintained, but new methods will be added.
 Consequently, the current development snapshot in the master branch is quite different from the 1.0.0
-release.  Be aware that there are API differences that are not fully resolved.
+release.  Be aware that there are API differences that are not fully finalized.
 
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
