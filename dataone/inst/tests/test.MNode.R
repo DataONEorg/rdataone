@@ -10,6 +10,7 @@ test_that("MNode constructors", {
 })
 test_that("MNode getCapabilities()", {
 	library(dataone)
+	library(XML)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 	mn <- MNode(mn_uri)
     xml <- getCapabilities(mn)

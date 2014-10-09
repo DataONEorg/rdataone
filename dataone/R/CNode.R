@@ -29,13 +29,14 @@ setClass("CNode", slots = c(endpoint = "character"), contains="Node")
 ## CNode constructors
 #########################
 
-## @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
-## @param ... (not yet used)
+#' Create a CNode object
+#' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
+#' @param ... (not yet used)
 ## @returnType CNode  
-## @return the CNode object representing the DataONE environment
+#' @return the CNode object representing the DataONE environment
 ## 
-## @author jones
-## @export
+#' @author jones
+#' @export
 setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
@@ -57,6 +58,7 @@ setMethod("CNode", , function() {
 
 ## Pass in the environment to be used by this D1Client, plus the 
 ## id of the member node to be used for primary interactions such as creates
+#' @export
 setMethod("CNode", signature("character"), function(env) {
 
   ## Define the default CNs for each environment.
@@ -116,7 +118,7 @@ setGeneric("listFormats", function(cnode, ...) {
 
 #' @rdname listFormats-method
 #' @aliases listFormats
-#' @export
+## @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
   out <- GET(url)
@@ -146,8 +148,8 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 ## @returnType list
 ## @return the list of nodes in the DataONE CN environment
 ## 
-## @author jones
-## @export
+#' @author jones
+#' @export
 setGeneric("listNodes", function(cnode, ...) {
     standardGeneric("listNodes")
 })
@@ -188,11 +190,97 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get
 # public InputStream get(Identifier pid)
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata
-# public SystemMetadata getSystemMetadata(Identifier pid)
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.describe
-# public DescribeResponse describe(Identifier pid)
+## Retrieves the object identified by id from the node
+## @see https://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get
+## @param cnode the DataONE coordinating node to query
+## @returnType data
+##  @return the DataONE object identified by id 
+## @author slaughter
+
+setMethod("get", signature("CNode", "character"), function(node, pid) {
+  url <- paste(node@endpoint, "object", pid, sep="/")
+  
+  # Use an authenticated connection if a certificate is available
+  cm <- CertificateManager()
+  cert <- getCertLocation(cm)
+  response <- NULL
+  
+  if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+    response <- GET(url, config=config(sslcert = cert))
+  } else {
+    response <- GET(url)   # the anonymous access case
+  }
+  
+  if(response$status != "200") {
+    return(NULL)
+  }
+  
+  return(content(response))
+})
+
+## Get the metadata describing system properties associated with an object on this Coordinating Node
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata
+## @param cnode The CNode instance from which the metadata will be downloaded
+## @param pid The object identifier to be downloaded
+## @returnType SystemMetadata  
+## @return the SystemMetadata associated with the object
+## 
+## @author slaughter
+
+setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
+  # TODO: need to properly URL-escape the PID
+  url <- paste(node@endpoint, "meta", pid, sep="/")
+  
+  # Use an authenticated connection if a certificate is available
+  cm = CertificateManager()
+  cert <- getCertLocation(cm)
+  response <- NULL
+  if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+    response <- GET(url, config=config(sslcert = cert))
+  } else {
+    response <- GET(url)
+  }
+  
+  if(response$status != "200") {
+    return(NULL)
+  }
+  
+  sysmeta <- SystemMetadata()
+  sysmeta_xml <- content(response, as="text")
+  xml <- xmlParseDoc(sysmeta_xml, asText=TRUE)
+  #xml <- xmlParseDoc("/tmp/sysmeta.xml", asText=FALSE)
+  sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
+
+  return(sysmeta)
+  
+})
+
+
+## This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+## determine basic properties of the referenced object.
+## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.describe
+## @param cnode The CNode instance from which the identifier will be generated
+## @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
+## part of the URL path and must be escaped accordingly.
+## @returnType character
+## @return A list of header elements
+## @examples \dontrun{
+## cn <- CNode("STAGING2")
+## pid <- "aceasdata.3.2""
+## describe(mn, pid)
+## describe(mn, "adfadf") # warning message when wrong pid
+## }
+##
+## @author Scott Chamberlain
+
+setMethod("describe", signature("CNode", "character"), function(node, pid) {
+  url <- file.path(node@endpoint, "object", pid)
+  response <- HEAD(url)
+  if(response$status != "200") {
+    d1_errors(response)
+  } else { return(unclass(response$headers)) }
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.resolve
 # public ObjectLocationList resolve(Identifier pid)
@@ -258,7 +346,7 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
 ## @return the Member Node as an MNode reference, or NULL if not found
 ## 
 ## @author jones
-## @export
+#' @export
 setGeneric("getMNode", function(cnode, nodeid, ...) {
   standardGeneric("getMNode")
 })

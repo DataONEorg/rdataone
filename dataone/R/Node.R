@@ -81,6 +81,25 @@ setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 ## Methods
 ##########################
 
+# The MN and CN APIs have several services with the same name, i.e. "get', 'getSystemMetadata', 'describe', etc.,
+# so MNode.R and CNode.R have several methods that also share the same name. The generic functions for these 
+# methods are defined here in the parent class, so that the generic is defined for all child classes (MNode.R, CNode.R), where
+# the corresponding methods are defined.
+#' @export
+setGeneric("get", function(node, pid, ...) {
+  standardGeneric("get")
+})
+
+#' @export
+setGeneric("getSystemMetadata", function(node, pid, ...) {
+  standardGeneric("getSystemMetadata")
+})
+
+#' @export
+setGeneric("describe", function(node, pid, ...) {
+  standardGeneric("describe")
+})
+
 ## Construct a Node, using a passed in capabilities XML
 ## @param node The node to which capabilities should be applied.
 ## @param ... (not yet used)
@@ -116,3 +135,20 @@ setMethod("parseCapabilities", signature("Node", "XMLInternalElementNode"), func
   node@state <- attrs[["state"]]
   return(node)
 })
+
+## This function parses a DataONE service response message for errors, and extracts and
+## prints error information.
+## @param x The DataONE service response
+##
+## @author Scott Chamberlain
+d1_errors <- function(x){
+  headnames <- names(x$headers)
+  tmp <- grep('dataone-exception-description', headnames, value = TRUE)
+  exc_name <- x$headers$`dataone-exception-name`
+  detailcode <- x$headers$`dataone-exception-detailcode`
+  mssg <- sub('dataone-exception-description: ', '', tmp)
+  cat(sprintf('Exception name: %s', exc_name), "\n")
+  cat(sprintf('Exception detail code: %s', detailcode), "\n")
+  cat(sprintf('Exception description: %s', mssg), "\n")
+  #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
+}

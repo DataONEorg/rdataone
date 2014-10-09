@@ -27,6 +27,33 @@ test_that("CNode listNodes()", {
 	expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
 	expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
 })
+
+test_that("CNode get()", {
+  library(dataone)
+  cn <- CNode("STAGING2")
+  pid <- "aceasdata.3.2"
+  obj <- get(cn, pid)
+  cname <- class(obj)[1]
+  expect_that(cname, matches("XML"))
+})
+
+test_that("CNode getSystemMetadata()", {
+  library(dataone)
+  cn <- CNode()
+  pid <- "aceasdata.3.2"
+  sysmeta <- getSystemMetadata(cn, pid)
+  expect_that(sysmeta@identifier, matches(pid))
+})
+
+test_that("CNode describe()", {
+  library(dataone)
+  cn <- CNode("STAGING2")
+  pid <- "aceasdata.3.2"
+  res <- describe(cn, pid)
+  expect_is(res, "list")
+  expect_that(res$`content-type`, matches("text/xml"))
+})
+
 test_that("CNode getMNode()", {
   library(dataone)
   cn <- CNode()

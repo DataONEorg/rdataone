@@ -34,7 +34,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="Node")
 ## @return the MNode object representing the DataONE environment
 ## 
 ## @author jones
-## @export
+#' @export
 setGeneric("MNode", function(x) {
   standardGeneric("MNode")
 })
@@ -103,7 +103,7 @@ setMethod("MNode", signature("Node"), function(x) {
 ## @return the MNode object representing the DataONE environment
 ## 
 ## @author jones
-## @export
+#' @export
 setGeneric("getCapabilities", function(mnode, ...) {
     standardGeneric("getCapabilities")
 })
@@ -126,14 +126,10 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 ## @return the data object or a parsed representation of it
 ## 
 ## @author jones
-## @export
-setGeneric("get", function(mnode, pid, ...) {
-    standardGeneric("get")
-})
 
-setMethod("get", signature("MNode", "character"), function(mnode, pid) {
+setMethod("get", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
-    url <- paste(mnode@endpoint, "object", pid, sep="/")
+    url <- paste(node@endpoint, "object", pid, sep="/")
     
     # Use an authenticated connection if a certificate is available
     cm = CertificateManager()
@@ -160,13 +156,10 @@ setMethod("get", signature("MNode", "character"), function(mnode, pid) {
 ## 
 ## @author jones
 ## @export
-setGeneric("getSystemMetadata", function(mnode, pid, ...) {
-    standardGeneric("getSystemMetadata")
-})
 
-setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, pid) {
+setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
-    url <- paste(mnode@endpoint, "meta", pid, sep="/")
+    url <- paste(node@endpoint, "meta", pid, sep="/")
     # Use an authenticated connection if a certificate is available
     cm = CertificateManager()
     cert <- getCertLocation(cm)
@@ -203,30 +196,14 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(mnode, 
 ## }
 ##
 ## @author Scott Chamberlain
-## @export
-setGeneric("describe", function(mnode, pid, ...) {
-  standardGeneric("describe")
-})
 
-setMethod("describe", signature("MNode", "character"), function(mnode, pid) {
-  url <- file.path(mnode@endpoint, "object", pid)
+setMethod("describe", signature("MNode", "character"), function(node, pid) {
+  url <- file.path(node@endpoint, "object", pid)
   response <- HEAD(url)
   if(response$status != "200") {
     d1_errors(response)
   } else { return(unclass(response$headers)) }
 })
-
-d1_errors <- function(x){
-  headnames <- names(x$headers)
-  tmp <- grep('dataone-exception-description', headnames, value = TRUE)
-  exc_name <- x$headers$`dataone-exception-name`
-  detailcode <- x$headers$`dataone-exception-detailcode`
-  mssg <- sub('dataone-exception-description: ', '', tmp)
-  cat(sprintf('Exception name: %s', exc_name), "\n")
-  cat(sprintf('Exception detail code: %s', detailcode), "\n")
-  cat(sprintf('Exception description: %s', mssg), "\n")
-  #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
-}
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getChecksum
 # public Checksum getChecksum(Identifier pid, String checksumAlgorithm)
@@ -235,7 +212,8 @@ d1_errors <- function(x){
 # public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatid, Boolean replicaStatus, Integer start, Integer count) 
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.create
-# public Identifier create(Identifier pid, InputStream object, SystemMetadata sysmeta) 
+# public Identifier create(Identifier pid, InputStream object, SystemMetadata sysmeta)
+#' @export
 setGeneric("create", function(mnode, pid, ...) {
     standardGeneric("create")
 })
@@ -310,7 +288,7 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
 ## @return the character string of the unique identifier
 ## 
 ## @author jones
-## @export
+#' @export
 setGeneric("generateIdentifier", function(mnode, ...) {
     standardGeneric("generateIdentifier")
 })
