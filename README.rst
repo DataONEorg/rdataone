@@ -73,6 +73,15 @@ release.  Be aware that there are API differences that are not fully resolved.
 
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
+Development logs
+----------------
+For developers interested in getting an email for each push to the rdataone repository, you can subscribe to our mailing list:
+    
+    rdataone-dev: `List Info`_
+    
+.. _List Info: http://lists.dataone.org/mailman/listinfo/rdataone-dev/
+
+
 License
 -------
 
