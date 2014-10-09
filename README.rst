@@ -34,9 +34,9 @@ Installation Notes
 The easiest way to install the client is via the GitHub_ repository::
 
 
-  > devtools::install_github("DataONEorg/rdataone/dataonelibs")
+  > devtools::install_github("DataONEorg/rdataone/dataonelibs", ref="D1_CLIENT_R_v1.0.0")
 
-  > devtools::install_github("DataONEorg/rdataone/dataone")
+  > devtools::install_github("DataONEorg/rdataone/dataone"ref="D1_CLIENT_R_v1.0.0")
 
 
 .. _CRAN: http://cran.r-project.org
@@ -63,6 +63,15 @@ Once installed, the package can be run in R using::
 
   > help(dataone)
 
+Roadmap
+-------
+We are currently working on a `version 2 release milestone`_ that removes the dependency on rJava.  
+This work is partially complete and significantly changes the base API to correspond to the published 
+DataONE API.  Previous methods for accessing DataONE will be maintained, but new methods will be added.
+Consequently, the current development snapshot in the master branch is quite different from the 1.0.0
+release.  Be aware that there are API differences that are not fully resolved.
+
+.. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
 License
 -------
