@@ -269,6 +269,9 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
         response <- PUT(url, config=config(sslcert = cert))
     } else {
         # This is an error, one must be authenticated
+        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
+        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        return(NULL)
     }
     if(response$status != "200") {
         d1_errors(response)
