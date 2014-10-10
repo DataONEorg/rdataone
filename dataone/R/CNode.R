@@ -103,6 +103,7 @@ setMethod("CNode", signature("character"), function(env) {
 #' @param cnode a valid CNode object
 #' @docType methods
 #' @author hart
+#' @import httr
 #' @rdname listFormats-method
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples

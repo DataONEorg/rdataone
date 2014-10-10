@@ -18,6 +18,7 @@
 #   limitations under the License.
 #
 
+#' @include Node.R
 ## A class representing a Member Node repository, which can expose and store data
 ## @slot endpoint The url to access node services, which is the baseURL plus the version string
 ## @author jones

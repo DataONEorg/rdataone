@@ -98,6 +98,7 @@ setMethod("CertificateManager", , function() {
 #' field of the X.509 certificate.  The value is a Distinguished Name, and can be used in all fields that
 #' require a user identity for access control authorization. If the certificate is missing on expired, then
 #' the subject 'public' is returned.
+#' @import PKI
 #' @param x a CertificateManager instance
 #' @return the DataONE Subject that is your client's identity
 #' @export
@@ -152,6 +153,7 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 #' Show the date and time when an X.509 certificate expires.
 #' @description Each X.509 has a range of certificate validity times.  This method returns the X.509 
 #' \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
+#' @import PKI
 #' @param x a CertificateManager instance
 #' @return POSIXct value
 #' @export
@@ -222,7 +224,8 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 #' operations.
 #' @param x a CertificateManager instance
 #' @return the modified CertificateManager instance
-#' @seealso \code{\link{obscureCert}} is this method's inverse operation   
+#' @seealso \code{\link{obscureCert}} is this method's inverse operation
+#' @import stringr
 #' @export
 setGeneric("restoreCert", function(x, ...) { 
     standardGeneric("restoreCert")

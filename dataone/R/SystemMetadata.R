@@ -152,6 +152,7 @@ setMethod("SystemMetadata", signature(), function(...) {
 #' @param sysmeta value of type \code{"XMLInternalElementNode"}, containing the parsed XML element with SystemMetadata fields.
 #' @return the SystemMetadata object representing an object
 #' @author jones
+#' @import XML
 #' @export
 #' 
 setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(sysmeta) {
@@ -174,10 +175,10 @@ setMethod("SystemMetadata", signature("XMLInternalElementNode"), function(sysmet
 #' @param xml the XML representation of the capabilities, as an XMLInternalElementNode
 #' @param ... additional arguments passed to other functions or methods
 #' @return the SystemMetadata object representing an object
-#' 
 #' @rdname parseSystemMetadata-methods
 #' @docType methods
 #' @author jones
+#' @import XML
 #' @export
 setGeneric("parseSystemMetadata", function(sysmeta, xml, ...) {
   standardGeneric("parseSystemMetadata")
@@ -259,6 +260,7 @@ setMethod("parseSystemMetadata", signature("SystemMetadata", "XMLInternalElement
 #' @rdname serialize-methods
 #' @docType methods
 #' @author jones
+#' @import XML
 #' @export
 setGeneric("serialize", function(sysmeta, ...) {
   standardGeneric("serialize")
