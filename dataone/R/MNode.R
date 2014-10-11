@@ -239,7 +239,7 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 #' @param pid The identifier of the object to be created
 #' @param filepath the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-#' @return XML describing the result of the operation, inlcuding the identifier if successful
+#' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
 #' @export
 setGeneric("create", function(mnode, pid, ...) {
@@ -275,9 +275,55 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     }
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.update
-# public Identifier update(Identifier pid, InputStream object, Identifier newPid, SystemMetadata sysmeta) 
-    
+#' Update an object on a Member Node, by creating a new object that replaces an original.
+#' @description This method provides the ability to update a data or metadata object to the Member Node
+#' provided in the \code{'mnode'} parameter.  In DataONE, both the original object and the new object are
+#' maintained, each with its own persistent identifier, and the 'obsoletes' field in the SystemMetadata is
+#' used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
+#' @details This operation requires an X.509 certificate to be present in the default location of the file 
+#' system. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @param node The MNode instance on which the object will be created
+#' @param pid The identifier of the object to be updated
+#' @param filepath the absolute file location of the object to be uploaded
+#' @param newpid The identifier of the new object to be created
+#' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @return XML describing the result of the operation, including the identifier if successful
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.update}
+#' @export
+setGeneric("update", function(mnode, pid, ...) {
+    standardGeneric("update")
+})
+
+#' @describeIn MNode
+setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
+    # TODO: need to properly URL-escape the PID
+    url <- paste(mnode@endpoint, "object", sep="/")
+    # Use an authenticated connection if a certificate is available
+    cm = CertificateManager()
+    cert <- getCertLocation(cm)
+    response <- NULL
+    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        sysmetaxml <- serialize(sysmeta)
+        sm_file <- tempfile()
+        writeLines(sysmetaxml, sm_file)
+        response <- PUT(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
+                        newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), 
+                        config=config(sslcert = cert))
+    } else {
+        # This is an error, one must be authenticated
+        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
+        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        return(NULL)
+    }
+    if(response$status != "200") {
+        d1_errors(response)
+        return(NULL)
+    } else {
+        return(content(response))
+    }
+})
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.delete
 # public Identifier delete(Identifier pid)
 

@@ -63,7 +63,7 @@ test_that("MNode describe()", {
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
-test_that("MNode create(), archive(), and delete()", {
+test_that("MNode create(), update(), archive(), and delete()", {
     library(dataone)
     library(digest)
     cn <- CNode("STAGING2")
@@ -99,6 +99,22 @@ test_that("MNode create(), archive(), and delete()", {
     # Upload the data to the MN using create(), checking for success and a returned identifier
     response <- create(mn, newid, csvfile, sysmeta)
     expect_that(xmlValue(xmlRoot(response)), matches(newid))
+    
+    # Update the object with a new version
+    updateid <- generateIdentifier(mn, "UUID")
+    testdf <- data.frame(x=1:20,y=11:30)
+    csvfile <- paste(tempfile(), ".csv", sep="")
+    write.csv(testdf, csvfile, row.names=FALSE)
+    size <- file.info(csvfile)$size
+    sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+    sysmeta@identifier <- updateid
+    sysmeta@size <- size
+    sysmeta@checksum <- sha1
+    sysmeta@obsoletes <- newid
+    response <- update(mn, newid, csvfile, updateid, sysmeta)
+    expect_that(xmlValue(xmlRoot(response)), matches(updateid))
+    updsysmeta <- getSystemMetadata(mn, updateid)
+    expect_that(xmlValue(xmlRoot(updsysmeta)[["obsoletes"]]), matches(newid))
     
     # Archive the object
     response <- archive(mn, newid)
