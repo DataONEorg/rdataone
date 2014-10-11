@@ -3,3 +3,4 @@
 .RData
 dataone/dataone.Rproj
 dataone/.Rbuildignore
+dataone_*.tar.gz
