@@ -85,17 +85,39 @@ setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
 # so MNode.R and CNode.R have several methods that also share the same name. The generic functions for these 
 # methods are defined here in the parent class, so that the generic is defined for all child classes (MNode.R, CNode.R), where
 # the corresponding methods are defined.
+
+#' Get the bytes associated with an object on this Node.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The Node instance from which the pid will be downloaded
+#' @param pid The identifier of the object to be downloaded
+#' @return the bytes of the object
 #' @export
 setGeneric("get", function(node, pid, ...) {
   standardGeneric("get")
 })
 
+#' Get the metadata describing system properties associated with an object on this Node.
+#' @description The SystemMetadata includes information about the identity, type, access control, and other system
+#' level details about the object.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @param pid The identifier of the object
+#' @return SystemMetadata for the object
 #' @export
 setGeneric("getSystemMetadata", function(node, pid, ...) {
   standardGeneric("getSystemMetadata")
 })
 
+#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+#' determine basic properties of the referenced object.
+#' @param mnode The Node instance from which the identifier will be generated
+#' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
+#' part of the URL path and must be escaped accordingly.
+#' @return A list of header elements
 #' @export
+#' @author Scott Chamberlain
 setGeneric("describe", function(node, pid, ...) {
   standardGeneric("describe")
 })

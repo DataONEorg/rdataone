@@ -188,17 +188,15 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.archive
 # public Identifier archive(Identifier pid)
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get
-# public InputStream get(Identifier pid)
-
-
-## Retrieves the object identified by id from the node
-## @see https://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get
-## @param cnode the DataONE coordinating node to query
-## @returnType data
-##  @return the DataONE object identified by id 
-## @author slaughter
-
+#' Get the bytes associated with an object on this Coordinating Node.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The CNode instance from which the pid will be downloaded
+#' @param pid The identifier of the object to be downloaded
+#' @return the bytes of the object
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get}
+#' @export
+#' @describeIn CNode
 setMethod("get", signature("CNode", "character"), function(node, pid) {
   url <- paste(node@endpoint, "object", pid, sep="/")
   
@@ -220,15 +218,17 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
   return(content(response))
 })
 
-## Get the metadata describing system properties associated with an object on this Coordinating Node
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata
-## @param cnode The CNode instance from which the metadata will be downloaded
-## @param pid The object identifier to be downloaded
-## @returnType SystemMetadata  
-## @return the SystemMetadata associated with the object
-## 
-## @author slaughter
-
+#' Get the metadata describing system properties associated with an object on a Coordinating Node.
+#' @description The SystemMetadata includes information about the identity, type, access control, and other system
+#' level details about the object.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The CNode instance from which the SystemMetadata will be downloaded
+#' @param pid The identifier of the object
+#' @return SystemMetadata for the object
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata}
+#' @export
+#' @describeIn CNode
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
   # TODO: need to properly URL-escape the PID
   url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -257,24 +257,16 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
   
 })
 
-
-## This method provides a lighter weight mechanism than getSystemMetadata() for a client to
-## determine basic properties of the referenced object.
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.describe
-## @param cnode The CNode instance from which the identifier will be generated
-## @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
-## part of the URL path and must be escaped accordingly.
-## @returnType character
-## @return A list of header elements
-## @examples \dontrun{
-## cn <- CNode("STAGING2")
-## pid <- "aceasdata.3.2""
-## describe(mn, pid)
-## describe(mn, "adfadf") # warning message when wrong pid
-## }
-##
-## @author Scott Chamberlain
-
+#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+#' determine basic properties of the referenced object.
+#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.describe
+#' @param mnode The CNode instance from which the identifier will be generated
+#' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
+#' part of the URL path and must be escaped accordingly.
+#' @return A list of header elements
+#' @export
+#' @describeIn CNode
+#' @author Scott Chamberlain
 setMethod("describe", signature("CNode", "character"), function(node, pid) {
   url <- file.path(node@endpoint, "object", pid)
   response <- HEAD(url)

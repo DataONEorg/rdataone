@@ -18,35 +18,60 @@
 #   limitations under the License.
 #
 
+#' MNode is a class representing a Member Node repository within the DataONE federation of data repositories.
+#' @description MNode provides functions interacting with the a DataONE Member Node repository, which
+#' is a repository that provides access for reading and writing data and metadata using the common
+#' DataONE service API.  The MNode API includes functions for retrieving data and metadata based on its
+#' unique persistent identifier (pid), as well as for creating, updating, and archiving these data and
+#' metadata objects.  
+#' @details   
+#' Methods that perform write operations on the Member Node generally require
+#' authentication, which is managed via a client-side X.509 certificate via
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @slot endpoint The url to access node services, which is the baseURL plus the version string
+#' @author Matthew Jones
+#' @rdname MNode-class
 #' @include Node.R
-## A class representing a Member Node repository, which can expose and store data
-## @slot endpoint The url to access node services, which is the baseURL plus the version string
-## @author jones
-## @export
+#' @keywords classes
+#' @examples
+#' \dontrun{
+#' cn <- CNode("STAGING2")
+#' mn <- getMNode(cn, "urn:node:mnTestKNB")
+#' mnid <- mn@@identifier
+#' newid <- generateIdentifier(mn, "UUID")
+#' cm <- CertificateManager()
+#' u <- showClientSubject(cm)
+#' testdf <- data.frame(x=1:10,y=11:20)
+#' csvfile <- paste(tempfile(), ".csv", sep="")
+#' write.csv(testdf, csvfile, row.names=FALSE)
+#' f <- "text/csv"
+#' size <- file.info(csvfile)$size
+#' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+#' response <- create(mn, newid, csvfile, sysmeta)
+#' response <- archive(mn, newid)
+#' }
 setClass("MNode", slots = c(endpoint = "character"), contains="Node")
 
 #########################
 ## MNode constructors
 #########################
 
-## @param baseurl The node URL with which this node is registered in DataONE
-## @param ... (not yet used)
-## @returnType MNode  
-## @return the MNode object representing the DataONE environment
-## 
-## @author jones
+#' Create a MNode object representing a DataONE Member Node repository.
+#' @description Construct an instance of MNode to provide mechanisms to access, create, and update data and 
+#' metadata objects on the associated Member Node.
+#' @details If the \code{'x'} is a string, it is treated as a URI and an attempt to find an associated
+#' Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, then it is cast to a MNode
+#' instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
+#' way to retrieve an instance of an MNode.
+#' @param x a URI representing a node base URL, or a reference to a dataone::Node instance
+#' @return the MNode object
 #' @export
 setGeneric("MNode", function(x) {
   standardGeneric("MNode")
 })
 
-## Construct a MNode, using a passed in node url
-## @param endpoint The node url with which this node is registered in DataONE, including version
-## @returnType MNode  
-## @return the MNode object representing the member node
-## 
-## @author jones
-## @export
+#' @describeIn MNode
 setMethod("MNode", signature("character"), function(x) {
 
 	## create new MNode object and insert uri endpoint
@@ -59,13 +84,7 @@ setMethod("MNode", signature("character"), function(x) {
 	return(mnode)
 })
 
-## Construct a MNode, using a Node reference
-## @param node The Node to be converted to a MNode
-## @returnType MNode  
-## @return the MNode object representing the member node, or NULL if not an MN
-## 
-## @author jones
-## @export
+#' @describeIn MNode
 setMethod("MNode", signature("Node"), function(x) {
   
   if (x@type == "mn") {
@@ -96,19 +115,20 @@ setMethod("MNode", signature("Node"), function(x) {
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
-
-## Get the node capabilities description, and store the information in the MNode
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities
-## @param identifier The node identifier with which this node is registered in DataONE
-## @returnType MNode  
-## @return the MNode object representing the DataONE environment
-## 
-## @author jones
+ 
+#' Get the node capabilities description, and store the information in the MNode.
+#' @description Access the DataONE getCapabilities() service for the Member Node, which returns an XML
+#' decription of the repository and the services it offers.
+#' @param mnode The node identifier with which this node is registered in DataONE
+#' @return the MNode object representing the DataONE environment
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
+#' @import XML
 #' @export
 setGeneric("getCapabilities", function(mnode, ...) {
     standardGeneric("getCapabilities")
 })
 
+#' @describeIn MNode
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	url <- paste(mnode@endpoint, "node", sep="/")
 	response <- GET(url)
@@ -119,15 +139,15 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	return(xml)
 })
 
-## Get the data associated with an object on this Member Node
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.get
-## @param mnode The MNode instance from which the pid will be downloaded
-## @param pid The object identifier to be downloaded
-## @returnType data  
-## @return the data object or a parsed representation of it
-## 
-## @author jones
-
+#' Get the bytes associated with an object on this Member Node.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The MNode instance from which the pid will be downloaded
+#' @param pid The identifier of the object to be downloaded
+#' @return the bytes of the object
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.get}
+#' @export
+#' @describeIn MNode
 setMethod("get", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "object", pid, sep="/")
@@ -148,16 +168,17 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
 	return(content(response))
 })
 
-## Get the metadata describing system properties associated with an object on this Member Node
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getSystemMetadata
-## @param mnode The MNode instance from which the metadata will be downloaded
-## @param pid The object identifier to be downloaded
-## @returnType SystemMetadata  
-## @return the SystemMetadata associated with the object
-## 
-## @author jones
-## @export
-
+#' Get the metadata describing system properties associated with an object on this Member Node.
+#' @description The SystemMetadata includes information about the identity, type, access control, and other system
+#' level details about the object.
+#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
+#' present in the default location of the file system, in which case the access will be authenticated.
+#' @param node The MNode instance from which the SystemMetadata will be downloaded
+#' @param pid The identifier of the object
+#' @return SystemMetadata for the object
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.getSystemMetadata}
+#' @export
+#' @describeIn MNode
 setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -177,27 +198,23 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     return(content(response))
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.describe
-# public DescribeResponse describe(Identifier pid)
-
-## This method provides a lighter weight mechanism than getSystemMetadata() for a client to
-## determine basic properties of the referenced object.
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe
-## @param mnode The MNode instance from which the identifier will be generated
-## @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
-## part of the URL path and must be escaped accordingly.
-## @returnType character
-## @return A list of header elements
-## @examples \dontrun{
-## mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-## mn <- MNode(mn_uri)
-## pid <- "knb.473.1"
-## describe(mn, pid)
-## describe(mn, "adfadf") # warning message when wrong pid
-## }
-##
-## @author Scott Chamberlain
-
+#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+#' determine basic properties of the referenced object.
+#' @param mnode The MNode instance from which the identifier will be generated
+#' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
+#' part of the URL path and must be escaped accordingly.
+#' @return A list of header elements
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
+#' @examples \dontrun{
+#' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+#' mn <- MNode(mn_uri)
+#' pid <- "knb.473.1"
+#' describe(mn, pid)
+#' describe(mn, "adfadf") # warning message when wrong pid
+#' }
+#' @describeIn MNode
+#' @export
+#' @author Scott Chamberlain
 setMethod("describe", signature("MNode", "character"), function(node, pid) {
   url <- file.path(node@endpoint, "object", pid)
   response <- HEAD(url)
@@ -212,13 +229,24 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
 # public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatid, Boolean replicaStatus, Integer start, Integer count) 
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.create
-# public Identifier create(Identifier pid, InputStream object, SystemMetadata sysmeta)
+#' Create an object on a Member Node.
+#' @description This method provides the ability to upload a data or metadata object to the Member Node
+#' provided in the \code{'mnode'} parameter.  
+#' @details This operation requires an X.509 certificate to be present in the default location of the file 
+#' system. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @param node The MNode instance on which the object will be created
+#' @param pid The identifier of the object to be created
+#' @param filepath the absolute file location of the object to be uploaded
+#' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @return XML describing the result of the operation, inlcuding the identifier if successful
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
 #' @export
 setGeneric("create", function(mnode, pid, ...) {
     standardGeneric("create")
 })
 
+#' @describeIn MNode
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
@@ -253,12 +281,28 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.delete
 # public Identifier delete(Identifier pid)
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.archive
-# public Identifier archive(Identifier pid)
+#' Archive an object on a Member Node, which hides it from casual searches.
+#' @description This method provides the ability to archive a data or metadata object on the Member Node
+#' provided in the \code{'mnode'} parameter.  Archiving removes the object from DataONE search functions,
+#' thereby making it more difficult to find without completely removing the object.  Archive is intended
+#' for objects that should not be used by current researchers, but for which there is a desire to maintain
+#' a historical record, such as when journal articles might cite the object.  Users can still obtain the
+#' contents of archived objects if they have the identifier, but will not discover it through searches.
+#' @details This operation requires an X.509 certificate to be present in the default location of the file 
+#' system. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @param node The MNode instance on which the object will be created
+#' @param pid The identifier of the object to be created
+#' @param filepath the absolute file location of the object to be uploaded
+#' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @return XML describing the result of the operation, inlcuding the identifier if successful
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.archive}
+#' @export
 setGeneric("archive", function(mnode, pid, ...) {
     standardGeneric("archive")
 })
 
+#' @describeIn MNode
 setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "archive", pid, sep="/")
@@ -282,21 +326,26 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
     }
 })
 
-## Request a unique identifier from the Member Node repository
-## in subsequent calls
-## @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier
-## @param mnode The MNode instance from which the identifier will be generated
-## @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
-## @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
-## @returnType character  
-## @return the character string of the unique identifier
-## 
-## @author jones
+#' Get a unique identifier that is generated by the Member Node repository and guaranteed to be unique.
+#' @description Creating objects requires use of a unique persistent identifier (pid) when calling the create
+#' function.  Member Nodes may optionally provide the generateIdentifier service to issue such identifiers, 
+#' ensuring that they are unique. Each identifier conforms to an identifier scheme, which determines the syntax and
+#' rules for how the identifier that is generated is formatted.  All Member Nodes that implement this method must 
+#' support the UUID scheme, but may also support other schemes such as DOI and others.
+#' @details This operation requires an X.509 certificate to be present in the default location of the file 
+#' system. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @param mnode The MNode instance on which the object will be created
+#' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
+#' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
+#' @return the character string of the unique identifier
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
 setGeneric("generateIdentifier", function(mnode, ...) {
     standardGeneric("generateIdentifier")
 })
 
+#' @describeIn MNode
 setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "generate", sep="/")
