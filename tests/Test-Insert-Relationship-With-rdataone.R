@@ -2,7 +2,7 @@ library(dataone)
 
 # Login
 cm <- CertificateManager()
-downloadCert(cm)
+#downloadCert(cm)
 getCertExpires(cm)
 
 # Select a repository to use for writing the data; these may change, especially for
@@ -26,6 +26,8 @@ id.mta <- paste("r_test_mta", cur_time, "1", sep=".")
 id.result <- paste("r_test_derivedData", cur_time, "1", sep=".")
 id.program <- paste("r_test_program", cur_time, "1", sep=".")
 id.pkg <- paste("r_test_pkg", cur_time, "1", sep=".")
+id.png <- paste("r_test_png", cur_time, "1", sep=".")
+
 
 ## Create a data table, and write it to csv format
 testdf <- data.frame(x=1:10,y=11:20)
@@ -43,9 +45,16 @@ head(resultData)
 result <- convert.csv(cli, resultData)
 format.result <- "text/csv"
 
+
+in_file <- "image.png"
+file_size <- file.info(in_file)$size
+#imagePNG <- base64_encode_file(in_file, caTools::base64encode)
+format.png <- "image/png"
+imagePNG <- readBin(in_file, 'raw', n = file_size)
+
 # Create a metadata object
-metadata <- paste(readLines("metadata.xml"), collapse = '')
-metadata <- gsub("result_data.1.1", id.result, metadata)
+metadata <- paste(readLines("test-metadata.xml"), collapse = '')
+metadata <- gsub("PUTIDHERE", id.result, metadata)
 metadata <- gsub("program.1.1", id.program, metadata)
 metadata <- gsub("data.1.1", id.dat, metadata)
 format.mta <- "eml://ecoinformatics.org/eml-2.1.1"
@@ -63,35 +72,45 @@ d1Object.program <- new(Class="D1Object", id.program, script, format.script, mn_
 ## Build a D1Object for the metadata, and upload it to the MN
 d1Object.mta <- new("D1Object", id.mta, metadata, format.mta, mn_nodeid)
 
+## Build a D1Object for the metadata, and upload it to the MN
+d1Object.png <- new("D1Object", id.png, imagePNG, format.png, mn_nodeid)
+
 # Set access control on the data object to be public
 setPublicAccess(d1Object.dat)
 if (canRead(d1Object.dat,"public")) {
-  print("successfully set public access");
+  print("successfully set public access");
 } else {
-  print("FAIL: did not set public access");
+  print("FAIL: did not set public access");
 }
 
 # Set access control on the result object to be public
 setPublicAccess(d1Object.result)
 if (canRead(d1Object.result,"public")) {
-  print("successfully set public access");
+  print("successfully set public access");
 } else {
-  print("FAIL: did not set public access");
+  print("FAIL: did not set public access");
 }
 
 # Set access control on the action object to be public
 setPublicAccess(d1Object.program)
 if (canRead(d1Object.program,"public")) {
-  print("successfully set public access");
+  print("successfully set public access");
 } else {
-  print("FAIL: did not set public access");
+  print("FAIL: did not set public access");
 }
 
 setPublicAccess(d1Object.mta)
 if (canRead(d1Object.mta,"public")) {
-  print("successfully set public access");
+  print("successfully set public access");
 } else {
-  print("FAIL: did not set public access");
+  print("FAIL: did not set public access");
+}
+
+setPublicAccess(d1Object.png)
+if (canRead(d1Object.png,"public")) {
+  print("successfully set public access");
+} else {
+  print("FAIL: did not set public access");
 }
 
 # Assemble our data package containing both metadata and data
@@ -100,7 +119,8 @@ addData(data.package,d1Object.dat)
 addData(data.package,d1Object.result)
 addData(data.package,d1Object.program)
 addData(data.package,d1Object.mta)
-insertRelationship(data.package, id.mta, c(id.dat, id.result, id.program))
+addData(data.package,d1Object.png)
+insertRelationship(data.package, id.mta, c(id.dat, id.result, id.program, id.png))
 insertRelationship(data.package, id.result, c(id.program), "http://www.w3.org/ns/prov", "http://www.w3.org/ns/prov#wasGeneratedBy")
 insertRelationship(data.package, id.program, c(id.dat), "http://www.w3.org/ns/prov", "http://www.w3.org/ns/prov#used")
 insertRelationship(data.package, id.result, c(id.dat), "http://www.w3.org/ns/prov", "http://www.w3.org/ns/prov#wasDerivedFrom")
@@ -110,3 +130,5 @@ createDataPackage(cli, data.package)
 
 #resourceMapString <- data.package@jDataPackage$serializePackage()
 #resourceMapString
+
+
