@@ -44,8 +44,12 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
     pid$setValue(id)
     
     ## Convert incoming data to byte array (byte[])
-    ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
-    byteArray <- ioUtils$toByteArray(data)
+    if (typeof(data)=="raw") {
+        byteArray <- .jarray(data)
+    } else {
+        ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
+        byteArray <- ioUtils$toByteArray(data)
+    }
     
     ## build the ObjectFormatIdentifier.
     formatId <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
