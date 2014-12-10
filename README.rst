@@ -22,11 +22,11 @@ Documentation for the DataONE R Client is provided as help files within the R fr
 
 - DataONE R Client Manual (dataone_1.0.0-manual.pdf_)
 
-.. _dataone_1.0.0.tar.gz: https://releases.dataone.org/dist/dataone_1.0.0.tar.gz
+.. _dataone_1.0.0.tar.gz: https://releases.dataone.org/dist/dataone_R/dataone_1.0.0.tar.gz
 
-.. _dataonelibs_1.0.0.tar.gz: https://releases.dataone.org/dist/dataonelibs_1.0.0.tar.gz
+.. _dataonelibs_1.0.0.tar.gz: https://releases.dataone.org/dist/dataone_R/dataonelibs_1.0.0.tar.gz
 
-.. _dataone_1.0.0-manual.pdf: https://releases.dataone.org/dist/dataone_1.0.0-manual.pdf
+.. _dataone_1.0.0-manual.pdf: https://releases.dataone.org/dist/dataone_R/dataone_1.0.0-manual.pdf
 
 Installation Notes
 ------------------
