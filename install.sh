@@ -21,8 +21,12 @@ unset JAVA_HOME
 #  R --silent --no-save -e 'library(dataone); d1.test();'
 
 #  R --silent --no-save -e 'library(dataone); source(system.file("testing.R"), package="dataone"); dataone:::d1.test();'
-  
+# R library package dependencies: httr, devtools, testthat, roxygen2, XML, rJava, dataonelibs, mbjones/PKI from github, stringr
+# options(repos = c(CRAN = "http://cran.rstudio.com"))
+# install_github("mbjones/PKI")
+# install.packages(c("httr", "devtools", "testthat", "roxygen2", "XML", "rJava", "stringr"))
 mkdir -p ./R/x86_64-pc-linux-gnu-library/3.1 && \
+R --silent CMD INSTALL -l ./R/x86_64-pc-linux-gnu-library/3.1 dataonelibs && \
 R --silent CMD INSTALL -l ./R/x86_64-pc-linux-gnu-library/3.1 dataone && \
 R --file=./runTests.R
 
