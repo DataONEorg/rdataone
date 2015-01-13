@@ -17,7 +17,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-
+.libPaths("./R/x86_64-pc-linux-gnu-library/3.1")
 library(testthat)
 test_package("dataone")
 remove.packages("dataone")
+remove.packages("dataonelibs")
