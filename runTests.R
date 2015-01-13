@@ -18,6 +18,6 @@
 #   limitations under the License.
 #
 
-library(dataone)
-source("testing.R")
-d1.test()
+library(testthat)
+test_package("dataone")
+remove.packages("dataone")
