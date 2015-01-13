@@ -1,7 +1,9 @@
 #!/bin/sh
 #
 # A shell script that installs and executes integration tests
-# on the D1 R Client code.
+# on the D1 R Client code. This is mainly used for the DataONE
+# Continuous Integration build under Jenkins, so some specific
+# values are hardcoded for that environment.
 # 
 # Prerequisites for this to work include:
 # aptitude install r-recommended r-cran-rjava
@@ -28,5 +30,5 @@ unset JAVA_HOME
 mkdir -p ./R/x86_64-pc-linux-gnu-library/3.1 && \
 R --silent CMD INSTALL -l ./R/x86_64-pc-linux-gnu-library/3.1 dataonelibs && \
 R --silent CMD INSTALL -l ./R/x86_64-pc-linux-gnu-library/3.1 dataone && \
+cp /etc/dataone/client/testClientCerts/testPerson.crt /tmp/x509up_106 && \
 R --file=./runTests.R
-
