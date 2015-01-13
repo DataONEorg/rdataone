@@ -77,7 +77,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     cm <- CertificateManager()
     user <- showClientSubject(cm)
     isExpired <- isCertExpired(cm)
-    expect_that(user, matches("cilogon"))
+    expect_that(user, matches("cilogon|dataone"))
     expect_that(isExpired, is_false())
     
     # Create a data object, and convert it to csv format
