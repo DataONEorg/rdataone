@@ -23,6 +23,6 @@ unset JAVA_HOME
 #  R --silent --no-save -e 'library(dataone); source(system.file("testing.R"), package="dataone"); dataone:::d1.test();'
   
 
-R --silent CMD INSTALL dataone && \
+R --silent CMD INSTALL -l ./R/x86_64-pc-linux-gnu-library/3.1 dataone && \
 R --file=./runTests.R
 
