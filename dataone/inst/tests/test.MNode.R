@@ -49,7 +49,7 @@ test_that("MNode getSystemMetadata()", {
 test_that("MNode generateIdentifier()", {
     library(dataone)
     cn <- CNode("STAGING2")
-    mn <- getMNode(cn, "urn:node:mnTestKNB")
+    mn <- getMNode(cn, "urn:node:mnDemo9")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
@@ -67,7 +67,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     library(dataone)
     library(digest)
     cn <- CNode("STAGING2")
-    mn <- getMNode(cn, "urn:node:mnTestKNB")
+    mn <- getMNode(cn, "urn:node:mnDemo9")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
