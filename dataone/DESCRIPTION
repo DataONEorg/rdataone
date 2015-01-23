@@ -37,7 +37,7 @@ URL: http://releases.dataone.org/online/dataone_r
 BugReports: https://github.com/DataONEorg/rdataone/issues
 Collate:
     'AbstractTableDescriber.R'
-    'Node.R'
+    'D1Node.R'
     'CNode.R'
     'CertificateManager.R'
     'D1Object.R'

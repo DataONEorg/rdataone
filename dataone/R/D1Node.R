@@ -30,7 +30,7 @@
 ## @slot state an indication of whether the node is accessible, either 'up' or 'down'
 ## @author jones
 ## @export
-setClass("Node",
+setClass("D1Node",
          slots = c(	identifier = "character",
 					name = "character",
 					description = "character",
@@ -58,8 +58,8 @@ setClass("Node",
 ## 
 ## @author jones
 ## @export
-setGeneric("Node", function(xml, ...) {
-  standardGeneric("Node")
+setGeneric("D1Node", function(xml, ...) {
+  standardGeneric("D1Node")
 })
 
 ## Construct a Node, using a passed in node url
@@ -69,10 +69,10 @@ setGeneric("Node", function(xml, ...) {
 ## 
 ## @author jones
 ## @export
-setMethod("Node", signature("XMLInternalElementNode"), function(xml) {
+setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 
   ## create new Node object
-	node <- new("Node")
+	node <- new("D1Node")
 	newnode <- parseCapabilities(node, xml)
 	return(newnode)
 })
@@ -142,7 +142,7 @@ setGeneric("parseCapabilities", function(node, xml, ...) {
 ## 
 ## @author jones
 ## @export
-setMethod("parseCapabilities", signature("Node", "XMLInternalElementNode"), function(node, xml) {
+setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), function(node, xml) {
   
   ## Parse the rest of the node information
   node@identifier <- xmlValue(xml[["identifier"]])

@@ -18,12 +18,12 @@
 #   limitations under the License.
 #
 
-#' @include Node.R
+#' @include D1Node.R
 ## 
 ## @slot endpoint The endpoint of the CN in this environment, including the version specifier
 ## @author jones
 ## @export
-setClass("CNode", slots = c(endpoint = "character"), contains="Node")
+setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
 #########################
 ## CNode constructors
@@ -165,7 +165,7 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 	xml <- content(response)
   node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
 	nodes <- getNodeSet(xml, "//node")
-	nodelist <- sapply(nodes, Node)
+	nodelist <- sapply(nodes, D1Node)
 	return(nodelist)
 })
 

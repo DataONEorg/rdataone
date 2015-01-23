@@ -31,7 +31,7 @@
 #' @slot endpoint The url to access node services, which is the baseURL plus the version string
 #' @author Matthew Jones
 #' @rdname MNode-class
-#' @include Node.R
+#' @include D1Node.R
 #' @keywords classes
 #' @examples
 #' \dontrun{
@@ -51,7 +51,7 @@
 #' response <- create(mn, newid, csvfile, sysmeta)
 #' response <- archive(mn, newid)
 #' }
-setClass("MNode", slots = c(endpoint = "character"), contains="Node")
+setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 
 #########################
 ## MNode constructors
@@ -85,7 +85,7 @@ setMethod("MNode", signature("character"), function(x) {
 })
 
 #' @describeIn MNode
-setMethod("MNode", signature("Node"), function(x) {
+setMethod("MNode", signature("D1Node"), function(x) {
   
   if (x@type == "mn") {
     ## create new MNode object and insert uri endpoint
