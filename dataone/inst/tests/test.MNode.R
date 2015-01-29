@@ -47,6 +47,7 @@ test_that("MNode getSystemMetadata()", {
     expect_that(cname, matches("XML"))
 })
 test_that("MNode generateIdentifier()", {
+    skip_on_cran()
     library(dataone)
     cn <- CNode("STAGING2")
     mn <- getMNode(cn, "urn:node:mnDemo9")
@@ -64,6 +65,7 @@ test_that("MNode describe()", {
   expect_equal(res$`content-type`, "text/xml")
 })
 test_that("MNode create(), update(), archive(), and delete()", {
+    skip_on_cran()
     library(dataone)
     library(digest)
     cn <- CNode("STAGING2")
@@ -126,3 +128,50 @@ test_that("MNode create(), update(), archive(), and delete()", {
     #response <- delete(mn, newid)
     
 })
+
+test_that("MNode create() works for large files", {
+    skip_on_cran()
+    if (grepl("Darwin", Sys.info()['sysname'])) {
+        skip("fallocate not available on Mac")
+    }
+    library(dataone)
+    library(digest)
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnDemo9")
+    newid <- generateIdentifier(mn, "UUID")
+    cname <- class(newid)
+    expect_that(cname, matches("character"))
+    expect_that(newid, matches("urn:uuid:"))
+    
+    # Ensure the user is logged in before running the tests
+    cm <- CertificateManager()
+    user <- showClientSubject(cm)
+    isExpired <- isCertExpired(cm)
+    expect_that(user, matches("cilogon|dataone"))
+    expect_that(isExpired, is_false())
+    
+    # TODO: Create a large data object using fallocate through a system call (only on linux)
+    csvfile <- 'testdata.csv'
+    csvsize <- '4G'
+    system(paste("fallocate -l", csvsize, csvfile))
+    
+    # On a mac, use truncate instead (slower, and produces a sparse file)
+    #csvsize <- '4294967296'    # truncate needs the size arg in bytes
+    #system(paste("truncate", csvfile, csvsize))
+    
+    # Create SystemMetadata for the object
+    format <- "text/csv"
+    size <- file.info(csvfile)$size
+    sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    expect_that(sysmeta@checksum, equals(sha1))
+    expect_that(sysmeta@submitter, equals(user))
+    expect_that(sysmeta@rightsHolder, equals(user))
+    expect_that(sysmeta@originMemberNode, equals(mn@identifier))
+    expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
+    
+    # Upload the data to the MN using create(), checking for success and a returned identifier
+    response <- create(mn, newid, csvfile, sysmeta)
+    expect_that(xmlValue(xmlRoot(response)), matches(newid))  
+})
+
