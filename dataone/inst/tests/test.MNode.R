@@ -68,6 +68,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     skip_on_cran()
     library(dataone)
     library(digest)
+    library(httr)
     cn <- CNode("STAGING2")
     mn <- getMNode(cn, "urn:node:mnDemo9")
     newid <- generateIdentifier(mn, "UUID")
@@ -100,6 +101,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     
     # Upload the data to the MN using create(), checking for success and a returned identifier
     response <- create(mn, newid, csvfile, sysmeta)
+    expect_that(response, not(is_null()))
     expect_that(xmlValue(xmlRoot(response)), matches(newid))
     
     # Update the object with a new version
@@ -136,6 +138,7 @@ test_that("MNode create() works for large files", {
     }
     library(dataone)
     library(digest)
+    library(httr)
     cn <- CNode("STAGING2")
     mn <- getMNode(cn, "urn:node:mnDemo9")
     newid <- generateIdentifier(mn, "UUID")
@@ -172,6 +175,7 @@ test_that("MNode create() works for large files", {
     
     # Upload the data to the MN using create(), checking for success and a returned identifier
     response <- create(mn, newid, csvfile, sysmeta)
+    expect_that(response, not(is_null()))
     expect_that(xmlValue(xmlRoot(response)), matches(newid))  
 })
 
