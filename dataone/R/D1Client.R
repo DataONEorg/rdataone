@@ -210,17 +210,19 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 			return(d1o)
 		})
 
+#' A method to query the DataONE solr endpoint of the Coordinating Node.
+#' It expects any lucene reserved characters to already be escaped with backslash. If
+#' solrQuery is a list, it is expected to have field names as attributes and search
+#' values as the values in the list.
+#' @param x  the D1Client (environment) being queried
+#' @param solrQuery list or character: a fully encoded query string 
+#' @return the solr response (XML)
+#' @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
+#' @export
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
             standardGeneric("d1SolrQuery")
         })
 
-#' A method to query the DataONE solr endpoint of the Coordinating Node.
-#' It expects any lucene reserved characters to already be escaped with backslash.
-#' @param x  the D1Client (environment) being queried
-#' @param solrQuery  list
-#' @return the solr response (XML)
-#' @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
-#' @export
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 
     encodedKVs <- character()
@@ -242,16 +244,6 @@ setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
     return( d1SolrQuery(x, assembledQuery) )
 })
 
-
-#' A method to query the DataONE solr endpoint of the Coordinating Node.
-#' It expects a fully encoded character string as input (with lucene-reserved 
-#' characters backslash escaped and url-reserved characters %-encoded).
-#' @param x  D1Client: representing the DataONE environment being queried
-#' @param solrQuery  character: a fully encoded query string 
-#' @return the solr response (XML)
-#' @note users should not provide the leading '?' to the query
-#' @examples \dontrun{ d1SolrQuery(client,"q=%2Bspecies%20population%20diversity%26fl=identifier" }
-#' @export
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
     
     packagedQuery <- paste0("?", solrQuery)
@@ -269,12 +261,6 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
     return(data)
 })
 
-
-setGeneric("d1IdentifierSearch", function(x, solrQuery) {
-	standardGeneric("d1IdentifierSearch")    
-})
-
-
 #' A method to query the DataONE solr endpoint of the Coordinating Node, and 
 #' return a character vector of identifiers.  
 #' It expects a fully encoded character string as input (with lucene-reserved 
@@ -285,6 +271,10 @@ setGeneric("d1IdentifierSearch", function(x, solrQuery) {
 #' @note users should not provide the leading '?' to the query
 #' @examples \dontrun{ d1IdentifierSearch(client,"q=%2Bspecies%20population%20diversity" }
 #' @export
+setGeneric("d1IdentifierSearch", function(x, solrQuery) {
+	standardGeneric("d1IdentifierSearch")    
+})
+
 setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
 	
 	# empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
@@ -305,8 +295,6 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 	result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
 	return(result)
 })
-
-
 
 
 #' Reserve an Identifier in the DataONE System

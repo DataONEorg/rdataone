@@ -15,7 +15,7 @@ create(mnode, pid, ...)
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
 }
 \value{
-XML describing the result of the operation, inlcuding the identifier if successful
+XML describing the result of the operation, including the identifier if successful
 }
 \description{
 This method provides the ability to upload a data or metadata object to the Member Node
