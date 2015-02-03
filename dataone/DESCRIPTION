@@ -10,7 +10,8 @@ Authors@R: c( person("Matthew", "Jones", role = c("aut", "cre"), email =
     "walker@nceas.ucsb.edu"), person("Scott", "Chamberlain", role = "aut",
     email = "myrmecocystus@gmail.com"), person("Edmund", "Hart", role = "aut",
     email = "edmund.m.hart@gmail.com"), person("Jordan", "Read", role = "aut",
-    email = "jread@usgs.gov"))
+    email = "jread@usgs.gov"), person("Peter", "Slaughter", role = "aut",
+    email = "slaughter@nceas.ucsb.edu"))
 VignetteBuilder: knitr
 Description: A package that provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
@@ -27,7 +28,8 @@ Imports:
     dataonelibs,
     httr,
     PKI,
-    stringr
+    stringr,
+    datapackage
 SystemRequirements: Java (>= 1.6)
 License: Apache License 2.0
 Packaged: 2013-02-14 20:54:27 UTC; jones
