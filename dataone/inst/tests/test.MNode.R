@@ -93,6 +93,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     size <- file.info(csvfile)$size
     sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
     sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    sysmeta <- addAccessRule(sysmeta, "public", "read")
     expect_that(sysmeta@checksum, equals(sha1))
     expect_that(sysmeta@submitter, equals(user))
     expect_that(sysmeta@rightsHolder, equals(user))
@@ -167,6 +168,7 @@ test_that("MNode create() works for large files", {
     size <- file.info(csvfile)$size
     sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
     sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    sysmeta <- addAccessRule(sysmeta, "public", "read")
     expect_that(sysmeta@checksum, equals(sha1))
     expect_that(sysmeta@submitter, equals(user))
     expect_that(sysmeta@rightsHolder, equals(user))
