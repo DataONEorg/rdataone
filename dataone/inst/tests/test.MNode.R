@@ -178,6 +178,9 @@ test_that("MNode create() works for large files", {
     # Upload the data to the MN using create(), checking for success and a returned identifier
     response <- create(mn, newid, csvfile, sysmeta)
     expect_that(response, not(is_null()))
-    expect_that(xmlValue(xmlRoot(response)), matches(newid))  
+    expect_that(xmlValue(xmlRoot(response)), matches(newid)) 
+    
+    # Remove the big data file we created locally
+    unlink(csvfile)
 })
 
