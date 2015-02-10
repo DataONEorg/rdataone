@@ -105,6 +105,7 @@ setGeneric("get", function(node, pid, ...) {
 #' @param node The Node instance from which the SystemMetadata will be downloaded
 #' @param pid The identifier of the object
 #' @return SystemMetadata for the object
+#' @import datapackage
 #' @export
 setGeneric("getSystemMetadata", function(node, pid, ...) {
   standardGeneric("getSystemMetadata")

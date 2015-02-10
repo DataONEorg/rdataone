@@ -177,6 +177,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
 #' @param pid The identifier of the object
 #' @return SystemMetadata for the object
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.getSystemMetadata}
+#' @import datapackage
 #' @export
 #' @describeIn MNode
 setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
@@ -241,6 +242,7 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
+#' @import datapackage
 #' @export
 setGeneric("create", function(mnode, pid, ...) {
     standardGeneric("create")
@@ -255,7 +257,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        sysmetaxml <- serialize(sysmeta)
+        sysmetaxml <- serializeSystemMetadata(sysmeta)
         sm_file <- tempfile()
         writeLines(sysmetaxml, sm_file)
         response <- POST(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
@@ -290,6 +292,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.update}
+#' @import datapackage
 #' @export
 setGeneric("update", function(mnode, pid, ...) {
     standardGeneric("update")
@@ -304,7 +307,7 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        sysmetaxml <- serialize(sysmeta)
+        sysmetaxml <- serializeSystemMetadata(sysmeta)
         sm_file <- tempfile()
         writeLines(sysmetaxml, sm_file)
         response <- PUT(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
@@ -339,8 +342,6 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
 #' @param node The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
-#' @param filepath the absolute file location of the object to be uploaded
-#' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @return XML describing the result of the operation, inlcuding the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.archive}
 #' @export

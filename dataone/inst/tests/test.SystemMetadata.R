@@ -3,7 +3,7 @@ test_that("dataone library loads", {
 	library(dataone)
 })
 test_that("SystemMetadata constructors", {
-    library(dataone)
+    library(datapackage)
     sysmeta <- SystemMetadata()
     expect_that(sysmeta@serialVersion, equals(1))
     expect_that(is.na(sysmeta@identifier), is_true())
@@ -42,7 +42,7 @@ test_that("XML SystemMetadata serialization works", {
     sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
     expect_that(sysmeta@identifier, matches(testid))
     expect_that(sysmeta@archived, is_true())
-    xml <- serialize(sysmeta)
+    xml <- serializeSystemMetadata(sysmeta)
     #cat(xml)
     expect_that(xml, matches("<d1:systemMetadata"))
     expect_that(xml, matches("<blockedMemberNode>urn:node:BADNODE</blockedMemberNode>"))
@@ -53,7 +53,7 @@ test_that("XML SystemMetadata serialization works", {
     expect_that(xml, matches("<permission>changePermission</permission>"))
     sysmeta@obsoletes <- ""
     sysmeta <- new("SystemMetadata")
-    xml <- serialize(sysmeta)
+    xml <- serializeSystemMetadata(sysmeta)
     foundObsoletes <- grep("<obsoletes>", xml, invert=TRUE)
     expect_that(as.logical(foundObsoletes), is_true())
     # TODO: check tree equivalence with original XML document

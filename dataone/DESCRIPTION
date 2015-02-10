@@ -47,5 +47,4 @@ Collate:
     'DataPackage.R'
     'EMLParser.R'
     'MNode.R'
-    'SystemMetadata.R'
     'onLoad.R'

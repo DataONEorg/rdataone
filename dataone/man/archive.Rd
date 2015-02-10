@@ -9,10 +9,6 @@ archive(mnode, pid, ...)
 \item{pid}{The identifier of the object to be created}
 
 \item{node}{The MNode instance on which the object will be created}
-
-\item{filepath}{the absolute file location of the object to be uploaded}
-
-\item{sysmeta}{a SystemMetadata instance describing properties of the object}
 }
 \value{
 XML describing the result of the operation, inlcuding the identifier if successful

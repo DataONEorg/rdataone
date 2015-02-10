@@ -227,6 +227,7 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
 #' @param pid The identifier of the object
 #' @return SystemMetadata for the object
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata}
+#' @import datapackage
 #' @export
 #' @describeIn CNode
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
