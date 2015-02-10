@@ -66,10 +66,7 @@ test_that("MNode describe()", {
 })
 test_that("MNode create(), update(), archive(), and delete()", {
     skip_on_cran()
-    library(datapackage)
     library(dataone)
-    library(digest)
-    library(httr)
     cn <- CNode("STAGING2")
     mn <- getMNode(cn, "urn:node:mnTestKNB")
     newid <- generateIdentifier(mn, "UUID")
