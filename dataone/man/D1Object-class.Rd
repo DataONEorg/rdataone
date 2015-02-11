@@ -2,7 +2,7 @@
 \docType{class}
 \name{D1Object-class}
 \alias{D1Object-class}
-\title{D1Object (Debprecated) is a representation of a DataObject.}
+\title{D1Object (Deprecated) is a representation of a DataObject.}
 \description{
 D1Object has been deprecated in favor of datapackage::DataObject, which provides
 a wrapper for data and associated SystemMetadata.

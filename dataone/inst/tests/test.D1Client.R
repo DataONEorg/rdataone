@@ -30,3 +30,23 @@ test_that("D1Client constructors", {
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn-dev.test.dataone.org/cn"))
 })
+test_that("D1Client getDataObject", {
+    library(dataone)
+    library(digest)
+    cli <- new("D1Client")
+    expect_that(cli, not(is_null()))
+    expect_that(class(cli), matches("D1Client"))
+    expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
+    
+    # Try retrieving a known object from the PROD environment
+    pid <- "solson.5.1"
+    obj <- getDataObject(cli, pid)
+    cname <- class(obj)[1]
+    expect_that(cname, matches("DataObject"))
+    expect_that(class(obj@sysmeta), matches("SystemMetadata"))
+    expect_that(getIdentifier(obj), matches(pid))
+    expect_that(getFormatId(obj), matches("text/csv"))
+    data <- getData(obj)
+    sha1 <- digest(data, algo="sha1", serialize=FALSE, file=FALSE)
+    expect_that(sha1, matches(obj@sysmeta@checksum))
+})

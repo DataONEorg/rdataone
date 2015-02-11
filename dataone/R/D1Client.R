@@ -164,25 +164,40 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
-#' Download a D1Object from the DataONE Federation
+#' Download a DataObject from the DataONE Federation
 #' @param x : D1Client
 #' @param identifier : the identifier of the object to get
 #' @param ... (not yet used)
 #' @return the DataONE object
 #'
 #' @export
-setGeneric("getD1Object", function(x, identifier, ...) { 
-    standardGeneric("getD1Object")
+setGeneric("getDataObject", function(x, identifier, ...) { 
+    standardGeneric("getDataObject")
 })
 
-setMethod("getD1Object", "D1Client", function(x, identifier) {
+#' @export
+setMethod("getDataObject", "D1Client", function(x, identifier) {
     
-    # TODO: get the system metadata
+    # Resolve the object location
+    mntable <- resolve(x@cn, identifier)
     
-    # TODO: get the object bytes
+    # Get the SystemMetadata and object bytes from one of the MNs
+    # Process them in order, until we get non-NULL responses from a node
+    for (i in 1:length(mntable)) { 
+        currentMN <- getMNode(x@cn, mntable[i,]$identifier)
+        if (currentMN != NULL) {
+            sysmeta <- getSystemMetadata(currentMN, identifier)
+            bytes <- get(currentMN, identifier)
+            if (sysmeta != NULL && bytes != NULL) {
+                success=TRUE
+                break
+            }
+        }
+    }
     
-    # TODO: contruct and return a D1Object (or DataObject)
-    
+    # Construct and return a DataObject
+    do <- new("DataObject", id=sysmeta, data=bytes)
+    return(do)
 })
 
 #' A method to query the DataONE solr endpoint of the Coordinating Node.

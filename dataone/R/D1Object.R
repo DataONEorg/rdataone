@@ -18,7 +18,7 @@
 #   limitations under the License.
 #
 
-#' D1Object (Debprecated) is a representation of a DataObject.
+#' D1Object (Deprecated) is a representation of a DataObject.
 #' @description D1Object has been deprecated in favor of datapackage::DataObject, which provides
 #' a wrapper for data and associated SystemMetadata. 
 #' @slot proxyObject A backing instance of a DataObject, to which all methods and state are proxied
