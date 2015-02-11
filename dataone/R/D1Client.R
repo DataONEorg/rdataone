@@ -27,7 +27,7 @@
 #' @slot mn.nodeid The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.
 #' @slot client The reference to the internally held Java D1Client instance
 #' @slot session The reference to the internally held Java Session instance
-#' @export
+#' @exportClass D1Client
 #' @import datapackage
 setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
@@ -61,14 +61,16 @@ setMethod("D1Client", , function() {
 
 #' Pass in the environment to be used by this D1Client, but use
 #'   the default member node.
+#' @export
 setMethod("D1Client", signature("character"), function(env, ...) {
-    message("instantiating D1Client without a 'home' Member Node...")
+    #message("Instantiating D1Client without a default Member Node.")
     result <- D1Client(env, "")
     return(result)
 })
 
 #' Pass in the environment to be used by this D1Client, plus the 
 #' id of the member node to be used for primary interactions such as creates
+#' @export
 setMethod("D1Client", signature("character", "character"), function(env, mnNodeid) {
     
     # create new D1Client object and insert uri endpoint
@@ -88,7 +90,7 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
     # Check and set the node reference
     if (mnNodeid == "") {
         # allow the mn to be unset with empty string only
-        result@mn <- NULL
+        # result@mn <- NULL
     } else {
         # try to instantiate a MN from the node identifier in this CN environment
         mn <- getMNode(result@cn, mNodeid)
@@ -96,6 +98,27 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
     
     return(result)
 })
+
+#' @export
+setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
+    # defaults here
+    if (missing(cn)) {
+        .Object@cn <- CNode()
+    } else {
+        .Object@cn <- cn
+    }
+    if (!missing(mn)) {
+        .Object@mn <- mn
+    }
+    if (!missing(env)) {
+        .Object@cn <- CNode(env)
+    }
+    if (!missing(mNodeid)) {
+        .Object@mn <- getMNode(.Object@cn, mNodeid)
+    }
+    return(.Object)
+})
+
 
 #########################################################
 ### MNAuthentication methods
@@ -107,10 +130,10 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
 #########################################################
 
 
-#' Download a DataPackage from the DataONE Cloud
+#' Download a DataPackage from the DataONE Federation.
 #' 
 #' Given a valid identifier for a ResourceMap, instantiate an R DataPackage
-#' object containing all of the package members.  
+#' object containing all of the package members. 
 #' @param x D1Client
 #' @param identifier character: identifier of the ResourceMap 
 #' @param ... (not yet used)
@@ -124,24 +147,24 @@ setGeneric("getPackage", function(x, identifier, ...) {
 
 setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
     
-    jPid <- .jnew("org/dataone/service/types/v1/Identifier")
-    jPid$setValue(identifier)
-    message(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
-    ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-    ## jNodeRef$setValue(x@mn.nodeid)
-    ## message(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
-    message(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
-    jDataPackage <- J("org/dataone/client/DataPackage")$download(jPid)
-    if (!is.null(e<-.jgetEx())) {
-        print("Java exception was raised")
-        print(.jcheck(silent=FALSE))
-    }
-    dp <- new(Class="DataPackage",jDataPackage=jDataPackage)
+    dp <- DataPackage()
+    
+    # TODO: Download the ResourceMap from the DataONE CN
+    
+    # TODO: Deserialize the ResourceMap into a ResourceMap instance
+    
+    # TODO: Create a new DataPackage instance with info from the ResourceMap
+    
+    # TODO: Loop over the aggregated package members
+        # Download it and add it to the package
+        # Add any relationships for this member
+    
+    # Return the newly constructed DataPackage
     return(dp)
 })
 
 
-#' Download a D1Object from the DataONE Cloud
+#' Download a D1Object from the DataONE Federation
 #' @param x : D1Client
 #' @param identifier : the identifier of the object to get
 #' @param ... (not yet used)

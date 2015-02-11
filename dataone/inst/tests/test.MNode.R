@@ -50,7 +50,7 @@ test_that("MNode generateIdentifier()", {
     skip_on_cran()
     library(dataone)
     cn <- CNode("STAGING2")
-    mn <- getMNode(cn, "urn:node:mnDemo9")
+    mn <- getMNode(cn, "urn:node:mnTestKNB")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
