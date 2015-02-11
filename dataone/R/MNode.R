@@ -124,6 +124,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @return the MNode object representing the DataONE environment
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
 #' @import XML
+#' @import httr
 #' @export
 setGeneric("getCapabilities", function(mnode, ...) {
     standardGeneric("getCapabilities")
