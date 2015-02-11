@@ -44,7 +44,6 @@ Collate:
     'CertificateManager.R'
     'D1Object.R'
     'D1Client.R'
-    'DataPackage.R'
     'EMLParser.R'
     'MNode.R'
     'onLoad.R'

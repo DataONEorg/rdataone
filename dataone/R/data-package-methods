@@ -1,0 +1,23 @@
+setClass("DataPackage",
+setGeneric("DataPackage", function(...) { standardGeneric("DataPackage")} )
+##setGeneric("DataPackage", function(identifier, jDataPackage, ...) {
+setMethod("initialize", "DataPackage", function(.Object, packageId, jDataPackage) {
+setMethod("getData", signature("DataPackage", "character"), function(x, id) {
+setGeneric("getSize", function(x, ...) { standardGeneric("getSize")} )
+setMethod("getSize", "DataPackage", function(x) {
+setGeneric("getIdentifiers", function(x, ...) { standardGeneric("getIdentifiers")} )
+setMethod("getIdentifiers", "DataPackage", function(x) {
+setGeneric("addData", function(x, d1object, ...) { 
+setMethod("addData", signature("DataPackage", "D1Object"), function(x, d1object) {
+setGeneric("addAndDownloadData", function(x, identifier, ...) { 
+setMethod("addAndDownloadData", signature("DataPackage", "character"), function(x, identifier) {
+setGeneric("insertRelationship", function(x, subjectID, objectIDs, predicateNS, predicateURI, ...) {
+setMethod("insertRelationship", signature("DataPackage", "character", "character"), function(x, subjectID, objectIDs, ...) {
+setMethod("insertRelationship", signature("DataPackage", "character", "character", "character", "character"), function(x, subjectID, objectIDs, predicateNS, predicateURI) {
+setGeneric("contains", function(x, identifier, ...) {
+setMethod("contains", signature("DataPackage", "character"), function(x, identifier) {
+setGeneric("removeMember", function(x, identifier, ...) {
+setMethod("removeMember", signature("DataPackage", "character"), function(x, identifier) {
+setGeneric("getMember", function(x, identifier, ...) {
+setMethod("getMember", signature("DataPackage", "character"), function(x, identifier) {
+setMethod("asDataFrame", signature("DataPackage", "character"), function(x, reference) {

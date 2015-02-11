@@ -18,7 +18,19 @@
 #   limitations under the License.
 #
 
-setClass("D1Object", representation(jD1o = "jobjRef") )
+#' D1Object (Debprecated) is a representation of a DataObject.
+#' @description D1Object has been deprecated in favor of datapackage::DataObject, which provides
+#' a wrapper for data and associated SystemMetadata. 
+#' @slot proxyObject A backing instance of a DataObject, to which all methods and state are proxied
+#' @author Matthew Jones
+#' @keywords classes
+#' @import datapackage
+#' @examples
+#' \dontrun{
+#' cn <- CNode("STAGING2")
+#' mn <- getMNode(cn, "urn:node:mnTestKNB")
+#' }
+setClass("D1Object", slots = c(proxyObject="DataObject") )
 
 #####################
 ## D1Object constructors
@@ -27,62 +39,12 @@ setClass("D1Object", representation(jD1o = "jobjRef") )
 ## generic
 setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
 
-## no arguments in the signature
-## setMethod("D1Object", , function() {
-##   result <- new("D1Object")
-##   return(result)
-## })
-
-
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId) {
 
   if (typeof(id) == "character") {
-    message("@@ D1Object-class:R initialize as character")
-    
-    ## build identifier to be used in system metadata
-    pid <- .jnew("org/dataone/service/types/v1/Identifier")
-    pid$setValue(id)
-    
-    ## Convert incoming data to byte array (byte[])
-    ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
-    byteArray <- ioUtils$toByteArray(data)
-    
-    ## build the ObjectFormatIdentifier.
-    formatId <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
-    formatId$setValue(format)
-    
-    
-    ## build a submitter Subject from the certificate
-    certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
-    cert <- certman$loadCertificate()
-    submitter <- .jnew("org/dataone/service/types/v1/Subject")
-    submitter$setValue(certman$getSubjectDN(cert))
-    
-    ## build the NodeReference
-    mnNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-    mnNodeRef$setValue(mnNodeId)
-    
-    jd1o <- .jnew("org/dataone/client/D1Object",
-                  pid, byteArray, formatId, submitter, mnNodeRef,
-                  check=FALSE)
-    
-    if (!is.null(e <- .jgetEx())) {
-      print("Java exception was raised")
-      print(.jcheck(silent=TRUE))
-      print(.jcheck(silent=TRUE))
-      print(e)
-      jd1o = .jnull("org/dataone/client/D1Object")
-    }
-  }
-  else {
-    message("@@ D1Object-class:R initialize as something else")
-    if (.jinstanceof(id,"org/dataone/client/D1Object")) {
-      message("@@ D1Object-class:R initialize with jobjRef")
-      jd1o <- id
-    }
+  } else {
   }
   
-  .Object@jD1o <- jd1o
   return(.Object)
 })
 
@@ -91,115 +53,21 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 ### MNRead and MNStorage methods
 #########################################################
 
-## buildD1Object, implemented as a static way of constructing an object
-# TODO: Consider making this into a real constructor
-# Currently this is just a copy from the D1Client class, needs to be
-# refactored.
-#setGeneric("buildD1Object", function(id, data, format, mn_nodeid, ...) { 
-#  standardGeneric("buildD1Object")
-#})
-#
-#setMethod("buildD1Object",
-#          signature("character", "character", "character", "character"),
-#	  function(id, data, format, mn_nodeid) {
-#
-  # build identifier to be used in system metadata
-#  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-#  pid$setValue(id)
-
-  # Set up/convert additional system metadata fields
-  # get the submitter from the certificate
-#  certman <- J("org/dataone/client/auth/CertificateManager")$getInstance()
-#  cert <- certman$loadCertificate()
-#  submitter <- .jnew("org/dataone/service/types/v1/Subject")
-#  submitter$setValue(certman$getSubjectDN(cert))
-
-  # Convert incoming data to byte array (byte[])
-#  ioUtils <- .jnew("org/apache/commons/io/IOUtils") 
-#  byteArray <- ioUtils$toByteArray(data)
-
-  # build the ObjectFormatIdentifier.
-#  format.id <- .jnew("org/dataone/service/types/v1/ObjectFormatIdentifier")
-#  format.id$setValue(format)
-
-  # build the NodeReference from the mn_nodeid.
-#  if(is.null(mn_nodeid) || (mn_nodeid == "")) {
-#    print("ERROR: A Member Node must be defined to create an object.")
-#    return(.jnull("org/dataone/client/D1Object"))
-#  }
-#  mn.noderef <- .jnew("org/dataone/service/types/v1/NodeReference")
-#  mn.noderef$setValue(mn_nodeid)
-
-  # Now build the object with the sysmeta values
-#  d1object <- .jnew("org/dataone/client/D1Object", pid, byteArray, format.id,
-#                    submitter, mn.noderef, check=FALSE)
-  #message("building object")
-#  if (!is.null(e <- .jgetEx())) {
-#    print("Java exception was raised")
-#    print(.jcheck(silent=TRUE))
-#    print(.jcheck(silent=TRUE))
-#    print(e)
-#  }
-
-#  return(d1object)
-#})
-
-#########################################################
-### Accessor methods
-#########################################################
-
-# Need accessors for sysmeta and data contained in the 
-# internal java D1Object instance
 
 #########################################################
 ### Utility methods
 #########################################################
 
-
 #' Get the Contents of the Specified Data Object
 #' 
-#' @param x  D1Object or DataPackage: the data structure from where to get the data
-#' @param id Missing or character: if \code{"x"} is DataPackage, the identifier of the
-#' package member to get data from
+#' @param x  D1Object: the object from which to retrieve bytes of data
 #' @param ... (not yet used)
 #' @return character representation of the data
 #' 
 #' @author rnahf
 #' @export
-setGeneric("getData", function(x, id, ...) {
-    standardGeneric("getData")
-})
- 
 setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
-	jD1Object = x@jD1o
-	if(!is.jnull(jD1Object)) {
-		databytes <- jD1Object$getData()
-		if(is.null(databytes)) {
-			print(paste("Didn't find data in:", id))
-			return()
-		}
-        
-        if (!is.na(fileName)) {
-            ## Write data to file
-            jFileOutputStream <- .jnew("java/io/FileOutputStream", fileName)
-            jInputStream <- .jnew("java/io/ByteArrayInputStream", databytes)
-            ioUtils <- .jnew("org/apache/commons/io/IOUtils")
-            ioUtils$copy(jInputStream, jFileOutputStream)
-            returnVal = fileName
-        } else {
-            ## return data as string
-            jDataString <- .jnew("java/lang/String",databytes,"UTF-8")
-            if (!is.null(e<-.jgetEx())) {
-                print("Java exception was raised")
-                print(e)
-                print(.jcheck(silent=FALSE))
-            }
-            dataString <- jDataString$toString()
-            returnVal = dataString
-        }
-        
-		return(returnVal)
-	}
+    
 })
 
 
@@ -211,19 +79,8 @@ setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
 #' 
 #' @author rnahf
 #' @export
-setGeneric("getIdentifier", function(x, ...) {
-    standardGeneric("getIdentifier")
-})
-
 setMethod("getIdentifier", signature("D1Object"), function(x) {
-    jD1Object = x@jD1o
-	if(!is.jnull(jD1Object)) {
-		jPid <- jD1Object$getIdentifier()
-		if(is.null(jPid)) {
-			return()
-		}
-		return(jPid$getValue())
-	}
+
 })
 
 
@@ -234,20 +91,9 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' 
 #' @author rnahf
 #' @export
-setGeneric("getFormatId", function(x, ...) {
-			standardGeneric("getFormatId")
-		})
-
 setMethod("getFormatId", signature("D1Object"), function(x) {
-			jD1Object = x@jD1o
-			if(!is.jnull(jD1Object)) {
-				jFormatId <- jD1Object$getFormatId()
-				if(is.null(jFormatId)) {
-					return()
-				}
-				return(jFormatId$getValue())
-			}
-		})
+
+})
 
 
 #' Add a Rule to the AccessPolicy to Make the Object Publicly Readable
@@ -262,23 +108,8 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' 
 #' @author rnahf
 #' @export
-setGeneric("setPublicAccess", function(x, ...) {
-  standardGeneric("setPublicAccess")
-})
-
-
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
-    jD1Object = x@jD1o
-	if(!is.jnull(jD1Object)) {
-		
-		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
-		if (!is.jnull(jPolicyEditor)) {
-			message("setPublicAccess: got policy editor")
-			jPolicyEditor$setPublicAccess()
-		} else {
-			print("policy editor is null")
-		}
-	}
+
 })
 
 
@@ -296,34 +127,15 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' 
 #' @author rnahf
 #' @export
-setGeneric("canRead", function(x, subject, ...) {
-  standardGeneric("canRead")
-})
-
-## TODO: is this method really necessary? Can it be implemented more fully? (looking at rightsHolder)
-## (want to be able to work prior to submission)
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
-    jD1Object = x@jD1o
-	if(!is.jnull(jD1Object)) {
-		jPolicyEditor <- jD1Object$getAccessPolicyEditor()
-		if (!is.jnull(jPolicyEditor)) {
-			message("canRead: got policy editor")
-			jSubject <- J("org/dataone/client/D1TypeBuilder", "buildSubject", subject)
-			jPermission <- J("org/dataone/service/types/v1/Permission", "convert", "read")
-			result <- jPolicyEditor$hasAccess(jSubject,jPermission)
-		} else {
-			print("policy editor is null")
-			result <- FALSE
-		}
-	}
-	return(result)
+
 })
 
 
 
 setGeneric("asDataFrame", function(x, reference, ...) { 
             standardGeneric("asDataFrame")
-        })
+})
 
 ##
 ## this method uses the provided metadata reference object for instructions on
@@ -334,20 +146,20 @@ setGeneric("asDataFrame", function(x, reference, ...) {
 ## @rdname asDataFrame-methods
 ## aliases asDataFrame,D1Object,D1Object-method
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
-            ## reference is a metadata D1Object
-            mdFormat <- getFormatId(reference)
-            
-            dtdClassName <- tableDescriber.registry[[ mdFormat ]]
-            message(paste("@@ asDataFrame/Object", getIdentifier(reference), dtdClassName))
-            if (!is.na(dtdClassName)) {
-                dtd <-	do.call(dtdClassName, list(reference))
-                df <- asDataFrame(x,dtd)
-            } else {
-                print("Could not find metadata parser, trying as plain csv...")
-                df <-  asDataFrame(x)
-            }
-            return( df )
-        })
+    ## reference is a metadata D1Object
+    mdFormat <- getFormatId(reference)
+    
+    dtdClassName <- tableDescriber.registry[[ mdFormat ]]
+    message(paste("@@ asDataFrame/Object", getIdentifier(reference), dtdClassName))
+    if (!is.na(dtdClassName)) {
+        dtd <-	do.call(dtdClassName, list(reference))
+        df <- asDataFrame(x,dtd)
+    } else {
+        print("Could not find metadata parser, trying as plain csv...")
+        df <-  asDataFrame(x)
+    }
+    return( df )
+})
 
 
 ## @rdname asDataFrame-methods
@@ -422,15 +234,15 @@ setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), functi
 ## @rdname asDataFrame-methods
 ## aliases asDataFrame,D1Object,ANY-method
 setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
-            ## Load the data into a dataframe
-            
-            dataBytes <- getData(x)
-            theData <- textConnection(dataBytes)
-            message("theData is ", class(theData))
-            ## using read.csv instead of read.table, because it exposes the defaults we want
-            ## while also allowing them to be overriden
-            df <- read.csv(theData, ...)
-            return(df)
-        })
+    ## Load the data into a dataframe
+    
+    dataBytes <- getData(x)
+    theData <- textConnection(dataBytes)
+    message("theData is ", class(theData))
+    ## using read.csv instead of read.table, because it exposes the defaults we want
+    ## while also allowing them to be overriden
+    df <- read.csv(theData, ...)
+    return(df)
+})
 
 
