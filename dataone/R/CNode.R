@@ -19,10 +19,9 @@
 #
 
 #' @include D1Node.R
-## 
-## @slot endpoint The endpoint of the CN in this environment, including the version specifier
-## @author jones
-## @export
+
+#' A CNode represents a DataONE Coordinating Node and can be used to access its services.
+#' @exportClass CNode
 setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
 #########################
@@ -156,17 +155,17 @@ setGeneric("listNodes", function(cnode, ...) {
 })
 
 setMethod("listNodes", signature("CNode"), function(cnode) {
-	url <- paste(cnode@endpoint, "node", sep="/")
-	response <- GET(url)
-  if(response$status != "200") {
-		return(NULL)
-	}
-  
-	xml <- content(response)
-  node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
-	nodes <- getNodeSet(xml, "//node")
-	nodelist <- sapply(nodes, D1Node)
-	return(nodelist)
+    url <- paste(cnode@endpoint, "node", sep="/")
+    response <- GET(url)
+    if(response$status != "200") {
+        return(NULL)
+    }
+    
+    xml <- content(response)
+    node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
+    nodes <- getNodeSet(xml, "//node")
+    nodelist <- sapply(nodes, D1Node)
+    return(nodelist)
 })
 
 

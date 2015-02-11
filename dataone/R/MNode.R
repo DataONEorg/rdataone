@@ -33,6 +33,7 @@
 #' @rdname MNode-class
 #' @include D1Node.R
 #' @keywords classes
+#' @exportClass MNode
 #' @examples
 #' \dontrun{
 #' cn <- CNode("STAGING2")

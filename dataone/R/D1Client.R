@@ -18,6 +18,8 @@
 #   limitations under the License.
 #
 
+#' @include CNode.R
+#' @include MNode.R
 #' @include D1Object.R
 
 #'
@@ -26,12 +28,8 @@
 #' @slot client The reference to the internally held Java D1Client instance
 #' @slot session The reference to the internally held Java Session instance
 #' @export
-setClass("D1Client",
-         representation(endpoint = "character",
-                        mn.nodeid = "character",
-                        client = "jobjRef",
-                        session = "jobjRef")
-)
+#' @import datapackage
+setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
 #########################
 ## D1Client constructors
@@ -48,9 +46,9 @@ setClass("D1Client",
 ## @author mbjones
 ## @export
 setGeneric("D1Client", function(env, mnNodeid, ...) {
-  standardGeneric("D1Client")
+    standardGeneric("D1Client")
 })
- 
+
 #' Construct a D1Client, using default env ("PROD") and nodeid ("")
 #' 
 #' @return the D1Client object representing the DataONE environment
@@ -72,70 +70,31 @@ setMethod("D1Client", signature("character"), function(env, ...) {
 #' Pass in the environment to be used by this D1Client, plus the 
 #' id of the member node to be used for primary interactions such as creates
 setMethod("D1Client", signature("character", "character"), function(env, mnNodeid) {
-
-  ## Define the default CNs for each environment.
-  PROD <- "https://cn.dataone.org/cn"
-  STAGING <- "https://cn-stage.test.dataone.org/cn"
-  STAGING2 <- "https://cn-stage-2.test.dataone.org/cn"
-  SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
-  DEV <- "https://cn-dev.test.dataone.org/cn"
-
-  # By default, use production.  But also look in the environment.
-  CN_URI <- PROD
-  cn.url <- Sys.getenv("CN_URI")
-  if(cn.url != "") {
-    CN_URI <- cn.url
-  } else {
-    if (env == "DEV") CN_URI <- DEV
-    if (env == "STAGING") CN_URI <- STAGING
-    if (env == "STAGING2") CN_URI <- STAGING2
-    if (env == "SANDBOX") CN_URI <- SANDBOX
-    if (env == "PROD") CN_URI <- PROD
-  }
-
-  config <- J("org/dataone/configuration/Settings")$getConfiguration()
-  config$setProperty("D1Client.CN_URL", CN_URI)
-
-  ## create new D1Client object and insert uri endpoint
-  result <- new("D1Client")
-  result@endpoint <- CN_URI
-
-  ## an expired certificate can crash the R session, so want to check before 
-  ## instantiating any Java objects, which might interact with the DataONE environment
-  ## while setting things up.  (It will be called in this routine when 
-  ## validating the member node id)
-  cm <- CertificateManager()
-  if (isCertExpired(cm)) {
-      message("Your client certificate is expired.  Please download new one before continuing...")
-      return(NULL)
-  }
-  
-  ## Create a Java D1Client object to use for contacting the server
-  client <- .jnew("org/dataone/client/D1Client") 
-  result@client <- client
-  
-  ## Check and set the node reference
-  if (mnNodeid == "") {
-    ## allow the mn to be unset with empty string only
-    result@mn.nodeid <- mnNodeid
-  } else {
-    ## check to see if it's a valid value   
-    jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-    jNodeRef$setValue(mnNodeid)
-  
-    mnUrl <- result@client$getCN()$lookupNodeBaseUrl(mnNodeid)
-    if (is.null(mnUrl) || mnUrl == "") {
-        message("Error: The provided mnNodeid value is invalid for the DataONE environment")
+    
+    # create new D1Client object and insert uri endpoint
+    result <- new("D1Client")
+    result@cn <- CNode(env)
+    
+    # an expired certificate can crash the R session, so want to check before 
+    # instantiating any Java objects, which might interact with the DataONE environment
+    # while setting things up.  (It will be called in this routine when 
+    # validating the member node id)
+    cm <- CertificateManager()
+    if (isCertExpired(cm)) {
+        message("Your client certificate is expired.  Please download a new one before continuing...")
         return(NULL)
-    } else {
-        result@mn.nodeid <- mnNodeid
     }
-  }
- 
-  ## initialize the session, but not sure where it's used
-  result@session <- .jnull("org/dataone/service/types/v1/Session") 
-
-  return(result)
+    
+    # Check and set the node reference
+    if (mnNodeid == "") {
+        # allow the mn to be unset with empty string only
+        result@mn <- NULL
+    } else {
+        # try to instantiate a MN from the node identifier in this CN environment
+        mn <- getMNode(result@cn, mNodeid)
+    }
+    
+    return(result)
 })
 
 #########################################################
@@ -160,25 +119,25 @@ setMethod("D1Client", signature("character", "character"), function(env, mnNodei
 #' @import datapackage
 #' @export
 setGeneric("getPackage", function(x, identifier, ...) { 
-  standardGeneric("getPackage")
+    standardGeneric("getPackage")
 })
 
 setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
-
-  jPid <- .jnew("org/dataone/service/types/v1/Identifier")
-  jPid$setValue(identifier)
-  message(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
-  ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-  ## jNodeRef$setValue(x@mn.nodeid)
-  ## message(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
-  message(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
-  jDataPackage <- J("org/dataone/client/DataPackage")$download(jPid)
-  if (!is.null(e<-.jgetEx())) {
-	  print("Java exception was raised")
-	  print(.jcheck(silent=FALSE))
-  }
-  dp <- new(Class="DataPackage",jDataPackage=jDataPackage)
-  return(dp)
+    
+    jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+    jPid$setValue(identifier)
+    message(paste("@@ D1Client-methods.R 50: getPackage for", identifier))
+    ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+    ## jNodeRef$setValue(x@mn.nodeid)
+    ## message(paste("@@ D1Client-methods.R 51: nodeReference from rD1Client", x@mn.nodeid))
+    message(paste("@@ D1Client-methods.R 51: calling java DataPackage download method..." ))
+    jDataPackage <- J("org/dataone/client/DataPackage")$download(jPid)
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    dp <- new(Class="DataPackage",jDataPackage=jDataPackage)
+    return(dp)
 })
 
 
@@ -190,25 +149,25 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 #'
 #' @export
 setGeneric("getD1Object", function(x, identifier, ...) { 
-			standardGeneric("getD1Object")
-		})
+    standardGeneric("getD1Object")
+})
 
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-			client <- x@client
-			session <- x@session
-			jPid <- .jnew("org/dataone/service/types/v1/Identifier")
-			jPid$setValue(identifier)
-			
-			## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
-			## jNodeRef$setValue(x@mn.nodeid)
-			
-			# Use libclient D1Object to get the object
-			jD1Object <- J("org/dataone/client/D1Object")$download(jPid)
-			.jcheck(silent = FALSE)
-			
-			d1o <- new("D1Object",jD1Object)
-			return(d1o)
-		})
+    client <- x@client
+    session <- x@session
+    jPid <- .jnew("org/dataone/service/types/v1/Identifier")
+    jPid$setValue(identifier)
+    
+    ## jNodeRef <- .jnew("org/dataone/service/types/v1/NodeReference")
+    ## jNodeRef$setValue(x@mn.nodeid)
+    
+    # Use libclient D1Object to get the object
+    jD1Object <- J("org/dataone/client/D1Object")$download(jPid)
+    .jcheck(silent = FALSE)
+    
+    d1o <- new("D1Object",jD1Object)
+    return(d1o)
+})
 
 #' A method to query the DataONE solr endpoint of the Coordinating Node.
 #' It expects any lucene reserved characters to already be escaped with backslash. If
@@ -220,11 +179,11 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @examples \dontrun{ d1SolrQuery(client,list(q="+species population diversity", fl="identifier")) }
 #' @export
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
-            standardGeneric("d1SolrQuery")
-        })
+    standardGeneric("d1SolrQuery")
+})
 
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
-
+    
     encodedKVs <- character()
     for(key in attributes(solrQuery)$names) {
         kv <- paste0(encodeUrlQuery(x,key), "=", encodeUrlQuery(x,solrQuery[[key]]))
@@ -272,28 +231,28 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' @examples \dontrun{ d1IdentifierSearch(client,"q=%2Bspecies%20population%20diversity" }
 #' @export
 setGeneric("d1IdentifierSearch", function(x, solrQuery) {
-	standardGeneric("d1IdentifierSearch")    
+    standardGeneric("d1IdentifierSearch")    
 })
 
 setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
-	
-	# empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
-	# negates any other fl or wr values that might be part of the passed in solrQuery
-	# (need to do this for parsing the reponse)
-	finalQuery = paste0("fl=identifier&wt=json&",solrQuery)
-	message("final query: ", finalQuery)
-	jsonResponse <- d1SolrQuery(x, finalQuery)
-	
-	# remove leading and trailing junk that surrounds the identifier list
-	intermediate <- sub("\"}\\]}}","",sub(".*docs\":\\[\\{\"identifier\":\"","",jsonResponse))
-	
-	# if there are no identifiers returned, the intermediate will still have the responseHeader
-	if(grepl("^\\{\"responseHeader\":",intermediate)) {
-		return(character(0))
-	}
-	# split the remaining identifier list by the json cruft
-	result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
-	return(result)
+    
+    # empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
+    # negates any other fl or wr values that might be part of the passed in solrQuery
+    # (need to do this for parsing the reponse)
+    finalQuery = paste0("fl=identifier&wt=json&",solrQuery)
+    message("final query: ", finalQuery)
+    jsonResponse <- d1SolrQuery(x, finalQuery)
+    
+    # remove leading and trailing junk that surrounds the identifier list
+    intermediate <- sub("\"}\\]}}","",sub(".*docs\":\\[\\{\"identifier\":\"","",jsonResponse))
+    
+    # if there are no identifiers returned, the intermediate will still have the responseHeader
+    if(grepl("^\\{\"responseHeader\":",intermediate)) {
+        return(character(0))
+    }
+    # split the remaining identifier list by the json cruft
+    result <- unlist(strsplit(intermediate,"\"\\},\\{\"identifier\":\""))
+    return(result)
 })
 
 
@@ -305,31 +264,31 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 #' @return true if reserved
 #' @export
 setGeneric("reserveIdentifier", function(x, id, ...) { 
-  standardGeneric("reserveIdentifier")
+    standardGeneric("reserveIdentifier")
 })
 
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
-  message(paste("Reserving id:", id))
-
-  # Create a DataONE Identifier
-  pid <- .jnew("org/dataone/service/types/v1/Identifier")
-  pid$setValue(id)
-
-  # Reserve the specified identifier on the coordinating node.
-  cn <- getCN(x)
-  pid <- cn$reserveIdentifier(pid)
-  if (!is.null(e <- .jgetEx())) {
-    if(e$getDetail_code() == "4210") {
-      print(paste(identifier, "id cannot be used"))
-    } else {
-      print(paste("Exception detail code:", e$getDetail_code()))
-      print(e)
+    message(paste("Reserving id:", id))
+    
+    # Create a DataONE Identifier
+    pid <- .jnew("org/dataone/service/types/v1/Identifier")
+    pid$setValue(id)
+    
+    # Reserve the specified identifier on the coordinating node.
+    cn <- getCN(x)
+    pid <- cn$reserveIdentifier(pid)
+    if (!is.null(e <- .jgetEx())) {
+        if(e$getDetail_code() == "4210") {
+            print(paste(identifier, "id cannot be used"))
+        } else {
+            print(paste("Exception detail code:", e$getDetail_code()))
+            print(e)
+        }
+        return(FALSE)
     }
-    return(FALSE)
-  }
-
-  message(paste("Reserved pid:", pid$getValue()))
-  return(TRUE)
+    
+    message(paste("Reserved pid:", pid$getValue()))
+    return(TRUE)
 })
 
 
@@ -345,13 +304,13 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 #' 
 #' @export
 setGeneric("createD1Object", function(x, d1Object, ...) { 
-  standardGeneric("createD1Object")
+    standardGeneric("createD1Object")
 })
 
 
 setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
     message("--> createD1Object(D1Client, D1Object)")
-
+    
     # -- Validate everything necessary to create new object.
     message("    * Validating the D1Object....")
     if(is.jnull(d1Object)) {
@@ -359,7 +318,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
         return(FALSE)
     }
     jD1o <- d1Object@jD1o  
-  
+    
     sysmeta <- jD1o$getSystemMetadata()
     if(is.jnull(sysmeta)) {
         print("    ** Cannot create with a null sysmeta object.")
@@ -371,20 +330,20 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
         return(FALSE)
     }
     message("    * object valid")
-
+    
     ## TODO: uncomment this when /reserve is more reliable
     ## -- Reserve this identifier
     #  pid <- sysmeta$getIdentifier()
     #  id <- pid$getValue()
-  
+    
     #  if(!reserveIdentifier(x, id)) {
     #      print(paste("    ** Identifier already exists, or has been reserved: ", id))
     #      return(FALSE)
     #  }
     #  message("    * ID Reserved: ", id)
-
+    
     ## -- Connect to the member node and create the object.
-
+    
     jNewPid <- x@client$create(x@session, jD1o)
     if (!is.jnull(e <- .jgetEx())) {
         print("    ** Java exception was raised")
@@ -393,7 +352,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
         print(.jcheck(silent=FALSE))
     }
     message("    * Created.")
-
+    
     if(!is.jnull(jNewPid)) {
         message("      - created pid:", jNewPid$getValue())
     } else {
@@ -412,60 +371,57 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' Any objects in the data map that have a dataUploaded value are assumed to be 
 #' pre-existing in the system, and skipped.
 #' 
-#' @param x : D1Client
-#' @param dataPackage : The DataPackage instance to be submitted to DataONE for creation.
-#' @param ... (not yet used)
-#' 
 #' @details The DataPackage describes the collection of data object and their associated 
 #' metadata object, with the relationships and members serialized into a document
 #' stored under, and retrievable with, the packageId as it's own distinct object.
 #' 
 #' Members are created serially, and most errors in creating one object will 
-#' interrupt the create process for the whole, resulting in some members will 
-#' getting created, and the remainder not.
+#' interrupt the create process for the whole, with the result that some members will 
+#' be created, and the remainder not.
 #' 
+#' @param x D1Client
+#' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
+#' @param ... (not yet used)
 #' @return NULL
-#' @references See d1_libclient_java documentation D1Client.create()
-#'   	\url{"http://dev-testing.dataone.org:8080/hudson/job/d1_libclient_java/ws/d1_libclient_java/target/site/apidocs/org/dataone/client/D1Client.html#create"}
 #' @export
 setGeneric("createDataPackage", function(x, dataPackage, ...) { 
-            standardGeneric("createDataPackage")
-        })
+    standardGeneric("createDataPackage")
+})
 setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
-  message("====> createDataPackage(D1Client,DataPackage")
-            
-  message(paste("    * building the resource map for the", getSize(dataPackage), "members..."))
-  resourceMapString <- dataPackage@jDataPackage$serializePackage()
-  mapObject <- new("D1Object", dataPackage@packageId, resourceMapString, 
-		  "http://www.openarchives.org/ore/terms", x@mn.nodeid)
-  
-  ## TODO: this should not always be the case in the future.  
-  ## access should match the accessPolicy of the metadata objects, yes?
-  setPublicAccess(mapObject)
-  
-  ## add the vector of pids in the dataList to the java DataPackage
-  members <- getIdentifiers(dataPackage)
-  
-  for (pid in members) {
-      message(paste("    * next member to create:", pid))
-      rD1o <- getMember(dataPackage, pid)
-      jUploadDate <- rD1o@jD1o$getSystemMetadata()$getDateUploaded()
-      if (!is.jnull( jUploadDate )) {
-          message("     * SystemMetadata indicates that this object was already created (uploaded ",
+    message("====> createDataPackage(D1Client,DataPackage")
+    
+    message(paste("    * building the resource map for the", getSize(dataPackage), "members..."))
+    resourceMapString <- dataPackage@jDataPackage$serializePackage()
+    mapObject <- new("D1Object", dataPackage@packageId, resourceMapString, 
+                     "http://www.openarchives.org/ore/terms", x@mn.nodeid)
+    
+    ## TODO: this should not always be the case in the future.  
+    ## access should match the accessPolicy of the metadata objects, yes?
+    setPublicAccess(mapObject)
+    
+    ## add the vector of pids in the dataList to the java DataPackage
+    members <- getIdentifiers(dataPackage)
+    
+    for (pid in members) {
+        message(paste("    * next member to create:", pid))
+        rD1o <- getMember(dataPackage, pid)
+        jUploadDate <- rD1o@jD1o$getSystemMetadata()$getDateUploaded()
+        if (!is.jnull( jUploadDate )) {
+            message("     * SystemMetadata indicates that this object was already created (uploaded ",
                     jUploadDate$toString(),
                     "). Skipping create.")
-      }
-      createD1Object(x, rD1o)
-  }
-  
-  message(paste("    * creating the package resource map:", dataPackage@packageId ))
-  createD1Object(x, mapObject)
-  
-  message("<====  createDataPackage(D1Client, DataPackage")
-
+        }
+        createD1Object(x, rD1o)
+    }
+    
+    message(paste("    * creating the package resource map:", dataPackage@packageId ))
+    createD1Object(x, mapObject)
+    
+    message("<====  createDataPackage(D1Client, DataPackage")
+    
 })
 
- 
+
 #########################################################
 ### Accessor methods
 #########################################################
@@ -474,30 +430,35 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 setGeneric("getEndpoint", function(x, ...) { standardGeneric("getEndpoint")} )
 
 setMethod("getEndpoint", "D1Client", function(x) {
-  res <- x@endpoint
-  return(res)
+    res <- x@cn$baseUrl
+    return(res)
 })
 
 #' Get for the member node identifier associated with this client.
 #' One Member Node can be associated with the client as the default to which
 #' data and metadata are written.
 setGeneric("getMNodeId", function(x) { 
-  standardGeneric("getMNodeId")
+    standardGeneric("getMNodeId")
 })
 setMethod("getMNodeId", signature("D1Client"), function(x) {
-  return(x@mn.nodeid)
+    return(x@mn$identifier)
 })
 
 #' Set for the member node identifier associated with this client.
 #' One Member Node can be associated with the client as the default to which
 #' data and metadata are written.
 setGeneric("setMNodeId", function(x, id) { 
-  standardGeneric("setMNodeId")
+    standardGeneric("setMNodeId")
 })
 setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
-  if(!is.null(id) && id != "") {
-    x@mn.nodeid <- id
-  }
+    if(!is.null(id) && id != "") {
+        newMN <- getMNode(x@cn, id)
+        if (newMN != NULL) {
+            x@mn <- newMN   
+        } else {
+            message(paste0("Member Node not found: ", id))
+        }
+    }
 })
 
 
@@ -507,37 +468,26 @@ setGeneric("getMN", function(x, nodeid, ...) {
     standardGeneric("getMN")
 })
 setMethod("getMN", signature("D1Client"), function(x, ...) {
-  .Deprecated("MNode")
-  mn <- getMN(x, x@mn.nodeid)
+    return(x@mn)
 })
 setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
-  .Deprecated("MNode")
-  # Validate nodeid.
-  if(is.null(nodeid) || (nodeid == "")) {
-    print("ERROR: No member node id is defined.")
-    return(.jnull("org/dataone/client/MNode"))
-  }
-
-  # Build a NodeReference out of the id and return a MN client.
-  node.ref <- .jnew("org/dataone/service/types/v1/NodeReference")
-  node.ref$setValue(nodeid)
-  mn <- J("org/dataone/client/D1Client")$getMN(node.ref)
-
-  return(mn)
+    if(is.null(nodeid) || (nodeid == "")) {
+        newMN <- getMNode(x@cn, nodeid)
+        if (newMN == NULL) {
+            message(paste0("Member Node not found: ", id))
+        }
+    }
+    return(newMN)
 })
 
 
-#' Deprecated. Get a coordinating node client.
+#' Get a coordinating node client.
 setGeneric("getCN", function(x) { 
-  standardGeneric("getCN")
+    standardGeneric("getCN")
 })
 setMethod("getCN", signature("D1Client"), function(x) {
-  .Deprecated("CNode")
-  cn <- J("org/dataone/client/D1Client")$getCN()
-  return(cn)
+    return(x@cn)
 })
-
-
 
 
 setGeneric("listMemberNodes", function(x) {
@@ -545,10 +495,7 @@ setGeneric("listMemberNodes", function(x) {
 })
 
 setMethod("listMemberNodes", signature("D1Client"), function(x) {
-    .Deprecated("listNodes")
-    mnIDset <- x@client$getCN()$listNodeIds()$toArray(.jarray(""))
-    ## remove CN
-    return (mnIDset)
+    return (listNodes(x))
 })
 
 #########################################################
@@ -561,15 +508,15 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @return the dataframe serialized as a .csv
 #' @export
 setGeneric("convert.csv", function(x, ...) {
-  standardGeneric("convert.csv")
+    standardGeneric("convert.csv")
 })
- 
+
 setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
-   con <- textConnection("data", "w")
-   write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
-   close(con)
-   csvdata <- paste(data, collapse="\n")
-   return(csvdata)
+    con <- textConnection("data", "w")
+    write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
+    close(con)
+    csvdata <- paste(data, collapse="\n")
+    return(csvdata)
 })
 
 #' Encode the Input for Solr Queries
@@ -581,15 +528,15 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' @examples encodeSolr("this & that")
 #' @export
 setGeneric("encodeSolr", function(x, segment, ... ) {
-			standardGeneric("encodeSolr")
-		})
+    standardGeneric("encodeSolr")
+})
 
 setMethod("encodeSolr", signature(x="D1Client", segment="character"), function(x, segment, ...) {
-	inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
-	if (grepl(" ",inter)) {
-		return(paste0("\"",inter,"\""))
-	}
-	return(inter)
+    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
+    if (grepl(" ",inter)) {
+        return(paste0("\"",inter,"\""))
+    }
+    return(inter)
 })
 
 
@@ -604,26 +551,26 @@ setMethod("encodeSolr", signature(x="D1Client", segment="character"), function(x
 #' @examples fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 #' @export
 setGeneric("encodeUrlQuery", function(x, querySegment, ...) {
-			standardGeneric("encodeUrlQuery")
-		})
+    standardGeneric("encodeUrlQuery")
+})
 
 setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), function(x, querySegment, ...) {
-	
-	#    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
-	#    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
-	
-	encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
-	if (!is.null(e<-.jgetEx())) {
-		print("Java exception was raised")
-		print(.jcheck(silent=FALSE))
-	}
-	return(encoded)
-	
-	## an R-only alternate implementation that only would work for ASCII characters
-	## (may need to check the behavior of {,},[,] - they may need to be hidden also)
-	#    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
-	#    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
-	#    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
+    
+    #    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
+    #    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
+    
+    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    return(encoded)
+    
+    ## an R-only alternate implementation that only would work for ASCII characters
+    ## (may need to check the behavior of {,},[,] - they may need to be hidden also)
+    #    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
+    #    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
+    #    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
 })
 
 
@@ -638,14 +585,14 @@ setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), f
 #' @examples fullyEncodedPath <- paste0("cn/v1/object/",encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
 #' @export
 setGeneric("encodeUrlPath", function(x, pathSegment, ...) {
-			standardGeneric("encodeUrlPath")
-		})
+    standardGeneric("encodeUrlPath")
+})
 
 setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), function(x, pathSegment, ...) {
-	encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlPathSegment", pathSegment)
-	if (!is.null(e<-.jgetEx())) {
-		print("Java exception was raised")
-		print(.jcheck(silent=FALSE))
-	}
-	return(encoded)
+    encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlPathSegment", pathSegment)
+    if (!is.null(e<-.jgetEx())) {
+        print("Java exception was raised")
+        print(.jcheck(silent=FALSE))
+    }
+    return(encoded)
 })
