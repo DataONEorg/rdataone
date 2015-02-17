@@ -164,7 +164,15 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
 })
 
 
-#' Download a DataObject from the DataONE Federation
+#' Download a DataObject from the DataONE Federation. 
+#' 
+#' @description A convenience method to download a data object and its associated SystemMetadata, wrapped
+#' in a DataObject class.
+#' @details This method performs multiple underlying calls to the DataONE repository network. 
+#' CN.resolve() is called to locate the object on one or more repositories, and then each of these
+#' is accessed until success at downloading the associated SystemMetadata and data bytes, which are 
+#' finally wrapped in a DataObject and returned. Replaces previous getD1Object() method in the version 1
+#' dataone library.
 #' @param x : D1Client
 #' @param identifier : the identifier of the object to get
 #' @param ... (not yet used)
@@ -185,7 +193,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
     # Get the SystemMetadata and object bytes from one of the MNs
     # Process them in order, until we get non-NULL responses from a node
     sysmeta <- NA
-    data <- NA
+    bytes <- NA
     for (i in 1:length(mntable)) { 
         currentMN <- getMNode(x@cn, mntable[i,]$identifier)
         if (!is.null(currentMN)) {

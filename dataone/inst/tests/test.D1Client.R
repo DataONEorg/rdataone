@@ -47,6 +47,6 @@ test_that("D1Client getDataObject", {
     expect_that(getIdentifier(obj), matches(pid))
     expect_that(getFormatId(obj), matches("text/csv"))
     data <- getData(obj)
-    sha1 <- digest(data, algo="sha1", serialize=FALSE, file=FALSE)
+    sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
     expect_that(sha1, matches(obj@sysmeta@checksum))
 })
