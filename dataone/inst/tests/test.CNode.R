@@ -33,7 +33,8 @@ test_that("CNode get()", {
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
   obj <- get(cn, pid)
-  cname <- class(obj)[1]
+  xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
+  cname <- class(xml)[1]
   expect_that(cname, matches("XML"))
 })
 

@@ -19,23 +19,26 @@ test_that("MNode getCapabilities()", {
 	expect_that(mn@identifier, matches("urn:node"))
 })
 test_that("MNode get()", {
-	library(dataone)
-	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-	mn <- MNode(mn_uri)
+    library(dataone)
+    mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+    mn <- MNode(mn_uri)
     pid <- "doi:10.5063/F1QN64NZ"
-    xml <- get(mn, pid)
-	cname <- class(xml)[1]
-	expect_that(cname, matches("XML"))
+    bytes <- get(mn, pid)
+    xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
+    cname <- class(xml)[1]
+    expect_that(cname, matches("XML"))
     pid <- "solson.5.1"
     obj <- get(mn, pid)
-	cname <- class(obj)[1]
-	expect_that(cname, matches("data.frame"))
+    df <- read.csv(text=rawToChar(obj))
+    cname <- class(df)[1]
+    expect_that(cname, matches("data.frame"))
     cn <- CNode()
     knb <- getMNode(cn, "urn:node:KNB")
-	pid <- "doi:10.5063/F1QN64NZ"
-	xml <- get(mn, pid)
-	cname <- class(xml)[1]
-	expect_that(cname, matches("XML"))
+    pid <- "doi:10.5063/F1QN64NZ"
+    bytes <- get(mn, pid)
+    xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
+    cname <- class(xml)[1]
+    expect_that(cname, matches("XML"))
 })
 test_that("MNode getSystemMetadata()", {
     library(dataone)

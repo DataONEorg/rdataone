@@ -214,7 +214,7 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
     return(NULL)
   }
   
-  return(content(response))
+  return(content(response, as="raw"))
 })
 
 #' Get the metadata describing system properties associated with an object on a Coordinating Node.

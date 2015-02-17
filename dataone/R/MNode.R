@@ -167,7 +167,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
     if(response$status != "200") {
 		return(NULL)
 	}
-	return(content(response))
+	return(content(response, as="raw"))
 })
 
 #' Get the metadata describing system properties associated with an object on this Member Node.
