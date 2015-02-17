@@ -247,14 +247,10 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
     return(NULL)
   }
   
-  sysmeta <- SystemMetadata()
-  sysmeta_xml <- content(response, as="text")
-  xml <- xmlParseDoc(sysmeta_xml, asText=TRUE)
-  #xml <- xmlParseDoc("/tmp/sysmeta.xml", asText=FALSE)
-  sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
-
-  return(sysmeta)
+  # Convert the response into a SystemMetadata object
+  sysmeta <- SystemMetadata(xmlRoot(content(response)))
   
+  return(sysmeta)
 })
 
 #' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
