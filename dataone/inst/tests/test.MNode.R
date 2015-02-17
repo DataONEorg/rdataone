@@ -127,7 +127,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     expect_that(xmlValue(xmlRoot(response)), matches(newid))
     newsysmeta <- getSystemMetadata(mn, newid)
     expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
-    expect_that(newsysmeta@archived, matches("true"))
+    expect_that(newsysmeta@archived, is_true())
     
     #TODO: delete the object
     #response <- delete(mn, newid)
