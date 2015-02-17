@@ -197,8 +197,9 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     if(response$status != "200") {
         return(NULL)
     }
-    # TODO: convert the response into a SystemMetadata object
-    return(content(response))
+    # Convert the response into a SystemMetadata object
+    sysmeta <- SystemMetadata(xmlRoot(content(response)))
+    return(sysmeta)
 })
 
 #' This method provides a lighter weight mechanism than getSystemMetadata() for a client to

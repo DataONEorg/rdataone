@@ -42,9 +42,10 @@ test_that("MNode getSystemMetadata()", {
     cn <- CNode()
     mn <- getMNode(cn, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
-    xml <- getSystemMetadata(mn, pid)
-    cname <- class(xml)[1]
-    expect_that(cname, matches("XML"))
+    sysmeta <- getSystemMetadata(mn, pid)
+    cname <- class(sysmeta)[1]
+    expect_that(cname, matches("SystemMetadata"))
+    expect_that(sysmeta@identifier, matches("doi:10.5063/F1QN64NZ"))
 })
 test_that("MNode generateIdentifier()", {
     skip_on_cran()
@@ -118,13 +119,15 @@ test_that("MNode create(), update(), archive(), and delete()", {
     response <- update(mn, newid, csvfile, updateid, sysmeta)
     expect_that(xmlValue(xmlRoot(response)), matches(updateid))
     updsysmeta <- getSystemMetadata(mn, updateid)
-    expect_that(xmlValue(xmlRoot(updsysmeta)[["obsoletes"]]), matches(newid))
+    expect_that(class(updsysmeta)[1], matches("SystemMetadata"))
+    expect_that(updsysmeta@obsoletes, matches(newid))
     
     # Archive the object
     response <- archive(mn, newid)
     expect_that(xmlValue(xmlRoot(response)), matches(newid))
     newsysmeta <- getSystemMetadata(mn, newid)
-    expect_that(xmlValue(xmlRoot(newsysmeta)[["archived"]]), matches("true"))
+    expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
+    expect_that(newsysmeta@archived, matches("true"))
     
     #TODO: delete the object
     #response <- delete(mn, newid)

@@ -179,16 +179,19 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 setMethod("getDataObject", "D1Client", function(x, identifier) {
     
     # Resolve the object location
-    mntable <- resolve(x@cn, identifier)
+    result <- resolve(x@cn, identifier)
+    mntable <- result[[2]]
     
     # Get the SystemMetadata and object bytes from one of the MNs
     # Process them in order, until we get non-NULL responses from a node
+    sysmeta <- NA
+    data <- NA
     for (i in 1:length(mntable)) { 
         currentMN <- getMNode(x@cn, mntable[i,]$identifier)
-        if (currentMN != NULL) {
+        if (!is.null(currentMN)) {
             sysmeta <- getSystemMetadata(currentMN, identifier)
             bytes <- get(currentMN, identifier)
-            if (sysmeta != NULL && bytes != NULL) {
+            if (!is.null(sysmeta) & !is.null(bytes)) {
                 success=TRUE
                 break
             }
