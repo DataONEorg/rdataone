@@ -268,8 +268,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
                     config=config(sslcert = cert))
     } else {
         # This is an error, one must be authenticated
-        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
-        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        show_auth_message()
         return(NULL)
     }
     if(response$status != "200") {
@@ -318,8 +317,7 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
                         config=config(sslcert = cert))
     } else {
         # This is an error, one must be authenticated
-        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
-        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        show_auth_message()
         return(NULL)
     }
     if(response$status != "200") {
@@ -364,8 +362,7 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
         response <- PUT(url, config=config(sslcert = cert))
     } else {
         # This is an error, one must be authenticated
-        cat(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
-        cat(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+        show_auth_message()
         return(NULL)
     }
     if(response$status != "200") {
@@ -423,3 +420,12 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.listQueryEngines
 # public QueryEngineList listQueryEngines()
+
+
+############# Private functions, internal to this class, not for external callers #################
+
+show_auth_message <- function() {
+    message(sprintf('Exception name: %s', "NotAuthenticated"), "\n")
+    message(sprintf('Exception description: %s', "You must be logged in with a valid certificate file."), "\n")
+    message("You can log in and download a certificate at https://cilogon.org/?skin=DataONE")
+}
