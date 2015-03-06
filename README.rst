@@ -100,10 +100,10 @@ release.  Be aware that there are API differences that are not fully finalized.
 
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
-Because the v2 package has not been release to CRAN, nor have its dependencies, you need to install the 
+Because the v2 package has not been released to CRAN, nor have its dependencies, you need to install the 
 dependencies manually before installing the package itself.  Using the devtools package, once can install 
 all of the dependencies needed using the install_github() function, except for the redland-bindings 
-package, which must be installed manually:
+package, which must be installed manually::
 
   $ curl https://github.com/ropensci/redland-bindings/archive/master.zip -o redland-bindings.zip
   $ unzip redland-bindings.zip
