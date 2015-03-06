@@ -53,8 +53,8 @@ rJava for your particular version of R and Java.
 
 .. > install.packages("rJava",,"http://rforge.net/",type="source")
 
-Quick Start
------------
+Quick Start (Version 1)
+-----------------------
 
 See the full manual for documentation, but once installed, the package can be run in R using::
 
@@ -89,8 +89,9 @@ Writing a CSV file to a DataONE Member Node requires authentication via CILogon,
   > createD1Object(cli, d1Object)
 
 
-Roadmap
--------
+Version 2 Alpha
+---------------
+
 We are currently working on a `version 2 release milestone`_ that removes the dependency on rJava.  
 This work is partially complete and significantly changes the base API to correspond to the published 
 DataONE API.  Previous methods for accessing DataONE will be maintained, but new methods will be added.
@@ -98,6 +99,24 @@ Consequently, the current development snapshot in the master branch is quite dif
 release.  Be aware that there are API differences that are not fully finalized.
 
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
+
+Because the v2 package has not been release to CRAN, nor have its dependencies, you need to install the 
+dependencies manually before installing the package itself.  Using the devtools package, once can install 
+all of the dependencies needed using the install_github() function, except for the redland-bindings 
+package, which must be installed manually:
+
+  $ curl https://github.com/ropensci/redland-bindings/archive/master.zip -o redland-bindings.zip
+  $ unzip redland-bindings.zip
+  $ cd redland-bindings
+  $ ./autogen.sh --with-R
+  $ make
+  $ cd R
+  $ R CMD INSTALL redland
+  $ R
+  > install.packages(c("XML", "httr", "stringr"))
+  > devtools::install_github("ropensci/datapackage")
+  > devtools::install_github("mbjones/PKI")
+  > devtools::install_github("DataONEorg/rdataone/dataone")
 
 Development logs
 ----------------
