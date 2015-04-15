@@ -186,6 +186,8 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 #' @export
 setMethod("getDataObject", "D1Client", function(x, identifier) {
     
+    # TODO: add SSL credentials to get calls if user is authenticated
+    
     # Resolve the object location
     result <- resolve(x@cn, identifier)
     mntable <- result[[2]]
@@ -224,6 +226,7 @@ setGeneric("d1SolrQuery", function(x, solrQuery) {
     standardGeneric("d1SolrQuery")
 })
 
+# TODO: delegate implementation to CNode
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
     
 #     encodedKVs <- character()
@@ -245,6 +248,7 @@ setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
 #     return( d1SolrQuery(x, assembledQuery) )
 })
 
+# TODO: delegate implementation to CNode
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
     
 #     packagedQuery <- paste0("?", solrQuery)
@@ -335,73 +339,60 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 
 
 
-#' Create the Object in the DataONE System
+#' Upload an object to the DataONE System.
 #' 
-#' Creates a D1Object on the MemberNode determined by the object's systemMetadata.
+#' Uploads a DataObject on the MemberNode determined by the object's systemMetadata.
+#' Values in the object's SystemMetadata are used to determine where the object is
+#' is uploaded, its identifier, format, owner, access policies, and other relevant
+#' metadata about the object.
 #' 
-#' @param x : D1Client
-#' @param d1Object : the object to create in DataONE
+#' @param x : D1Client to do the uploading
+#' @param object : the object to create in DataONE
 #' @param ... (not yet used)
-#' @return TRUE if success
+#' @return identifier of the uploaded object if success, otherwise FALSE
 #' 
 #' @export
-setGeneric("createD1Object", function(x, d1Object, ...) { 
-    standardGeneric("createD1Object")
+setGeneric("upload", function(x, ...) { 
+    standardGeneric("upload")
 })
 
+setMethod("upload", signature("D1Client"), function(x, object) {
+    
+    # Validate that we have a good DataObject instance
+    if (is.null(object) | is.missing(object) | class(object) != "DataObject") {
+        message("Failed to upload: object is missing, NULL, or is not an instance of DataObject.")
+        return(FALSE)
+    }
+    
+    # Validate that we have a system metadata object
+    sysmeta <- object@sysmeta
+    if (is.null(sysmeta) | is.missing(sysmeta) | class(sysmeta) != "SystemMetadata") {
+        message("Failed to upload: system metadata is missing, NULL, or is not an instance of SystemMetatdata")
+        return(FALSE)
+    }
+    
+    # Validate that we have adequate system metadata, including an identifier and nodeId
+    newid <- sysmeta@identifier
+    if (is.missing(newid) | is.null(newid) | is.missing(sysmeta@authoritativeMemberNode) | is.null(sysmeta@authoritativeMemberNode)) {
+        message("Failed to upload: system metadata does not contain either a required identifier or authoritativeMemberNode value.")
+        return(FALSE)
+    }
 
-setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
-#     message("--> createD1Object(D1Client, D1Object)")
-#     
-#     # -- Validate everything necessary to create new object.
-#     message("    * Validating the D1Object....")
-#     if(is.jnull(d1Object)) {
-#         print("    ** Cannot create a null object.")
-#         return(FALSE)
-#     }
-#     jD1o <- d1Object@jD1o  
-#     
-#     sysmeta <- jD1o$getSystemMetadata()
-#     if(is.jnull(sysmeta)) {
-#         print("    ** Cannot create with a null sysmeta object.")
-#         return(FALSE)
-#     }
-#     
-#     if(is.jnull(sysmeta$getIdentifier())) {
-#         print("    ** Cannot create with a null identifier.")
-#         return(FALSE)
-#     }
-#     message("    * object valid")
-#     
-#     ## TODO: uncomment this when /reserve is more reliable
-#     ## -- Reserve this identifier
-#     #  pid <- sysmeta$getIdentifier()
-#     #  id <- pid$getValue()
-#     
-#     #  if(!reserveIdentifier(x, id)) {
-#     #      print(paste("    ** Identifier already exists, or has been reserved: ", id))
-#     #      return(FALSE)
-#     #  }
-#     #  message("    * ID Reserved: ", id)
-#     
-#     ## -- Connect to the member node and create the object.
-#     
-#     jNewPid <- x@client$create(x@session, jD1o)
-#     if (!is.jnull(e <- .jgetEx())) {
-#         print("    ** Java exception was raised")
-#         print(paste("Exception detail code:", e$getDetail_code()))
-#         print(e)
-#         print(.jcheck(silent=FALSE))
-#     }
-#     message("    * Created.")
-#     
-#     if(!is.jnull(jNewPid)) {
-#         message("      - created pid:", jNewPid$getValue())
-#     } else {
-#         message("      - pid is null")
-#     }
-#     message("<--  create(D1Client, D1Object)")
-#     return(jNewPid$getValue())
+    # Connect to the member node and create the object.
+    mn <- getMN(x, sysmeta@authoritativeMemberNode)
+    if (is.null(mn) | is.missing(mn)) {
+        message(paste("Failed to upload: could not find the requested authoritativeMemberNode:", sysmeta@authoritativeMemberNode))
+        return(FALSE)
+    }
+    # TODO: check the obsoletes flag, and if set, then use update() rather than create()
+    response <- create(mn, newid, csvfile, sysmeta)
+    if (response$status != "200") {
+        message(paste("Failed to upload:", response@errorCode))
+        return(FALSE)
+    }
+
+    # TODO: pull out the identifier from its XML wrapper before returning it
+    return(content(response))
 })
 
 
@@ -561,29 +552,8 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
     return(csvdata)
 })
 
-#' Encode the Input for Solr Queries
-#' 
-#' Treating all special characters and spaces as literals, backslash escape special
-#' characters, and double-quote if necessary 
-#' @param segment : a string to encode
-#' @return the encoded form of the input
-#' @examples encodeSolr("this & that")
-#' @export
-setGeneric("encodeSolr", function(x, segment, ... ) {
-    standardGeneric("encodeSolr")
-})
 
-setMethod("encodeSolr", signature(x="D1Client", segment="character"), function(x, segment, ...) {
-    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
-    if (grepl(" ",inter)) {
-        return(paste0("\"",inter,"\""))
-    }
-    return(inter)
-})
-
-
-
-
+# TODO: delegate this implementation to CNode
 #' Encode the Input for a URL Query Segment
 #' 
 #' Encodes the characters of the input so they are not interpretted as reserved

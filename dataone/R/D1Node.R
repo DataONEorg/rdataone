@@ -175,3 +175,24 @@ d1_errors <- function(x){
   cat(sprintf('Exception description: %s', mssg), "\n")
   #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
 }
+
+#' Encode the input for Solr Queries
+#' 
+#' Treating all special characters and spaces as literals, backslash escape special
+#' characters, and double-quote if necessary.
+#' @param segment : a string to encode
+#' @return the encoded form of the input
+#' @examples encodeSolr("this & that")
+#' @export
+setGeneric("encodeSolr", function(segment, ... ) {
+    standardGeneric("encodeSolr")
+})
+
+setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
+    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
+    if (grepl(" ",inter)) {
+        return(paste0("\"",inter,"\""))
+    }
+    return(inter)
+})
+
