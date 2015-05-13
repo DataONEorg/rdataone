@@ -84,6 +84,8 @@ setMethod("CNode", signature("character"), function(env) {
   result <- new("CNode")
   result@baseURL <- CN_URI
   result@endpoint <- paste(CN_URI, "v1", sep="/")
+  # Set the service URL fragment for the solr query engine
+  result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "select?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
 
   return(result)
 })
@@ -320,42 +322,6 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.query
 # public InputStream query(String queryEngine, String query)
-#' Search DataONE for data and metadata objects
-#' @details Use SOLR syntax to search the DataONE federation of data repositories for matching data.
-#' Any lucene reserved characters must be escaped with backslash. If solrQuery is a list, 
-#' it is expected to have field names as attributes and search values as the values in the list.
-#' @param cnode The coordinating node to query
-#' @param solrQuery The query parameters to be searched, either as a URL-encoded string or as list with named attributes
-#' @return search results
-#' 
-#' @export
-setGeneric("query", function(cnode, solrQuery, ...) {
-    standardGeneric("query")
-})
-
-#' @export
-setMethod("query", signature("CNode", "character"), function(cnode, solrQuery) {
-    
-    # TODO: add parameter to set results format: xml, json, list
-    
-    url <- paste(cnode@endpoint, "query", "solr", sep="/")
-    queryUrl <- paste(url, solrQuery, sep="?")
-    # TODO: add credentials if authenticated
-    
-    # Send the query to the CN
-    response <- GET(queryUrl)
-    if(response$status != "200") {
-        return(NULL)
-    }
-    
-    res <- content(response)
-    
-    # TODO: parse the results into a list if requested in the format parameter
-    #node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
-    #nodes <- getNodeSet(xml, "//node")
-    #nodelist <- sapply(nodes, D1Node)
-    return(res)
-})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)
@@ -389,33 +355,3 @@ setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function
   }
 })
 
-#' Encode input for a Url Query segment
-#' 
-#' Encodes the characters of the input so they are not interpretted as reserved
-#' characters.  Will also encode non-ASCII unicode characters.
-#' @param query: a string to encode
-#' @return the encoded form of the input
-#' @examples fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
-#' @export
-setGeneric("encodeSolrQuery", function(querySegment, ...) {
-    standardGeneric("encodeSolrQuery")
-})
-
-setMethod("encodeSolrQuery", signature(querySegment="character"), function(querySegment, ...) {
-    
-    #    luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
-    #    luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
-    
-    #     encoded <- J("org/dataone/service/util/EncodingUtilities","encodeUrlQuerySegment", querySegment)
-    #     if (!is.null(e<-.jgetEx())) {
-    #         print("Java exception was raised")
-    #         print(.jcheck(silent=FALSE))
-    #     }
-    #     return(encoded)
-    
-    ## an R-only alternate implementation that only would work for ASCII characters
-    ## (may need to check the behavior of {,},[,] - they may need to be hidden also)
-    #    escaped <- gsub("\\\\([+-:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","%5C\\1",querySegment, perl=TRUE)
-    #    escaped <- gsub("%5C&","%5C%26",solrQuery)  ##  need to hide the ampersand from the web server
-    #    escaped   <- gsub("%5C\\+","%5C%2B",solrQuery)  ## need to hide the + from the web server
-})

@@ -28,6 +28,7 @@
 ## @slot replicate  a boolean flag indicating whether the node accepts replicas
 ## @slot type the node type, either 'mn' or 'cn'
 ## @slot state an indication of whether the node is accessible, either 'up' or 'down'
+## @slot serviceUrls a data.frame that contains DataONE service Urls
 ## @author jones
 ## @export
 setClass("D1Node",
@@ -43,7 +44,8 @@ setClass("D1Node",
 					contactSubject = "character",
 					replicate = "character",
 					type = "character",
-					state = "character"
+					state = "character",
+          serviceUrls = "data.frame"
 					)
 )
 
@@ -188,6 +190,7 @@ setGeneric("encodeSolr", function(segment, ... ) {
     standardGeneric("encodeSolr")
 })
 
+#' @export
 setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
     inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
     if (grepl(" ",inter)) {
@@ -196,3 +199,149 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
     return(inter)
 })
 
+#' Search DataONE for data and metadata objects
+#' @description Use SOLR syntax to search the DataONE federation of data repositories for matching data.
+#' @details
+#' Several different return types can be specified with the \code{"as"} parameter: "text", "parsed", "list".
+#' If "text" is specified, then the query results are returned as a character varialble. Specify "parsed" to
+#' have the result converted to an XML document (R XMLInternalDocument). Specify 'list' to have 
+#' the result converted to an R list, with each element containing one result as a list of values, for example.
+#' \code{'result[[1]]$id'} would be the DataONE identifier value of the first result.
+#' Any lucene reserved characters in query parameters must be escaped with backslash, for example,
+#' \code{'queryParams <- "q=id:doi\\:10.6073/AA/knb-lter-and.4341.13"'}. Notice that the colon after
+#' \code{'q=id'} is not escaped, as this is needed by Solr to parse the query.
+#' If solrQuery is a list, 
+#' it is expected to have field names as attributes and search values as the values in the list.
+#' @param d1node The coordinating node or member node object instance to query
+#' @param solrQuery The query parameters to be searched, either as a string or as list with named attributes.
+#' @param as The return type. Possible values: "text", "parsed", "list" where "parsed" is the default.
+#' @param encode A boolean, if true then URLencode the entire query string if a character, or each parameter value if a list
+#' @return search results
+#' @examples
+#' \dontrun{
+#' queryParams <- "q=id:doi*&rows=2&wt=xml"
+#' cn <- CNode("SANDBOX")
+#' result <- query(cn, queryParams, as="list")
+#' }
+#' @export
+setGeneric("query", function(d1node, ...) {
+  standardGeneric("query")
+})
+
+#' @export
+setMethod("query", signature("D1Node"), function(d1node, solrQuery, as="parsed", encode=TRUE, ...) {
+  
+  # The CN API has a slightly different format for the solr query engine than the MN API,
+  # so the appropriate URL is set in the CNode or MNode class.
+  serviceUrl <- d1node@serviceUrls[d1node@serviceUrls$service=="query.solr", "Url"]
+  
+  # The 'solrQuery' parameter can be specified as either a character string or a named list
+  if (encode) {
+    if (is(solrQuery, "list")) {
+      encodedKVs <- character()
+      for(key in attributes(solrQuery)$names) {
+        kv <- paste0(key, "=", URLencode(solrQuery[[key]]))
+        encodedKVs[length(encodedKVs)+1] <- kv
+      }
+      queryParams <- paste(encodedKVs,collapse="&")
+    } else {
+      queryParams <- URLencode(solrQuery)
+    }
+  } else {
+    queryParams <- paste(solrQuery, sep="?")  
+  }
+  
+  queryUrl <- paste(serviceUrl, queryParams, sep="")
+  # TODO: add credentials if authenticated
+  
+  # Send the query to the Node
+  response <- GET(queryUrl)
+  if(response$status != "200") {
+    return(NULL)
+  }
+  
+  # The CNs return the response content as binary regardless of Solr response writer specified or http request header
+  # "Accept" type specified, so check the response and convert it to parsed XML, if necessary.
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  if (as == "text") {
+    res <- resultText
+  } else if (as == "parsed") {
+    res <- xmlInternalTreeParse(resultText, asText=TRUE)
+  } else if (as == "list") {
+    xmlDoc <- xmlInternalTreeParse(resultText, asText=TRUE)
+    res <- parseSolrResult(xmlDoc)
+  }
+  
+  return(res)
+})
+
+#' Parse Solr output into an R list
+#' @description Solr output that is specified with a writer type of XML \code{'&wt="xml"'}
+#' @param result The Solr result to parse, in XML format
+#' @return resultList The Solr result as an R list
+#' @export
+setGeneric("parseSolrResult", function(doc, ...) {
+  standardGeneric("parseSolrResult")
+})
+
+#' @export
+setMethod("parseSolrResult", signature("XMLInternalDocument"), function(doc, ...) {
+  resultList <- xpathApply(doc, "/response/result/doc", parseResultDoc)
+  return (resultList)
+  
+})
+
+## Internal functions
+
+# Parse a Solr result "<doc>" XML element inta an R list
+parseResultDoc <- function(xNode) {
+  childNodes <- getNodeSet(xNode, "*")
+  thisDocList <- list()
+  for (child in childNodes) {
+    thisDocList <- parseResultNode(child, thisDocList)
+  }
+  return(thisDocList)
+}
+
+# Parse a Solr result field
+parseResultNode <- function(xNode, resultList) {
+  nodeName <- xmlName(xNode)
+  # Convert a Solr result "arr" (arrary) into an R list
+  if (nodeName == "arr") {
+    childNodes <- getNodeSet(xNode, "*")
+    resultList[[xmlGetAttr(xNode, "name")]] <- lapply(childNodes, parseSolrField)
+    #xmlVals <- xpathApply(xNode, "*", parseResultNode, resultList=resultList)
+  } else {
+    # Convert a Solr result atomic value into an R variable
+    resultList[[xmlGetAttr(xNode, "name")]] <- parseSolrField(xNode)
+    # cat(sprintf("name: %s, value %d\n", valueType, nodeValue))
+  }
+  return(resultList)
+}
+
+## Convert a Solr result field as an R variable
+parseSolrField <- function(xNode) {
+  nodeName <- xmlName(xNode)
+  if (nodeName == "arr") {
+    warning(sprintf("Unable to process solr 'arr' field"))
+    return(as.character(NULL))
+  } else if (nodeName == "long" || nodeName == "float") {
+    return(as.numeric(xmlValue(xNode)))
+  } else if (nodeName == "str") {
+    return(as.character(xmlValue(xNode)))
+  } else if (nodeName == "bool") {
+    return(as.character(xmlValue(xNode)))
+  } else if (nodeName == "int") {
+    return(as.numeric(xmlValue(xNode)))
+  } else if (nodeName == "date") {
+    return(as.character(xmlValue(xNode)))
+  } else {
+    warning(sprintf("Unhandled Solr field data type: %s\n", nodeName))
+  }
+}

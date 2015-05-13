@@ -81,7 +81,9 @@ setMethod("MNode", signature("character"), function(x) {
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
-    mnode <- parseCapabilities(mnode, xmlRoot(xml))
+  mnode <- parseCapabilities(mnode, xmlRoot(xml))
+	# Set the service URL fragment for the solr query engine
+	mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
 	return(mnode)
 })
 
@@ -100,7 +102,9 @@ setMethod("MNode", signature("D1Node"), function(x) {
     mnode@replicate = x@replicate
     mnode@type = x@type
     mnode@state = x@state
-    mnode@endpoint <- paste(x@baseURL, "v1", sep="/")    
+    mnode@endpoint <- paste(x@baseURL, "v1", sep="/")
+    # Set the service URL fragment for the solr query engine
+    mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
     return(mnode)
   } else {
     return(NULL)
@@ -154,7 +158,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "object", pid, sep="/")
     
-    # Use an authenticated connection if a certificate is available
+    # Use an authenticated connection if a certificate is available 
     cm = CertificateManager()
     cert <- getCertLocation(cm)
     response <- NULL
