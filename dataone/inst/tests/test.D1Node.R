@@ -16,14 +16,14 @@ test_that("CNode object index query works", {
   expect_is(size, "numeric")
   
   # Test query of CN object index using query list
-  queryParamList <- list(q="id:doi*", rows="5", abstract="kelp", fl="title,id,abstract,size", dateUploaded="[2000-01-01T00:00:00Z TO NOW]", wt="xml")
+  queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size", wt="xml")
   result <- query(cn, queryParamList, as="list")
   #resultList <- parseSolrResult(result)
   expect_true(length(result) > 0)
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
-  expect_is(size, "numeric")
-  expect_match(abstract, "kelp")
+  expect_is(result[[1]]$size, "numeric")
+  expect_match(result[[1]]$abstract, "chlorophyll")
 })
 test_that("MNode object index query works", {
   library(dataone)
