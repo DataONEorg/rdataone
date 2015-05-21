@@ -13,6 +13,8 @@
 \alias{getCapabilities,MNode-method}
 \alias{getSystemMetadata,MNode,character-method}
 \alias{update,MNode,character-method}
+\alias{uploadDataObject,MNode,DataObject-method}
+\alias{uploadDataPackage,MNode,DataPackage-method}
 \title{MNode is a class representing a Member Node repository within the DataONE federation of data repositories.}
 \usage{
 \S4method{MNode}{character}(x)
@@ -35,6 +37,14 @@
 
 \S4method{generateIdentifier}{MNode}(mnode, scheme = "UUID",
   fragment = NULL)
+
+\S4method{uploadDataPackage}{MNode,DataPackage}(mn, dp, replicate = NA,
+  numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
+  accessRules = NA, ...)
+
+\S4method{uploadDataObject}{MNode,DataObject}(mn, do,
+  replicate = as.logical(FALSE), numberReplicas = NA, preferredNodes = NA,
+  public = as.logical(FALSE), accessRules = NA, ...)
 }
 \arguments{
 \item{mnode}{The MNode instance from which the identifier will be generated}
@@ -104,6 +114,10 @@ present in the default location of the file system, in which case the access wil
 \item \code{archive}: 
 
 \item \code{generateIdentifier}: 
+
+\item \code{uploadDataPackage}: 
+
+\item \code{uploadDataObject}: 
 }}
 \section{Slots}{
 
