@@ -3,8 +3,8 @@ test_that("dataone library loads", {
   library(dataone)
 })
 test_that("CNode object index query works", {
+  skip_on_cran()
   library(dataone)
-  
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   cn <- CNode("SANDBOX")
@@ -16,9 +16,8 @@ test_that("CNode object index query works", {
   expect_is(size, "numeric")
   
   # Test query of CN object index using query list
-  queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size", wt="xml")
+  queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded", wt="xml")
   result <- query(cn, queryParamList, as="list")
-  #resultList <- parseSolrResult(result)
   expect_true(length(result) > 0)
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
@@ -26,6 +25,7 @@ test_that("CNode object index query works", {
   expect_match(result[[1]]$abstract, "chlorophyll")
 })
 test_that("MNode object index query works", {
+  skip_on_cran()
   library(dataone)
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   #mn_uri <- "https://dev.nceas.ucsb.edu/knb/d1/mn/v1"
