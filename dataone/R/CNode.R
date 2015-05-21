@@ -65,6 +65,7 @@ setMethod("CNode", signature("character"), function(env) {
   STAGING <- "https://cn-stage.test.dataone.org/cn"
   STAGING2 <- "https://cn-stage-2.test.dataone.org/cn"
   SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
+  SANDBOX2 <- "https://cn-sandbox-2.test.dataone.org/cn"
   DEV <- "https://cn-dev.test.dataone.org/cn"
 
   # By default, use production.  But also look in the environment.
@@ -77,6 +78,7 @@ setMethod("CNode", signature("character"), function(env) {
     if (env == "STAGING") CN_URI <- STAGING
     if (env == "STAGING2") CN_URI <- STAGING2
     if (env == "SANDBOX") CN_URI <- SANDBOX
+    if (env == "SANDBOX2") CN_URI <- SANDBOX2
     if (env == "PROD") CN_URI <- PROD
   }
 
