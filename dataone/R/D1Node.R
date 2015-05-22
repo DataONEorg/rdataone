@@ -45,7 +45,8 @@ setClass("D1Node",
 					replicate = "character",
 					type = "character",
 					state = "character",
-          serviceUrls = "data.frame"
+          serviceUrls = "data.frame",
+          userAgent = "character"
 					)
 )
 
@@ -62,6 +63,19 @@ setClass("D1Node",
 ## @export
 setGeneric("D1Node", function(xml, ...) {
   standardGeneric("D1Node")
+})
+
+setMethod("initialize", "D1Node",function(.Object) {
+    info <- sessionInfo()
+    # Force loading of packages now, to get package info
+    library("RCurl")
+    library("httr")
+    .Object@userAgent <- sprintf("dataone/%s curl/%s Rcurl/%s httr/%s", 
+                                 info$otherPkgs$dataone$Version, 
+                                 curlVersion()$version, 
+                                 info$otherPkgs$RCurl$Version, 
+                                 info$otherPkgs$httr$Version)
+    return(.Object)
 })
 
 ## Construct a Node, using a passed in node url

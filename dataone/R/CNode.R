@@ -159,7 +159,7 @@ setGeneric("listNodes", function(cnode, ...) {
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode) {
     url <- paste(cnode@endpoint, "node", sep="/")
-    response <- GET(url)
+    response <- GET(url, user_agent(cnode@userAgent))
     if(response$status != "200") {
         return(NULL)
     }
@@ -208,9 +208,9 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
   response <- NULL
   
   if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-    response <- GET(url, config=config(sslcert = cert))
+    response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
   } else {
-    response <- GET(url)   # the anonymous access case
+    response <- GET(url, user_agent(node@userAgent))   # the anonymous access case
   }
   
   if(response$status != "200") {
@@ -241,9 +241,9 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
   cert <- getCertLocation(cm)
   response <- NULL
   if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-    response <- GET(url, config=config(sslcert = cert))
+    response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
   } else {
-    response <- GET(url)
+    response <- GET(url, user_agent(node@userAgent))
   }
   
   if(response$status != "200") {
@@ -301,7 +301,7 @@ setGeneric("resolve", function(cnode,pid) {
 #' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
-  out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L))
+  out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L), user_agent(cnode@userAgent))
   out <- xmlToList(content(out,as="parsed"))
   # Using a loop when plyr would work to reduce dependencies.
   df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))

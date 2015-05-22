@@ -134,7 +134,7 @@ setGeneric("getCapabilities", function(mnode, ...) {
 #' @describeIn MNode
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
 	url <- paste(mnode@endpoint, "node", sep="/")
-	response <- GET(url)
+	response <- GET(url, user_agent(mnode@userAgent))
     if(response$status != "200") {
 		return(NULL)
 	}
@@ -160,9 +160,9 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- GET(url, config=config(sslcert = cert))
+        response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
     } else {
-        response <- GET(url)   # the anonymous access case
+        response <- GET(url, user_agent(node@userAgent))   # the anonymous access case
     }
 	
     if(response$status != "200") {
@@ -191,9 +191,9 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- GET(url, config=config(sslcert = cert))
+        response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
     } else {
-        response <- GET(url)
+        response <- GET(url, user_agent(node@userAgent))
     }
     if(response$status != "200") {
         return(NULL)
@@ -266,7 +266,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
         writeLines(sysmetaxml, sm_file)
         response <- POST(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
                     sysmeta=upload_file(sm_file, type='text/xml')), 
-                    config=config(sslcert = cert))
+                    config=config(sslcert = cert), user_agent(mnode@userAgent))
     } else {
         # This is an error, one must be authenticated
         show_auth_message()
@@ -315,7 +315,7 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
         writeLines(sysmetaxml, sm_file)
         response <- PUT(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
                         newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), 
-                        config=config(sslcert = cert))
+                        config=config(sslcert = cert), user_agent(mnode@userAgent))
     } else {
         # This is an error, one must be authenticated
         show_auth_message()
@@ -360,7 +360,7 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
     cert <- getCertLocation(cm)
     response <- NULL
     if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- PUT(url, config=config(sslcert = cert))
+        response <- PUT(url, config=config(sslcert = cert), user_agent(mnode@userAgent))
     } else {
         # This is an error, one must be authenticated
         show_auth_message()
@@ -403,7 +403,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
-    response <- POST(url = url, body = body, encode="multipart", config=config(sslcert = cert))
+    response <- POST(url = url, body = body, encode="multipart", config=config(sslcert = cert), user_agent(mnode@userAgent))
     if(response$status != "200") {
         return(NULL)
     }
@@ -435,6 +435,8 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @return id The identifier of the resource map for this data package
+#' @import datapackage
+#' @import uuid
 #' @export
 setGeneric("uploadDataPackage", function(mn, dp, ...) {
   standardGeneric("uploadDataPackage")
@@ -473,6 +475,7 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
 #' @return id The id of the DataObject that was uploaded
+#' @import datapackage
 #' @export
 setGeneric("uploadDataObject", function(mn, do, ...) {
   standardGeneric("uploadDataObject")
@@ -490,9 +493,7 @@ setMethod("uploadDataObject", signature("MNode", "DataObject"),
     stop("Unable to upload data, your certificate expired on: ", getCertExpires(cm))
   }
 
-  filename <- do@filename
   doId <- do@sysmeta@identifier
-  
   # Set sysmeta values if passed in and not already set in sysmeta for each data object
   if (!is.na(replicate)) {
     do@sysmeta@replicationAllowed <- as.logical(replicate)
@@ -514,7 +515,7 @@ setMethod("uploadDataObject", signature("MNode", "DataObject"),
   }
   sysmetaXML <- serializeSystemMetadata(do@sysmeta)
   # Upload the data to the MN using create(), checking for success and a returned identifier
-  createdId <- create(mn, doId, filename, do@sysmeta)
+  createdId <- create(mn, doId, do@filename, do@sysmeta)
   #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
   if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
     warning(paste0("Error on returned identifier: ", createdId))
