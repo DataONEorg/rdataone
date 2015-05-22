@@ -190,7 +190,8 @@ test_that("MNode create() works for large files", {
 })
 test_that("MNode uploadDataPackage works", {
   skip_on_cran()
-  
+  library(dataone)
+  library(datapackage)
   # Create a csv file for the science object
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
