@@ -248,24 +248,28 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, as="parsed",
   # The CN API has a slightly different format for the solr query engine than the MN API,
   # so the appropriate URL is set in the CNode or MNode class.
   serviceUrl <- d1node@serviceUrls[d1node@serviceUrls$service=="query.solr", "Url"]
-  
   # The 'solrQuery' parameter can be specified as either a character string or a named list
-  if (encode) {
-    if (is(solrQuery, "list")) {
-      encodedKVs <- character()
-      for(key in attributes(solrQuery)$names) {
+  if (is(solrQuery, "list")) {
+    encodedKVs <- character()
+    for(key in attributes(solrQuery)$names) {
+      if (encode) {
         kv <- paste0(key, "=", URLencode(solrQuery[[key]]))
-        encodedKVs[length(encodedKVs)+1] <- kv
+      } else {
+        kv <- paste0(key, "=", solrQuery[[key]])
       }
-      queryParams <- paste(encodedKVs,collapse="&")
-    } else {
-      queryParams <- URLencode(solrQuery)
+      encodedKVs[length(encodedKVs)+1] <- kv
     }
+    queryParams <- paste(encodedKVs,collapse="&")
   } else {
-    queryParams <- paste(solrQuery, sep="?")  
+    if (encode) {
+      queryParams <- URLencode(solrQuery)
+    } else {
+      queryParams <- solrQuery
+    }
   }
   
   queryUrl <- paste(serviceUrl, queryParams, sep="")
+  cat(sprintf("queryUrl: %s\n", queryUrl))
   # TODO: add credentials if authenticated
   
   # Send the query to the Node
@@ -339,7 +343,7 @@ parseResultNode <- function(xNode, resultList) {
   return(resultList)
 }
 
-## Convert a Solr result field as an R variable
+#[=] Convert a Solr result field into an R variable
 parseSolrField <- function(xNode) {
   nodeName <- xmlName(xNode)
   if (nodeName == "arr") {
