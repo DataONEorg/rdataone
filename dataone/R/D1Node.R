@@ -243,7 +243,7 @@ setGeneric("query", function(d1node, ...) {
 })
 
 #' @export
-setMethod("query", signature("D1Node"), function(d1node, solrQuery, as="parsed", encode=TRUE, ...) {
+setMethod("query", signature("D1Node"), function(d1node, solrQuery, as="parsed", encode=TRUE, convert=TRUE, ...) {
   
   # The CN API has a slightly different format for the solr query engine than the MN API,
   # so the appropriate URL is set in the CNode or MNode class.
@@ -287,13 +287,27 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, as="parsed",
     resultText <- content(response, as="text")
   }
   
+  # Return result as unparsed XML text returned from Solr
   if (as == "text") {
     res <- resultText
   } else if (as == "parsed") {
+    # Return as XML tree structure
     res <- xmlInternalTreeParse(resultText, asText=TRUE)
   } else if (as == "list") {
+    # Return as a list, with data in each column returned as the appropriate R data type
     xmlDoc <- xmlInternalTreeParse(resultText, asText=TRUE)
-    res <- parseSolrResult(xmlDoc)
+    res <- parseSolrResult(xmlDoc, convert)
+  } else if (as == "data.frame") {
+    # Return as a data frame, all values represented as strings
+    xmlDoc <- xmlInternalTreeParse(resultText, asText=TRUE)
+    res <- parseSolrResult(xmlDoc, convert)
+    dfAll <- data.frame()
+    for (i in 1:length(res)) {
+      df1 <- as.data.frame(res[[i]], stringsAsFactors=FALSE)
+      dfAll <- rbind.fill(dfAll, df1)
+    }
+    res <- dfAll
+    #res <- do.call(rbind, lapply(res, rbind.fill, stringsAsFactors=FALSE))
   }
   
   return(res)
@@ -309,57 +323,73 @@ setGeneric("parseSolrResult", function(doc, ...) {
 })
 
 #' @export
-setMethod("parseSolrResult", signature("XMLInternalDocument"), function(doc, ...) {
-  resultList <- xpathApply(doc, "/response/result/doc", parseResultDoc)
+setMethod("parseSolrResult", signature("XMLInternalDocument"), function(doc, convert, ...) {
+  resultList <- xpathApply(doc, "/response/result/doc", parseResultDoc, convert)
   return (resultList)
   
 })
 
 ## Internal functions
 
+getAllNames <- function(result, allElemNames) {
+  str(result)
+  print(names(result[[1]]))
+  union(names(result[[1]]), allElemNames)
+}
+
 # Parse a Solr result "<doc>" XML element inta an R list
-parseResultDoc <- function(xNode) {
+parseResultDoc <- function(xNode, convert) {
   childNodes <- getNodeSet(xNode, "*")
   thisDocList <- list()
   for (child in childNodes) {
-    thisDocList <- parseResultNode(child, thisDocList)
+    thisDocList <- parseResultNode(child, thisDocList, convert)
   }
   return(thisDocList)
 }
 
 # Parse a Solr result field
-parseResultNode <- function(xNode, resultList) {
+parseResultNode <- function(xNode, resultList, convert) {
   nodeName <- xmlName(xNode)
   # Convert a Solr result "arr" (arrary) into an R list
   if (nodeName == "arr") {
     childNodes <- getNodeSet(xNode, "*")
-    resultList[[xmlGetAttr(xNode, "name")]] <- lapply(childNodes, parseSolrField)
+    # If we are not converting Solr results to R types, then return this
+    # list as a comma separated list of values
+    if (convert) {
+      resultList[[xmlGetAttr(xNode, "name")]] <- lapply(childNodes, parseSolrField, convert)
+    } else {
+      resultList[[xmlGetAttr(xNode, "name")]] <- paste(lapply(childNodes, parseSolrField, convert), collapse=",")
+    }
     #xmlVals <- xpathApply(xNode, "*", parseResultNode, resultList=resultList)
   } else {
     # Convert a Solr result atomic value into an R variable
-    resultList[[xmlGetAttr(xNode, "name")]] <- parseSolrField(xNode)
+    resultList[[xmlGetAttr(xNode, "name")]] <- parseSolrField(xNode, convert)
     # cat(sprintf("name: %s, value %d\n", valueType, nodeValue))
   }
   return(resultList)
 }
 
 #[=] Convert a Solr result field into an R variable
-parseSolrField <- function(xNode) {
+parseSolrField <- function(xNode, convert) {
   nodeName <- xmlName(xNode)
-  if (nodeName == "arr") {
-    warning(sprintf("Unable to process solr 'arr' field"))
-    return(as.character(NULL))
-  } else if (nodeName == "long" || nodeName == "float") {
-    return(as.numeric(xmlValue(xNode)))
-  } else if (nodeName == "str") {
-    return(as.character(xmlValue(xNode)))
-  } else if (nodeName == "bool") {
-    return(as.character(xmlValue(xNode)))
-  } else if (nodeName == "int") {
-    return(as.numeric(xmlValue(xNode)))
-  } else if (nodeName == "date") {
-    return(as.character(xmlValue(xNode)))
+  if (convert) {
+    if (nodeName == "arr") {
+      warning(sprintf("Unable to process solr 'arr' field"))
+      return(as.character(NULL))
+    } else if (nodeName == "long" || nodeName == "float") {
+      return(as.numeric(xmlValue(xNode)))
+    } else if (nodeName == "str") {
+      return(as.character(xmlValue(xNode)))
+    } else if (nodeName == "bool") {
+      return(as.logical(xmlValue(xNode)))
+    } else if (nodeName == "int") {
+      return(as.numeric(xmlValue(xNode)))
+    } else if (nodeName == "date") {
+      return(as.Date(xmlValue(xNode)))
+    } else {
+      warning(sprintf("Unhandled Solr field data type: %s\n", nodeName))
+    }
   } else {
-    warning(sprintf("Unhandled Solr field data type: %s\n", nodeName))
+    return(xmlValue(xNode))
   }
 }
