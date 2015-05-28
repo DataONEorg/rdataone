@@ -27,7 +27,8 @@ Imports:
     httr,
     PKI,
     stringr,
-    datapackage
+    datapackage,
+    plyr
 License: Apache License 2.0
 Packaged: 2013-02-14 20:54:27 UTC; jones
 Repository: CRAN

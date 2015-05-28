@@ -3,11 +3,11 @@ test_that("dataone library loads", {
   library(dataone)
 })
 test_that("CNode object index query works", {
-  skip_on_cran()
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
-  cn <- CNode("SANDBOX")
+  cn <- CNode("STAGING2")
   result <- query(cn, queryParams, as="list")
   #resultList <- parseSolrResult(result)
   expect_true(length(result) == 2)
@@ -16,7 +16,7 @@ test_that("CNode object index query works", {
   expect_is(size, "numeric")
   
   # Test query of CN object index using query list
-  queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded", wt="xml")
+  queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="list")
   expect_true(length(result) > 0)
   expect_match(result[[1]]$id, "doi:")
@@ -50,12 +50,11 @@ test_that("MNode object index query works", {
   }
   
   # Request that an XML object is returned
-  result <- query(mn, queryParams, as="parsed")
+  result <- query(mn, queryParams, as="xml", parse=TRUE)
   expect_is(result, "XMLInternalDocument")
   
   # Request that a character object is returned
-  result <- query(mn, queryParams, as="text")
+  result <- query(mn, queryParams, as="xml", parse=FALSE)
   expect_is(result, "character")
   expect_match(result, "<?xml")
-  
 })
