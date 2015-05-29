@@ -216,13 +216,15 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' Search DataONE for data and metadata objects
 #' @description Use SOLR syntax to search the DataONE federation of data repositories for matching data.
 #' @details
-#' Several different return types can be specified with the \code{"as"} parameter: "xml", "list", "data.frame".
-#' If "xml" is specified, then the query results are returned as an R XMLInternalDocumentif \code{'parsed'} is
-#' true or as a character variable if \code{'parsed'} is FALSE. Specify 'list' to have 
+#' Several different return types can be specified with the \code{"as"} parameter: "json", xml", "list", "data.frame".
+#' If "xml" is specified and \code{'parsed=TRUE'} then the query result is returned as an R XMLInternalDocument. If \code{'parsed'} is
+#' false then a character variable with the XML string is returned. Specify 'list' to have 
 #' the result parseed to an R list, with each list element containing one Solr result as a list of values, for example.
 #' \code{'result[[1]]$id'} would be the DataONE identifier value of the first result (if the query parameters specified that
-#' the id field shoudl be returned from the query).
-#' Any lucene reserved characters in query parameters must be escaped with backslash, for example,
+#' the id field shoudl be returned from the query). If \code{'json'} is specified, then the Solr response writer argument
+#' \code{'&wt=json'} must be included in the \code{'solQuery'} parameter. Currently for a json return type the \code{'parse'} parameter
+#' is ignored and unparsed text will always be returned.
+#' Any lucene reserved characters in query parameters must be escaped with backslash, for example, 
 #' \code{'queryParams <- "q=id:doi\\:10.6073/AA/knb-lter-and.4341.13"'}. Notice that the colon after
 #' \code{'q=id'} is not escaped, as this is needed by Solr to parse the query.
 #' If solrQuery is a list, 
@@ -230,15 +232,21 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' @param d1node The coordinating node or member node object instance to query.
 #' @param solrQuery The query parameters to be searched, either as a string or as list with named attributes.
 #' @param encode A boolean, if true then the entire query string is URLencoded if it is a character, or each parameter value if a list.
-#' @param as The return type. Possible values: "xml", "list" or "data.frame" with "list" as the default.
+#' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
 #' @param parse A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.
 #' @return search results
 #' @import plyr
 #' @examples
 #' \dontrun{
-#' queryParams <- "q=id:doi*&rows=2&wt=xml"
-#' cn <- CNode("SANDBOX")
+#' cn <- CNode("PROD")
+#' queryParams <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- query(cn, queryParams, as="list")
+#' 
+#' queryParams <- list(q="id:doi*", rows="3", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+#' result <- query(cn, queryParams, as="data.frame", parse=FALSE)
+#' 
+#' queryParams <- "q=id:doi*&rows=2&wt=json"
+#' result <- query(cn, queryParams, as="json")
 #' }
 #' @export
 setGeneric("query", function(d1node, ...) {
@@ -248,7 +256,7 @@ setGeneric("query", function(d1node, ...) {
 #' @export
 setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE, as="list", parse=TRUE, ...) {
   
-  returnTypes <- c("xml", "list", "data.frame")
+  returnTypes <- c("json", "xml", "list", "data.frame")
   if (!is.element(as, returnTypes)) {
     stop(sprintf("Invalid return type: \"%s\". Please specify one of \"%s\"", as, paste(returnTypes, collapse=",")))
   }
@@ -301,6 +309,9 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
     } else {
       res <- resultText
     }
+  } else if (as == "json") {
+    # if json return type, only unparsed text is supported
+    res <- resultText
   } else if (as == "list") {
     # Return as a list, with data in each column returned as the appropriate R data type
     xmlDoc <- xmlInternalTreeParse(resultText, asText=TRUE)
@@ -308,10 +319,14 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   } else if (as == "data.frame") {
     # Return as a data frame, all values represented as strings
     xmlDoc <- xmlInternalTreeParse(resultText, asText=TRUE)
+    # First get a result as a list, then convert the list to a data frame
     res <- parseSolrResult(xmlDoc, parse)
     dfAll <- data.frame()
     for (i in 1:length(res)) {
       df1 <- as.data.frame(res[[i]], stringsAsFactors=FALSE)
+      # Have to use plyr:rbind.fill, as each row from the list could contain
+      # a different number of field values, and hence data frame columns, and
+      # each row of the data frame must have the same number of columns. Thanks H.W. for rbind.fill!
       dfAll <- rbind.fill(dfAll, df1)
     }
     res <- dfAll
@@ -337,12 +352,6 @@ setMethod("parseSolrResult", signature("XMLInternalDocument"), function(doc, par
 })
 
 ## Internal functions
-
-getAllNames <- function(result, allElemNames) {
-  str(result)
-  print(names(result[[1]]))
-  union(names(result[[1]]), allElemNames)
-}
 
 # Parse a Solr result "<doc>" XML element inta an R list
 parseResultDoc <- function(xNode, parse) {
