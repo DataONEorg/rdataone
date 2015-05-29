@@ -3,8 +3,6 @@
 export(CNode)
 export(CertificateManager)
 export(MNode)
-export(addAccessRule)
-export(addAccessRules)
 export(archive)
 export(convert.csv)
 export(create)
