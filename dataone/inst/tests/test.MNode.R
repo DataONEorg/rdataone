@@ -208,7 +208,7 @@ test_that("MNode uploadDataPackage works", {
   # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
   sciObj <- setPublicAccess(sciObj)
   accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
-  sciObj <- addAccessRules(sciObj, accessRules)
+  sciObj <- addAccessRule(sciObj, accessRules)
   addData(dp, sciObj)
 
   #uploadDataObject(mn, sciObj, replicate=TRUE, numberReplicates=1, preferredNodes=preferredNodes, public=TRUE, accessRules=accessRules)
