@@ -322,12 +322,14 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
     # First get a result as a list, then convert the list to a data frame
     res <- parseSolrResult(xmlDoc, parse)
     dfAll <- data.frame()
-    for (i in 1:length(res)) {
-      df1 <- as.data.frame(res[[i]], stringsAsFactors=FALSE)
-      # Have to use plyr:rbind.fill, as each row from the list could contain
-      # a different number of field values, and hence data frame columns, and
-      # each row of the data frame must have the same number of columns. Thanks H.W. for rbind.fill!
-      dfAll <- rbind.fill(dfAll, df1)
+    if (length(res) > 0) {
+      for (i in 1:length(res)) {
+        df1 <- as.data.frame(res[[i]], stringsAsFactors=FALSE)
+        # Have to use plyr:rbind.fill, as each row from the list could contain
+        # a different number of field values, and hence data frame columns, and
+        # each row of the data frame must have the same number of columns. Thanks H.W. for rbind.fill!
+        dfAll <- rbind.fill(dfAll, df1)
+      }
     }
     res <- dfAll
   }
