@@ -8,7 +8,7 @@
 
 * added uploadDataPackage that can upload all objects that have been added to a DataPackage
 
+# Version 1.1.0.9002 (2015-06-04)
 ## Bug fixes
 
-## Minor changes
-
+* query() now returns correctly if no query results found and data.frame was requested
