@@ -101,19 +101,24 @@ release.  Be aware that there are API differences that are not fully finalized.
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
 Because the v2 package has not been released to CRAN, nor have its dependencies, you need to install the 
-dependencies manually before installing the package itself.  Using the devtools package, once can install 
-all of the dependencies needed using the install_github() function, except for the redland-bindings 
-package, which must be installed manually::
+dependencies manually before installing the package itself.  The main dependency is the redlands librdf 
+binary, which must be installed on your OS prior to installing the R code::
 
-  $ curl https://github.com/ropensci/redland-bindings/archive/master.zip -o redland-bindings.zip
-  $ unzip redland-bindings.zip
-  $ cd redland-bindings
-  $ ./autogen.sh --with-R
-  $ make
-  $ cd R
-  $ R CMD INSTALL redland
+
+  # For MacOS X, use MacPorts
+  $ sudo port install redland
+  
+  # For ubuntu, use the appropriate .deb packages
+  $ sudo apt-get install librdf0 librdf0-dev
+
+
+Once redland is installed, using the devtools package one can install 
+all of the R dependencies needed using the install.packages() and the
+install_github() function::
+
   $ R
   > install.packages(c("XML", "httr", "stringr"))
+  > devtools::install_github("ropensci/redland-bindings", subdir="R/redland")
   > devtools::install_github("ropensci/datapackage")
   > devtools::install_github("mbjones/PKI")
   > devtools::install_github("DataONEorg/rdataone/dataone")
