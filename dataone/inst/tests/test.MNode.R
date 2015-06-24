@@ -197,8 +197,10 @@ test_that("MNode uploadDataPackage works", {
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
   
-  cn <- CNode("STAGING2")
-  mnId <- "urn:node:mnTestKNB"
+  #cn <- CNode("STAGING2")
+  #mnId <- "urn:node:mnTestKNB"
+  cn <- CNode("SANDBOX")
+  mnId <- "urn:node:mnSandboxUCSB2"
   mn <- getMNode(cn, mnId)
   preferredNodes <- c("urn:node:mnDemo9")
   
@@ -206,21 +208,28 @@ test_that("MNode uploadDataPackage works", {
   # Create DataObject for the science data
   sciObj <- new("DataObject", format="text/csv", user="uid=slaughter,ou=Account,dc=ecoinformatics,dc=org", mnNodeId=mnId, filename=csvfile)
   # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
+  expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
   sciObj <- setPublicAccess(sciObj)
   accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
   sciObj <- addAccessRule(sciObj, accessRules)
   addData(dp, sciObj)
+  expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
 
   #uploadDataObject(mn, sciObj, replicate=TRUE, numberReplicates=1, preferredNodes=preferredNodes, public=TRUE, accessRules=accessRules)
   # Create metadata object that describes science data
   emlFile <- system.file("testfiles/testdoc-eml-2.1.0.xml", package="dataone")
   metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user="uid=slaughter,ou=Account,dc=ecoinformatics,dc=org", mnNodeId=mnId, filename=emlFile)
+  expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
   addData(dp, metadataObj)
+  expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
   # Associate the metadata object with the science object it describes
   insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
+  #cat(sprintf("sciObj: %s\n", getIdentifier(sciObj)))
+  #cat(sprintf("metadataObj: %s\n", getIdentifier(metadataObj)))
   
   # Upload the data package to DataONE    
-  packageId <- uploadDataPackage(mn, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)    
+  resourceMapId <- uploadDataPackage(mn, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
+  expect_true(!is.null(resourceMapId))
 })
   
 
