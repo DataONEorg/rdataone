@@ -81,6 +81,8 @@ setMethod("MNode", signature("character"), function(x) {
 
 	## Lookup the rest of the node information
 	xml <- getCapabilities(mnode)
+  # getCapabilties returns NULL if an error was encoutered
+  if (is.null(xml)) return(NULL)
   mnode <- parseCapabilities(mnode, xmlRoot(xml))
 	# Set the service URL fragment for the solr query engine
 	mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
@@ -133,11 +135,12 @@ setGeneric("getCapabilities", function(mnode, ...) {
 
 #' @describeIn MNode
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
-	url <- paste(mnode@endpoint, "node", sep="/")
+  url <- paste(mnode@endpoint, "node", sep="/")
 	response <- GET(url, user_agent(mnode@userAgent))
-    if(response$status != "200") {
+  if(response$status != "200") {
+    cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
 		return(NULL)
-	}
+ 	}
 	xml <- content(response)
 	return(xml)
 })
@@ -166,9 +169,11 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
     }
 	
     if(response$status != "200") {
-		return(NULL)
-	}
-	return(content(response, as="raw"))
+      cat(sprintf("get() error: %s\n", getErrorDescription(response)))
+      #d1_errors(response)
+		  return(NULL)
+  	}
+ 	return(content(response, as="raw"))
 })
 
 #' Get the metadata describing system properties associated with an object on this Member Node.
@@ -273,7 +278,8 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
         return(NULL)
     }
     if(response$status != "200") {
-        d1_errors(response)
+        #d1_errors(response)
+        cat(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
         return(NULL)
     } else {
         return(content(response))
@@ -518,8 +524,8 @@ setMethod("uploadDataObject", signature("MNode", "DataObject"),
   createdId <- create(mn, doId, do@filename, do@sysmeta)
   #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
   if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
-    warning(paste0("Error on returned identifier: ", createdId))
-    return(doId)
+    #warning(paste0("Error on returned identifier: ", createdId))
+    return(NULL)
   } else {
     return(doId)
   }

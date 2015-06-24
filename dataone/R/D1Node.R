@@ -192,6 +192,38 @@ d1_errors <- function(x){
   #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
 }
 
+# Extract an error message from an http response. Http requests can fail
+# for a variety of reasons, so getErrorDescription first tries to
+# determine what type of response was sent. 
+# The return types handled by this function are:
+#   o An incorrect url is sent to DataONE and an error is returned by
+#     the web server, not a specified DataOne service url. In this case,
+#     a generic error message may be returned, e.g. status=404, URL not found
+#   o A DataOne service was called, and retunred an error message. In this
+#     case the DataONE response is parsed in an attemp to retrieve a
+#     meaningfull error message.
+# 
+getErrorDescription <- function(response) {
+  responseContent <- content(response, as="parsed")
+  # DataONE services return XML
+  if (class(responseContent)[1] == "XMLInternalDocument") {
+     msgNode <- getNodeSet(responseContent, "/error/description")
+     if (length(msgNode) > 0) {
+       errorMsg <- xmlValue(msgNode[[1]])
+     } else {
+       # Don't know how to get error, so return generic error
+       errorMsg <- http_status(response)$message
+     }
+  } else if (class(responseContent)[1] == "HTMLInternalDocument") {
+    # To complex to try to get an error message from HTML, so
+    # just get info from the response object. This will be a
+    # generic message, so not as informative as specific msg from DataONE
+    errorMsg <- http_status(response)$message
+  }
+  
+  return(errorMsg)
+}
+
 #' Encode the input for Solr Queries
 #' 
 #' Treating all special characters and spaces as literals, backslash escape special
