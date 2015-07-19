@@ -19,6 +19,7 @@
 #
 
 #' @include D1Node.R
+#' @include auth_request.R
 
 #' A CNode represents a DataONE Coordinating Node and can be used to access its services.
 #' @exportClass CNode
@@ -125,7 +126,7 @@ setGeneric("listFormats", function(cnode, ...) {
 ## @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
-  out <- GET(url)
+  out <- auth_get(url)
   out <- xmlToList(content(out,as="parsed"))
   ## Below could be done with plyr functionality, but I want to reduce
   ## dependencies in the package
@@ -159,7 +160,7 @@ setGeneric("listNodes", function(cnode, ...) {
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode) {
     url <- paste(cnode@endpoint, "node", sep="/")
-    response <- GET(url, user_agent(cnode@userAgent))
+    response <- auth_get(url, user_agent(cnode@userAgent))
     if(response$status != "200") {
         return(NULL)
     }
@@ -200,24 +201,14 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
 #' @export
 #' @describeIn CNode
 setMethod("get", signature("CNode", "character"), function(node, pid) {
-  url <- paste(node@endpoint, "object", pid, sep="/")
-  
-  # Use an authenticated connection if a certificate is available
-  cm <- CertificateManager()
-  cert <- getCertLocation(cm)
-  response <- NULL
-  
-  if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-    response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
-  } else {
-    response <- GET(url, user_agent(node@userAgent))   # the anonymous access case
-  }
-  
-  if(response$status != "200") {
-    return(NULL)
-  }
-  
-  return(content(response, as="raw"))
+    url <- paste(node@endpoint, "object", pid, sep="/")
+    response <- auth_get(url)
+    
+    if(response$status != "200") {
+        return(NULL)
+    }
+    
+    return(content(response, as="raw"))
 })
 
 #' Get the metadata describing system properties associated with an object on a Coordinating Node.
@@ -233,27 +224,18 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
 #' @export
 #' @describeIn CNode
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
-  # TODO: need to properly URL-escape the PID
-  url <- paste(node@endpoint, "meta", pid, sep="/")
-  
-  # Use an authenticated connection if a certificate is available
-  cm = CertificateManager()
-  cert <- getCertLocation(cm)
-  response <- NULL
-  if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-    response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
-  } else {
-    response <- GET(url, user_agent(node@userAgent))
-  }
-  
-  if(response$status != "200") {
-    return(NULL)
-  }
-  
-  # Convert the response into a SystemMetadata object
-  sysmeta <- SystemMetadata(xmlRoot(content(response)))
-  
-  return(sysmeta)
+    # TODO: need to properly URL-escape the PID
+    url <- paste(node@endpoint, "meta", pid, sep="/")
+    response <- auth_get(url)
+    
+    if(response$status != "200") {
+        return(NULL)
+    }
+    
+    # Convert the response into a SystemMetadata object
+    sysmeta <- SystemMetadata(xmlRoot(content(response)))
+    
+    return(sysmeta)
 })
 
 #' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
@@ -301,8 +283,9 @@ setGeneric("resolve", function(cnode,pid) {
 #' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
-  out <- GET(url,add_headers(Accept = "text/xml"),config=config(followlocation = 0L), user_agent(cnode@userAgent))
+  out <- GET(url, add_headers(Accept = "text/xml"), config=config(followlocation = 0L), user_agent(cnode@userAgent))
   out <- xmlToList(content(out,as="parsed"))
+  
   # Using a loop when plyr would work to reduce dependencies.
   df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))
   for(i in 2:length(out)){

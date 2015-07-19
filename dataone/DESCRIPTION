@@ -37,10 +37,10 @@ URL: http://releases.dataone.org/online/dataone_r
 BugReports: https://github.com/DataONEorg/rdataone/issues
 Collate:
     'AbstractTableDescriber.R'
+    'auth_request.R'
     'D1Node.R'
     'CNode.R'
     'CertificateManager.R'
-    'auth_request.R'
     'MNode.R'
     'D1Object.R'
     'D1Client.R'

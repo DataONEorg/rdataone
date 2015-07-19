@@ -18,6 +18,7 @@
 #   limitations under the License.
 #
 
+#' @include auth_request.R
 ## A class representing a Member Node repository, which can expose and store data
 ## @slot identifier The node identifier of the MN
 ## @slot name The node name
@@ -316,10 +317,9 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   }
   
   queryUrl <- paste(serviceUrl, queryParams, sep="")
-  # TODO: add credentials if authenticated
-  
+
   # Send the query to the Node
-  response <- GET(queryUrl)
+  response <- auth_get(queryUrl)
   if(response$status != "200") {
     return(NULL)
   }

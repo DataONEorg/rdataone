@@ -251,22 +251,13 @@ setGeneric("create", function(mnode, pid, ...) {
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
-    # Use an authenticated connection if a certificate is available
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
-    response <- NULL
-    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        sysmetaxml <- serializeSystemMetadata(sysmeta)
-        sm_file <- tempfile()
-        writeLines(sysmetaxml, sm_file)
-        response <- POST(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
-                    sysmeta=upload_file(sm_file, type='text/xml')), 
-                    config=config(sslcert = cert), user_agent(mnode@userAgent))
-    } else {
-        # This is an error, one must be authenticated
-        show_auth_message()
-        return(NULL)
-    }
+    sysmetaxml <- serializeSystemMetadata(sysmeta)
+    sm_file <- tempfile()
+    writeLines(sysmetaxml, sm_file)
+    response <- auth_post(url, encode="multipart", 
+                          body=list(pid=pid, object=upload_file(filepath), 
+                                    sysmeta=upload_file(sm_file, type='text/xml')))
+    
     if(response$status != "200") {
         #d1_errors(response)
         cat(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
@@ -301,22 +292,13 @@ setGeneric("update", function(mnode, pid, ...) {
 setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
-    # Use an authenticated connection if a certificate is available
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
-    response <- NULL
-    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        sysmetaxml <- serializeSystemMetadata(sysmeta)
-        sm_file <- tempfile()
-        writeLines(sysmetaxml, sm_file)
-        response <- PUT(url, encode="multipart", body=list(pid=pid, object=upload_file(filepath), 
-                        newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), 
-                        config=config(sslcert = cert), user_agent(mnode@userAgent))
-    } else {
-        # This is an error, one must be authenticated
-        show_auth_message()
-        return(NULL)
-    }
+    sysmetaxml <- serializeSystemMetadata(sysmeta)
+    sm_file <- tempfile()
+    writeLines(sysmetaxml, sm_file)
+    response <- auth_put(url, encode="multipart", 
+                         body=list(pid=pid, object=upload_file(filepath), 
+                                   newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')))
+    
     if(response$status != "200") {
         d1_errors(response)
         return(NULL)
@@ -351,17 +333,8 @@ setGeneric("archive", function(mnode, pid, ...) {
 setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "archive", pid, sep="/")
-    # Use an authenticated connection if a certificate is available
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
-    response <- NULL
-    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- PUT(url, config=config(sslcert = cert), user_agent(mnode@userAgent))
-    } else {
-        # This is an error, one must be authenticated
-        show_auth_message()
-        return(NULL)
-    }
+    response <- auth_put(url)
+
     if(response$status != "200") {
         d1_errors(response)
         return(NULL)
@@ -382,7 +355,7 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
 #' @param mnode The MNode instance on which the object will be created
 #' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
 #' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
-#' @return the character string of the unique identifier
+#' @return the character string of the generated unique identifier
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
 setGeneric("generateIdentifier", function(mnode, ...) {
@@ -393,17 +366,16 @@ setGeneric("generateIdentifier", function(mnode, ...) {
 setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "generate", sep="/")
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
     body = list(scheme = scheme, fragment = fragment)
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
-    response <- POST(url = url, body = body, encode="multipart", config=config(sslcert = cert), user_agent(mnode@userAgent))
+    response <- auth_post(url=url,  encode="multipart", body=body)
     if(response$status != "200") {
         return(NULL)
     }
-    # convert the response into a character string
+    
+    # extract the identifier as a character string from the XML response
     xml <- content(response)
     new_identifier <- xmlValue(xmlRoot(xml))
     return(new_identifier)
