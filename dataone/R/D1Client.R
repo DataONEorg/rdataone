@@ -186,8 +186,6 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 #' @export
 setMethod("getDataObject", "D1Client", function(x, identifier) {
     
-    # TODO: add SSL credentials to get calls if user is authenticated
-    
     # Resolve the object location
     result <- resolve(x@cn, identifier)
     mntable <- result[[2]]
