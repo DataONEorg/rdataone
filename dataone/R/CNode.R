@@ -283,7 +283,8 @@ setGeneric("resolve", function(cnode,pid) {
 #' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
-  out <- GET(url, add_headers(Accept = "text/xml"), config=config(followlocation = 0L), user_agent(cnode@userAgent))
+  config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
+  out <- auth_get(url, config=config)
   out <- xmlToList(content(out,as="parsed"))
   
   # Using a loop when plyr would work to reduce dependencies.

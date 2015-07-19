@@ -24,8 +24,12 @@
 #' provided in a client certificate.  Authenticated access depends on the suggested
 #' PKI package. If the PKI package is not installed, then the request falls back
 #' to an unauthenticated request, which may fail due to insufficient permissions.
+#' Configuration options for httr/RCurl can be passed using the normal config()
+#' mechanisms to generate a config option. Use httr_options() to see a complete list
+#' of available options.
 #' @param url The URL to be accessed via authenticated GET.
-auth_get <- function(url) {
+#' @param config HTTP configuration options as used by curl, defaults to empty list
+auth_get <- function(url, config=config()) {
     cert <- NULL
     auth <- F
     response <- NULL
@@ -34,7 +38,8 @@ auth_get <- function(url) {
         cm = CertificateManager()
         cert <- getCertLocation(cm)
         if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-            response <- GET(url, config = config(sslcert = cert), user_agent(get_user_agent()))
+            new_config <- c(config, config(sslcert = cert))
+            response <- GET(url, config = new_config, user_agent(get_user_agent()))
         } else {
             # The certificate is invalid or unreadable, so fall back to unauthenticated?
             warning("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'. Attempting call as public user without being authenticated.")
