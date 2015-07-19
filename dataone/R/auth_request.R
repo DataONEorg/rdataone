@@ -29,6 +29,8 @@
 #' of available options.
 #' @param url The URL to be accessed via authenticated GET.
 #' @param config HTTP configuration options as used by curl, defaults to empty list
+#' @return the response object from the method
+#' @import httr
 auth_get <- function(url, config=config()) {
     cert <- NULL
     auth <- F
@@ -63,6 +65,7 @@ auth_get <- function(url, config=config()) {
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
 #' @return the response object from the method
+#' @import httr
 auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA)) {
     cert <- NULL
     auth <- F
