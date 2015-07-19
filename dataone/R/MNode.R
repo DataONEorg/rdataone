@@ -32,6 +32,7 @@
 #' @author Matthew Jones
 #' @rdname MNode-class
 #' @include D1Node.R
+#' @include auth_request.R
 #' @keywords classes
 #' @exportClass MNode
 #' @examples
@@ -158,22 +159,14 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "object", pid, sep="/")
     
-    # Use an authenticated connection if a certificate is available 
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
-    response <- NULL
-    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
-    } else {
-        response <- GET(url, user_agent(node@userAgent))   # the anonymous access case
+    response <- auth_get(url)
+    
+    if (response$status != "200") {
+        cat(sprintf("get() error: %s\n", getErrorDescription(response)))
+        #d1_errors(response)
+        return(NULL)
     }
-	
-    if(response$status != "200") {
-      cat(sprintf("get() error: %s\n", getErrorDescription(response)))
-      #d1_errors(response)
-		  return(NULL)
-  	}
- 	return(content(response, as="raw"))
+    return(content(response, as = "raw"))
 })
 
 #' Get the metadata describing system properties associated with an object on this Member Node.
@@ -191,16 +184,11 @@ setMethod("get", signature("MNode", "character"), function(node, pid) {
 setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
-    # Use an authenticated connection if a certificate is available
-    cm = CertificateManager()
-    cert <- getCertLocation(cm)
-    response <- NULL
-    if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-        response <- GET(url, config=config(sslcert = cert), user_agent(node@userAgent))
-    } else {
-        response <- GET(url, user_agent(node@userAgent))
-    }
-    if(response$status != "200") {
+
+    response <- auth_get(url)
+
+    if (response$status != "200") {
+        cat(sprintf("get() error: %s\n", getErrorDescription(response)))
         return(NULL)
     }
     # Convert the response into a SystemMetadata object
