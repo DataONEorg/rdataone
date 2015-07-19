@@ -70,48 +70,48 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @return the MNode object
 #' @export
 setGeneric("MNode", function(x) {
-  standardGeneric("MNode")
+    standardGeneric("MNode")
 })
 
 #' @describeIn MNode
 setMethod("MNode", signature("character"), function(x) {
 
-	## create new MNode object and insert uri endpoint
-	mnode <- new("MNode")
-	mnode@endpoint <- x
-
-	## Lookup the rest of the node information
-	xml <- getCapabilities(mnode)
-  # getCapabilties returns NULL if an error was encoutered
-  if (is.null(xml)) return(NULL)
-  mnode <- parseCapabilities(mnode, xmlRoot(xml))
-	# Set the service URL fragment for the solr query engine
-	mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
-	return(mnode)
+    ## create new MNode object and insert uri endpoint
+    mnode <- new("MNode")
+    mnode@endpoint <- x
+    
+    ## Lookup the rest of the node information
+    xml <- getCapabilities(mnode)
+    # getCapabilties returns NULL if an error was encoutered
+    if (is.null(xml)) return(NULL)
+    mnode <- parseCapabilities(mnode, xmlRoot(xml))
+    # Set the service URL fragment for the solr query engine
+    mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+    return(mnode)
 })
 
 #' @describeIn MNode
 setMethod("MNode", signature("D1Node"), function(x) {
   
-  if (x@type == "mn") {
-    ## create new MNode object and insert uri endpoint
-    mnode <- new("MNode")
-    mnode@identifier = x@identifier
-    mnode@name = x@name    
-    mnode@description = x@description
-    mnode@baseURL = x@baseURL
-    mnode@subject = x@subject
-    mnode@contactSubject = x@contactSubject
-    mnode@replicate = x@replicate
-    mnode@type = x@type
-    mnode@state = x@state
-    mnode@endpoint <- paste(x@baseURL, "v1", sep="/")
-    # Set the service URL fragment for the solr query engine
-    mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
-    return(mnode)
-  } else {
-    return(NULL)
-  }
+    if (x@type == "mn") {
+        ## create new MNode object and insert uri endpoint
+        mnode <- new("MNode")
+        mnode@identifier = x@identifier
+        mnode@name = x@name    
+        mnode@description = x@description
+        mnode@baseURL = x@baseURL
+        mnode@subject = x@subject
+        mnode@contactSubject = x@contactSubject
+        mnode@replicate = x@replicate
+        mnode@type = x@type
+        mnode@state = x@state
+        mnode@endpoint <- paste(x@baseURL, "v1", sep="/")
+        # Set the service URL fragment for the solr query engine
+        mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+        return(mnode)
+    } else {
+        return(NULL)
+    }
 })
 
 ##########################
@@ -136,14 +136,14 @@ setGeneric("getCapabilities", function(mnode, ...) {
 
 #' @describeIn MNode
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
-  url <- paste(mnode@endpoint, "node", sep="/")
-	response <- GET(url, user_agent(mnode@userAgent))
-  if(response$status != "200") {
-    cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
-		return(NULL)
- 	}
-	xml <- content(response)
-	return(xml)
+    url <- paste(mnode@endpoint, "node", sep="/")
+    response <- GET(url, user_agent(mnode@userAgent))
+    if(response$status != "200") {
+        cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
+        return(NULL)
+    }
+    xml <- content(response)
+    return(xml)
 })
 
 #' Get the bytes associated with an object on this Member Node.
@@ -214,11 +214,13 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
 #' @export
 #' @author Scott Chamberlain
 setMethod("describe", signature("MNode", "character"), function(node, pid) {
-  url <- file.path(node@endpoint, "object", pid)
-  response <- HEAD(url)
-  if(response$status != "200") {
-    d1_errors(response)
-  } else { return(unclass(response$headers)) }
+    url <- file.path(node@endpoint, "object", pid)
+    response <- HEAD(url)
+    if(response$status != "200") {
+        d1_errors(response)
+    } else { 
+        return(unclass(response$headers))
+    }
 })
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getChecksum
@@ -439,25 +441,25 @@ setGeneric("uploadDataPackage", function(mn, dp, ...) {
 #' @describeIn MNode
 setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), accessRules=NA, ...) {
   
-  submitter <- as.character(NULL)
-  # Upload each object that has been added to the DataPackage
-  for (doId in getIdentifiers(dp)) {
-    do <- getMember(dp, doId)
-    
-    submitter <- do@sysmeta@submitter
-    if (public) {
-      do <- setPublicAccess(do)
+    submitter <- as.character(NULL)
+    # Upload each object that has been added to the DataPackage
+    for (doId in getIdentifiers(dp)) {
+        do <- getMember(dp, doId)
+        
+        submitter <- do@sysmeta@submitter
+        if (public) {
+            do <- setPublicAccess(do)
+        }
+        uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
     }
-    uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
-  }
-  
-  # Create a resource map for this DataPackage and upload it
-  tf <- tempfile()
-  serializationId <- paste0("urn:uuid:", UUIDgenerate())
-  status <- serializePackage(dp, tf, id=serializationId)
-  resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=mn@identifier, filename=tf)
-  returnId <- uploadDataObject(mn, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
-  return(returnId)
+    
+    # Create a resource map for this DataPackage and upload it
+    tf <- tempfile()
+    serializationId <- paste0("urn:uuid:", UUIDgenerate())
+    status <- serializePackage(dp, tf, id=serializationId)
+    resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=mn@identifier, filename=tf)
+    returnId <- uploadDataObject(mn, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+    return(returnId)
 })
 
 #' Upload a DataObject to a DataONE repository
@@ -472,51 +474,52 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
 #' @import datapackage
 #' @export
 setGeneric("uploadDataObject", function(mn, do, ...) {
-  standardGeneric("uploadDataObject")
+    standardGeneric("uploadDataObject")
 })
 
 #' @describeIn MNode
 setMethod("uploadDataObject", signature("MNode", "DataObject"), 
-                     function(mn, do, replicate=as.logical(FALSE), numberReplicas=NA, preferredNodes=NA, public=as.logical(FALSE), accessRules=NA, ...)  {
+    function(mn, do, replicate=as.logical(FALSE), numberReplicas=NA, 
+             preferredNodes=NA, public=as.logical(FALSE), accessRules=NA, ...)  {
   
-  # Ensure the user is logged in before the upload
-  cm <- CertificateManager()
-  user <- showClientSubject(cm)
-  
-  if (isCertExpired(cm)) {
-    stop("Unable to upload data, your certificate expired on: ", getCertExpires(cm))
-  }
-
-  doId <- do@sysmeta@identifier
-  # Set sysmeta values if passed in and not already set in sysmeta for each data object
-  if (!is.na(replicate)) {
-    do@sysmeta@replicationAllowed <- as.logical(replicate)
-  }
-  if (!is.na(numberReplicas)) {
-    do@sysmeta@numberReplicas <- as.numeric(numberReplicas)
-  }
-  if (!all(is.na(preferredNodes))) {
-    do@sysmeta@preferredNodes <- as.list(preferredNodes)
-  }
-  
-  if (public) {
-    do@sysmeta <- addAccessRule(do@sysmeta, "public", "read")
-  }
-  
-  # addAccessRule will add all rules (rows) in accessRules in one call
-  if(!all(is.na(accessRules))) {
-    do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
-  }
-  sysmetaXML <- serializeSystemMetadata(do@sysmeta)
-  # Upload the data to the MN using create(), checking for success and a returned identifier
-  createdId <- create(mn, doId, do@filename, do@sysmeta)
-  #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
-  if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
-    #warning(paste0("Error on returned identifier: ", createdId))
-    return(NULL)
-  } else {
-    return(doId)
-  }
+    # Ensure the user is logged in before the upload
+    cm <- CertificateManager()
+    user <- showClientSubject(cm)
+    
+    if (isCertExpired(cm)) {
+        stop("Unable to upload data, your certificate expired on: ", getCertExpires(cm))
+    }
+    
+    doId <- do@sysmeta@identifier
+    # Set sysmeta values if passed in and not already set in sysmeta for each data object
+    if (!is.na(replicate)) {
+        do@sysmeta@replicationAllowed <- as.logical(replicate)
+    }
+    if (!is.na(numberReplicas)) {
+        do@sysmeta@numberReplicas <- as.numeric(numberReplicas)
+    }
+    if (!all(is.na(preferredNodes))) {
+        do@sysmeta@preferredNodes <- as.list(preferredNodes)
+    }
+    
+    if (public) {
+        do@sysmeta <- addAccessRule(do@sysmeta, "public", "read")
+    }
+        
+    # addAccessRule will add all rules (rows) in accessRules in one call
+    if(!all(is.na(accessRules))) {
+        do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
+    }
+    sysmetaXML <- serializeSystemMetadata(do@sysmeta)
+    # Upload the data to the MN using create(), checking for success and a returned identifier
+    createdId <- create(mn, doId, do@filename, do@sysmeta)
+    #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
+    if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
+        #warning(paste0("Error on returned identifier: ", createdId))
+        return(NULL)
+    } else {
+        return(doId)
+    }
 })
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.getQueryEngineDescription
