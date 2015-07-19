@@ -48,6 +48,87 @@ auth_get <- function(url) {
     return(response)
 }
 
+#' POST, PUT, or DELETE a resource with authenticated credentials.
+#' 
+#' POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
+#' provided in a client certificate.  Authenticated access depends on the suggested
+#' PKI package. If the PKI package is not installed, then the request fails.
+#' @param method a string indicating which HTTP method to use (post, put, or delete)
+#' @param url The URL to be accessed via authenticated PUT
+#' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
+#' @param body a list of data to be included in the body of the PUT request
+#' @return the response object from the method
+auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA)) {
+    cert <- NULL
+    auth <- F
+    if (check4PKI()) {
+        # Check if a valid certificate is available
+        cm = CertificateManager()
+        cert <- getCertLocation(cm)
+        if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+            switch(method,
+                post <- POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                put <- PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                delete <- DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent()))
+            )
+        } else {
+            # The certificate is invalid or unreadable, so fall back to unauthenticated?
+            stop("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'.")
+        }
+    } else {
+        # PKI is not available, so throw an error
+        stop("PKIext not installed. You must install the PKI package to enable authenticated operations such as uploading data to DataONE repositories.")
+    }
+}
+
+#' POST a resource with authenticated credentials.
+#' 
+#' POST data to a URL using an HTTP POST request using authentication credentials 
+#' provided in a client certificate.  Authenticated access depends on the suggested
+#' PKI package. If the PKI package is not installed, then the request fails.
+#' @param url The URL to be accessed via authenticated POST
+#' @param encode the type of encoding to use for the POST body, defaults to 'multipart'
+#' @param body a list of data to be included in the body of the POST request
+#' @return the HTTP response from the request
+auth_post <- function(url, encode="multipart", body=as.list(NA)) {
+    cert <- NULL
+    auth <- F
+    response <- auth_put_post_delete("post", url, encode, body)
+    return(response)
+}
+
+#' PUT a resource with authenticated credentials.
+#' 
+#' PUT data to a URL using an HTTP PUT request using authentication credentials 
+#' provided in a client certificate.  Authenticated access depends on the suggested
+#' PKI package. If the PKI package is not installed, then the request fails.
+#' @param url The URL to be accessed via authenticated PUT
+#' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
+#' @param body a list of data to be included in the body of the PUT request
+#' @return the HTTP response from the request
+auth_put <- function(url, encode="multipart", body=as.list(NA)) {
+    cert <- NULL
+    auth <- F
+    response <- auth_put_post_delete("put", url, encode, body)
+    return(response)
+}
+
+#' DELETE a resource with authenticated credentials.
+#' 
+#' DELETE data at a URL using an HTTP DELETE request using authentication credentials 
+#' provided in a client certificate.  Authenticated access depends on the suggested
+#' PKI package. If the PKI package is not installed, then the request fails.
+#' @param url The URL to be accessed via authenticated DELETE
+#' @param encode the type of encoding to use for the DELETE body, defaults to 'multipart'
+#' @param body a list of data to be included in the body of the DELETE request
+#' @return the HTTP response from the request
+auth_delete <- function(url, encode="multipart", body=as.list(NA)) {
+    cert <- NULL
+    auth <- F
+    response <- auth_put_post_delete("delete", url, encode, body)
+    return(response)
+}
+
 #' Determine if the PKI package is installed
 check4PKI <- function() {
     if (!requireNamespace("PKIext", quietly = TRUE)) {
