@@ -44,3 +44,4 @@ Collate:
     'D1Object.R'
     'D1Client.R'
     'EMLParser.R'
+    'SessionConfig.R'
