@@ -247,9 +247,34 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
     d1_errors(response)
   } else { return(unclass(response$headers)) }
 })
-    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.getChecksum
-# public Checksum getChecksum(Identifier pid, String checksumAlgorithm)
+
+#' Get the checksum for the data object corresponding to the specified pid
+#' @description A checksum is calculated for an object when it is uploaded to DataONE and
+#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
+#' the checksum from the specified member node
+#' @param node The MNode instance from which the checksum will be retrieved
+#' @param pid The identifier of the object
+#' @param checksumAlgorith The algorithm used to calculate the checksum. Default="SHA-1"
+#' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.getChecksum}
+#' @export
+#' @describeIn MNode
+setMethod("getChecksum", signature("MNode", "character"), function(node, pid, checksumAlgorithm="SHA-1") {
+  url <- paste(node@endpoint, "checksum", pid, sep="/")
+  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm))
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  checksum<-(xmlToList(xmlParse(resultText)))
+  returnVal <- checksum$text
+  # Set an attribute of the algorithm used to calculate the checksum
+  attr(returnVal, "algorithm") <- checksum$.attrs[['algorithm']]
+  return(returnVal)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
 # public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatid, Boolean replicaStatus, Integer start, Integer count) 

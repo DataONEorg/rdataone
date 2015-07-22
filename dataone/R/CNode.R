@@ -140,8 +140,32 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
 # public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getChecksumAlgorithms
-# public ChecksumAlgorithmList listChecksumAlgorithms()
+#' Get the checksum for the data object associated with the specified pid
+#' @description A checksum is calculated for an object when it is uploaded to DataONE and
+#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
+#' the checksum from the specified coordinating node
+#' @param node The CNode instance from which the checksum will be retrieved
+#' @param pid The identifier of the object
+#' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum}
+#' @export
+#' @describeIn CNode
+setMethod("getChecksum", signature("CNode", "character"), function(node, pid) {
+  url <- paste(node@endpoint, "checksum", pid, sep="/")
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  checksum<-(xmlToList(xmlParse(resultText)))
+  returnVal <- checksum$text
+  # Set an attribute of the algorithm used to calculate the checksum
+  attr(returnVal, "algorithm") <- checksum$.attrs[['algorithm']]
+  return(returnVal)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
@@ -321,9 +345,6 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.search
 # public ObjectList search(String queryType, String query)
-    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.query
-# public InputStream query(String queryEngine, String query)
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)

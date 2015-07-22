@@ -18,7 +18,7 @@ test_that("MNode getCapabilities()", {
 	expect_that(val, matches("node"))
 	expect_that(mn@identifier, matches("urn:node"))
 })
-test_that("MNode get()", {
+test_that("MNode get(), getChecksum()", {
     library(dataone)
     mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
     mn <- MNode(mn_uri)
@@ -39,6 +39,9 @@ test_that("MNode get()", {
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
     expect_that(cname, matches("XML"))
+    chksum <- getChecksum(mn, pid)
+    expect_that(chksum, is_a("character"))
+    expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
     library(dataone)
@@ -214,6 +217,7 @@ test_that("MNode uploadDataPackage works", {
   sciObj <- addAccessRule(sciObj, accessRules)
   addData(dp, sciObj)
   expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
+  cat(sprintf("sciObj id: %s\n", getIdentifier(sciObj)))
 
   #uploadDataObject(mn, sciObj, replicate=TRUE, numberReplicates=1, preferredNodes=preferredNodes, public=TRUE, accessRules=accessRules)
   # Create metadata object that describes science data
@@ -222,6 +226,7 @@ test_that("MNode uploadDataPackage works", {
   expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
   addData(dp, metadataObj)
   expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
+  cat(sprintf("metadataObj id: %s\n", getIdentifier(metadataObj)))
   # Associate the metadata object with the science object it describes
   insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
   #cat(sprintf("sciObj: %s\n", getIdentifier(sciObj)))

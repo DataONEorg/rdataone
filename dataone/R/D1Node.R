@@ -113,6 +113,16 @@ setGeneric("get", function(node, pid, ...) {
   standardGeneric("get")
 })
 
+#' Returns the checksum for a pid 
+#' @param node The CNode or MNode instance from which the checksum will be retrieved
+#' @param pid The object identifier to be downloaded
+#' @return checksum The comuted hash of the pid object
+#' @export
+setGeneric("getChecksum", function(node, pid, ...) {
+  standardGeneric("getChecksum")
+})
+
+
 #' Get the metadata describing system properties associated with an object on this Node.
 #' @description The SystemMetadata includes information about the identity, type, access control, and other system
 #' level details about the object.
@@ -321,6 +331,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   # Send the query to the Node
   response <- GET(queryUrl)
   if(response$status != "200") {
+    cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
     return(NULL)
   }
   

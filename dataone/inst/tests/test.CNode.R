@@ -36,6 +36,9 @@ test_that("CNode get()", {
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
   cname <- class(xml)[1]
   expect_that(cname, matches("XML"))
+  chksum <- getChecksum(cn, pid)
+  expect_that(chksum, is_a("character"))
+  expect_false(is.null(chksum))
 })
 
 test_that("CNode getSystemMetadata()", {
