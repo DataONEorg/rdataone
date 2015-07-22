@@ -150,13 +150,28 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @param node The MNode instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
+#' @param check Check if the requested pid has been obsoleted and print a warning if true
 #' @return the bytes of the object
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.get}
 #' @export
 #' @describeIn MNode
-setMethod("get", signature("MNode", "character"), function(node, pid) {
+setMethod("get", signature("MNode", "character"), function(node, pid, check=as.logical(FALSE)) {
+  
+    if(!class(check) == "logical") {
+      stop("Invalid argument: 'check' must be specified as a logical.")
+    }
+
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "object", pid, sep="/")
+    
+    # Check if the requested pid has been obsoleted by a newer version
+    # and print a warning
+    if (check) {
+      sysmeta <- getSystemMetadata(node, pid)
+      if (!is.na(sysmeta@obsoletedBy)) {
+        message(sprintf('Warning: pid "%s" is obsoleted by pid "%s"', pid, sysmeta@obsoletedBy))
+      }
+    }
     
     # Use an authenticated connection if a certificate is available 
     cm = CertificateManager()
