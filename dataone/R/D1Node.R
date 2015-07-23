@@ -122,6 +122,47 @@ setGeneric("getChecksum", function(node, pid, ...) {
   standardGeneric("getChecksum")
 })
 
+#' Retrieve a description of a query engine from a coordinating node or member node
+#' @param node The CNode or MNode to query
+#' @param queryEngine The query engine name to get a description for.
+#' @return list The query engine description
+#' @export
+setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
+  standardGeneric("getQueryEngineDescription")
+})
+
+#' Query a node for the list of query engines available on the node
+#' @param node The CNode or MNode instance to list the query engines for.
+#' @return list Objects that met the search criteria
+#' @export
+#' @examples
+#' \dontrun{ 
+#' cn <- CNode("PROD")
+#' engineDesc <- getQueryEngineDescription(cn, "solr")
+#' cat(sprintf("Query engine version: %s\n", engineDesc[1]$queryEngineVersion))
+#' cat(sprintf("Query engine name: %s\n", engineDesc[2]$name))
+#' for (i in 5:length(engineDesc)) {
+#'   cat(sprintf("query field: %s : %s\n", engineDesc[i]$queryField$name, engineDesc[i]$queryField$description))
+#' }
+#' }
+#' @describeIn CNode
+setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
+  
+  url <- paste(node@endpoint, "query", queryEngineName, sep="/")
+  # Send the request
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  queryEngineDescription <-(xmlToList(xmlParse(resultText)))
+  
+  return(queryEngineDescription)
+})
 
 #' Get the metadata describing system properties associated with an object on this Node.
 #' @description The SystemMetadata includes information about the identity, type, access control, and other system
@@ -213,6 +254,46 @@ setMethod("listObjects", signature("D1Node"), function(node,
   # Parse the returned XML into a list
   objects<-(xmlToList(xmlParse(resultText)))
   return(objects)
+})
+
+#' List the query engines available for a DataONE member node or coordinating node
+#' @param node The CNode or MNode to list the query engines for.
+#' @return list The list of query engines.
+#' @export
+setGeneric("listQueryEngines", function(node, ...) {
+  standardGeneric("listQueryEngines")
+})
+
+#' Query a node for the list of query engines available on the node
+#' @param node The CNode or MNode instance to list the query engines for.
+#' @return list Objects that met the search criteria
+#' @family search engines
+#' #For the \code{'logsolr'} search engine, \code{\link{logsolr}} and 
+#' \url{http://jenkins-1.dataone.org/jenkins/job/API Documentation - trunk/ws/api-documentation/build/html/design/UsageStatistics.html}
+#' @export
+#' @describeIn CNode
+setMethod("listQueryEngines", signature("D1Node"), function(node) {
+  
+  url <- paste(node@endpoint, "query", sep="/")
+  # Send the request
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  resultList <-(xmlToList(xmlParse(resultText)))
+  
+  queryEngines <- list()
+  # Reformat the list for easier consumption
+  for (i in 1:length(resultList)) {
+    queryEngines <- c(queryEngines, resultList[i]$queryEngine)
+  }
+
+  return(queryEngines)
 })
 
 ## Construct a Node, using a passed in capabilities XML
