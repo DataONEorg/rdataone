@@ -149,6 +149,72 @@ setGeneric("describe", function(node, pid, ...) {
   standardGeneric("describe")
 })
 
+#' Retrieve the list of objects that match the search parameters
+#' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @return list Objects that met the search criteria
+#' @export
+setGeneric("listObjects", function(node, ...) {
+  standardGeneric("listObjects")
+})
+
+#' Retrieve the list of objects present on the MN that match the calling parameters. 
+#' @details The list of objects that is returned is paged according to the \code{'start'} and
+#' \code{'count'} values, so that large result sets can be returned over multiple calls.
+#' @param node The MNode or CNode instance from which the checksum will be retrieved
+#' @param fromDate Entries with a modified date greater than \code{'fromDate'} will be returned.
+#' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
+#' @param toDate Entries with a modified date less than \code{'toDate'} will be returned.
+#' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
+#' @param formatId The format to match, for example "eml://ecoinformatics.org/eml-2.1.1"
+#' @param replicaStatus A logical value that determines if replica (object not on it's origin node) should be returned. Default is TRUE.
+#' @param start An integer that specifies the first element of the result set that will be returned
+#' @param count An integer that specifies how many results will be returned
+#' @return list Objects that met the search criteria
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
+#' @import parsedate
+#' @export
+#' @describeIn MNode
+setMethod("listObjects", signature("D1Node"), function(node, 
+                                                      fromDate=as.character(NA), toDate=as.character(NA),
+                                                      formatId=as.character(NA), replicaStatus=as.logical(TRUE), 
+                                                      start=as.integer(0), count=as.integer(1000)) {
+  
+  # Build a parameter list with the specified arguments. Don't include parameters that
+  # have not be specified and do not have default values, as each parameter included in the
+  # list will be sent in the http query parameters.
+  params <- list()
+  if (!is.na(fromDate)) {
+    chkDT <- parse_iso_8601(fromDate)
+    if(is.na(chkDT)) stop(sprintf('Invalid parameter "fromDate=%s". Value must be in ISO 8601 format\n', fromDate))
+    params <- c(params, fromDate=fromDate)
+  }
+  if (!is.na(toDate)) {
+    chkDT <- parse_iso_8601(toDate)
+    if(is.na(chkDT)) stop(sprintf('Invalid parameter "toDate=%s". Value must be in ISO 8601 format\n', toDate))
+    params <- c(params, toDate=toDate)
+  }
+  if (!is.na(formatId)) {
+    params <- c(params, formatId=URLencode(formatId))
+  }
+  params <- c(params, replicaStatus=as.character(replicaStatus))
+  params <- c(params, start=as.character(start))
+  params <- c(params, count=as.character(count))
+  
+  url <- paste(node@endpoint, "object", sep="/")
+  # Send the request
+  response<-GET(url, query=params)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  objects<-(xmlToList(xmlParse(resultText)))
+  return(objects)
+})
+
 ## Construct a Node, using a passed in capabilities XML
 ## @param node The node to which capabilities should be applied.
 ## @param ... (not yet used)
