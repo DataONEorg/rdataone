@@ -2,6 +2,15 @@ context("D1Node tests")
 test_that("dataone library loads", {
   library(dataone)
 })
+
+test_that("CNode ping", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  cn <- CNode("STAGING2")
+  alive <- ping(cn)
+  expect_true(alive)
+})
+
 test_that("CNode object index query works with query list param", {
   skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
@@ -62,6 +71,32 @@ test_that("Object listing works for CNode, MNode", {
   try(objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count), silent=TRUE)
   expect_that(class(err), (matches("try-error")))
 
+})
+
+test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  
+  #cn <- CNode("STAGING2")
+  # Get list of query engines for a CN, and get description for each engine
+  cn <- CNode("STAGING")
+  engines <- listQueryEngines(cn)
+  expect_more_than(length(engines), 0)
+  for (i in 1:length(engines)) {
+    engineDesc <- getQueryEngineDescription(cn, engines[[i]])
+    expect_more_than(length(engineDesc), 0)
+    expect_match(engineDesc$name, engines[[i]])
+  }
+  
+  # Get list of query engines for an MN, and get description for each engine
+  mn <- MNode("https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn")
+  engines <- listQueryEngines(mn)
+  expect_more_than(length(engines), 0)
+  for (i in 1:length(engines)) {
+    engineDesc <- getQueryEngineDescription(mn, engines[[i]])
+    expect_more_than(length(engineDesc), 0)
+    expect_match(engineDesc$name, engines[[i]])
+  }
 })
 
 test_that("CNode object index query works with query string param", {

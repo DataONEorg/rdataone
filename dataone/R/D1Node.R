@@ -332,6 +332,31 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
   return(node)
 })
 
+#' Test if a node is online and accepting DataONE requests
+#' @param node The CNode or MNode to check
+#' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
+#' @export
+setGeneric("ping", function(node) {
+  standardGeneric("ping")
+})
+
+#' Test if a node is online and accepting DataONE requests
+#' @param node The CNode or MNode to check.
+#' @return list Objects that met the search criteria
+#' @export
+setMethod("ping", signature("D1Node"), function(node) {
+  
+  url <- paste(node@endpoint, "monitor/ping", sep="/")
+  # Send the request
+  response<-GET(url)
+
+  if (response$status == 200) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+})
+
 ## This function parses a DataONE service response message for errors, and extracts and
 ## prints error information.
 ## @param x The DataONE service response

@@ -96,18 +96,13 @@ setMethod("CNode", signature("character"), function(env) {
 ## Methods
 ##########################
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CN_core.ping
-# public Date ping()
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
-# public ObjectFormatList listFormats()
 #' list formats
 #' @description list of all object formats registered in the DataONE Object Format Vocabulary.
 #' @param cnode a valid CNode object
-#' @docType methods
 #' @author hart
 #' @import httr
 #' @rdname listFormats-method
+#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples
 #' \dontrun{
@@ -119,10 +114,10 @@ setGeneric("listFormats", function(cnode, ...) {
   standardGeneric("listFormats")
 })
 
-
-#' @rdname listFormats-method
+#' list formats
 #' @aliases listFormats
-## @export
+#' @describeIn CNode
+#' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
   out <- GET(url)
@@ -137,9 +132,39 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
   return(df)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
-# public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
-   
+#' Get information for a single DataONE object format
+#' @param cnode A CNode object instance
+#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
+#' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @examples
+#' \dontrun{
+#' cn <- CNode()
+#' fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
+#' cat(sprintf("format name: %s\n", fmt$name))
+#' cat(sprintf("format type: %s\n", fmt$type))
+#' cat(sprintf("format Id: %s\n", fmt$id))
+#' }
+#' @export
+setGeneric("getFormat", function(cnode, ...) {
+  standardGeneric("getFormat")
+})
+
+#' @aliases getFormat
+#' @describeIn CNode
+#' @export
+setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
+  url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
+  response <- GET(url)
+  
+  if(response$status != "200") {
+    return(NULL)
+  }
+  
+  result <- xmlToList(content(response,as="parsed"))
+  fmt <- list(name=result$formatName, type=result$formatType, id=result$formatId)
+  return(fmt)
+})
+
 #' Get the checksum for the data object associated with the specified pid
 #' @description A checksum is calculated for an object when it is uploaded to DataONE and
 #' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
