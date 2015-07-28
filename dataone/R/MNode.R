@@ -110,7 +110,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
         mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
         return(mnode)
     } else {
-        return(NULL)
+        stop("Error: Node is not of type 'mn'.")
     }
 })
 
@@ -139,8 +139,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
     url <- paste(mnode@endpoint, "node", sep="/")
     response <- GET(url, user_agent(mnode@userAgent))
     if(response$status != "200") {
-        cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
-        return(NULL)
+        stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
     }
     xml <- content(response)
     return(xml)
@@ -177,9 +176,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid, check=as.l
     response <- auth_get(url)
     
     if (response$status != "200") {
-        cat(sprintf("get() error: %s\n", getErrorDescription(response)))
-        #d1_errors(response)
-        return(NULL)
+        stop(sprintf("get() error: %s\n", getErrorDescription(response)))
     }
     return(content(response, as = "raw"))
 })
@@ -203,8 +200,7 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     response <- auth_get(url)
 
     if (response$status != "200") {
-        cat(sprintf("get() error: %s\n", getErrorDescription(response)))
-        return(NULL)
+        stop(sprintf("get() error: %s\n", getErrorDescription(response)))
     }
     # Convert the response into a SystemMetadata object
     sysmeta <- SystemMetadata(xmlRoot(content(response)))
@@ -300,8 +296,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     
     if(response$status != "200") {
         #d1_errors(response)
-        cat(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
-        return(NULL)
+        stop(sprintf("Error creating %s: %s\n", pid, getErrorDescription(response)))
     } else {
         return(content(response))
     }
@@ -340,8 +335,8 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
                                    newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')))
     
     if(response$status != "200") {
-        d1_errors(response)
-        return(NULL)
+        #d1_errors(response)
+        stop(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
     } else {
         return(content(response))
     }
@@ -376,8 +371,8 @@ setMethod("archive", signature("MNode", "character"), function(mnode, pid) {
     response <- auth_put(url)
 
     if(response$status != "200") {
-        d1_errors(response)
-        return(NULL)
+        #d1_errors(response)
+        stop(sprintf("Error archiving %s: %s\n", pid, getErrorDescription(response)))
     } else {
         return(content(response))
     }
@@ -412,7 +407,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     }
     response <- auth_post(url=url,  encode="multipart", body=body)
     if(response$status != "200") {
-        return(NULL)
+        stop(sprintf("Error generating ID of type %s: %s\n", scheme, getErrorDescription(response)))
     }
     
     # extract the identifier as a character string from the XML response
@@ -424,7 +419,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' Upload a DataPackage to a DataONE member node
 #' 
 #' @description Upload all DataObjects contained in the DataPackage by calling uploadDataObject()
-#' on each of the members. Also a resourceMap object is create from the
+#' on each of the members. Also a resourceMap object is created from the
 #' recorded relationships between DataObjects, and this is uploaded as well.
 #' 
 #' @details The DataPackage describes the collection of data object and their associated 
