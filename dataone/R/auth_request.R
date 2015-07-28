@@ -22,16 +22,17 @@
 #' 
 #' Retrieve the data at a URL using an HTTP GET request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKI package. If the PKI package is not installed, then the request falls back
+#' PKIplus package. If the PKIplus package is not installed, then the request falls back
 #' to an unauthenticated request, which may fail due to insufficient permissions.
 #' Configuration options for httr/RCurl can be passed using the normal config()
 #' mechanisms to generate a config option. Use httr_options() to see a complete list
 #' of available options.
 #' @param url The URL to be accessed via authenticated GET.
-#' @param config HTTP configuration options as used by curl, defaults to empty list
+#' @param nconfig HTTP configuration options as used by curl, defaults to empty list
 #' @return the response object from the method
 #' @import httr
-auth_get <- function(url, config=config()) {
+auth_get <- function(url, nconfig=config()) {
+#auth_get <- function(url, config=config()) {
     cert <- NULL
     auth <- F
     response <- NULL
@@ -40,7 +41,7 @@ auth_get <- function(url, config=config()) {
         cm = CertificateManager()
         cert <- getCertLocation(cm)
         if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-            new_config <- c(config, config(sslcert = cert))
+            new_config <- c(nconfig, config(sslcert = cert))
             response <- GET(url, config = new_config, user_agent(get_user_agent()))
         } else {
             # The certificate is invalid or unreadable, so fall back to unauthenticated?
@@ -48,8 +49,9 @@ auth_get <- function(url, config=config()) {
             response <- GET(url, user_agent(get_user_agent()))   # the anonymous access case
         }
     } else {
-        # PKI is not available, so print a warning and fall back to unauthenticated
-        warning("PKIext not installed. You must install the PKI package to enable authenticated operations such as reading private data or uploading data to DataONE repositories. Attempting call as public user without being authenticated.")
+        # PKIplus is not available, so print a warning and fall back to unauthenticated
+        warning("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories. Attempting call as public user without being authenticated.")
+        warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
         response <- GET(url, user_agent(get_user_agent()))   # the anonymous access case
     }
     return(response)
@@ -59,7 +61,7 @@ auth_get <- function(url, config=config()) {
 #' 
 #' POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKI package. If the PKI package is not installed, then the request fails.
+#' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param method a string indicating which HTTP method to use (post, put, or delete)
 #' @param url The URL to be accessed via authenticated PUT
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
@@ -84,8 +86,9 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
             stop("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'.")
         }
     } else {
-        # PKI is not available, so throw an error
-        stop("PKIext not installed. You must install the PKI package to enable authenticated operations such as uploading data to DataONE repositories.")
+        # PKIplus is not available, so throw an error
+        warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
+        stop("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as uploading data to DataONE repositories.")
     }
 }
 
@@ -93,7 +96,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' 
 #' POST data to a URL using an HTTP POST request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKI package. If the PKI package is not installed, then the request fails.
+#' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated POST
 #' @param encode the type of encoding to use for the POST body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the POST request
@@ -109,7 +112,7 @@ auth_post <- function(url, encode="multipart", body=as.list(NA)) {
 #' 
 #' PUT data to a URL using an HTTP PUT request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKI package. If the PKI package is not installed, then the request fails.
+#' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated PUT
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
@@ -125,7 +128,7 @@ auth_put <- function(url, encode="multipart", body=as.list(NA)) {
 #' 
 #' DELETE data at a URL using an HTTP DELETE request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKI package. If the PKI package is not installed, then the request fails.
+#' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated DELETE
 #' @param encode the type of encoding to use for the DELETE body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the DELETE request
@@ -139,7 +142,7 @@ auth_delete <- function(url, encode="multipart", body=as.list(NA)) {
 
 #' Determine if the PKI package is installed
 check4PKI <- function() {
-    if (!requireNamespace("PKIext", quietly = TRUE)) {
+    if (!requireNamespace("PKIplus", quietly = TRUE)) {
         invisible(FALSE)
     } else {
         invisible(TRUE)
