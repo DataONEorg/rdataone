@@ -76,10 +76,14 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
         cm = CertificateManager()
         cert <- getCertLocation(cm)
         if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+          
             switch(method,
-                post <- POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
-                put <- PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
-                delete <- DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent()))
+                post=POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                put=PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                delete=DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                {
+                  stop('Method not supported.')
+                }
             )
         } else {
             # The certificate is invalid or unreadable, so fall back to unauthenticated?

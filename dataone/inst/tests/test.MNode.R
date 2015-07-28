@@ -141,6 +141,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
 })
 
 test_that("MNode create() works for large files", {
+    skip()
     skip_on_cran()
     if (grepl("Darwin", Sys.info()['sysname'])) {
         skip("fallocate not available on Mac")
@@ -217,7 +218,7 @@ test_that("MNode uploadDataPackage works", {
   sciObj <- addAccessRule(sciObj, accessRules)
   addData(dp, sciObj)
   expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
-  cat(sprintf("sciObj id: %s\n", getIdentifier(sciObj)))
+  #cat(sprintf("sciObj id: %s\n", getIdentifier(sciObj)))
 
   #uploadDataObject(mn, sciObj, replicate=TRUE, numberReplicates=1, preferredNodes=preferredNodes, public=TRUE, accessRules=accessRules)
   # Create metadata object that describes science data
@@ -226,7 +227,7 @@ test_that("MNode uploadDataPackage works", {
   expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
   addData(dp, metadataObj)
   expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
-  cat(sprintf("metadataObj id: %s\n", getIdentifier(metadataObj)))
+  #cat(sprintf("metadataObj id: %s\n", getIdentifier(metadataObj)))
   # Associate the metadata object with the science object it describes
   insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
   #cat(sprintf("sciObj: %s\n", getIdentifier(sciObj)))
