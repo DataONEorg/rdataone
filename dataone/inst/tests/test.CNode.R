@@ -36,6 +36,9 @@ test_that("CNode get()", {
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
   cname <- class(xml)[1]
   expect_that(cname, matches("XML"))
+  chksum <- getChecksum(cn, pid)
+  expect_that(chksum, is_a("character"))
+  expect_false(is.null(chksum))
 })
 
 test_that("CNode getSystemMetadata()", {
@@ -77,11 +80,17 @@ test_that("CNode resolve()",{
   expect_that(res$id, matches(id) )
   expect_that(typeof(res$data),matches("list") )
 })
-test_that("CNode listFormats",{
+test_that("CNode listFormats, getFormat",{
+  skip_on_cran()
   library(dataone) 
   cn <- CNode()
-  f <- listFormats(cn)
-  expect_that(is.data.frame(f),is_true())
-  expect_that(length(grep("eml", f$ID)), is_more_than(0))
+  fmts <- listFormats(cn)
+  expect_that(is.data.frame(fmts),is_true())
+  expect_that(length(grep("eml", fmts$ID)), is_more_than(0))
+  # CHeck that the name returned by getFormat matches the name
+  # requested, and in the data.frame from listFormats
+  for (i in 1:length(fmts)) {
+    thisFmt <- getFormat(cn, fmts[i,'ID'])
+    expect_match(fmts[i,'Name'], thisFmt$name)
+  }
 })
-

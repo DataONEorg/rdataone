@@ -114,6 +114,57 @@ setGeneric("get", function(node, pid, ...) {
   standardGeneric("get")
 })
 
+#' Returns the checksum for a pid 
+#' @param node The CNode or MNode instance from which the checksum will be retrieved
+#' @param pid The object identifier to be downloaded
+#' @return checksum The comuted hash of the pid object
+#' @export
+setGeneric("getChecksum", function(node, pid, ...) {
+  standardGeneric("getChecksum")
+})
+
+#' Retrieve a description of a query engine from a coordinating node or member node
+#' @param node The CNode or MNode to query
+#' @param queryEngine The query engine name to get a description for.
+#' @return list The query engine description
+#' @export
+setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
+  standardGeneric("getQueryEngineDescription")
+})
+
+#' Query a node for the list of query engines available on the node
+#' @param node The CNode or MNode instance to list the query engines for.
+#' @return list Objects that met the search criteria
+#' @export
+#' @examples
+#' \dontrun{ 
+#' cn <- CNode("PROD")
+#' engineDesc <- getQueryEngineDescription(cn, "solr")
+#' cat(sprintf("Query engine version: %s\n", engineDesc[1]$queryEngineVersion))
+#' cat(sprintf("Query engine name: %s\n", engineDesc[2]$name))
+#' for (i in 5:length(engineDesc)) {
+#'   cat(sprintf("query field: %s : %s\n", engineDesc[i]$queryField$name, engineDesc[i]$queryField$description))
+#' }
+#' }
+#' @describeIn CNode
+setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
+  
+  url <- paste(node@endpoint, "query", queryEngineName, sep="/")
+  # Send the request
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  queryEngineDescription <-(xmlToList(xmlParse(resultText)))
+  
+  return(queryEngineDescription)
+})
+
 #' Get the metadata describing system properties associated with an object on this Node.
 #' @description The SystemMetadata includes information about the identity, type, access control, and other system
 #' level details about the object.
@@ -138,6 +189,112 @@ setGeneric("getSystemMetadata", function(node, pid, ...) {
 #' @author Scott Chamberlain
 setGeneric("describe", function(node, pid, ...) {
   standardGeneric("describe")
+})
+
+#' Retrieve the list of objects that match the search parameters
+#' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @return list Objects that met the search criteria
+#' @export
+setGeneric("listObjects", function(node, ...) {
+  standardGeneric("listObjects")
+})
+
+#' Retrieve the list of objects present on the MN that match the calling parameters. 
+#' @details The list of objects that is returned is paged according to the \code{'start'} and
+#' \code{'count'} values, so that large result sets can be returned over multiple calls.
+#' @param node The MNode or CNode instance from which the checksum will be retrieved
+#' @param fromDate Entries with a modified date greater than \code{'fromDate'} will be returned.
+#' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
+#' @param toDate Entries with a modified date less than \code{'toDate'} will be returned.
+#' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
+#' @param formatId The format to match, for example "eml://ecoinformatics.org/eml-2.1.1"
+#' @param replicaStatus A logical value that determines if replica (object not on it's origin node) should be returned. Default is TRUE.
+#' @param start An integer that specifies the first element of the result set that will be returned
+#' @param count An integer that specifies how many results will be returned
+#' @return list Objects that met the search criteria
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
+#' @import parsedate
+#' @export
+#' @describeIn MNode
+setMethod("listObjects", signature("D1Node"), function(node, 
+                                                      fromDate=as.character(NA), toDate=as.character(NA),
+                                                      formatId=as.character(NA), replicaStatus=as.logical(TRUE), 
+                                                      start=as.integer(0), count=as.integer(1000)) {
+  
+  # Build a parameter list with the specified arguments. Don't include parameters that
+  # have not be specified and do not have default values, as each parameter included in the
+  # list will be sent in the http query parameters.
+  params <- list()
+  if (!is.na(fromDate)) {
+    chkDT <- parse_iso_8601(fromDate)
+    if(is.na(chkDT)) stop(sprintf('Invalid parameter "fromDate=%s". Value must be in ISO 8601 format\n', fromDate))
+    params <- c(params, fromDate=fromDate)
+  }
+  if (!is.na(toDate)) {
+    chkDT <- parse_iso_8601(toDate)
+    if(is.na(chkDT)) stop(sprintf('Invalid parameter "toDate=%s". Value must be in ISO 8601 format\n', toDate))
+    params <- c(params, toDate=toDate)
+  }
+  if (!is.na(formatId)) {
+    params <- c(params, formatId=URLencode(formatId))
+  }
+  params <- c(params, replicaStatus=as.character(replicaStatus))
+  params <- c(params, start=as.character(start))
+  params <- c(params, count=as.character(count))
+  
+  url <- paste(node@endpoint, "object", sep="/")
+  # Send the request
+  response<-GET(url, query=params)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  objects<-(xmlToList(xmlParse(resultText)))
+  return(objects)
+})
+
+#' List the query engines available for a DataONE member node or coordinating node
+#' @param node The CNode or MNode to list the query engines for.
+#' @return list The list of query engines.
+#' @export
+setGeneric("listQueryEngines", function(node, ...) {
+  standardGeneric("listQueryEngines")
+})
+
+#' Query a node for the list of query engines available on the node
+#' @param node The CNode or MNode instance to list the query engines for.
+#' @return list Objects that met the search criteria
+#' @family search engines
+#' #For the \code{'logsolr'} search engine, \code{\link{logsolr}} and 
+#' \url{http://jenkins-1.dataone.org/jenkins/job/API Documentation - trunk/ws/api-documentation/build/html/design/UsageStatistics.html}
+#' @export
+#' @describeIn CNode
+setMethod("listQueryEngines", signature("D1Node"), function(node) {
+  
+  url <- paste(node@endpoint, "query", sep="/")
+  # Send the request
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  # Parse the returned XML into a list
+  resultList <-(xmlToList(xmlParse(resultText)))
+  
+  queryEngines <- list()
+  # Reformat the list for easier consumption
+  for (i in 1:length(resultList)) {
+    queryEngines <- c(queryEngines, resultList[i]$queryEngine)
+  }
+
+  return(queryEngines)
 })
 
 ## Construct a Node, using a passed in capabilities XML
@@ -174,6 +331,31 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
   node@type <- attrs[["type"]]
   node@state <- attrs[["state"]]
   return(node)
+})
+
+#' Test if a node is online and accepting DataONE requests
+#' @param node The CNode or MNode to check
+#' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
+#' @export
+setGeneric("ping", function(node) {
+  standardGeneric("ping")
+})
+
+#' Test if a node is online and accepting DataONE requests
+#' @param node The CNode or MNode to check.
+#' @return list Objects that met the search criteria
+#' @export
+setMethod("ping", signature("D1Node"), function(node) {
+  
+  url <- paste(node@endpoint, "monitor/ping", sep="/")
+  # Send the request
+  response<-GET(url)
+
+  if (response$status == 200) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
 })
 
 ## This function parses a DataONE service response message for errors, and extracts and
@@ -321,6 +503,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   # Send the query to the Node
   response <- auth_get(queryUrl)
   if(response$status != "200") {
+    cat(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
     return(NULL)
   }
   

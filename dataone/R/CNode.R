@@ -97,18 +97,13 @@ setMethod("CNode", signature("character"), function(env) {
 ## Methods
 ##########################
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CN_core.ping
-# public Date ping()
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
-# public ObjectFormatList listFormats()
 #' list formats
 #' @description list of all object formats registered in the DataONE Object Format Vocabulary.
 #' @param cnode a valid CNode object
-#' @docType methods
 #' @author hart
 #' @import httr
 #' @rdname listFormats-method
+#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples
 #' \dontrun{
@@ -120,10 +115,10 @@ setGeneric("listFormats", function(cnode, ...) {
   standardGeneric("listFormats")
 })
 
-
-#' @rdname listFormats-method
+#' list formats
 #' @aliases listFormats
-## @export
+#' @describeIn CNode
+#' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
   out <- auth_get(url)
@@ -138,11 +133,65 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
   return(df)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
-# public ObjectFormat getFormat(ObjectFormatIdentifier formatid)
-   
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getChecksumAlgorithms
-# public ChecksumAlgorithmList listChecksumAlgorithms()
+#' Get information for a single DataONE object format
+#' @param cnode A CNode object instance
+#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
+#' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @examples
+#' \dontrun{
+#' cn <- CNode()
+#' fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
+#' cat(sprintf("format name: %s\n", fmt$name))
+#' cat(sprintf("format type: %s\n", fmt$type))
+#' cat(sprintf("format Id: %s\n", fmt$id))
+#' }
+#' @export
+setGeneric("getFormat", function(cnode, ...) {
+  standardGeneric("getFormat")
+})
+
+#' @aliases getFormat
+#' @describeIn CNode
+#' @export
+setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
+  url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
+  response <- GET(url)
+  
+  if(response$status != "200") {
+    return(NULL)
+  }
+  
+  result <- xmlToList(content(response,as="parsed"))
+  fmt <- list(name=result$formatName, type=result$formatType, id=result$formatId)
+  return(fmt)
+})
+
+#' Get the checksum for the data object associated with the specified pid
+#' @description A checksum is calculated for an object when it is uploaded to DataONE and
+#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
+#' the checksum from the specified coordinating node
+#' @param node The CNode instance from which the checksum will be retrieved
+#' @param pid The identifier of the object
+#' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum}
+#' @export
+#' @describeIn CNode
+setMethod("getChecksum", signature("CNode", "character"), function(node, pid) {
+  url <- paste(node@endpoint, "checksum", pid, sep="/")
+  response<-GET(url)
+  if (is.raw(response$content)) {
+    tmpres <- content(response, as="raw")
+    resultText <- rawToChar(tmpres)
+  } else {
+    resultText <- content(response, as="text")
+  }
+  
+  checksum<-(xmlToList(xmlParse(resultText)))
+  returnVal <- checksum$text
+  # Set an attribute of the algorithm used to calculate the checksum
+  attr(returnVal, "algorithm") <- checksum$.attrs[['algorithm']]
+  return(returnVal)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
@@ -305,9 +354,6 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.search
 # public ObjectList search(String queryType, String query)
-    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.query
-# public InputStream query(String queryEngine, String query)
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)

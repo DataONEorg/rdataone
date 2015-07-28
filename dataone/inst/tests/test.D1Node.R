@@ -2,7 +2,16 @@ context("D1Node tests")
 test_that("dataone library loads", {
   library(dataone)
 })
-test_that("CNode object index query works", {
+
+test_that("CNode ping", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  cn <- CNode("STAGING2")
+  alive <- ping(cn)
+  expect_true(alive)
+})
+
+test_that("CNode object index query works with query list param", {
   skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   # Test query of CN object index using query string
@@ -24,10 +33,91 @@ test_that("CNode object index query works", {
   expect_is(result[[1]]$size, "numeric")
   expect_match(result[[1]]$abstract, "chlorophyll")
 })
+
+test_that("Object listing works for CNode, MNode", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  
+  #cn <- CNode("STAGING2")
+  cn <- CNode("STAGING")
+  fromDate <- "2013-01-01T01:01:01.000+00:00"
+  toDate <- "2015-12-31T01:01:01.000+00:00"
+  formatId <- "eml://ecoinformatics.org/eml-2.1.0"
+  start <- 0
+  count <- 5
+  objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count)
+  # The XML parser used in listObjects creates one more element than returned elements, used to hold attributes?
+  expect_equal(length(objects) - 1, count)
+  for (i in 1:(length(objects)-1) ) {
+    expect_match(objects[i]$objectInfo$formatId, formatId)
+  }
+  
+  mn <- MNode("https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn")
+  objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count)
+  # The XML parser used in listObjects creates one more element than returned elements, used to hold attributes?
+  expect_equal(length(objects) - 1, count)
+  for (i in 1:(length(objects)-1) ) {
+    expect_match(objects[i]$objectInfo$formatId, formatId)
+  }
+  
+  # Test invalid input
+  fromDate <- "20-01-01T01:01:01.000+00:00" # Invalid year
+  toDate <- "2015-12-31T01:01:01.000+00:00" # valid
+  err <- try(objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count), silent=TRUE)
+  expect_that(class(err), (matches("try-error")))
+  
+  fromDate <- "2013-01-01T01:01:01.000+00:00" # valid
+  toDate <- "01/01/15" # Invalid - not ISO 8601
+  try(objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count), silent=TRUE)
+  expect_that(class(err), (matches("try-error")))
+
+})
+
+test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  
+  #cn <- CNode("STAGING2")
+  # Get list of query engines for a CN, and get description for each engine
+  cn <- CNode("STAGING")
+  engines <- listQueryEngines(cn)
+  expect_more_than(length(engines), 0)
+  for (i in 1:length(engines)) {
+    engineDesc <- getQueryEngineDescription(cn, engines[[i]])
+    expect_more_than(length(engineDesc), 0)
+    expect_match(engineDesc$name, engines[[i]])
+  }
+  
+  # Get list of query engines for an MN, and get description for each engine
+  mn <- MNode("https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn")
+  engines <- listQueryEngines(mn)
+  expect_more_than(length(engines), 0)
+  for (i in 1:length(engines)) {
+    engineDesc <- getQueryEngineDescription(mn, engines[[i]])
+    expect_more_than(length(engineDesc), 0)
+    expect_match(engineDesc$name, engines[[i]])
+  }
+})
+
+test_that("CNode object index query works with query string param", {
+  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
+  library(dataone)
+  
+  #cn <- CNode("STAGING2")
+  cn <- CNode("SANDBOX2")
+  queryParams <- "q=id:doi*&rows=2&wt=xml"
+  result <- query(cn, queryParams, as="list")
+  expect_true(length(result) == 2)
+  expect_match(result[[2]]$id, "doi:")
+  size <- result[[1]]$size
+  expect_is(size, "numeric")
+})
+
 test_that("MNode object index query works", {
   skip_on_cran()
   library(dataone)
   queryParams <- "q=id:doi*&rows=2&wt=xml"
+  #queryParams <- 'q=attribute:"net primary production" AND (abstract:"above ground" OR title:"above ground")'
   #mn_uri <- "https://dev.nceas.ucsb.edu/knb/d1/mn/v1"
   mn_uri <- "https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn/v1"
   mn <- MNode(mn_uri)
