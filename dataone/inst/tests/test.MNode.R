@@ -141,7 +141,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
 })
 
 test_that("MNode create() works for large files", {
-    skip()
+    skip("Skip large file testing.")
     skip_on_cran()
     if (grepl("Darwin", Sys.info()['sysname'])) {
         skip("fallocate not available on Mac")
@@ -201,10 +201,10 @@ test_that("MNode uploadDataPackage works", {
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
   
-  #cn <- CNode("STAGING2")
-  #mnId <- "urn:node:mnTestKNB"
-  cn <- CNode("SANDBOX")
-  mnId <- "urn:node:mnSandboxUCSB2"
+  cn <- CNode("STAGING2")
+  mnId <- "urn:node:mnTestKNB"
+  #cn <- CNode("SANDBOX")
+  #mnId <- "urn:node:mnSandboxUCSB2"
   mn <- getMNode(cn, mnId)
   preferredNodes <- c("urn:node:mnDemo9")
   
