@@ -76,15 +76,27 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
         cm = CertificateManager()
         cert <- getCertLocation(cm)
         if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-          
-            switch(method,
-                post=POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
-                put=PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
-                delete=DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
-                {
-                  stop('Method not supported.')
-                }
-            )
+            
+            if (length(body) > 0 && is.na(body)) {
+                warning("Body is missing.")
+                switch(method,
+                       post=POST(url, encode=encode, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       put=PUT(url, encode=encode, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       delete=DELETE(url, encode=encode, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       {
+                         stop('Method not supported.')
+                       }
+                )
+            } else {
+                switch(method,
+                       post=POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       put=PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       delete=DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent())),
+                       {
+                         stop('Method not supported.')
+                       }
+                )
+            }
         } else {
             # The certificate is invalid or unreadable, so fall back to unauthenticated?
             stop("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'.")
