@@ -87,10 +87,13 @@ setGeneric("CertificateManager", function(...) {
 
 #' @describeIn CertificateManager
 setMethod("CertificateManager", , function() {
-   result <- new("CertificateManager")
-   result@location=as.character(NA)
-   result@obscuredpath=as.character(NA)
-   return(result)
+    if (!requireNamespace("PKIplus", quietly = TRUE)) {
+        stop("CertificateManager functions require the PKI package to be installed.")
+    }
+    result <- new("CertificateManager")
+    result@location=as.character(NA)
+    result@obscuredpath=as.character(NA)
+    return(result)
 })
 
 #' Get DataONE Identity as Stored in the CILogon Certificate.
@@ -98,7 +101,6 @@ setMethod("CertificateManager", , function() {
 #' field of the X.509 certificate.  The value is a Distinguished Name, and can be used in all fields that
 #' require a user identity for access control authorization. If the certificate is missing on expired, then
 #' the subject 'public' is returned.
-#' @import PKI
 #' @param x a CertificateManager instance
 #' @return the DataONE Subject that is your client's identity
 #' @export
@@ -111,8 +113,8 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     PUBLIC="public"
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
-        cert <- PKI.load.cert(file=certfile)
-        subject <- PKI.get.subject(cert)
+        cert <- PKIplus::PKI.load.cert(file=certfile)
+        subject <- PKIplus::PKI.get.subject(cert)
     } else {
         subject=PUBLIC
     }
@@ -153,7 +155,6 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 #' Show the date and time when an X.509 certificate expires.
 #' @description Each X.509 has a range of certificate validity times.  This method returns the X.509 
 #' \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
-#' @import PKI
 #' @param x a CertificateManager instance
 #' @return POSIXct value
 #' @export
@@ -165,8 +166,8 @@ setGeneric("getCertExpires", function(x, ...) {
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
-        cert <- PKI.load.cert(file=certfile)
-        expires <- PKI.get.notAfter(cert)
+        cert <- PKIplus::PKI.load.cert(file=certfile)
+        expires <- PKIplus::PKI.get.notAfter(cert)
     } else {
         expires=NULL
     }
@@ -254,7 +255,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
     return(x)
 })
 
-#' Get the fiel path on disk of the client certificate file.
+#' Get the file path on disk of the client certificate file.
 #' @description Find the location of the client certificate, which is typically in a default
 #' location on disk, unless the \code{'location'} slot has been set with a custom location for
 #' the certificate.

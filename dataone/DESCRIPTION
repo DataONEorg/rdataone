@@ -21,11 +21,11 @@ Depends:
 Suggests:
     knitr,
     testthat,
-    digest
+    digest,
+    PKIplus
 Imports:
     XML (>= 3.95-0.1),
     httr,
-    PKI,
     stringr,
     datapackage,
     plyr
