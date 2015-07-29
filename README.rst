@@ -120,7 +120,7 @@ install_github() function::
   > install.packages(c("XML", "httr", "stringr"))
   > devtools::install_github("ropensci/redland-bindings", subdir="R/redland")
   > devtools::install_github("ropensci/datapackage")
-  > devtools::install_github("mbjones/PKI")
+  > devtools::install_github("NCEAS/PKIplus")
   > devtools::install_github("DataONEorg/rdataone/dataone")
 
 Development logs
