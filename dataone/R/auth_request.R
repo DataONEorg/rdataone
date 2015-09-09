@@ -171,10 +171,12 @@ check4PKI <- function() {
 #' with other request details.
 get_user_agent <- function() {
     info <- sessionInfo()
-    local_agent <- sprintf("dataone/%s curl/%s Rcurl/%s httr/%s", 
+    library(curl)
+    library(httr)
+    local_agent <- sprintf("dataone/%s libcurl/%s curl/%s httr/%s", 
                                  info$otherPkgs$dataone$Version, 
-                                 curlVersion()$version, 
-                                 info$otherPkgs$RCurl$Version, 
+                                 curl_version()$version, 
+                                 info$otherPkgs$curl$Version, 
                                  info$otherPkgs$httr$Version)
     return(local_agent)
 }

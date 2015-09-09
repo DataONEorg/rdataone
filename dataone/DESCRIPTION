@@ -25,7 +25,7 @@ Suggests:
     PKIplus
 Imports:
     XML (>= 3.95-0.1),
-    httr,
+    httr (>= 1.0.0),
     stringr,
     datapackage,
     plyr,
