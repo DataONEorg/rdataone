@@ -14,6 +14,7 @@ test_that("CNode constructors", {
 	expect_that(cn@endpoint, matches("https://cn-stage-2.test.dataone.org/cn"))
 })
 test_that("CNode listNodes()", {
+  skip_on_cran()  # Sys.setenv(NOT_CRAN = "true") to disable and run tests
 	library(dataone)
 	cn <- CNode()
 	nodelist <- listNodes(cn)
@@ -29,6 +30,7 @@ test_that("CNode listNodes()", {
 })
 
 test_that("CNode get()", {
+  skip_on_cran()
   library(dataone)
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
@@ -42,6 +44,7 @@ test_that("CNode get()", {
 })
 
 test_that("CNode getSystemMetadata()", {
+  skip_on_cran()
   library(dataone)
   cn <- CNode()
   pid <- "aceasdata.3.2"
@@ -50,6 +53,7 @@ test_that("CNode getSystemMetadata()", {
 })
 
 test_that("CNode describe()", {
+  skip_on_cran()
   library(dataone)
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
@@ -59,6 +63,7 @@ test_that("CNode describe()", {
 })
 
 test_that("CNode getMNode()", {
+  skip_on_cran()
   library(dataone)
   cn <- CNode()
   nodelist <- listNodes(cn)
@@ -73,12 +78,27 @@ test_that("CNode getMNode()", {
   expect_that(newnode, is_a("NULL"))
 })
 test_that("CNode resolve()",{
+  skip_on_cran()
   library(dataone) 
   cn <- CNode()
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cn,id)
   expect_that(res$id, matches(id) )
   expect_that(typeof(res$data),matches("list") )
+})
+test_that("CNode reserveIdentifier(), hasReservation() works",{
+  skip_on_cran()
+  library(dataone)
+  cn <- CNode("SANDBOX")
+  # Create a unique id that doesn't require uuid package
+  myId <- gsub(" ", "", date())
+  myId <- gsub(":", "", myId)
+  myId <- sprintf("%s-%s", myId, Sys.info()["nodename"])
+  newId <- reserveIdentifier(cn, myId)
+  expect_equal(myId, newId)
+  hasRes <- hasReservation(cn, newId)
+  expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
+
 })
 test_that("CNode listFormats, getFormat",{
   skip_on_cran()

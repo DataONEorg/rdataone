@@ -221,24 +221,91 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
     return(nodelist)
 })
 
+#' serves an identifier that is unique and can not be used by any other sessions.
+#' @param x The coordinating node to query for its registered Member Nodes
+#' @param ... Additional parameters.
+#' @seealso \link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.reserveIdentifier}
+#' @export
+setGeneric("reserveIdentifier", function(x, id, ...) {
+  standardGeneric("reserveIdentifier")
+})
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.reserveIdentifier
-# public Identifier reserveIdentifier(Identifier pid)
+#' @describeIn reserveIdentifier
+#' @param pid The identifier that is to be reserved.
+#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
+#' @return The reserved pid if it was sucessfully reserved, otherwise NULL
+setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id, quiet=TRUE) {
+  url <- paste(x@endpoint, "reserve", sep="/")
+  response <- auth_post(url, encode="multipart", body=list(pid=URLencode(id)))
+  # Note: the DataONE reserveIdentifier service uses the subject from the client certificate
+  # as the subject to reserve the identifier for.
+  if(response$status != "200") {
+    if (!quiet) {
+      message(sprintf("Error reserving identifier %s: %s\n", id, getErrorDescription(response)))
+    }
+    return(NULL)
+  } else {
+    resultText <- content(response, as="text")
+    doc <- xmlInternalTreeParse(resultText)
+    # XML doc is similiar to: <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">WedSep91341002015-ub14</d1:identifier>
+    nodes <- getNodeSet(doc, "/d1:identifier")
+    id <- xmlValue(nodes[[1]])
+    # Return the identifier as a character value
+    return(id)
+  }
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.generateIdentifier
 # public Identifier generateIdentifier(String scheme, String fragment)
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.hasReservation
-# public boolean hasReservation(Subject subject, Identifier pid)
+#' Get the list of nodes associated with a CN
+#' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param ... Additional parameters.
+#' @seealso \link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.hasReservation}
+#' @export
+setGeneric("hasReservation", function(cnode, ...) {
+  standardGeneric("hasReservation")
+})
+
+#' @describeIn hasReservation
+#' @param pid The identifier that is being checked for existing as a reserved identifier or is in use as 
+#' an identifier for an existing object
+#' @param subject The subject of the principal (user) that made the reservation. If not specified, then
+#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
+#' @return A logical value where TRUE means a reservation exists for the specified pid by the subject.
+setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.character(NA), quiet=TRUE) {
+  url <- paste(cnode@endpoint, "reserve", pid, sep="/")
+  # Obtain the subject from the client certificate if it has not been specified
+  if(is.na(subject)) {
+    cm <- CertificateManager()
+    subject <- showClientSubject(cm)
+  }
+  # The subject might contain '=', so encode reserved chars also.
+  url <- sprintf("%s?%s", url, sprintf("subject=%s", URLencode(subject, reserved=TRUE)))
+  response <- auth_get(url)
+  # The DataONE 'hasReservation' service uses the HTTP status code to communicate the
+  # existence of a reservation for the pid and subject combination. The following HTTP status
+  # codes and their meaning are shown below:
+  #     Status code      meaning
+  #     200              A reservation for the pid and subject combination exists
+  #     401              Unauthorized - pid reservation exists, but subject doesn't have priviledge
+  #                      to access it
+  #     404              A reservation for the pid does not exist
+  # 
+  if(response$status != "200") {
+    if (!quiet) {
+      message(sprintf("Error checking reservation for pid=%ssubject=%s: %s\n", 
+                 pid, subject, getErrorDescription(response)))
+    }
+    return(FALSE)
+  }
+  # When a reservation exists, there is nothing of interest in the response, so just return
+  # a TRUE value.
+  return(TRUE)
+})
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.setObsoletedBy
 # public boolean setObsoletedBy(Identifier pid, Identifier obsoletedByPid, long serialVersion)
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.delete
-# public Identifier delete(Identifier pid)
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.archive
-# public Identifier archive(Identifier pid)
 
 #' Get the bytes associated with an object on this Coordinating Node.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
@@ -351,15 +418,9 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
     
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.listObjects
 # public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatId, Boolean replicaStatus, Integer start, Integer count) 
-    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.search
-# public ObjectList search(String queryType, String query)
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.listQueryEngines
-# public QueryEngineList listQueryEngines()
 
 ## Get a reference to a node based on its identifier
 ## @param cnode The coordinating node to query for its registered Member Nodes
