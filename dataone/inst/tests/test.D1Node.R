@@ -148,3 +148,30 @@ test_that("MNode object index query works", {
   expect_is(result, "character")
   expect_match(result, "<?xml")
 })
+
+test_that("D1Node archive() works",{
+  skip_on_cran()
+  library(dataone)
+  # Create a csv file for the data object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  cn <- CNode("SANDBOX")
+  mnId <- "urn:node:mnSandboxUNM1"
+  mn <- getMNode(cn, mnId)
+  cm <- CertificateManager()
+  subject <- showClientSubject(cm)
+  # Set 'user' to certificate subject, so we will have permission to change this object
+  do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+  uploadDataObject(mn, do1, replicate=FALSE, public=TRUE)
+  id1 <- getIdentifier(do1)
+  md1 <- getSystemMetadata(mn, id1)
+  # Run the archive test if both metadata objects sync'd
+  if (!is.null(md1)) {
+    tstPid <- archive(mn, id1, quiet=FALSE)
+    expect_equal(tstPid, id1)
+  }
+  tstMd1 <- getSystemMetadata(mn, id1)
+  expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
+})

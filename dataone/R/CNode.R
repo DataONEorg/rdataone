@@ -304,8 +304,37 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   return(TRUE)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.setObsoletedBy
-# public boolean setObsoletedBy(Identifier pid, Identifier obsoletedByPid, long serialVersion)
+#' Set a pid as being obsoleted by another pid
+#' @description Updates the SystemMetadata 'obsoletedBy' property for an object, indicating that the object 
+#' specified by pid has been obsoleted by the identifier in obsoletedByPid.
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' @param node The CNode instance on which the object will be created
+#' @param pid The identifier of the object to be obsoleted
+#' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
+#' @param serialVersion The serial version of the system metadata of the pid being obsoleted. 
+#' @param ... (Not yet used)
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#CNCore.setObsoletedBy}
+#' @export
+setGeneric("setObsoletedBy", function(cnode, pid, obsoletedByPid, ...) {
+  standardGeneric("setObsoletedBy")
+})
+
+#' @describeIn setObsoletedBy
+#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
+#' @return TRUE if the pid was obsoleted, otherwise FALSE is returned
+setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid, obsoletedByPid, serialVersion, quiet=TRUE) {
+  url <- paste(cnode@endpoint, "obsoletedBy", URLencode(pid, reserve=TRUE), sep="/")
+  body=list(obsoletedByPid=URLencode(obsoletedByPid), serialVersion=serialVersion)
+  response <- auth_put(url=url, body=body)
+  if(response$status != "200") {
+    if(!quiet) {
+      message(sprintf("Error obsoleting %s: %s\n", pid, getErrorDescription(response)))
+    }
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+})
 
 #' Get the bytes associated with an object on this Coordinating Node.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is

@@ -32,7 +32,7 @@ test_that("CNode listNodes()", {
 test_that("CNode get()", {
   skip_on_cran()
   library(dataone)
-  cn <- CNode("STAGING2")
+  cn <- CNode("STAGING")
   pid <- "aceasdata.3.2"
   obj <- get(cn, pid)
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
@@ -89,17 +89,66 @@ test_that("CNode resolve()",{
 test_that("CNode reserveIdentifier(), hasReservation() works",{
   skip_on_cran()
   library(dataone)
+  library(uuid)
   cn <- CNode("SANDBOX")
-  # Create a unique id that doesn't require uuid package
-  myId <- gsub(" ", "", date())
-  myId <- gsub(":", "", myId)
-  myId <- sprintf("%s-%s", myId, Sys.info()["nodename"])
+  newId <- sprintf("urn:uuid:%s", UUIDgenerate())
   newId <- reserveIdentifier(cn, myId)
   expect_equal(myId, newId)
   hasRes <- hasReservation(cn, newId)
   expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
 
 })
+
+test_that("CNode setObsoletedBy() works",{
+  skip_on_cran()
+  skip("This test requires objects to be sync'd from an MN to a CN, so it takes awhile")
+  library(dataone)
+  # Create a csv file for the data object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  cn <- CNode("SANDBOX")
+  mnId <- "urn:node:mnSandboxUNM1"
+  mn <- getMNode(cn, mnId)
+  cm <- CertificateManager()
+  subject <- showClientSubject(cm)
+  # Set 'user' to certificate subject, so we will have permission to change this object
+  do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+  uploadDataObject(mn, do1, replicate=FALSE, public=TRUE)
+  do2 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+  uploadDataObject(mn, do2, replicate=FALSE, public=TRUE)
+  id1 <- getIdentifier(do1)
+  id2 <- getIdentifier(do2)
+  # Wait for the CN to sync the new objects from the MN
+  # First wait for 3 minutes
+  message("Waiting 3 minutes for objects to sync from the MN to the CN\n")
+  Sys.sleep(180)
+  for (i in 1:3) {
+    # See if the objs have been sync'd to the CN
+    md1 <- getSystemMetadata(cn, id1)
+    if (!is.null(md1)) break
+    cat(sprintf("Pid %s hasn't synced to %s yet...\n", id1, cn@endpoint))
+    Sys.sleep(60)
+  }
+  for (i in 1:3) {
+    # See if the objs have been sync'd to the CN
+    md2 <- getSystemMetadata(cn, id2)
+    if (!is.null(md2)) break
+    cat(sprintf("Pid %s hasn't synced to %s yet...\n", id2, cn@endpoint))
+    Sys.sleep(60)
+  }
+  # Run the setObsoletedByPid test if both metadata objects sync'd
+  if (!is.null(md1) && !is.null(md2)) {
+    tstPid <- setObsoletedBy(cn, id1, id2, md1@serialVersion, quiet=FALSE)
+    expect_equal(tstPid, id1)
+  }
+  
+  tstmd1 <- getSystemMetadata(cn, id1)
+  expect_equal(tstmd1@obsoletedBy, id2)
+})
+
 test_that("CNode listFormats, getFormat",{
   skip_on_cran()
   library(dataone) 

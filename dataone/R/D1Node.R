@@ -103,6 +103,48 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 # methods are defined here in the parent class, so that the generic is defined for all child classes (MNode.R, CNode.R), where
 # the corresponding methods are defined.
 
+#' Archive an object on a Member Node or Coordinating Node, which hides it from casual searches.
+#' @description This method provides the ability to archive a data or metadata object on the Member Node
+#' provided in the \code{'mnode'} parameter.  Archiving removes the object from DataONE search functions,
+#' thereby making it more difficult to find without completely removing the object.  Archive is intended
+#' for objects that should not be used by current researchers, but for which there is a desire to maintain
+#' a historical record, such as when journal articles might cite the object.  Users can still obtain the
+#' contents of archived objects if they have the identifier, but will not discover it through searches.
+#' @details This operation requires an X.509 certificate to be present in the default location of the file 
+#' system. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
+#' @param node The MNode or CNode instance on which the object will be created
+#' @param pid The identifier of the object to be created
+#' @param ... (Not yet used)
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.archive}
+#' @export
+setGeneric("archive", function(node, pid, ...) {
+  standardGeneric("archive")
+})
+
+#' @describeIn archive
+#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
+#' @return The pid that was archived if successful, otherwise NULL
+setMethod("archive", signature("D1Node", "character"), function(node, pid, quiet=TRUE) {
+  url <- paste(node@endpoint, "archive", URLencode(pid, reserve=TRUE), sep="/")
+  response <- auth_put(url)
+  if(response$status != "200") {
+    if(!quiet) {
+      message(sprintf("Error archiving %s: %s\n", pid, getErrorDescription(response)))
+    }
+    return(NULL)
+  } else {
+    resultText <- content(response, as="text")
+    doc <- xmlInternalTreeParse(resultText)
+    # XML doc is similiar to: <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">WedSep91341002015-ub14</d1:identifier>
+    nodes <- getNodeSet(doc, "/d1:identifier")
+    id <- xmlValue(nodes[[1]])
+    # Return the identifier as a character value
+    return(id)
+  }
+})
+
 #' Get the bytes associated with an object on this Node.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
 #' present in the default location of the file system, in which case the access will be authenticated.

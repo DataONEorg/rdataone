@@ -9,6 +9,7 @@ test_that("MNode constructors", {
 	expect_that(mn@endpoint, matches(mn_uri))
 })
 test_that("MNode getCapabilities()", {
+  skip_on_cra()
 	library(dataone)
 	library(XML)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
@@ -19,6 +20,7 @@ test_that("MNode getCapabilities()", {
 	expect_that(mn@identifier, matches("urn:node"))
 })
 test_that("MNode get(), getChecksum()", {
+  skip_on_cran()
     library(dataone)
     mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
     mn <- MNode(mn_uri)
@@ -44,6 +46,7 @@ test_that("MNode get(), getChecksum()", {
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
+  skip_on_cran()
     library(dataone)
     cn <- CNode()
     mn <- getMNode(cn, "urn:node:KNB")
@@ -64,6 +67,7 @@ test_that("MNode generateIdentifier()", {
     expect_that(newid, matches("urn:uuid:"))
 })
 test_that("MNode describe()", {
+  skip_on_cran()
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
   mn <- MNode(mn_uri)
@@ -237,5 +241,4 @@ test_that("MNode uploadDataPackage works", {
   resourceMapId <- uploadDataPackage(mn, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
   expect_true(!is.null(resourceMapId))
 })
-  
 
