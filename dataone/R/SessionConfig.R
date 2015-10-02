@@ -20,6 +20,8 @@
 
 #' SessionConfig provides methods to get, set, load, unload dataone configuration parameters.
 #' @rdname SessionConfig-class
+#' @slot DefaultConfigFilepath the default config file to load if no other filename is specified
+#' @slot InitialConfigFilepath the initial config file if a config file has never been created
 #' @export
 setClass("SessionConfig", slots = c(
   DefaultConfigFilepath = "character", # configuration file to use if one is not specified to loadConfig()
@@ -27,8 +29,6 @@ setClass("SessionConfig", slots = c(
 )
 
 #' Initialize a SessionConfig object
-#' @slot DefaultConfigFilepath the default config file to load if no other filename is specified
-#' @slot InitialConfigFilepath the initial config file if a config file has never been created
 setMethod("initialize", "SessionConfig", function(.Object) {
   # If a session is currently defined, then unload it
   if (is.element(".D1Config", base::search())) {
@@ -99,7 +99,6 @@ setMethod("loadConfig", signature("SessionConfig"), function(.Object, file=as.ch
 #' @description Unload a configuration
 #' @details The R environment that contained the configuration parameters is destroyed
 #' @param .Object a Configuration instance
-#' @param file the file path to the configuration file, default is "~/.dataone/config.csv"
 #' @export
 setGeneric("unloadConfig", function(.Object, ...) {
   standardGeneric("unloadConfig")
@@ -127,25 +126,26 @@ setGeneric("saveConfig", function(.Object, ...) {
 })
 
 #' @describeIn SessionConfig
-setMethod("saveConfig", signature("SessionConfig"), function(.Object, file=as.character(NA)) {
+setMethod("saveConfig", signature("SessionConfig"), function(.Object, file=.Object@DefaultConfigFilepath) {
   
   if (! is.element(".D1Config", base::search())) {
     warning("Cannot save configuration parameters, a configuration session is not currently active.")
     return()
   }
-  
-  if (is.na(file)) {
-    warning("Cannot save configuration parameters, filename not specified.")
-    return()
-  }
-  
+  # Remove existing configuration to prevent corruption
   if(file.exists(file)) {
-    unlink(file)
+    if (file.info(file)[["isdir"]]) {
+      # Is the file a directory?
+      message(sprintf("Unable to save configuration file, specified file to save \"%s\" is a directory", file))
+      return()
+    }
+    # Backup previous file
+    file.rename(file, sprintf("%s.save", file))
   }
   # List all the config params that were read in or saved via saveConfig()
   params <- base::ls(".D1Config")
   if (length(params) == 0) {
-    warning("Unable to save configuration file, no parameters loaded")
+    message("Unable to save configuration file, no parameters loaded")
     return()
   }
   D1ConfigEnv <- as.environment(".D1Config")
