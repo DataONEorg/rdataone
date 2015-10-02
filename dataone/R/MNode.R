@@ -136,7 +136,8 @@ setGeneric("getCapabilities", function(mnode, ...) {
 #' @describeIn MNode
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
     url <- paste(mnode@endpoint, "node", sep="/")
-    response <- GET(url, user_agent(mnode@userAgent))
+    # Don't need privileged access, so call GET directly vs auth_get
+    response <- GET(url, user_agent(get_user_agent()))
     if(response$status != "200") {
         stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
     }
@@ -246,7 +247,7 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 #' @describeIn MNode
 setMethod("getChecksum", signature("MNode", "character"), function(node, pid, checksumAlgorithm="SHA-1") {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
-  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm))
+  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agen(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)

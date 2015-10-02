@@ -122,7 +122,7 @@ setGeneric("listFormats", function(cnode, ...) {
 #' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
-  out <- auth_get(url)
+  out <- GET(url, user_agent(get_user_agent()))
   out <- xmlToList(content(out,as="parsed"))
   ## Below could be done with plyr functionality, but I want to reduce
   ## dependencies in the package
@@ -156,7 +156,7 @@ setGeneric("getFormat", function(cnode, ...) {
 #' @export
 setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
-  response <- GET(url)
+  response <- GET(url, user_agent(get_user_agent()))
   
   if(response$status != "200") {
     return(NULL)
@@ -179,7 +179,7 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
 #' @describeIn CNode
 setMethod("getChecksum", signature("CNode", "character"), function(node, pid) {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
-  response<-GET(url)
+  response <- GET(url, user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
@@ -210,7 +210,8 @@ setGeneric("listNodes", function(cnode, ...) {
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode) {
     url <- paste(cnode@endpoint, "node", sep="/")
-    response <- auth_get(url, user_agent(cnode@userAgent))
+    # Don't need authorized access, so call GET directly vs auth_get
+    response <- GET(url, user_agent(get_user_agent()))
     if(response$status != "200") {
         return(NULL)
     }
