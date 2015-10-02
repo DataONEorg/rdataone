@@ -88,7 +88,7 @@ setGeneric("CertificateManager", function(...) {
 #' @describeIn CertificateManager
 setMethod("CertificateManager", , function() {
     if (!requireNamespace("PKIplus", quietly = TRUE)) {
-        stop("CertificateManager functions require the PKI package to be installed.")
+        stop("CertificateManager functions require the PKIplus package to be installed.")
     }
     result <- new("CertificateManager")
     result@location=as.character(NA)
