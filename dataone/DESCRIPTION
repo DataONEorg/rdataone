@@ -1,5 +1,5 @@
 Package: dataone
-Version: 1.1.0.9002
+Version: 1.1.0.9003
 Date: 2015-05-29
 Title: R interface to the DataONE REST API
 Authors@R: c( person("Matthew", "Jones", role = c("aut", "cre"), email =
