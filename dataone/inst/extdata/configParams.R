@@ -34,10 +34,12 @@ subject_dn <- NULL
 # Example:  "/tmp/x509up_u501"
 certificate_path <- NULL
 # The Friend of a friend 'name' vocabulary term as defined at http://xmlns.com/foaf/spec/, typically the researchers given and family name together.
-# Example: foaf_name <- "Peter Slaughter"
+# Example: foaf_name <- "Peter Smith"
 foaf_name <- NULL
-# The directory used to store per execution provenance information. Defaults to '~/.recordr/runs
-provenance_storage_directory <- "~/.dataone"
+# The directory used to store per execution provenance information. Defaults to '~/.record'
+provenance_storage_directory <- "~/.recordr"
+# Location of the package metadata template file
+package_metadata_template_path <- sprintf("%s/package_metadata_template.R", provenance_storage_directory)
 # When set to true, provenance capture will be triggered when reading from files based on specific read commands in the scripting language. Default: true
 capture_file_reads <- TRUE
 # When set to true, provenance capture will be triggered when writing to files based on specific write commands in the scripting language. Default: true
