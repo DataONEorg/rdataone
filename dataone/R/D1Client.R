@@ -299,18 +299,6 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
 #     return(result)
 })
 
-
-#' Reserve an Identifier in the DataONE System
-#' Reserve an identifier for future use in the DataONE System.
-#' @param x : D1Client
-#' @param id : identifier to reserve
-#' @param ... (not yet used)
-#' @return true if reserved
-#' @export
-setGeneric("reserveIdentifier", function(x, id, ...) { 
-    standardGeneric("reserveIdentifier")
-})
-
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
 #     message(paste("Reserving id:", id))
 #     
