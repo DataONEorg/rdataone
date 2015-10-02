@@ -68,6 +68,7 @@ setMethod("CNode", signature("character"), function(env) {
   SANDBOX <- "https://cn-sandbox.test.dataone.org/cn"
   SANDBOX2 <- "https://cn-sandbox-2.test.dataone.org/cn"
   DEV <- "https://cn-dev.test.dataone.org/cn"
+  DEV2 <- "https://cn-dev-2.test.dataone.org/cn"
 
   # By default, use production.  But also look in the environment.
   CN_URI <- PROD
