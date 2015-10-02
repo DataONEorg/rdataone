@@ -404,6 +404,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
 #' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
+#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @return id The identifier of the resource map for this data package
 #' @import datapackage
 #' @import uuid
@@ -413,7 +414,8 @@ setGeneric("uploadDataPackage", function(mn, dp, ...) {
 })
 
 #' @describeIn MNode
-setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), accessRules=NA, ...) {
+setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
+                                                                           accessRules=NA, quiet=as.logical(TRUE), ...) {
   
     submitter <- as.character(NULL)
     # Upload each object that has been added to the DataPackage
@@ -422,9 +424,12 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
         
         submitter <- do@sysmeta@submitter
         if (public) {
+            if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", getIdentifier((resmapObj))))
             do <- setPublicAccess(do)
         }
-        uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
+        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", mn@endpoint, getIdentifier(resmapObj)))
+        returnId <- uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
+        if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     }
     
     # Create a resource map for this DataPackage and upload it
@@ -432,7 +437,9 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
     serializationId <- paste0("urn:uuid:", UUIDgenerate())
     status <- serializePackage(dp, tf, id=serializationId)
     resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=mn@identifier, filename=tf)
+    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resmapObj), mn@endpoint))
     returnId <- uploadDataObject(mn, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+    if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     return(returnId)
 })
 
