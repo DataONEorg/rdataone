@@ -415,7 +415,8 @@ setGeneric("uploadDataPackage", function(mn, dp, ...) {
 
 #' @describeIn MNode
 setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
-                                                                           accessRules=NA, quiet=as.logical(TRUE), ...) {
+                                                                           accessRules=NA, quiet=as.logical(TRUE), 
+                                                                           resolveURI=as.character(NA), ...) {
   
     submitter <- as.character(NULL)
     # Upload each object that has been added to the DataPackage
@@ -424,10 +425,10 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
         
         submitter <- do@sysmeta@submitter
         if (public) {
-            if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", getIdentifier((resmapObj))))
+            if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
             do <- setPublicAccess(do)
         }
-        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", mn@endpoint, getIdentifier(resmapObj)))
+        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", mn@endpoint, doId))
         returnId <- uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
         if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     }
@@ -435,9 +436,9 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
     # Create a resource map for this DataPackage and upload it
     tf <- tempfile()
     serializationId <- paste0("urn:uuid:", UUIDgenerate())
-    status <- serializePackage(dp, tf, id=serializationId)
+    status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
     resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=mn@identifier, filename=tf)
-    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resmapObj), mn@endpoint))
+    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), mn@endpoint))
     returnId <- uploadDataObject(mn, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
     if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     return(returnId)
