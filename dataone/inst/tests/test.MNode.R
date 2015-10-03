@@ -9,7 +9,7 @@ test_that("MNode constructors", {
 	expect_that(mn@endpoint, matches(mn_uri))
 })
 test_that("MNode getCapabilities()", {
-  skip_on_cra()
+  skip_on_cran()
 	library(dataone)
 	library(XML)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
