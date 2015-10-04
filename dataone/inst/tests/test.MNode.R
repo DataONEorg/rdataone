@@ -134,7 +134,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     
     # Archive the object
     response <- archive(mn, newid)
-    expect_that(xmlValue(xmlRoot(response)), matches(newid))
+    expect_that(response, matches(newid))
     newsysmeta <- getSystemMetadata(mn, newid)
     expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
     expect_that(newsysmeta@archived, is_true())
