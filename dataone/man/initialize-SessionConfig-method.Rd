@@ -10,11 +10,4 @@
 \description{
 Initialize a SessionConfig object
 }
-\section{Slots}{
-
-\describe{
-\item{\code{DefaultConfigFilepath}}{the default config file to load if no other filename is specified}
-
-\item{\code{InitialConfigFilepath}}{the initial config file if a config file has never been created}
-}}
 

@@ -8,8 +8,6 @@ unloadConfig(.Object, ...)
 }
 \arguments{
 \item{.Object}{a Configuration instance}
-
-\item{file}{the file path to the configuration file, default is "~/.dataone/config.csv"}
 }
 \description{
 Unload a configuration

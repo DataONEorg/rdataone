@@ -15,7 +15,8 @@
 
 \S4method{unloadConfig}{SessionConfig}(.Object)
 
-\S4method{saveConfig}{SessionConfig}(.Object, file = as.character(NA))
+\S4method{saveConfig}{SessionConfig}(.Object,
+  file = .Object@DefaultConfigFilepath)
 
 \S4method{setConfig}{SessionConfig,character}(.Object,
   name = as.character(NA), value)
@@ -40,5 +41,12 @@ SessionConfig provides methods to get, set, load, unload dataone configuration p
 \item \code{getConfig}: 
 
 \item \code{listConfig}: 
+}}
+\section{Slots}{
+
+\describe{
+\item{\code{DefaultConfigFilepath}}{the default config file to load if no other filename is specified}
+
+\item{\code{InitialConfigFilepath}}{the initial config file if a config file has never been created}
 }}
 

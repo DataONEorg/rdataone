@@ -20,6 +20,8 @@ uploadDataPackage(mn, dp, ...)
 \item{public}{A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user}
 
 \item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
+
+\item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 }
 \value{
 id The identifier of the resource map for this data package

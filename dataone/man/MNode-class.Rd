@@ -5,7 +5,6 @@
 \alias{MNode,D1Node-method}
 \alias{MNode,character-method}
 \alias{MNode-class}
-\alias{archive,MNode,character-method}
 \alias{create,MNode,character-method}
 \alias{describe,MNode,character-method}
 \alias{generateIdentifier,MNode-method}
@@ -43,14 +42,13 @@
 
 \S4method{update}{MNode,character}(mnode, pid, filepath, newpid, sysmeta)
 
-\S4method{archive}{MNode,character}(mnode, pid)
-
 \S4method{generateIdentifier}{MNode}(mnode, scheme = "UUID",
   fragment = NULL)
 
 \S4method{uploadDataPackage}{MNode,DataPackage}(mn, dp, replicate = NA,
   numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
-  accessRules = NA, ...)
+  accessRules = NA, quiet = as.logical(TRUE),
+  resolveURI = as.character(NA), ...)
 
 \S4method{uploadDataObject}{MNode,DataObject}(mn, do,
   replicate = as.logical(FALSE), numberReplicas = NA, preferredNodes = NA,
@@ -162,8 +160,6 @@ present in the default location of the file system, in which case the access wil
 
 \item \code{update}: 
 
-\item \code{archive}: 
-
 \item \code{generateIdentifier}: 
 
 \item \code{uploadDataPackage}: 
@@ -191,7 +187,6 @@ size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
 response <- create(mn, newid, csvfile, sysmeta)
-response <- archive(mn, newid)
 }
 \dontrun{
 mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
