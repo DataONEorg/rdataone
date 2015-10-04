@@ -117,6 +117,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' @param encode the type of encoding to use for the POST body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the POST request
 #' @return the HTTP response from the request
+#' @import httr
 auth_post <- function(url, encode="multipart", body=as.list(NA)) {
     cert <- NULL
     auth <- F
@@ -133,6 +134,7 @@ auth_post <- function(url, encode="multipart", body=as.list(NA)) {
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
 #' @return the HTTP response from the request
+#' @import httr
 auth_put <- function(url, encode="multipart", body=as.list(NA)) {
     cert <- NULL
     auth <- F
@@ -149,6 +151,7 @@ auth_put <- function(url, encode="multipart", body=as.list(NA)) {
 #' @param encode the type of encoding to use for the DELETE body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the DELETE request
 #' @return the HTTP response from the request
+#' @import httr
 auth_delete <- function(url, encode="multipart", body=as.list(NA)) {
     cert <- NULL
     auth <- F
@@ -169,10 +172,10 @@ check4PKI <- function() {
 #' 
 #' Get a string representation of the user agent to be sent to the server along
 #' with other request details.
+#' @import curl
+#' @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
-    library(curl)
-    library(httr)
     local_agent <- sprintf("dataone/%s libcurl/%s curl/%s httr/%s", 
                                  info$otherPkgs$dataone$Version, 
                                  curl_version()$version, 
