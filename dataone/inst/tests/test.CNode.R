@@ -32,7 +32,7 @@ test_that("CNode listNodes()", {
 test_that("CNode get()", {
   skip_on_cran()
   library(dataone)
-  cn <- CNode("STAGING")
+  cn <- CNode()
   pid <- "aceasdata.3.2"
   obj <- get(cn, pid)
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
@@ -77,6 +77,7 @@ test_that("CNode getMNode()", {
   newnode <- getMNode(cn, "NOT_A_NODE_ID")
   expect_that(newnode, is_a("NULL"))
 })
+
 test_that("CNode resolve()",{
   skip_on_cran()
   library(dataone) 
@@ -86,12 +87,13 @@ test_that("CNode resolve()",{
   expect_that(res$id, matches(id) )
   expect_that(typeof(res$data),matches("list") )
 })
+
 test_that("CNode reserveIdentifier(), hasReservation() works",{
   skip_on_cran()
   library(dataone)
   library(uuid)
-  cn <- CNode("SANDBOX")
-  newId <- sprintf("urn:uuid:%s", UUIDgenerate())
+  cn <- CNode("STAGING")
+  myId <- sprintf("urn:uuid:%s", UUIDgenerate())
   newId <- reserveIdentifier(cn, myId)
   expect_equal(myId, newId)
   hasRes <- hasReservation(cn, newId)
