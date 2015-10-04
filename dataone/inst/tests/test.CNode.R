@@ -57,7 +57,7 @@ test_that("CNode describe()", {
   library(dataone)
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
-  res <- describe(cn, pid)
+  res <- dataone::describe(cn, pid)
   expect_is(res, "list")
   expect_that(res$`content-type`, matches("text/xml"))
 })
