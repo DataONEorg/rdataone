@@ -176,9 +176,13 @@ check4PKI <- function() {
 #' @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
-    local_agent <- sprintf("dataone/%s curl/%s httr/%s", 
-                                 info$otherPkgs$dataone$Version, 
-                                 info$otherPkgs$curl$Version,
-                                 info$otherPkgs$httr$Version)
+    local_agent <- sprintf("dataone/%s R/%s", 
+                        info$otherPkgs$dataone$Version, 
+                        paste(info$R.version$major, info$R.version$minor, sep="."))
+    #local_agent <- sprintf("dataone/%s curl/%s httr/%s R/%s", 
+    #                    info$otherPkgs$dataone$Version, 
+    #                    info$otherPkgs$curl$Version,
+    #                    info$otherPkgs$httr$Version,
+    #                    paste(info$R.version$major, info$R.version$minor, sep="."))
     return(local_agent)
 }
