@@ -176,10 +176,9 @@ check4PKI <- function() {
 #' @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
-    local_agent <- sprintf("dataone/%s libcurl/%s curl/%s httr/%s", 
+    local_agent <- sprintf("dataone/%s curl/%s httr/%s", 
                                  info$otherPkgs$dataone$Version, 
-                                 curl_version()$version, 
-                                 info$otherPkgs$curl$Version, 
+                                 info$otherPkgs$curl$Version,
                                  info$otherPkgs$httr$Version)
     return(local_agent)
 }
