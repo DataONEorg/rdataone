@@ -119,8 +119,7 @@ setGeneric("archive", function(node, pid, ...) {
 #' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
 #' @return The pid that was archived if successful, otherwise NULL
 setMethod("archive", signature("D1Node", "character"), function(node, pid, quiet=TRUE) {
-    #url <- paste(node@endpoint, "archive", URLencode(pid, reserve=TRUE), sep="/")
-    url <- paste(node@endpoint, "archive", pid, sep="/")
+    url <- paste(node@endpoint, "archive", URLencode(pid, reserve=TRUE), sep="/")
     response <- auth_put(url)
     if(response$status != "200") {
         if(!quiet) {
