@@ -103,8 +103,8 @@ test_that("CNode object index query works with query string param", {
   skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   
-  #cn <- CNode("STAGING2")
-  cn <- CNode("SANDBOX2")
+  cn <- CNode("STAGING2")
+  #cn <- CNode("SANDBOX2")
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   result <- query(cn, queryParams, as="list")
   expect_true(length(result) == 2)
