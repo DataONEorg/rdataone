@@ -247,7 +247,7 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 #' @describeIn MNode
 setMethod("getChecksum", signature("MNode", "character"), function(node, pid, checksumAlgorithm="SHA-1") {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
-  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agen(get_user_agent()))
+  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
