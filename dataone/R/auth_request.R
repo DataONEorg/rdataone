@@ -40,7 +40,7 @@ auth_get <- function(url, nconfig=config()) {
         # Check if a valid certificate is available
         cm = CertificateManager()
         cert <- getCertLocation(cm)
-        if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
+        if (!is.null(cert) && (file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
             new_config <- c(nconfig, config(sslcert = cert))
             response <- GET(url, config = new_config, user_agent(get_user_agent()))
         } else {
@@ -75,8 +75,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
         # Check if a valid certificate is available
         cm = CertificateManager()
         cert <- getCertLocation(cm)
-        if ((file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
-            
+        if (!is.null(cert) && (file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
             if (is.na(body[1])) {
                 body = FALSE
             }
