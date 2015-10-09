@@ -540,7 +540,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   # Send the query to the Node
   response <- auth_get(queryUrl)
   if(response$status != "200") {
-    cat(sprintf("Error accessing %s: %s\n", d1node@endpoint, getErrorDescription(response)))
+    cat(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)
   }
   
