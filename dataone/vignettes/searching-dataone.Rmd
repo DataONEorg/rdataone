@@ -34,6 +34,7 @@ a `CNode` instance in the `query()` parameter list causes the DataONE Coordinati
 
 
 ```{r}
+library(dataone)
 cn <- CNode("PROD")
 queryParamList <- list(q="id:doi*", rows="2", fq="abstract:chlorophyll", fl="id,title,dateUploaded,abstract,datasource,size")
 result <- query(cn, queryParamList, as="list")
