@@ -89,7 +89,7 @@ setMethod("CNode", signature("character"), function(env) {
   result@baseURL <- CN_URI
   result@endpoint <- paste(CN_URI, "v1", sep="/")
   # Set the service URL fragment for the solr query engine
-  result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "select?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+  result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
 
   return(result)
 })
