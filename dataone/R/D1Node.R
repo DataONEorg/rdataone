@@ -498,6 +498,12 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' 
 #' queryParams <- "q=id:doi*&rows=2&wt=json"
 #' result <- query(cn, queryParams, as="json")
+#' 
+#' # The following query shows how to embed quotes
+#' cn <- CNode("SANDBOX2")
+#' queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
+#'                        fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
+#'  result <- query(cn, queryParamList, as="data.frame")
 #' }
 #' @export
 setGeneric("query", function(d1node, ...) {

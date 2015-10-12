@@ -32,6 +32,27 @@ test_that("CNode object index query works with query list param", {
   size <- result[[1]]$size
   expect_is(result[[1]]$size, "numeric")
   expect_match(result[[1]]$abstract, "chlorophyll")
+  
+  # Test a query that contains embedded quotes
+  cn <- CNode("SANDBOX2")
+  queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
+                        fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
+  result <- query(cn, queryParamList, as="data.frame")
+  expect_true(class(result) == "data.frame")
+  expect_true(nrow(result) > 0)
+  
+  # Test if query can handle solr syntax error
+  cn <- CNode("SANDBOX2")
+  queryParamList <- list(q="(attribute:lake) and attribute:\"Percent Nitrogen\")", rows="1000",
+                         fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
+  result <- query(cn, queryParamList, as="data.frame")
+  expect_true(is.null(result))
+  
+  # Test if query can handle solr syntax error (mispelled field name "attr")
+  queryParamList <- list(q="(attribute:lake) and attr:\"Percent Nitrogen\")", rows="1000",
+                         fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
+  result <- query(cn, queryParamList, as="data.frame")
+  expect_true(is.null(result))
 })
 
 test_that("Object listing works for CNode, MNode", {
