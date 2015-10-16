@@ -60,6 +60,7 @@ test_that("XML SystemMetadata serialization works", {
 })
 test_that("SystemMetadata XML constructor works", {
     library(dataone)
+    library(XML)
     testid <- "doi:10.xxyy/AA/tesdoc123456789"
     doc <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
     expect_that(xmlValue(xmlRoot(doc)[["identifier"]]), matches(testid))

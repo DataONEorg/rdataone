@@ -5,6 +5,7 @@ test_that("dataone library loads", {
 
 test_that("auth_get", {
   library(dataone)
+  library(httr)
   uri <- "https://cn.dataone.org/cn/v1/formats"
   format_list <- content(dataone:::auth_get(uri))
   cname <- class(format_list)[1]
