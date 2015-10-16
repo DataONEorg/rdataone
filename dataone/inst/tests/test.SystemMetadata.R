@@ -13,6 +13,7 @@ test_that("SystemMetadata constructors", {
 })
 test_that("XML SystemMetadata parsing works", {
   library(dataone)
+  library(XML)
   testid <- "doi:10.xxyy/AA/tesdoc123456789"
   sysmeta <- new("SystemMetadata")
   expect_that(sysmeta@serialVersion, equals(1))
