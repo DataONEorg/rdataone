@@ -4,16 +4,16 @@ source_member_node_id <- "urn:node:KNB"
 target_member_node_id <- "urn:node:testKNB"
 # DataONE environment
 dataone_env <- "PROD"
-# The base URL of the DataONE Coordinating Node server.
-coordinating_node_base_url <- "https://cn-stage-2.test.dataone.org/cn/v1/node"
+# The base URL of the DataONE Coordinating Node server. Currently unused
+#coordinating_node_base_url <- "https://cn-stage-2.test.dataone.org/cn/v1/node"
 # The default object format identifier when creating system metadata and uploading files to a Member Node. Defaults to application/octet-stream.
 format_id <- "application/octet-stream"
 # The DataONE Subject DN string of account uploading the file to a Member Node.
 # Example: "CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org"
-submitter <- NULL
+submitter <- NA
 # The DataONE Subject DN string of account with read, write, and changePermission permissions for the file being uploaded.
 # Example: "CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org"
-rights_holder <- NULL
+rights_holder <- NA 
 # Allow public read access to uploaded files. Defaults to true.
 public_read_allowed <- TRUE
 # Allow replication of files to preserve the integrity of the data file over time.
@@ -21,21 +21,21 @@ replication_allowed <- TRUE
 # The desired number of replicas of each file uploaded to the DataONE network.
 number_of_replicas <- 2
 # A comma-separated list of Member Node identifiers that are preferred for replica storage.
-preferred_replica_node_list <- c("urn:node:mnDemo9", "urn:node:testKNB")
+preferred_replica_node_list <- NA
 # A comma-separated list of Member Node identifiers that are blocked from replica storage.
-blocked_replica_node_list <- NULL
+blocked_replica_node_list <- NA
 # The researcher's ORCID identifier from http://orcid.org. Identity information found via the ORCID API will populate or override other identity fields as appropriate.
 # Example:  "http://orcid.org/0000-0002-1825-0097"
-orcid_identifier <- NULL
+orcid_identifier <- NA
 # The researcher's DataONE Subject as a Distinguished Name string. If not set, defaults to the Subject DN found in the CILogon X509 certificate at the given certificate path.
 # Example: "CN=Your Name A1234, O=Google,C=US,DC=cilogon,DC=org"
-subject_dn <- NULL
+subject_dn <- NA
 # The absolute file system path to the X509 certificate downloaded from https://cilogon.org. The path includes the file name itself.
 # Example:  "/tmp/x509up_u501"
-certificate_path <- NULL
+certificate_path <- NA
 # The Friend of a friend 'name' vocabulary term as defined at http://xmlns.com/foaf/spec/, typically the researchers given and family name together.
 # Example: foaf_name <- "Peter Smith"
-foaf_name <- NULL
+foaf_name <- NA
 # The directory used to store per execution provenance information. Defaults to '~/.record'
 provenance_storage_directory <- "~/.recordr"
 # Location of the package metadata template file
