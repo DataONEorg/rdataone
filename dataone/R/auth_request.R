@@ -46,13 +46,13 @@ auth_get <- function(url, nconfig=config()) {
         } else {
             # The certificate is invalid or unreadable, so fall back to unauthenticated?
             warning("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'. Attempting call as public user without being authenticated.")
-            response <- GET(url, user_agent(get_user_agent()))   # the anonymous access case
+            response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
         }
     } else {
         # PKIplus is not available, so print a warning and fall back to unauthenticated
         warning("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories. Attempting call as public user without being authenticated.")
         warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
-        response <- GET(url, user_agent(get_user_agent()))   # the anonymous access case
+        response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
     }
     return(response)
 }
