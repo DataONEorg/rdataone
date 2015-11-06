@@ -223,7 +223,7 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
     return(nodelist)
 })
 
-#' serves an identifier that is unique and can not be used by any other sessions.
+#' Reserve a identifier that is unique in the DataONE network and can not be used by any other sessions.
 #' @param x The coordinating node to query for its registered Member Nodes
 #' @param ... Additional parameters.
 #' @seealso \link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.reserveIdentifier}
@@ -431,9 +431,15 @@ setGeneric("resolve", function(cnode,pid) {
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
-  out <- auth_get(url, nconfig=config)
-  out <- xmlToList(content(out,as="parsed"))
+  res <- auth_get(url, nconfig=config)
+  # Check if there was an error downloading the object
+  errorMsg <- getErrorDescription(res)
+  if (!is.na(errorMsg)) {
+    message(sprintf('Error resolving url "%s": "%s".\n', url, errorMsg))
+    return(NA)
+  }
   
+  out <- xmlToList(content(res,as="parsed"))
   # Using a loop when plyr would work to reduce dependencies.
   df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))
   for(i in 2:length(out)){
@@ -478,4 +484,3 @@ setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function
     return(NULL)
   }
 })
-
