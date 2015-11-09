@@ -403,9 +403,6 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
   } else { return(unclass(response$headers)) }
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.resolve
-# public ObjectLocationList resolve(Identifier pid)
-
 #' Get a list of coordinating nodes holding a given pid
 #' @description Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
 #' @param cnode a valid CNode object
@@ -433,19 +430,43 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
   res <- auth_get(url, nconfig=config)
   # Check if there was an error downloading the object
-  errorMsg <- getErrorDescription(res)
-  if (!is.na(errorMsg)) {
+  # The DataONE resolve service returns HTTP status 303, which essentially
+  # means the response contains a URI to the object that was requested and
+  # not the object itself. In this case of the resolve service, a list of
+  # MN URLs for the requested object are returned.
+  if (res$status_code != 303) {
+    errorMsg <- getErrorDescription(res)
     message(sprintf('Error resolving url "%s": "%s".\n', url, errorMsg))
     return(NA)
   }
-  
+      
+  # FYI The XML response from dataone looks something like this:
+  # <?xml version="1.0" encoding="UTF-8"?>
+  # <d1:objectLocationList xmlns:d1="http://ns.dataone.org/service/types/v1">
+  #  <identifier>urn:uuid:c4c610c9-460a-45a0-8039-6a50e149f8d6</identifier>
+  #  <objectLocation>
+  #    <nodeIdentifier>urn:node:mnDemo2</nodeIdentifier>
+  #    <baseURL>https://mn-demo-2.test.dataone.org/metacat/d1/mn</baseURL>
+  #    <version>v1</version>
+  #    <version>v2</version>
+  #    <url>https://mn-demo-2.test.dataone.org/metacat/d1/mn/v2/object/urn:uuid:c4c610c9-460a-45a0-8039-6a50e149f8d6</url>
+  #  </objectLocation>
+  # </d1:objectLocationList>
   out <- xmlToList(content(res,as="parsed"))
+  # For the parsed XML:
+  #   Index 1 is the identifier we are resolving
+  #   Index 2-n are the objectLocations
+  # Number of columns may vary depending on whether this is a
+  # v1 mn or v2
+  numOutCols <- length(out[[2]])
+  outColNames <- names(out[[2]])
   # Using a loop when plyr would work to reduce dependencies.
-  df <- data.frame(matrix(NA,ncol=4,nrow=(length(out)-1)))
+  df <- data.frame(matrix(NA,ncol=numOutCols,nrow=(length(out)-1)))
   for(i in 2:length(out)){
     df[(i-1),] <- c(unlist(out[[i]]))
   }
-  colnames(df) <- c("identifier","baseURL","version","url")
+  
+  colnames(df) <- outColNames
   toret <- list(id = pid, data = df)
   return(toret)
 })
