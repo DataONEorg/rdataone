@@ -10,10 +10,10 @@ dataone_env <- "PROD"
 format_id <- "application/octet-stream"
 # The DataONE Subject DN string of account uploading the file to a Member Node.
 # Example: "CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org"
-submitter <- NA
+submitter <- as.character(NA)
 # The DataONE Subject DN string of account with read, write, and changePermission permissions for the file being uploaded.
 # Example: "CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org"
-rights_holder <- NA 
+rights_holder <- as.character(NA)
 # Allow public read access to uploaded files. Defaults to true.
 public_read_allowed <- TRUE
 # Allow replication of files to preserve the integrity of the data file over time.
@@ -26,16 +26,16 @@ preferred_replica_node_list <- NA
 blocked_replica_node_list <- NA
 # The researcher's ORCID identifier from http://orcid.org. Identity information found via the ORCID API will populate or override other identity fields as appropriate.
 # Example:  "http://orcid.org/0000-0002-1825-0097"
-orcid_identifier <- NA
+orcid_identifier <- as.character(NA)
 # The researcher's DataONE Subject as a Distinguished Name string. If not set, defaults to the Subject DN found in the CILogon X509 certificate at the given certificate path.
 # Example: "CN=Your Name A1234, O=Google,C=US,DC=cilogon,DC=org"
-subject_dn <- NA
+subject_dn <- as.character(NA)
 # The absolute file system path to the X509 certificate downloaded from https://cilogon.org. The path includes the file name itself.
 # Example:  "/tmp/x509up_u501"
-certificate_path <- NA
+certificate_path <- as.character(NA)
 # The Friend of a friend 'name' vocabulary term as defined at http://xmlns.com/foaf/spec/, typically the researchers given and family name together.
 # Example: foaf_name <- "Peter Smith"
-foaf_name <- NA
+foaf_name <- as.character(NA)
 # The directory used to store per execution provenance information. Defaults to '~/.record'
 provenance_storage_directory <- "~/.recordr"
 # Location of the package metadata template file
@@ -50,3 +50,5 @@ capture_dataone_reads <- TRUE
 capture_dataone_writes <- TRUE
 # When set to true, provenance capture will be triggered when encountering YesWorkflow inline comments. Default: true
 capture_yesworkflow_comments <- TRUE
+# DataONE authorization token
+authorization_token <- as.character(NA)
