@@ -21,7 +21,7 @@
 #' D1Object (Deprecated) is a representation of a DataObject.
 #' @description D1Object has been deprecated in favor of datapackage::DataObject, which provides
 #' a wrapper for data and associated SystemMetadata. 
-#' @slot proxyObject A backing instance of a DataObject, to which all methods and state are proxied
+#' @slot dataObject A backing instance of a DataObject, to which all methods and state are proxied
 #' @author Matthew Jones
 #' @keywords classes
 #' @import datapackage
@@ -32,19 +32,21 @@
 #' }
 setClass("D1Object", slots = c(proxyObject="DataObject") )
 
-#####################
+########################
 ## D1Object constructors
-#####################
+########################
 
 ## generic
 setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
 
-setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId) {
+setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId, filename) {
 
   if (typeof(id) == "character") {
   } else {
   }
   
+  .Object@dataObject <- new("DataObject", id = id, dataObj = data, format = format,
+                            mnNodeId = mnNodeId, filename = filename)
   return(.Object)
 })
 
@@ -66,11 +68,9 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 #' 
 #' @author rnahf
 #' @export
-setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
-    
+setMethod("getData", signature("D1Object"), function(x, id) {
+    data <- get(x@mn, pid, check=as.logical(FALSE))
 })
-
-
 
 #' Get the Identifier of the D1Object
 #' @param x D1Object
@@ -80,9 +80,8 @@ setMethod("getData", signature("D1Object"), function(x, fileName=NA) {
 #' @author rnahf
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
-
+  getIdentifier(x@dataObject)
 })
-
 
 #' Get the FormatId of the D1Object
 #' @param x D1Object
@@ -92,9 +91,8 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @author rnahf
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
-
+  getFormatId(x@dataObject)
 })
-
 
 #' Add a Rule to the AccessPolicy to Make the Object Publicly Readable
 #' 
@@ -109,10 +107,8 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @author rnahf
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
-
+  setPublicAccess(x@dataObject)
 })
-
-
 
 #' Test whether the provided subject can read the object
 #' 
@@ -121,30 +117,25 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' only the AccessPolicy to determine who can read (Not the rightsHolder field,
 #' which always can read.)
 #' @param x D1Client
-#' @param subject : character
+#' @param subject A character containing the subject to check read access for.
 #' @param ... (not yet used)
-#' @return TRUE or FALSE
-#' 
+#' @return A logical value
 #' @author rnahf
 #' @export
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
-
+  canRead(x@dataObject, subject)
 })
-
-
 
 setGeneric("asDataFrame", function(x, reference, ...) { 
             standardGeneric("asDataFrame")
 })
 
-##
-## this method uses the provided metadata reference object for instructions on
-## how to parse the data table (which parameters to set)
-## 'reference' is the metadata D1Object that gives instruction on how to read the data
-## into the dataFrame
-##
-## @rdname asDataFrame-methods
-## aliases asDataFrame,D1Object,D1Object-method
+#' 
+#' this method uses the provided metadata reference object for instructions on
+#' how to parse the data table (which parameters to set)
+#' 'reference' is the metadata D1Object that gives instruction on how to read the data
+#' into the dataFrame
+#'
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
     ## reference is a metadata D1Object
     mdFormat <- getFormatId(reference)

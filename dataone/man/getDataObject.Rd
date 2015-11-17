@@ -7,14 +7,14 @@
 getDataObject(x, identifier, ...)
 }
 \arguments{
-\item{x}{: D1Client}
+\item{x}{A D1Client object.}
 
-\item{identifier}{: the identifier of the object to get}
+\item{identifier}{The identifier of the object to get.}
 
 \item{...}{(not yet used)}
 }
 \value{
-the DataONE object
+A DataObject or NULL if the object was not found in DataONE
 }
 \description{
 A convenience method to download a data object and its associated SystemMetadata, wrapped
