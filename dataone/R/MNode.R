@@ -104,9 +104,11 @@ setMethod("MNode", signature("D1Node"), function(x) {
         mnode@replicate = x@replicate
         mnode@type = x@type
         mnode@state = x@state
-        mnode@endpoint <- paste(x@baseURL, "v1", sep="/")
+        mnode@services <- x@services
+        mnode@endpoint <- paste(x@baseURL, x@APIversion, sep="/")
         # Set the service URL fragment for the solr query engine
         mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+        mnode@APIversion <- x@APIversion
         return(mnode)
     } else {
         stop("Error: Node is not of type 'mn'.")

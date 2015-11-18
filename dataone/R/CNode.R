@@ -20,8 +20,18 @@
 
 #' @include D1Node.R
 #' @include auth_request.R
-
-#' A CNode represents a DataONE Coordinating Node and can be used to access its services.
+#' @title A CNode represents a DataONE Coordinating Node and can be used to access its services.
+#' @rdname CNode-class
+#' @aliases CNode-class
+#' @slot endpoint A character vector containing URL service endpoint for the Coordinating Node
+#' @slot services A data.frame containing the supported service tiers for a CN
+#' @slot serviceUrls A data.frame contains URL endpoints for certain services
+#' @section Methods:
+#' \itemize{
+#'  \item{\code{\link[=initialize-CNode]{initialize}}}{: Initialize a CNode object}
+#'  \item{\code{\link{getPackage}}}{: Begin recording provenance for an R session}
+#' }
+#' @seealso \code{\link{dataone}}{ package description.}
 #' @exportClass CNode
 setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
@@ -32,32 +42,23 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #' Create a CNode object
 #' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param ... (not yet used)
-## @returnType CNode  
 #' @return the CNode object representing the DataONE environment
-## 
-#' @author jones
 #' @export
 setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
 
-## 
-## Construct a CNode, using default env ("PROD")
-## @name CNode
-## 
-## @returnType CNode  
-## @return the CNode object representing the DataONE environment
-## 
-## @author jones
-## @docType methods
-## @export
+#' Construct a CNode, using default env ("PROD")
+#' @rdname CNode-initialize
+#' @aliases CNode-initialize
+#' @return the CNode object representing the DataONE environment
+#' @export
 setMethod("CNode", , function() {
     result <- CNode("PROD")
     return(result)
 })
 
-## Pass in the environment to be used by this D1Client, plus the 
-## id of the member node to be used for primary interactions such as creates
+#
 #' @export
 setMethod("CNode", signature("character"), function(env) {
 
@@ -77,17 +78,26 @@ setMethod("CNode", signature("character"), function(env) {
     CN_URI <- cn.url
   } else {
     if (env == "DEV") CN_URI <- DEV
-    if (env == "STAGING") CN_URI <- STAGING
-    if (env == "STAGING2") CN_URI <- STAGING2
-    if (env == "SANDBOX") CN_URI <- SANDBOX
-    if (env == "SANDBOX2") CN_URI <- SANDBOX2
-    if (env == "PROD") CN_URI <- PROD
+    else if (env == "DEV2") CN_URI <- DEV2
+    else if (env == "STAGING") CN_URI <- STAGING
+    else if (env == "STAGING2") CN_URI <- STAGING2
+    else if (env == "SANDBOX") CN_URI <- SANDBOX
+    else if (env == "SANDBOX2") CN_URI <- SANDBOX2
+    else if (env == "PROD") CN_URI <- PROD
+    else stop(sprintf("Unknown DataONE environment: %s", env))
   }
 
   ## create new D1Client object and insert uri endpoint
   result <- new("CNode")
   result@baseURL <- CN_URI
-  result@endpoint <- paste(CN_URI, "v1", sep="/")
+  # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
+  # yet that is needed to construct the service URL.
+  response <- GET(CN_URI)
+  # Search for the 'node' element. Have to search for local name in xpath, as DataONE v1 and v2 use different namespaces
+  # and one xpath expression with namespaces can't find both (that I know of).
+  xml <- getNodeSet(content(response, as="parsed"), "/*[local-name() = 'node']")
+  result <- parseCapabilities(result, xml[[1]])
+  result@endpoint <- paste(result@baseURL, result@APIversion, sep="/")
   # Set the service URL fragment for the solr query engine
   result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
 
@@ -208,8 +218,13 @@ setGeneric("listNodes", function(cnode, ...) {
 })
 
 #' @export
-setMethod("listNodes", signature("CNode"), function(cnode) {
-    url <- paste(cnode@endpoint, "node", sep="/")
+setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA), ...) {
+    # If an optional url argument is specified, use that. This might be used if
+    # we are listing just the CN itself, and don't know the version number, i.e.
+    # "https://cn-dev.test.dataone.org/cn" gvies a listing for just the CN
+    if(is.na(url)) {
+      url <- paste(cnode@endpoint, "node", sep="/")
+    }
     # Don't need authorized access, so call GET directly vs auth_get
     response <- GET(url, user_agent(get_user_agent()))
     if(response$status != "200") {
@@ -217,7 +232,7 @@ setMethod("listNodes", signature("CNode"), function(cnode) {
     }
     
     xml <- content(response)
-    node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
+    #node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
     nodes <- getNodeSet(xml, "//node")
     nodelist <- sapply(nodes, D1Node)
     return(nodelist)
@@ -343,15 +358,19 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @param node The CNode instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
+#' @param quiet A logical, if FALSE then informational and error messages will be printed
 #' @return the bytes of the object
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get}
 #' @export
 #' @describeIn CNode
-setMethod("get", signature("CNode", "character"), function(node, pid) {
+setMethod("get", signature("CNode", "character"), function(node, pid, quiet=TRUE) {
     url <- paste(node@endpoint, "object", pid, sep="/")
     response <- auth_get(url)
     
     if(response$status != "200") {
+      if(!quiet) {
+        message(getErrorDescription(response))
+      }
         return(NULL)
     }
     
@@ -410,6 +429,7 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
 #' @docType methods
 #' @author hart
 #' @rdname resolve-method
+#' @return A list of URLs that the object can be downloaded from, or NULL if the object is not found.
 #' @examples
 #' \dontrun{
 #' cn <- CNode("SANDBOX")
@@ -437,7 +457,7 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   if (res$status_code != 303) {
     errorMsg <- getErrorDescription(res)
     message(sprintf('Error resolving url "%s": "%s".\n', url, errorMsg))
-    return(NA)
+    return(NULL)
   }
       
   # FYI The XML response from dataone looks something like this:
@@ -471,27 +491,22 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   return(toret)
 })
     
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum
-# public Checksum getChecksum(Identifier pid)
-    
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.listObjects
-# public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatId, Boolean replicaStatus, Integer start, Integer count) 
-
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)
 
-## Get a reference to a node based on its identifier
-## @param cnode The coordinating node to query for its registered Member Nodes
-## @param nodeid The standard identifier string for this node
-## @returnType MNode
-## @return the Member Node as an MNode reference, or NULL if not found
-## 
-## @author jones
+#' Get a reference to a node based on its identifier
+#' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param nodeid The standard identifier string for this node
+#' @return An MNode object
+#' @return the Member Node as an MNode reference, or NULL if not found
+#' @author jones
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("getMNode", function(cnode, nodeid, ...) {
   standardGeneric("getMNode")
 })
 
+#' @describeIn getMNode
 setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function(cnode, nodeid) {
   nodelist <- listNodes(cnode)
   match <- sapply(nodelist, function(node) { 

@@ -19,19 +19,22 @@
 #
 
 #' @include auth_request.R
-## A class representing a Member Node repository, which can expose and store data
-## @slot identifier The node identifier of the MN
-## @slot name The node name
-## @slot description The node description
-## @slot baseURL The registered baseURL for the node, which does not include the version string
-## @slot subject The Distinguished Name of this node, used for authentication
-## @slot contactSubject The Distinguished Name of contact person for this node
-## @slot replicate  a boolean flag indicating whether the node accepts replicas
-## @slot type the node type, either 'mn' or 'cn'
-## @slot state an indication of whether the node is accessible, either 'up' or 'down'
-## @slot serviceUrls a data.frame that contains DataONE service Urls
-## @author jones
-## @export
+#' @title A class representing a Member Node repository, which can expose and store data
+#' @rdname D1Node-class
+#' @aliases D1Node-class
+#' @slot identifier The node identifier of the MN
+#' @slot name The node name
+#' @slot description The node description
+#' @slot baseURL The registered baseURL for the node, which does not include the version string
+#' @slot subject The Distinguished Name of this node, used for authentication
+#' @slot contactSubject The Distinguished Name of contact person for this node
+#' @slot replicate  a boolean flag indicating whether the node accepts replicas
+#' @slot type the node type, either 'mn' or 'cn'
+#' @slot state an indication of whether the node is accessible, either 'up' or 'down'
+#' @slot services A data.frame containing the service tiers supported by this node.
+#' @slot serviceUrls a data.frame that contains DataONE service Urls
+#' @slot APIversion The version of the DataONE API for this node
+#' @export
 setClass("D1Node",
          slots = c(	identifier = "character",
 					name = "character",
@@ -46,7 +49,9 @@ setClass("D1Node",
 					replicate = "character",
 					type = "character",
 					state = "character",
-          serviceUrls = "data.frame"
+					services = "data.frame",
+          serviceUrls = "data.frame",
+					APIversion = "character"
 					)
 )
 
@@ -333,29 +338,21 @@ setMethod("listQueryEngines", signature("D1Node"), function(node) {
   return(queryEngines)
 })
 
-## Construct a Node, using a passed in capabilities XML
-## @param node The node to which capabilities should be applied.
-## @param ... (not yet used)
-## @returnType Node  
-## @return the Node object with modified capabilities properties from the XML
-## 
-## @author jones
-## @export
+#' Construct a Node, using a passed in capabilities XML
+#' @param node The node to which capabilities should be applied.
+#' @param xml The XML capabilities representing the node to be created
+#' @param ... (not yet used)
+#' @return The Node object with modified capabilities properties from the XML
+#' @export
 setGeneric("parseCapabilities", function(node, xml, ...) {
   standardGeneric("parseCapabilities")
 })
 
-## Construct a Node, using a passed in capabilities XML
-## @param node The node to which capabilities should be applied.
-## @param xml The XML capabilities representing the node to be created
-## @returnType Node  
-## @return the Node object with modified capabilities properties from the XML
-## 
-## @author jones
-## @export
+#' @describeIn parseCapabilities
+#' @export
 setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), function(node, xml) {
   
-  ## Parse the rest of the node information
+  # Parse the rest of the node information
   node@identifier <- xmlValue(xml[["identifier"]])
   node@name <- xmlValue(xml[["name"]])
   node@description <- xmlValue(xml[["description"]])
@@ -366,6 +363,26 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
   node@replicate <- attrs[["replicate"]]
   node@type <- attrs[["type"]]
   node@state <- attrs[["state"]]
+  # Store the available services for this node in a data.frame
+  services <- data.frame(name=character(), version=character(), available=character(), row.names=NULL, stringsAsFactors=FALSE)
+  hasServices <- xmlToList(xml[['services']])
+  for (i in 1:length(hasServices)) {
+    thisService <- hasServices[[i]]
+    services <- rbind(services, data.frame(name=thisService[['name']], version=thisService[['version']], 
+                                           available=thisService[['available']], row.names=NULL, stringsAsFactors=FALSE))
+  }
+  node@services <- services
+  # Set the node API version based on MNCore (tier 1)
+  coreServices <- node@services[grepl("NCore", node@services$name) & node@services$version > "v1" & node@services$available=="true",]
+  serviceVersion <- "v1"
+  if(nrow(coreServices) > 0) {
+    for (i in 1:nrow(coreServices)) {
+      thisVersion <- coreServices[i,]$version
+      # Comparing strings of format "vn"
+      if (thisVersion > serviceVersion) serviceVersion <- thisVersion
+    }
+  }
+  node@APIversion <- serviceVersion
   return(node)
 })
 
@@ -423,6 +440,8 @@ d1_errors <- function(x){
 #     meaningfull error message.
 # 
 getErrorDescription <- function(response) {
+  # Return NA if no error message found
+  errorMsg <- as.character(NA)
   responseContent <- content(response, as="parsed")
   # DataONE services return XML
   if (class(responseContent)[1] == "XMLInternalDocument") {
@@ -486,6 +505,7 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
 #' @param parse A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.
 #' @return search results
+# Need plyr for rbind.fill in query()
 #' @import plyr
 #' @examples
 #' \dontrun{
@@ -546,7 +566,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   # Send the query to the Node
   response <- auth_get(queryUrl)
   if(response$status != "200") {
-    cat(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
+    message(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)
   }
   
