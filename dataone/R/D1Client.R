@@ -33,23 +33,23 @@
 #' @import datapackage
 #' @section Methods:
 #' \itemize{
-#'  \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a Recordr object}
-#'  \item{\code{\link{getPackage}}}{: Begin recording provenance for an R session}
-#'  \item{\code{\link{getD1Object}}}{: Get the Identifiers of Package Members}
+#'  \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a D1Client object.}
+#'  \item{\code{\link{getPackage}}}{: Download a data package from the DataONE Federation.}
+#'  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
 #'  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
-#'  \item{\code{\link{d1SolrQuery}}}{: Add a DataObject to the DataPackage}
-#'  \item{\code{\link{d1IdentifierSearch}}}{: Record relationships of objects in a DataPackage}
-#'  \item{\code{\link{reserveIdentifier}}}{: Record derivation relationships between objects in a DataPackage}
-#'  \item{\code{\link{createDataPackage}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{getEndpoint}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{getMNodeId}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{getMN}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{uploadDataPackage}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{uploadDataObject}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{listMemberNodes}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{convert.csv}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{encodeUrlQuery}}}{: Retrieve relationships of package objects}
-#'  \item{\code{\link{encodeUrlPath}}}{: Retrieve relationships of package objects}
+#'  \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
+#'  \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
+#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
+#'  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node}
+#'  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node}
+#'  \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
+#'  \item{\code{\link{getMN}}}{: Get a member node client based on its node identifier.}
+#'  \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
+#'  \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node..}
+#'  \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
+#'  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
+#'  \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
+#'  \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
@@ -130,7 +130,7 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
     return(.Object)
 })
 
-#' Download a DataPackage from the DataONE Federation.
+#' Download a data package from the DataONE Federation.
 #' @description Given a valid identifier for a ResourceMap, instantiate an R DataPackage
 #' object containing all of the package members. 
 #' @param x D1Client
@@ -202,7 +202,7 @@ setMethod("getPackage", signature("D1Client", "character"), function(x, identifi
     return(dp)
 })
 
-#' Download a D1Object from the DataONE Cloud
+#' Download a data object from the DataONE Federation.
 #' @description An objectd is download from the DataONE network for the identifier that is provided.
 #' @param x A D1Client instance
 #' @param identifier The identifier of the object to download from DatONE
@@ -221,7 +221,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
   return(getDataObject(x, identifier))
 })
 
-#' Download a DataObject from the DataONE Federation. 
+#' Download a data object from the DataONE Federation as a DataObject.
 #' @description A convenience method to download a data object and its associated SystemMetadata, wrapped
 #' in a DataObject class.
 #' @details This method performs multiple underlying calls to the DataONE repository network. 
@@ -300,7 +300,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
   return(result)
 })
 
-#' Query the DataONE Solr endpoint of the Coordinating Node
+#' Query the DataONE Solr endpoint of the Coordinating Node.
 #' @description The DataONE CN Solr query engine is searched using
 #' the provided query string. 
 #' @param x  D1Client: representing the DataONE environment being queried
@@ -334,7 +334,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
   return(TRUE)
 })
 
-#' Create a DataPackage to a DataONE Member Node
+#' Create a DataPackage on a DataONE Member Node
 #' @description Creates the D1Objects contained in the DataPackage by calling the createD1Object()
 #' on each of the members, as well as assembling the resourceMap object from the
 #' recorded relationships, and calling create() on it as well. 
@@ -367,7 +367,7 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 ### Accessor methods
 #########################################################
 
-#' Return the URL endpoint for the DataONE Coordinating Node
+#' Return the URL endpoint for the DataONE Coordinating Node.
 #' @description A D1Client object is associated with a DataONE Coordinating Node. This
 #' CN is either the production CN (from the "PROD" environment, the default), or a CN from one
 #' of the development environments ("STAGING", "SANDBOX", "DEV"). The base URL for the CN
@@ -385,7 +385,7 @@ setMethod("getEndpoint", "D1Client", function(x) {
     return(res)
 })
 
-#' Get for the member node identifier associated with this client.
+#' Get the member node identifier associated with this D1Client object..
 #' @description One Member Node can be associated with the client as the default to which
 #' data and metadata are written.
 #' @param x A D1Client object.
@@ -435,7 +435,7 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
   return(x)
 })
 
-#' Get a member node client based on its node identifier
+#' Get a member node client based on its node identifier.
 #' @param x A D1Client object.
 #' @param nodeid 
 #' @param ... (Not yet used)
@@ -482,7 +482,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
     return(x@cn)
 })
 
-#' Upload a DataPackage to a DataONE member node
+#' Upload a DataPackage to a DataONE member node.
 #' @description Upload all DataObjects contained in the DataPackage by calling \code{\link{uploadDataObject}}
 #' on each of the members. Also a resourceMap object is created from the
 #' recorded relationships between DataObjects, and this is uploaded as well.
@@ -540,7 +540,7 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
     return(returnId)
 })
 
-#' Upload a DataObject to a DataONE repository
+#' Upload a DataObject to a DataONE member node.
 #' @param A MNode instance that contains the MNode object that represents the member node to upload the package to.
 #' @param do The DataObject instance to be uploaded to DataONE.
 #' @param public A \code{'logical'}, if TRUE then all objects in this package wil be accessible by any user
@@ -601,7 +601,7 @@ setMethod("uploadDataObject", signature("MNode", "DataObject"),
     }
 })
 
-#' List DataONE Member Nodes
+#' List DataONE Member Nodes.
 #' @description A D1Client object is associated with a DataONE Coordinating Node. The
 #' \code{listMemberNodes} method lists all member nodes associated with a CN.
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
@@ -620,7 +620,7 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 ### Utility methods
 #########################################################
 
-#' Convert a DataFrame to Standard CSV
+#' Convert a DataFrame to Standard CSV.
 #' @param x A D1Client object
 #' @param df the dataFrame
 #' @param ... additional params passed to write.csv
@@ -641,7 +641,7 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
     return(csvdata)
 })
 
-#' Encode the Input for a URL Query Segment
+#' Encode the Input for a URL Query Segment.
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param querySegment : a string to encode
@@ -670,7 +670,7 @@ setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), f
     return(escaped)
 })
 
-#' Encode the Input for a URL Path Segment
+#' Encode the Input for a URL Path Segment.
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param pathSegment : a string to encode
