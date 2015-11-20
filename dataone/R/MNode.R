@@ -344,6 +344,38 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
     }
 })
 
+#' Update the system metadata associated with an object.
+#' @description A modified SytemMetadata object can be sent to DataONE that contains
+#' updated information. This function allow updating of the system metadata without
+#' updating the object that it describes, so that mutable attribures such as accessPolicy
+#' can be updated easily.
+#' @param node The MNode instance from which the SystemMetadata will be downloaded
+#' @param pid The identifier of the object
+#' @param sysmeta a SystemMetadata instance with updated information.
+#' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
+#' @import datapackage
+#' @export
+setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
+    standardGeneric("updateSystemMetadata")
+})
+
+#' @describeIn updateSystemMetadata
+#' @export
+setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadata"), function(node, pid, sysmeta) {
+    url <- paste(node@endpoint, "meta", pid, sep="/")
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=node@APIversion)
+    sm_file <- tempfile()
+    writeLines(sysmetaxml, sm_file)
+    response <- auth_put(url, encode="multipart", body=list(pid=pid, sysmeta=upload_file(sm_file, type='text/xml')), node)
+    if(response$status != "200") {
+      warning(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
+      return(FALSE)
+    } else {
+      return(TRUE)
+    }
+})
+
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_storage.delete
 # public Identifier delete(Identifier pid)
 
