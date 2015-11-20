@@ -4,7 +4,7 @@
 \alias{auth_post}
 \title{POST a resource with authenticated credentials.}
 \usage{
-auth_post(url, encode = "multipart", body = as.list(NA))
+auth_post(url, encode = "multipart", body = as.list(NA), node = NULL)
 }
 \arguments{
 \item{url}{The URL to be accessed via authenticated POST}

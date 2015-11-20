@@ -4,7 +4,7 @@
 \alias{auth_get}
 \title{GET a resource with authenticated credentials if available.}
 \usage{
-auth_get(url, nconfig = config())
+auth_get(url, nconfig = config(), node = NULL)
 }
 \arguments{
 \item{url}{The URL to be accessed via authenticated GET.}

@@ -392,7 +392,7 @@ setMethod("get", signature("CNode", "character"), function(node, pid, quiet=TRUE
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
-    response <- auth_get(url)
+    response <- auth_get(url, node=node)
     
     if(response$status != "200") {
         return(NULL)

@@ -40,6 +40,9 @@ setMethod("initialize", "SessionConfig", function(.Object) {
   
   # Create an R environment that will be used to store config variables
   attach(NULL, name=".D1Config")
+  sc <- as.environment((".D1Config"))
+  # Save the SessionConfig object so that we can retrieve it later if necessary.
+  sc$.Object <- .Object
   # sessionConfigEnv <- as.environment(".D1Config")
   return(.Object)
 })
@@ -93,7 +96,6 @@ setMethod("loadConfig", signature("SessionConfig"), function(.Object, file=as.ch
   # Load the configuration from the requested file
   source(file, as.environment(".D1Config"))
 })
-
 
 #' Unload configuration parameters
 #' @description Unload a configuration
@@ -256,3 +258,15 @@ setMethod("listConfig", signature("SessionConfig"), function(.Object, name=as.ch
     print(val)
   }
 })
+
+# If a session configuratio is currently active, retrieve the object defined 
+# for access to it. This allows internal functions to access an active SessionConfig
+# without creating a new one (which would destroy the old one).
+getSessionConfig <- function() {
+  if (is.element(".D1Config", base::search())) {
+    sc <- as.environment((".D1Config"))
+    return(sc$.Object)
+  } else {
+    return(NULL)
+  }
+}

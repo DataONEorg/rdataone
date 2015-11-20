@@ -31,12 +31,31 @@
 #' @param nconfig HTTP configuration options as used by curl, defaults to empty list
 #' @return the response object from the method
 #' @import httr
-auth_get <- function(url, nconfig=config()) {
+auth_get <- function(url, nconfig=config(), node=NULL) {
 #auth_get <- function(url, config=config()) {
     cert <- NULL
-    auth <- F
+    #auth <- F
     response <- NULL
-    if (check4PKI()) {
+    # Authorization tokens were implemented in DatONE v2, so if this node is not
+    # v2 or greater, don't send the authToken but look for a x509 certificate instead.
+    # This will probably only be useful for development testing, where a single user may
+    # be making requests to both v1 and v2 nodes.
+    authToken <- NULL
+    if (!is.null(node) && node@APIversion >= "v2") {
+    # Check is a SessonConfig is currently active and if not initialize and load a new one.
+      sc <- getSessionConfig()
+      if (is.null(sc)) {
+        sc <- new("SessionConfig")
+        loadConfig(sc)
+        on.exit(unloadConfig(sc))
+      }
+      # check if a DataONE authentication token has been entered into the configuration file.
+      authToken <- getConfig(sc, "authorization_token")
+    }
+    
+    if(!is.null(authToken) && !is.na(authToken)) {
+      response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
+    } else if (check4PKI()) {
         # Check if a valid certificate is available
         cm = CertificateManager()
         cert <- getCertLocation(cm)
@@ -54,6 +73,7 @@ auth_get <- function(url, nconfig=config()) {
         warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
         response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
     }
+    
     return(response)
 }
 
@@ -68,10 +88,40 @@ auth_get <- function(url, nconfig=config()) {
 #' @param body a list of data to be included in the body of the PUT request
 #' @return the response object from the method
 #' @import httr
-auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA)) {
+auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node=NULL) {
     cert <- NULL
-    auth <- F
-    if (check4PKI()) {
+    #auth <- F
+    authToken <- NULL
+    if (!is.null(node) && node@APIversion >= "v2") {
+    # Check is a SessonConfig is currently active and if not initialize and load a new one.
+      sc <- getSessionConfig()
+      if (is.null(sc)) {
+        sc <- new("SessionConfig")
+        loadConfig(sc)
+        on.exit(unloadConfig(sc))
+      }
+      # check if a DataONE authentication token has been entered into the configuration file.
+      authToken <- getConfig(sc, "authorization_token")
+    }
+    
+    if(!is.null(authToken) && !is.na(authToken)) {
+      switch(method,
+             post={
+               response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               return(response)
+             },
+             put={
+               response=PUT(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               return(response)
+             },
+             delete={
+               response=DELETE(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               return(response)},
+             {
+               stop('Method not supported.')
+             }
+             )
+    } else if (check4PKI()) {
         # Check if a valid certificate is available
         cm = CertificateManager()
         cert <- getCertLocation(cm)
@@ -117,10 +167,10 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' @param body a list of data to be included in the body of the POST request
 #' @return the HTTP response from the request
 #' @import httr
-auth_post <- function(url, encode="multipart", body=as.list(NA)) {
-    cert <- NULL
-    auth <- F
-    response <- auth_put_post_delete("post", url, encode, body)
+auth_post <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+    #cert <- NULL
+    #auth <- F
+    response <- auth_put_post_delete("post", url, encode, body, node)
     return(response)
 }
 
@@ -134,10 +184,10 @@ auth_post <- function(url, encode="multipart", body=as.list(NA)) {
 #' @param body a list of data to be included in the body of the PUT request
 #' @return the HTTP response from the request
 #' @import httr
-auth_put <- function(url, encode="multipart", body=as.list(NA)) {
-    cert <- NULL
-    auth <- F
-    response <- auth_put_post_delete("put", url, encode, body)
+auth_put <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+    #cert <- NULL
+    #auth <- F
+    response <- auth_put_post_delete("put", url, encode, body, node)
     return(response)
 }
 
@@ -151,10 +201,10 @@ auth_put <- function(url, encode="multipart", body=as.list(NA)) {
 #' @param body a list of data to be included in the body of the DELETE request
 #' @return the HTTP response from the request
 #' @import httr
-auth_delete <- function(url, encode="multipart", body=as.list(NA)) {
-    cert <- NULL
-    auth <- F
-    response <- auth_put_post_delete("delete", url, encode, body)
+auth_delete <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+    #cert <- NULL
+    #auth <- F
+    response <- auth_put_post_delete("delete", url, encode, body, node)
     return(response)
 }
 
@@ -171,8 +221,8 @@ check4PKI <- function() {
 #' 
 #' Get a string representation of the user agent to be sent to the server along
 #' with other request details.
-#' @import curl
-#' @import httr
+## @import curl
+## @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
     local_agent <- sprintf("dataone/%s R/%s", 

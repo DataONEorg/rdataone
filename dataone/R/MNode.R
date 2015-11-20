@@ -175,7 +175,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid, check=as.l
         }
     }
     
-    response <- auth_get(url)
+    response <- auth_get(url, node=node)
     
     if (response$status != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
@@ -199,7 +199,7 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
 
-    response <- auth_get(url)
+    response <- auth_get(url, node=node)
 
     if (response$status != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
@@ -289,12 +289,12 @@ setGeneric("create", function(mnode, pid, ...) {
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
-    sysmetaxml <- serializeSystemMetadata(sysmeta)
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_post(url, encode="multipart", 
                           body=list(pid=pid, object=upload_file(filepath), 
-                                    sysmeta=upload_file(sm_file, type='text/xml')))
+                                    sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
     
     if(response$status != "200") {
         #d1_errors(response)
@@ -329,7 +329,7 @@ setGeneric("update", function(mnode, pid, ...) {
 setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
-    sysmetaxml <- serializeSystemMetadata(sysmeta)
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_put(url, encode="multipart", 
@@ -416,6 +416,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     new_identifier <- xmlValue(xmlRoot(xml))
     return(new_identifier)
 })
+
 
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.getQueryEngineDescription
 # public QueryEngineDescription getQueryEngineDescription(String queryEngine)
