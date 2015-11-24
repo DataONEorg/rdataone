@@ -417,13 +417,40 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     return(new_identifier)
 })
 
+#' Download a data package from a member node.
+#' @description Given a valid identifier for a resource map, download a package file
+#' containing all of the package members of the corresponding DataONE data package. 
+#' @details The default data package file format is a Bagit file (\link{https://tools.ietf.org/html/draft-kunze-bagit-09}).
+#' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
+#' file. Other packaging formats can be requested if they have been implemented by the requested member node.
+#' @param x A MNode instance.
+#' @param identifier A character string containing the identifier of the resource map.
+#' @param ... (not yet used)
+#' @param format 
+#' @return The location of the package file downloaded from the member node.
+#' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
+#' @export
+setGeneric("getPackage", function(node, id, ...) { 
+    standardGeneric("getPackage")
+})
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.getQueryEngineDescription
-# public QueryEngineDescription getQueryEngineDescription(String queryEngine)
-
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNQuery.listQueryEngines
-# public QueryEngineList listQueryEngines()
-
+#' @describeIn getPackage
+setMethod("getPackage", signature("MNode", "character"), function(node, id, format="application/bagit-097") {
+  
+  # getPackage was implemented in API v1.2
+  url <- sprintf("%s/packages/%s/%s", node@endpoint, URLencode(format, reserved=T), id)
+  response <- auth_get(url, node=node)
+  
+  if (response$status == "200") {
+    packageFile <- tempfile(pattern=sprintf("%s-", id), fileext=".zip")
+    packageBin <- content(response, as="raw")
+    writeBin(packageBin, packageFile)
+    return(packageFile)
+  } else {
+    warning(sprintf("Error calling getPackage: %s\n", getErrorDescription(response)))
+    return(NULL)
+  }
+ })
 
 ############# Private functions, internal to this class, not for external callers #################
 

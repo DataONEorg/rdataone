@@ -4,6 +4,7 @@ test_that("dataone library loads", {
 })
 test_that("MNode constructors", {
 	library(dataone)
+  skip_on_cran()
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 	mn <- MNode(mn_uri)
 	expect_that(mn@endpoint, matches(mn_uri))
@@ -195,4 +196,21 @@ test_that("MNode create() works for large files", {
     
     # Remove the big data file we created locally
     unlink(csvfile)
+})
+
+test_that("MNode getPackage() works", {
+  library(uuid)
+  skip_on_cran()
+  cn <- CNode("SANDBOX2")
+  mn <- getMNode(cn, "urn:node:mnDemo2")
+  resMapPid <- "urn:uuid:62febde3-5e7b-47b8-97a9-a874ffc9a180"
+  bagitFile <- getPackage(mn, id=resMapPid)
+  expect_true(!is.null(bagitFile))
+  expect_true(file.exists(bagitFile))
+  # Now check error handling
+  # Can't be a valid pid because we just created the unique string.
+  notApid <- sprintf("urn:uuid:%s", UUIDgenerate())
+  err <- try(bagitFile <- getPackage(mn, id=notApid), silent=TRUE)
+  expect_that(class(err), matches("try-error"))
+  
 })
