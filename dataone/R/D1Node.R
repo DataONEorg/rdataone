@@ -179,13 +179,12 @@ setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
 #' @export
 #' @examples
 #' \dontrun{ 
-#' cn <- CNode("PROD")
+#' cn <- CNode("SANDBOX")
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
-#' cat(sprintf("Query engine version: %s\n", engineDesc[1]$queryEngineVersion))
-#' cat(sprintf("Query engine name: %s\n", engineDesc[2]$name))
-#' for (i in 5:length(engineDesc)) {
-#'   cat(sprintf("query field: %s : %s\n", engineDesc[i]$queryField$name, engineDesc[i]$queryField$description))
-#' }
+#' cat(sprintf("Query engine version: %s\n", engineDesc$queryEngineVersion))
+#' cat(sprintf("Query engine name: %s\n", engineDesc$name))
+#' engineDesc <- getQueryEngineDescription(cn, "solr")
+#' head(engineDesc$queryFields, n=3L)
 #' }
 #' @describeIn CNode
 setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
@@ -200,10 +199,34 @@ setMethod("getQueryEngineDescription", signature("D1Node", "character"), functio
     resultText <- content(response, as="text")
   }
   
-  # Parse the returned XML into a list
-  queryEngineDescription <-(xmlToList(xmlParse(resultText)))
+  if(response$status != "200") {
+      warning(sprintf("Error getting query engine description %s\n", getErrorDescription(response)))
+      return(list())
+  }
   
-  return(queryEngineDescription)
+  xml <- xmlParse(resultText)
+  docRoot <- xmlRoot(xml)
+  qfNodes <- getNodeSet(xml, "//queryField")
+  qfs <- data.frame(name=character(), type=character(), searchable=character(),
+                    returnable=character(), sortable=character(),
+                    multivalued=character(), row.names=NULL, stringsAsFactors = F)
+  
+  for (i in 1:length(qfNodes)) {
+    qfs <- rbind(qfs, data.frame(name = xmlValue(qfNodes[[i]][["name"]]),
+    type = xmlValue(qfNodes[[i]][["type"]]),
+    searchable = xmlValue(qfNodes[[i]][["searchable"]]),
+    returnable = xmlValue(qfNodes[[i]][["returnable"]]),
+    sortable = xmlValue(qfNodes[[i]][["sortable"]]),
+    multivalued = xmlValue(qfNodes[[i]][["multivalued"]]),
+    row.names=NULL, stringsAsFactors = F))
+  }
+  
+  qed <- list(queryEngineVersion=xmlValue(docRoot[['queryEngineVersion']]),
+              querySchemaVersion=xmlValue(docRoot[['querySchemaVersion']]),
+              name=xmlValue(docRoot[['name']]),
+              queryFields=qfs)
+  
+  return(qed)
 })
 
 #' Get the metadata describing system properties associated with an object on this Node.
