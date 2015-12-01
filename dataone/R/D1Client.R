@@ -494,8 +494,8 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @note Member objects are created serially, and most errors in creating one object will 
 #' interrupt the create process for the whole, with the result that some members will 
 #' be created, and the remainder not.
-#' @param The MNode object that represents the member node to upload the package to.
-#' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
+#' @param x A D1Client instance.
+#' @param dp The DataPackage instance to be submitted to DataONE for creation.
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
@@ -506,15 +506,19 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @import datapackage
 #' @import uuid
 #' @export
-setGeneric("uploadDataPackage", function(mn, dp, ...) {
+setGeneric("uploadDataPackage", function(x, dp, ...) {
   standardGeneric("uploadDataPackage")
 })
 
 #' @describeIn uploadDataPackage
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
+setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
                                                                            resolveURI=as.character(NA), ...) {
+    if (nchar(x@mn@identifier) == 0) {
+      stop("Please set the DataONE Member Node to upload to using setMN()")
+    }
+  
     submitter <- as.character(NULL)
     # Upload each object that has been added to the DataPackage
     for (doId in getIdentifiers(dp)) {
@@ -524,8 +528,8 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
             if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
             do <- setPublicAccess(do)
         }
-        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", mn@endpoint, doId))
-        returnId <- uploadDataObject(mn, do, replicate, numberReplicas, preferredNodes, public, accessRules)
+        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", x@mn@endpoint, doId))
+        returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
         if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     }
     
@@ -533,15 +537,15 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
     tf <- tempfile()
     serializationId <- paste0("urn:uuid:", UUIDgenerate())
     status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
-    resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=mn@identifier, filename=tf)
-    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), mn@endpoint))
-    returnId <- uploadDataObject(mn, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+    resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
+    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
+    returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
     if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
     return(returnId)
 })
 
 #' Upload a DataObject to a DataONE member node.
-#' @param A MNode instance that contains the MNode object that represents the member node to upload the package to.
+#' @param x A D1Client instance. 
 #' @param do The DataObject instance to be uploaded to DataONE.
 #' @param public A \code{'logical'}, if TRUE then all objects in this package wil be accessible by any user
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
@@ -552,23 +556,19 @@ setMethod("uploadDataPackage", signature("MNode", "DataPackage"), function(mn, d
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @import datapackage
 #' @export
-setGeneric("uploadDataObject", function(mn, do, ...) {
+setGeneric("uploadDataObject", function(x, do, ...) {
     standardGeneric("uploadDataObject")
 })
 
 #' @describeIn MNode
-setMethod("uploadDataObject", signature("MNode", "DataObject"), 
-    function(mn, do, replicate=as.logical(FALSE), numberReplicas=NA, 
+setMethod("uploadDataObject", signature("D1Client", "DataObject"), 
+    function(x, do, replicate=as.logical(FALSE), numberReplicas=NA, 
              preferredNodes=NA, public=as.logical(FALSE), accessRules=NA, ...)  {
-  
-    # Ensure the user is logged in before the upload
-    cm <- CertificateManager()
-    #user <- showClientSubject(cm)
-    
-    if (isCertExpired(cm)) {
-        stop("Unable to upload data, your certificate expired on: ", getCertExpires(cm))
+      
+    if (nchar(x@mn@identifier) == 0) {
+      stop("Please set the DataONE Member Node to upload to using setMN()")
     }
-    
+   
     doId <- do@sysmeta@identifier
     # Set sysmeta values if passed in and not already set in sysmeta for each data object
     if (!is.na(replicate)) {
