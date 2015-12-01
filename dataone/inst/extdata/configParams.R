@@ -49,6 +49,6 @@ capture_dataone_reads <- TRUE
 # When set to true, provenance capture will be triggered when writing with DataONE MNStorage.create() or MNStorage.update() API calls. Default: true
 capture_dataone_writes <- TRUE
 # When set to true, provenance capture will be triggered when encountering YesWorkflow inline comments. Default: true
-capture_yesworkflow_comments <- TRUE
-# DataONE authorization token
-authorization_token <- as.character(NA)
+capture_yesworkflow_comments <- FALSE
+# DataONE authentication token
+authentication_token <- as.character(NA)
