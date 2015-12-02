@@ -16,8 +16,6 @@ getMNode(cnode, nodeid, ...)
 \item{nodeid}{The standard identifier string for this node}
 }
 \value{
-An MNode object
-
 the Member Node as an MNode reference, or NULL if not found
 }
 \description{
@@ -27,9 +25,6 @@ Get a reference to a node based on its identifier
 \itemize{
 \item \code{cnode = CNode,nodeid = character}: 
 }}
-\author{
-jones
-}
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }

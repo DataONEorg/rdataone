@@ -4,15 +4,14 @@
 \name{hasReservation}
 \alias{hasReservation}
 \alias{hasReservation,CNode-method}
-\title{Get the list of nodes associated with a CN}
+\title{Checks to determine if the supplied subject is the owner of the reservation of id.}
 \usage{
 hasReservation(cnode, ...)
 
-\S4method{hasReservation}{CNode}(cnode, pid, subject = as.character(NA),
-  quiet = TRUE)
+\S4method{hasReservation}{CNode}(cnode, pid, subject = as.character(NA))
 }
 \arguments{
-\item{cnode}{The coordinating node to query for its registered Member Nodes}
+\item{cnode}{A CNode instance.}
 
 \item{...}{Additional parameters.}
 
@@ -20,20 +19,18 @@ hasReservation(cnode, ...)
 an identifier for an existing object}
 
 \item{subject}{The subject of the principal (user) that made the reservation. If not specified, then}
-
-\item{quiet}{A logical value - if TRUE (the default) then informational messages are not printed.}
 }
 \value{
 A logical value where TRUE means a reservation exists for the specified pid by the subject.
 }
 \description{
-Get the list of nodes associated with a CN
+Checks to determine if the supplied subject is the owner of the reservation of id.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{CNode}: 
 }}
 \seealso{
-\link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.hasReservation}
+\code{\link[=CNode-class]{CNode}}{ class description.}
 }
 

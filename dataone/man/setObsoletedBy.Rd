@@ -9,7 +9,7 @@
 setObsoletedBy(cnode, pid, obsoletedByPid, ...)
 
 \S4method{setObsoletedBy}{CNode,character}(cnode, pid, obsoletedByPid,
-  serialVersion, quiet = TRUE)
+  serialVersion)
 }
 \arguments{
 \item{pid}{The identifier of the object to be obsoleted}
@@ -19,8 +19,6 @@ setObsoletedBy(cnode, pid, obsoletedByPid, ...)
 \item{...}{(Not yet used)}
 
 \item{serialVersion}{The serial version of the system metadata of the pid being obsoleted.}
-
-\item{quiet}{A logical value - if TRUE (the default) then informational messages are not printed.}
 
 \item{node}{The CNode instance on which the object will be created}
 }
@@ -37,6 +35,6 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateMa
 \item \code{cnode = CNode,pid = character}: 
 }}
 \seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#CNCore.setObsoletedBy}
+\code{\link[=CNode-class]{CNode}}{ class description.}
 }
 
