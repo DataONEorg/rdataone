@@ -28,37 +28,48 @@
 #' @slot serviceUrls A data.frame contains URL endpoints for certain services
 #' @section Methods:
 #' \itemize{
-#'  \item{\code{\link[=initialize-CNode]{initialize}}}{: Initialize a CNode object}
-#'  \item{\code{\link{getPackage}}}{: Begin recording provenance for an R session}
+#'  \item{\code{\link{CNode}}}{: Construct a CNode object.}
+#'  \item{\code{\link{listFormats}}}{: List all object formats registered in DataONE.}
+#'  \item{\code{\link{getFormat}}}{: Get information for a single DataONE object format } 
+#'  \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
+#'  \item{\code{\link{listNodes}}}{: Get the list of nodes associated with a CN.} 
+#'  \item{\code{\link{reserveIdentifie}}}{: Reserve a identifier that is unique in the DataONE network.}
+#'  \item{\code{\link{hasReservation}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
+#'  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
+#'  \item{\code{\link{get}}}{: Get the bytes associated with an object on this Coordinating Node.} 
+#'  \item{\code{\link{getSystemMetadata}}}{: Get the bytes associated with an object on this Coordinating Node.}
+#'  \item{\code{\link{describe}}}{: Get a list of coordinating nodes holding a given pid.} 
+#'  \item{\code{\link{resolve}}}{: Get a list of coordinating nodes holding a given pid.}
+#'  \item{\code{\link{getMNode}}}{: Get a reference to a node based on its identifier.} 
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
-#' @exportClass CNode
+#' @export
 setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
 #########################
 ## CNode constructors
 #########################
 
-#' Create a CNode object
+#' Create a CNode object.
 #' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param ... (not yet used)
+#' @rdname CNode
+#' @aliases CNode
 #' @return the CNode object representing the DataONE environment
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
 
-#' Construct a CNode, using default env ("PROD")
-#' @rdname CNode-initialize
-#' @aliases CNode-initialize
-#' @return the CNode object representing the DataONE environment
+#' @rdname CNode
 #' @export
-setMethod("CNode", , function() {
+setMethod("CNode", signature=character(), function() {
     result <- CNode("PROD")
     return(result)
 })
 
-#
+#' @rdname CNode
 #' @export
 setMethod("CNode", signature("character"), function(env) {
 
@@ -108,13 +119,15 @@ setMethod("CNode", signature("character"), function(env) {
 ## Methods
 ##########################
 
-#' list formats
-#' @description list of all object formats registered in the DataONE Object Format Vocabulary.
+#' List all object formats registered in DataONE.
+#' @description The \link{listFormats} method queries a DataONE Coordinating Node for a 
+#' list of all entries in the Object Format Vocabulary.
 #' @param cnode a valid CNode object
-#' @author hart
+#' @param ... (Not yet used)
 #' @import httr
-#' @rdname listFormats-method
-#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listFormats
+#' @rdname listFormats
+#' @aliases listFormats 
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples
 #' \dontrun{
@@ -126,9 +139,7 @@ setGeneric("listFormats", function(cnode, ...) {
   standardGeneric("listFormats")
 })
 
-#' list formats
-#' @aliases listFormats
-#' @describeIn CNode
+#' @describeIn listFormats
 #' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
@@ -145,9 +156,11 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 })
 
 #' Get information for a single DataONE object format
+#' @rdname getFormat
+#' @aliases getFormat
 #' @param cnode A CNode object instance
-#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getFormat
-#' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @examples
 #' \dontrun{
 #' cn <- CNode()
@@ -161,8 +174,7 @@ setGeneric("getFormat", function(cnode, ...) {
   standardGeneric("getFormat")
 })
 
-#' @aliases getFormat
-#' @describeIn CNode
+#' @describeIn getFormat
 #' @export
 setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
@@ -177,17 +189,9 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   return(fmt)
 })
 
-#' Get the checksum for the data object associated with the specified pid
-#' @description A checksum is calculated for an object when it is uploaded to DataONE and
-#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
-#' the checksum from the specified coordinating node
-#' @param node The CNode instance from which the checksum will be retrieved
-#' @param pid The identifier of the object
-#' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getChecksum}
+#' @describeIn getChecksum
 #' @export
-#' @describeIn CNode
-setMethod("getChecksum", signature("CNode", "character"), function(node, pid) {
+setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ...) {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   if (is.raw(response$content)) {
@@ -207,16 +211,19 @@ setMethod("getChecksum", signature("CNode", "character"), function(node, pid) {
 # @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.listNodes
 #' Get the list of nodes associated with a CN
+#' @rdname listNodes
+#' @aliases listNodes
 #' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param ... (Not yet used)
 #' @return the list of nodes in the DataONE CN environment
-#' 
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("listNodes", function(cnode, ...) {
     standardGeneric("listNodes")
 })
 
+#' @describeIn listNodes
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA), ...) {
     # If an optional url argument is specified, use that. This might be used if
@@ -238,28 +245,28 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
     return(nodelist)
 })
 
-#' Reserve a identifier that is unique in the DataONE network and can not be used by any other sessions.
+#' Reserve a identifier that is unique in the DataONE network.
+#' @description Once a an identifier has been reserved, it and can not be used by any other user.
+#' @rdname reserveIdentifier
+#' @aliases reserveIdentifier
 #' @param x The coordinating node to query for its registered Member Nodes
+#' @param id The identifier that is to be reserved.
 #' @param ... Additional parameters.
-#' @seealso \link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.reserveIdentifier}
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("reserveIdentifier", function(x, id, ...) {
   standardGeneric("reserveIdentifier")
 })
 
 #' @describeIn reserveIdentifier
-#' @param pid The identifier that is to be reserved.
-#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
 #' @return The reserved pid if it was sucessfully reserved, otherwise NULL
-setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id, quiet=TRUE) {
+setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id) {
   url <- paste(x@endpoint, "reserve", sep="/")
-  response <- auth_post(url, encode="multipart", body=list(pid=URLencode(id)))
+  response <- auth_post(url, encode="multipart", body=list(pid=URLencode(id)), node=x)
   # Note: the DataONE reserveIdentifier service uses the subject from the client certificate
   # as the subject to reserve the identifier for.
   if(response$status != "200") {
-    if (!quiet) {
-      message(sprintf("Error reserving identifier %s: %s\n", id, getErrorDescription(response)))
-    }
+      warning(sprintf("Error reserving identifier %s: %s\n", id, getErrorDescription(response)))
     return(NULL)
   } else {
     resultText <- content(response, as="text")
@@ -272,13 +279,10 @@ setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id, 
   }
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.generateIdentifier
-# public Identifier generateIdentifier(String scheme, String fragment)
-
-#' Get the list of nodes associated with a CN
-#' @param cnode The coordinating node to query for its registered Member Nodes
+#' Checks to determine if the supplied subject is the owner of the reservation of id.
+#' @param cnode A CNode instance.
 #' @param ... Additional parameters.
-#' @seealso \link{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.hasReservation}
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("hasReservation", function(cnode, ...) {
   standardGeneric("hasReservation")
@@ -288,9 +292,8 @@ setGeneric("hasReservation", function(cnode, ...) {
 #' @param pid The identifier that is being checked for existing as a reserved identifier or is in use as 
 #' an identifier for an existing object
 #' @param subject The subject of the principal (user) that made the reservation. If not specified, then
-#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
 #' @return A logical value where TRUE means a reservation exists for the specified pid by the subject.
-setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.character(NA), quiet=TRUE) {
+setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.character(NA)) {
   url <- paste(cnode@endpoint, "reserve", pid, sep="/")
   # Obtain the subject from the client certificate if it has not been specified
   if(is.na(subject)) {
@@ -299,7 +302,7 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   }
   # The subject might contain '=', so encode reserved chars also.
   url <- sprintf("%s?%s", url, sprintf("subject=%s", URLencode(subject, reserved=TRUE)))
-  response <- auth_get(url)
+  response <- auth_get(url, node=cnode)
   # The DataONE 'hasReservation' service uses the HTTP status code to communicate the
   # existence of a reservation for the pid and subject combination. The following HTTP status
   # codes and their meaning are shown below:
@@ -310,10 +313,8 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   #     404              A reservation for the pid does not exist
   # 
   if(response$status != "200") {
-    if (!quiet) {
-      message(sprintf("Error checking reservation for pid=%ssubject=%s: %s\n", 
+      warning(sprintf("Error checking reservation for pid=%ssubject=%s: %s\n", 
                  pid, subject, getErrorDescription(response)))
-    }
     return(FALSE)
   }
   # When a reservation exists, there is nothing of interest in the response, so just return
@@ -330,23 +331,20 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
 #' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
 #' @param serialVersion The serial version of the system metadata of the pid being obsoleted. 
 #' @param ... (Not yet used)
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#CNCore.setObsoletedBy}
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("setObsoletedBy", function(cnode, pid, obsoletedByPid, ...) {
   standardGeneric("setObsoletedBy")
 })
 
 #' @describeIn setObsoletedBy
-#' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
 #' @return TRUE if the pid was obsoleted, otherwise FALSE is returned
-setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid, obsoletedByPid, serialVersion, quiet=TRUE) {
-  url <- paste(cnode@endpoint, "obsoletedBy", URLencode(pid, reserve=TRUE), sep="/")
+setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid, obsoletedByPid, serialVersion) {
+  url <- paste(cnode@endpoint, "obsoletedBy", URLencode(pid, reserved=TRUE), sep="/")
   body=list(obsoletedByPid=URLencode(obsoletedByPid), serialVersion=serialVersion)
-  response <- auth_put(url=url, body=body)
+  response <- auth_put(url=url, body=body, node=cnode)
   if(response$status != "200") {
-    if(!quiet) {
-      message(sprintf("Error obsoleting %s: %s\n", pid, getErrorDescription(response)))
-    }
+      warning(sprintf("Error obsoleting %s: %s\n", pid, getErrorDescription(response)))
     return(FALSE)
   } else {
     return(TRUE)
@@ -358,19 +356,16 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @param node The CNode instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
-#' @param quiet A logical, if FALSE then informational and error messages will be printed
 #' @return the bytes of the object
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.get}
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @describeIn CNode
-setMethod("get", signature("CNode", "character"), function(node, pid, quiet=TRUE) {
+#' @describeIn get
+setMethod("get", signature("CNode", "character"), function(node, pid) {
     url <- paste(node@endpoint, "object", pid, sep="/")
-    response <- auth_get(url)
+    response <- auth_get(url, node=node)
     
     if(response$status != "200") {
-      if(!quiet) {
-        message(getErrorDescription(response))
-      }
+        warning(sprintf("Error getting pid: %s\n", getErrorDescription(response)))
         return(NULL)
     }
     
@@ -385,16 +380,17 @@ setMethod("get", signature("CNode", "character"), function(node, pid, quiet=TRUE
 #' @param node The CNode instance from which the SystemMetadata will be downloaded
 #' @param pid The identifier of the object
 #' @return SystemMetadata for the object
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getSystemMetadata}
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @import datapackage
 #' @export
-#' @describeIn CNode
+#' @describeIn getSystemMetadata
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
     response <- auth_get(url, node=node)
     
     if(response$status != "200") {
+      warning(sprintf("Error getting SystemMetadata: %s\n", getErrorDescription(response)))
         return(NULL)
     }
     
@@ -403,17 +399,17 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
     
     return(sysmeta)
 })
-
-#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+#' Efficiently determine basic properties about the requested object.
+#' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
 #' determine basic properties of the referenced object.
-#' @seealso http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.describe
+#' @rdname describe
+#' @aliases describe
 #' @param mnode The CNode instance from which the identifier will be generated
 #' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
 #' part of the URL path and must be escaped accordingly.
 #' @return A list of header elements
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @describeIn CNode
-#' @author Scott Chamberlain
 setMethod("describe", signature("CNode", "character"), function(node, pid) {
   url <- file.path(node@endpoint, "object", pid)
   response <- HEAD(url)
@@ -422,13 +418,12 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
   } else { return(unclass(response$headers)) }
 })
 
-#' Get a list of coordinating nodes holding a given pid
+#' Get a list of coordinating nodes holding a given pid.
 #' @description Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
 #' @param cnode a valid CNode object
 #' @param pid the id of the identified object
-#' @docType methods
-#' @author hart
-#' @rdname resolve-method
+#' @rdname resolve
+#' @aliases resolve
 #' @return A list of URLs that the object can be downloaded from, or NULL if the object is not found.
 #' @examples
 #' \dontrun{
@@ -437,18 +432,16 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
 #' resolve(cn,id)
 #' }
 #' @export
-
 setGeneric("resolve", function(cnode,pid) {
   standardGeneric("resolve")
 })
 
-#' @rdname resolve-method
-#' @aliases resolve
+#' @describeIn resolve
 #' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
-  res <- auth_get(url, nconfig=config)
+  res <- auth_get(url, nconfig=config, node=cnode)
   # Check if there was an error downloading the object
   # The DataONE resolve service returns HTTP status 303, which essentially
   # means the response contains a URI to the object that was requested and
@@ -491,15 +484,12 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   return(toret)
 })
     
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNRead.getQueryEngineDescription
-# public QueryEngineDescription getQueryEngineDescription(String queryEngine)
-
 #' Get a reference to a node based on its identifier
+#' @rdname getMNode
+#' @aliases getMNode
 #' @param cnode The coordinating node to query for its registered Member Nodes
 #' @param nodeid The standard identifier string for this node
-#' @return An MNode object
 #' @return the Member Node as an MNode reference, or NULL if not found
-#' @author jones
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("getMNode", function(cnode, nodeid, ...) {
