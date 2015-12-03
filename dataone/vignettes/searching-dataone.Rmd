@@ -9,31 +9,30 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-The primary method to locate data in the DataONE network is to use the web based search tool located at https://www.dataone.org/find-data.
+The primary method to locate data in the DataONE network is to use the web based search tool located at https://search.dataone.org.
 
 Data can also be discovered programatically from R using the DataONE R client method `query()`. Both methods access the same
-underlying search mechanism, the Apache Foundation Solr search engine. The DataONE Solr index (similar to a catalog or database)
-contains information about every dataset that is available in the entire DataONE network. 
+underlying search mechanism, the Apache Foundation Solr search engine that runs on the DataONE Coordinating Node (CN) located at
+(https://cn.dataone.org/cn). The DataONE Solr index (similar to a catalog or database) contains infrormation for every dataset that is available from 
+the DataONE network. 
 
 Information about the Solr search engine can be obtained at [Solr Resources](http://lucene.apache.org/solr/resources.html) and 
 [Solr Tutorial](http://www.solrtutorial.com)
 
 Additional information about searching DataONE can be viewed at [Content Discovery](https://mule1.dataone.org/ArchitectureDocs-current/design/SearchMetadata.html).
 
-## Using query()
+## Using The `query` Method
 
-Some familiarity with Solr is necessary to use the `query()` method
+Some familiarity with Solr is necessary to use the `query` method
 effectively, however basic queries can be very powerful and the examples in this document can provide a starting point.
 
-Additional information about the `query()` method can be obtained from the R help facility, e.g. `?query` from the R command line.
+Additional information about the `query` method can be obtained from the R help facility, e.g. `?query` from the R command line.
 
 ### Query and return an R list
 
-The following example queries DataONE and return values in an R list, with each value converted from the Solr result to the appropriate R data type. Specifying 
-a `CNode` instance in the `query()` parameter list causes the DataONE Coordinating Node (CN) Solr index to be searched that contains information for datasets of the entire DataONE network:
+The following example queries DataONE and return values in an R list, with each value converted from the Solr result to the appropriate R data type: 
 
-
-```{r}
+```{r,warning=F,message=F}
 library(dataone)
 cn <- CNode("PROD")
 queryParamList <- list(q="id:doi*", rows="2", fq="abstract:chlorophyll", fl="id,title,dateUploaded,abstract,datasource,size")
@@ -45,35 +44,33 @@ for one dataset. Each returned attribute for a dataset can be accessed with the 
 access the title information of the first dataset returned, use the R statement:
 
 ```{r}
-result[[1]]$title
+message(sprintf("Title: %s", result[[1]]$title))
 ```
 
 To print out selected information for all returned values, use:
 
 ```{r}
 ids <- lapply(result, function(x) {
-  cat(sprintf("id: %s\n", x$id))
-  cat(sprintf("origin member node: %s\n", x$datasource))
-  cat(sprintf("title: %s\n", x$title))
-  cat(sprintf("date uploaded: %s\n", x$dateUploaded))
+  message(sprintf("id: %s", x$id))
+  message(sprintf("origin member node: %s", x$datasource))
+  message(sprintf("title: %s", x$title))
+  message(sprintf("date uploaded: %s", x$dateUploaded))
   x$id
 })
 ```
   
 The complete list of possible values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v1/query/solr). However,
-the values available for a particular dataset depend on the metadata provided when the dataset is uploaded to DataONE.
+the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
 
 ### Return values as a data frame
+To return results as a data frame, use the `as` parameter as shown below. In addittion all values will be stored as `character`, because `parse=FALSE` is specified:
 
-The following query will return a data frame, with all values stored as `character`, because `parse=FALSE` is specified:
-
-```{r}
+```{r,warning=F}
 cn <- CNode("PROD")
-queryParams <- result <- query(cn, queryParamList, as="data.frame", parse=FALSE)
 result <- query(cn, queryParamList, as="data.frame", parse=FALSE)
 ```
 
-Print all returned DataONE identifiers
+The `result` is a data frame with each row containing information for one dataset. To print all returned DataONE identifiers from the result:
   
 ```{r}
 result[,'id']
@@ -84,7 +81,7 @@ result[,'id']
 In order to limit a search to data holdings that originated from a specific member node a Solr filter query parameter (`&fq`) can be used
 for the `datasource` field:
 
-```{r}
+```{r,warning=F}
 cn <- CNode("PROD")
 queryParams <- 'q=id:*&fl=id,title&fq="datasource:urn:node:KNB"&rows=5'
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
