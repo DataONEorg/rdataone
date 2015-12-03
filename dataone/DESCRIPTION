@@ -40,6 +40,7 @@ URL: http://releases.dataone.org/online/dataone_r
 BugReports: https://github.com/DataONEorg/rdataone/issues
 Collate:
     'AbstractTableDescriber.R'
+    'AuthenticationManager.R'
     'auth_request.R'
     'D1Node.R'
     'CNode.R'
@@ -49,3 +50,4 @@ Collate:
     'D1Client.R'
     'EMLParser.R'
     'SessionConfig.R'
+    'dataone-package.R'
