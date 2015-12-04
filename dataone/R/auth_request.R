@@ -172,11 +172,25 @@ check4PKI <- function() {
 #' 
 #' Get a string representation of the user agent to be sent to the server along
 #' with other request details.
+#' @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
-    local_agent <- sprintf("dataone/%s R/%s httr/%s", 
-                        info$otherPkgs$dataone$Version, 
-                        paste(info$R.version$major, info$R.version$minor, sep="."),
-                        info$otherPkgs$httr$Version)
+    if (is.element("httr", names(info$otherPkgs))) {
+      httrVersion <- info$otherPkgs$httr$Version
+    } else if (is.element("httr", names(info$loadedOnly))) {
+      httrVersion <- info$loadedOnly$httr$Version
+    } else {
+      httrVersion <- as.character(NA)
+    }
+    if (!is.na(httrVersion)) {
+      local_agent <- sprintf("dataone/%s R/%s httr/%s", 
+                             info$otherPkgs$dataone$Version, 
+                             paste(info$R.version$major, info$R.version$minor, sep="."),
+                             httrVersion)
+    } else {
+      local_agent <- sprintf("dataone/%s R/%s", 
+                             info$otherPkgs$dataone$Version, 
+                             paste(info$R.version$major, info$R.version$minor, sep="."))
+    }
     return(local_agent)
 }
