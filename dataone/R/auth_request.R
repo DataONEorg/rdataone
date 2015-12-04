@@ -172,17 +172,11 @@ check4PKI <- function() {
 #' 
 #' Get a string representation of the user agent to be sent to the server along
 #' with other request details.
-## @import curl
-## @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
-    local_agent <- sprintf("dataone/%s R/%s", 
+    local_agent <- sprintf("dataone/%s R/%s httr/%s", 
                         info$otherPkgs$dataone$Version, 
-                        paste(info$R.version$major, info$R.version$minor, sep="."))
-    #local_agent <- sprintf("dataone/%s curl/%s httr/%s R/%s", 
-    #                    info$otherPkgs$dataone$Version, 
-    #                    info$otherPkgs$curl$Version,
-    #                    info$otherPkgs$httr$Version,
-    #                    paste(info$R.version$major, info$R.version$minor, sep="."))
+                        paste(info$R.version$major, info$R.version$minor, sep="."),
+                        info$otherPkgs$httr$Version)
     return(local_agent)
 }
