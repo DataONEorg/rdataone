@@ -427,8 +427,8 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
 #' @return A list of URLs that the object can be downloaded from, or NULL if the object is not found.
 #' @examples
 #' \dontrun{
-#' cn <- CNode("SANDBOX")
-#' id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
+#' cn <- CNode("STAGING")
+#' id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"
 #' resolve(cn,id)
 #' }
 #' @export
@@ -471,15 +471,14 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   #   Index 2-n are the objectLocations
   # Number of columns may vary depending on whether this is a
   # v1 mn or v2
-  numOutCols <- length(out[[2]])
-  outColNames <- names(out[[2]])
+  df <- data.frame(nodeIdentifier=character(), baseURL=character(), url=character())
   # Using a loop when plyr would work to reduce dependencies.
-  df <- data.frame(matrix(NA,ncol=numOutCols,nrow=(length(out)-1)))
   for(i in 2:length(out)){
-    df[(i-1),] <- c(unlist(out[[i]]))
+    df <- rbind(df, data.frame(nodeIdentifier=out[[i]]$nodeIdentifier, 
+                               baseURL=out[[i]]$baseURL,
+                               url=out[[i]]$url))
   }
   
-  colnames(df) <- outColNames
   toret <- list(id = pid, data = df)
   return(toret)
 })
