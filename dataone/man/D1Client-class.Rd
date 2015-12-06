@@ -23,23 +23,23 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 \section{Methods}{
 
 \itemize{
- \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a Recordr object}
- \item{\code{\link{getPackage}}}{: Begin recording provenance for an R session}
- \item{\code{\link{getD1Object}}}{: Get the Identifiers of Package Members}
+ \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a D1Client object.}
+ \item{\code{\link{getDataPackage}}}{: Download a data package from the DataONE Federation.}
+ \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
- \item{\code{\link{d1SolrQuery}}}{: Add a DataObject to the DataPackage}
- \item{\code{\link{d1IdentifierSearch}}}{: Record relationships of objects in a DataPackage}
- \item{\code{\link{reserveIdentifier}}}{: Record derivation relationships between objects in a DataPackage}
- \item{\code{\link{createDataPackage}}}{: Retrieve relationships of package objects}
- \item{\code{\link{getEndpoint}}}{: Retrieve relationships of package objects}
- \item{\code{\link{getMNodeId}}}{: Retrieve relationships of package objects}
- \item{\code{\link{getMN}}}{: Retrieve relationships of package objects}
- \item{\code{\link{uploadDataPackage}}}{: Retrieve relationships of package objects}
- \item{\code{\link{uploadDataObject}}}{: Retrieve relationships of package objects}
- \item{\code{\link{listMemberNodes}}}{: Retrieve relationships of package objects}
- \item{\code{\link{convert.csv}}}{: Retrieve relationships of package objects}
- \item{\code{\link{encodeUrlQuery}}}{: Retrieve relationships of package objects}
- \item{\code{\link{encodeUrlPath}}}{: Retrieve relationships of package objects}
+ \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
+ \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
+ \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
+ \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node}
+ \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node}
+ \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
+ \item{\code{\link{getMN}}}{: Get a member node client based on its node identifier.}
+ \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
+ \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node..}
+ \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
+ \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
+ \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
+ \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
 }
 }
 \seealso{

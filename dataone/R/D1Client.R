@@ -591,7 +591,7 @@ setMethod("uploadDataObject", signature("D1Client", "DataObject"),
     }
     
     # Upload the data to the MN using create(), checking for success and a returned identifier
-    createdId <- create(mn, doId, do@filename, do@sysmeta)
+    createdId <- create(x@mn, doId, do@filename, do@sysmeta)
     #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
     if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
         #warning(paste0("Error on returned identifier: ", createdId))

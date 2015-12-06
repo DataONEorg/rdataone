@@ -5,6 +5,8 @@ test_that("dataone library loads", {
 })
 
 test_that("Can read and write configuration parameters", {
+  # Skip on CRAN as the session configuration calls write to ~/.dataone
+  skip_on_cran()
   library(uuid)
   uuidTag <- UUIDgenerate()
   # Check that tests have been setup

@@ -11,6 +11,9 @@ getConfig(.Object, ...)
 
 \item{file}{the file path to the configuration file, default is "~/.dataone/config.csv"}
 }
+\value{
+The value of the requested parameter if found or NULL if not.
+}
 \description{
 Load a configuration into the current configuration session.
 }

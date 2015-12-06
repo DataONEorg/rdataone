@@ -10,7 +10,7 @@ MNode(x)
 \item{x}{a URI representing a node base URL, or a reference to a dataone::Node instance}
 }
 \value{
-the MNode object
+the MNode object-
 }
 \description{
 Construct an instance of MNode to provide mechanisms to access, create, and update data and
@@ -21,5 +21,8 @@ If the \code{'x'} is a string, it is treated as a URI and an attempt to find an 
 Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, then it is cast to a MNode
 instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
 way to retrieve an instance of an MNode.
+}
+\seealso{
+\code{\link[=MNode-class]{MNode}}{ class description.}
 }
 

@@ -34,7 +34,7 @@
 auth_get <- function(url, nconfig=config(), node=NULL) {
   response <- NULL
   am <- AuthenticationManager()
-  if(isAuthValid(am, node)) {
+  if(!is.null(node) && isAuthValid(am, node)) {
     if(getAuthMethod(am) == "token") {
       # Authentication will use an authentication token.
       authToken <- getAuthToken(am)
@@ -69,7 +69,10 @@ auth_get <- function(url, nconfig=config(), node=NULL) {
 auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node=NULL) {
   
   am <- AuthenticationManager()
-  if(isAuthValid(am, node)) {
+  if(!is.null(node) && isAuthValid(am, node)) {
+    if (is.na(body[1])) {
+      body = FALSE
+    }
     if(getAuthMethod(am) == "token") {
       # Authentication will use an authentication token.
       authToken <- getAuthToken(am)

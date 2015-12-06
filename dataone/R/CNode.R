@@ -100,7 +100,6 @@ setMethod("CNode", signature("character"), function(env) {
 
   ## create new D1Client object and insert uri endpoint
   result <- new("CNode")
-  result@baseURL <- CN_URI
   # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
   # yet that is needed to construct the service URL.
   response <- GET(CN_URI)
@@ -108,6 +107,7 @@ setMethod("CNode", signature("character"), function(env) {
   # and one xpath expression with namespaces can't find both (that I know of).
   xml <- getNodeSet(content(response, as="parsed"), "/*[local-name() = 'node']")
   result <- parseCapabilities(result, xml[[1]])
+  result@baseURL <- CN_URI
   result@endpoint <- paste(result@baseURL, result@APIversion, sep="/")
   # Set the service URL fragment for the solr query engine
   result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
@@ -140,6 +140,7 @@ setGeneric("listFormats", function(cnode, ...) {
 })
 
 #' @describeIn listFormats
+#' @import plyr
 #' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
@@ -147,11 +148,29 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
   out <- xmlToList(content(out,as="parsed"))
   ## Below could be done with plyr functionality, but I want to reduce
   ## dependencies in the package
-  df <- data.frame(matrix(NA,ncol=3,nrow=(length(out)-1)))
-  for(i in 1:(length(out)-1)){
-    df[i,] <- c(unlist(out[[i]]))
+  #df <- data.frame(matrix(NA,ncol=length(out[[1]]),nrow=(length(out)-1)))
+  df <- data.frame(out[[1]], stringsAsFactors = F)
+  dfNames <- colnames(out[[1]])
+  for(i in 2:(length(out)-1)){
+    df <- rbind.fill(df, data.frame(out[[i]], stringsAsFactors = F))
+    currentNames <- names(out[[i]])
+    if(length(currentNames) > length(dfNames)) {
+      dfNames <- currentNames
+    }
+    #df[i,] <- c(unlist(out[[i]]))
   }
-  colnames(df) <- c("ID","Name","Type")
+  
+  # For v2, continue to use the columnames that were used for v1, and add the
+  # new column names availabie in v2.
+  # from v1: colnames(df) <- c("ID","Name","Type")
+  colnames(df) <- dfNames
+  # Use replace because we don't want to assume the order of the names in the source data.
+  dfNames <- replace(dfNames, dfNames=="formatId", "ID")
+  dfNames <- replace(dfNames, dfNames=="formatName", "Name")
+  dfNames <- replace(dfNames, dfNames=="formatType", "Type")
+  dfNames <- replace(dfNames, dfNames=="mediaType", "MediaType")
+  dfNames <- replace(dfNames, dfNames=="extension", "Extension")
+  names(df) <- dfNames
   return(df)
 })
 
@@ -186,6 +205,10 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   
   result <- xmlToList(content(response,as="parsed"))
   fmt <- list(name=result$formatName, type=result$formatType, id=result$formatId)
+  # Add DataONE v2 types if present
+  if(is.element("mediaType", names(result))) fmt["mediaType"] <- result[["mediaType"]]
+  if(is.element("extension", names(result))) fmt["extension"] <- result[["extension"]]
+  
   return(fmt)
 })
 
@@ -297,8 +320,13 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   url <- paste(cnode@endpoint, "reserve", pid, sep="/")
   # Obtain the subject from the client certificate if it has not been specified
   if(is.na(subject)) {
-    cm <- CertificateManager()
-    subject <- showClientSubject(cm)
+    am <- AuthenticationManager()
+    if(isAuthValid(am, cnode)) {
+      subject <- (am)
+    }
+    if(is.na(subject)) {
+      warning("Unable to determine subject for hasReservation(), please specify \"subject\" parameter")
+    }
   }
   # The subject might contain '=', so encode reserved chars also.
   url <- sprintf("%s?%s", url, sprintf("subject=%s", URLencode(subject, reserved=TRUE)))
@@ -471,12 +499,12 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   #   Index 2-n are the objectLocations
   # Number of columns may vary depending on whether this is a
   # v1 mn or v2
-  df <- data.frame(nodeIdentifier=character(), baseURL=character(), url=character())
+  df <- data.frame(nodeIdentifier=character(), baseURL=character(), url=character(), stringsAsFactors = F)
   # Using a loop when plyr would work to reduce dependencies.
   for(i in 2:length(out)){
     df <- rbind(df, data.frame(nodeIdentifier=out[[i]]$nodeIdentifier, 
                                baseURL=out[[i]]$baseURL,
-                               url=out[[i]]$url))
+                               url=out[[i]]$url, stringsAsFactors = F))
   }
   
   toret <- list(id = pid, data = df)

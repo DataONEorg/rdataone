@@ -215,6 +215,7 @@ setMethod("setConfig", signature("SessionConfig", "character", "ANY"), function(
 #' time, then a default file is loaded from the dataone package.
 #' @param .Object a SessionConfig instance
 #' @param file the file path to the configuration file, default is "~/.dataone/config.csv"
+#' @return The value of the requested parameter if found or NULL if not.
 #' @export
 setGeneric("getConfig", function(.Object, ...) {
   standardGeneric("getConfig")

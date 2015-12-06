@@ -11,14 +11,8 @@ a wrapper for data and associated SystemMetadata.
 \section{Slots}{
 
 \describe{
-\item{\code{proxyObject}}{A backing instance of a DataObject, to which all methods and state are proxied}
+\item{\code{dataObject}}{A backing instance of a DataObject, to which all methods and state are proxied}
 }}
-\examples{
-\dontrun{
-cn <- CNode("STAGING2")
-mn <- getMNode(cn, "urn:node:mnTestKNB")
-}
-}
 \author{
 Matthew Jones
 }

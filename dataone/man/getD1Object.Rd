@@ -4,7 +4,7 @@
 \name{getD1Object}
 \alias{getD1Object}
 \alias{getD1Object,D1Client-method}
-\title{Download a D1Object from the DataONE Cloud}
+\title{Download a data object from the DataONE Federation.}
 \usage{
 getD1Object(x, identifier, ...)
 

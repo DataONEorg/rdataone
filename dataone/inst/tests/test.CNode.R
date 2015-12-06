@@ -15,18 +15,18 @@ test_that("CNode constructors", {
 })
 test_that("CNode listNodes()", {
   skip_on_cran()  # Sys.setenv(NOT_CRAN = "true") to disable and run tests
-	library(dataone)
-	cn <- CNode()
-	nodelist <- listNodes(cn)
-	expect_that(length(nodelist) > 0, is_true())
-	expect_that(class(nodelist[[1]]), matches("Node"))
-	expect_that(nodelist[[1]]@identifier, matches("urn:node:"))
-	expect_that(nodelist[[1]]@type, matches("cn|mn"))
-	expect_that(nodelist[[1]]@state, matches("up"))
-	expect_that(nodelist[[length(nodelist)]]@identifier, matches("urn:node:"))
-	expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
-	expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
-	expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
+  library(dataone)
+  cn <- CNode("PROD")
+  nodelist <- listNodes(cn)
+  expect_that(length(nodelist) > 0, is_true())
+  expect_that(class(nodelist[[1]]), matches("Node"))
+  expect_that(nodelist[[1]]@identifier, matches("urn:node:"))
+  expect_that(nodelist[[1]]@type, matches("cn|mn"))
+  expect_that(nodelist[[1]]@state, matches("up"))
+  expect_that(nodelist[[length(nodelist)]]@identifier, matches("urn:node:"))
+  expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
+  expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
+  expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
 })
 
 test_that("CNode get()", {
@@ -92,13 +92,35 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   skip_on_cran()
   library(dataone)
   library(uuid)
-  cn <- CNode("STAGING")
+  cn <- CNode("SANDBOX")
   myId <- sprintf("urn:uuid:%s", UUIDgenerate())
+  # researveIdentifier will create the reservation using only the client subject from
+  # the current authentication method - either auth token or certificate. 
   newId <- reserveIdentifier(cn, myId)
   expect_equal(myId, newId)
-  hasRes <- hasReservation(cn, newId)
+  # For hasReservation(), we have to use the same subject that is in the authorization token or X.509 certificate.
+  # Until the dataone package can decrypt auth tokens, we have to manually provide same subject
+  # used by reserveIdentifier.  
+  am <- AuthenticationManager()
+  if (!isAuthValid(am, cn)) {
+    stop(sprintf("Valid DataONE authentication is required for this test."))
+  }
+  subject <- getAuthSubject(am)
+  # If subject isn't available from the current authentication method, then try
+  # the session configuration.
+  if (is.na(subject)) {
+    sc <- new("SessionConfig")
+    loadConfig(sc)
+    subject <- getConfig(sc, "subject_dn")
+    unloadConfig(sc)  
+    # If session config doesn't have subject_dn set, then use the failback DN
+    if (is.null(subject)) {
+      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+    }
+  }
+ 
+  hasRes <- hasReservation(cn, newId, subject=subject)
   expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
-
 })
 
 test_that("CNode setObsoletedBy() works",{
@@ -112,9 +134,25 @@ test_that("CNode setObsoletedBy() works",{
   cn <- CNode("SANDBOX")
   mnId <- "urn:node:mnSandboxUNM1"
   mn <- getMNode(cn, mnId)
-  cm <- CertificateManager()
-  subject <- showClientSubject(cm)
-  # Set 'user' to certificate subject, so we will have permission to change this object
+  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  if (!isAuthValid(am, cn)) {
+    stop(sprintf("Valid DataONE authentication is required for this test."))
+  }
+  subject <- getAuthSubject(am)
+  # If subject isn't available from the current authentication method, then try
+  # the session configuration.
+  if (is.na(subject)) {
+    sc <- new("SessionConfig")
+    loadConfig(sc)
+    subject <- getConfig(sc, "subject_dn")
+    unloadConfig(sc)  
+    # If session config doesn't have subject_dn set, then use the failback DN
+    if (is.null(subject)) {
+      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+    }
+  }
+  
   do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
   # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
   uploadDataObject(mn, do1, replicate=FALSE, public=TRUE)

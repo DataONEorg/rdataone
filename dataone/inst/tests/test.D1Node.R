@@ -72,8 +72,7 @@ test_that("Object listing works for CNode, MNode", {
   for (i in 1:(length(objects)-1) ) {
     expect_match(objects[i]$objectInfo$formatId, formatId)
   }
-  
-  mn <- MNode("https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn")
+  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count)
   # The XML parser used in listObjects creates one more element than returned elements, used to hold attributes?
   expect_equal(length(objects) - 1, count)
@@ -107,16 +106,18 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
     engineDesc <- getQueryEngineDescription(cn, engines[[i]])
     expect_more_than(length(engineDesc), 0)
     expect_match(engineDesc$name, engines[[i]])
+    expect_true(class(engineDesc$queryFields) == "data.frame")
   }
   
   # Get list of query engines for an MN, and get description for each engine
-  mn <- MNode("https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn")
+  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   engines <- listQueryEngines(mn)
   expect_more_than(length(engines), 0)
   for (i in 1:length(engines)) {
     engineDesc <- getQueryEngineDescription(mn, engines[[i]])
     expect_more_than(length(engineDesc), 0)
     expect_match(engineDesc$name, engines[[i]])
+    expect_true(class(engineDesc$queryFields) == "data.frame")
   }
 })
 
@@ -177,15 +178,30 @@ test_that("D1Node archive() works",{
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  cn <- CNode("STAGING2")
-  mnId <- "urn:node:mnTestKNB"
-  mn <- getMNode(cn, mnId)
-  cm <- CertificateManager()
-  subject <- showClientSubject(cm)
-  # Set 'user' to certificate subject, so we will have permission to change this object
+  mnId <- "urn:node:mnStageUCSB2"
+  d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  if (!isAuthValid(am, d1c@mn)) {
+    stop(sprinf("Valid DataONE authentication is required for this test."))
+  }
+  subject <- getAuthSubject(am)
+  # If subject isn't available from the current authentication method, then try
+  # the session configuration.
+  if (is.na(subject)) {
+    sc <- new("SessionConfig")
+    loadConfig(sc)
+    subject <- getConfig(sc, "subject_dn")
+    unloadConfig(sc)  
+    # If session config doesn't have subject_dn set, then use the failback DN
+    if (is.null(subject)) {
+      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+    }
+  }
+ 
   do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
   # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
-  uploadDataObject(mn, do1, replicate=FALSE, public=TRUE)
+  uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
   id1 <- getIdentifier(do1)
   md1 <- getSystemMetadata(mn, id1)
   # Run the archive test if both metadata objects sync'd

@@ -124,8 +124,8 @@ setGeneric("archive", function(node, pid, ...) {
 #' @param quiet A logical value - if TRUE (the default) then informational messages are not printed.
 #' @return The pid that was archived if successful, otherwise NULL
 setMethod("archive", signature("D1Node", "character"), function(node, pid, quiet=TRUE) {
-    url <- paste(node@endpoint, "archive", URLencode(pid, reserve=TRUE), sep="/")
-    response <- auth_put(url)
+    url <- paste(node@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
+    response <- auth_put(url, node=node)
     if(response$status != "200") {
         if(!quiet) {
             message(sprintf("Error archiving %s\n", pid))
@@ -155,10 +155,17 @@ setGeneric("get", function(node, pid, ...) {
   standardGeneric("get")
 })
 
-#' Returns the checksum for a pid 
-#' @param node The CNode or MNode instance from which the checksum will be retrieved
-#' @param pid The object identifier to be downloaded
-#' @return checksum The comuted hash of the pid object
+
+#' Get the checksum for the data object associated with the specified pid.
+#' @description A checksum is calculated for an object when it is uploaded to DataONE and
+#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
+#' the checksum from the specified coordinating node
+#' @rdname getChecksum
+#' @aliases getChecksum
+#' @param node The CNode instance from which the checksum will be retrieved
+#' @param pid The identifier of the object
+#' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
+#' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
 #' @export
 setGeneric("getChecksum", function(node, pid, ...) {
   standardGeneric("getChecksum")
@@ -176,6 +183,8 @@ setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
 #' Query a node for the list of query engines available on the node
 #' @param node The CNode or MNode instance to list the query engines for.
 #' @return list Objects that met the search criteria
+#' @rdname getQueryEngineDescription
+#' @aliases getQueryEngineDescription
 #' @export
 #' @examples
 #' \dontrun{ 
@@ -186,7 +195,6 @@ setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' head(engineDesc$queryFields, n=3L)
 #' }
-#' @describeIn CNode
 setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
   
   url <- paste(node@endpoint, "query", queryEngineName, sep="/")
@@ -250,7 +258,6 @@ setGeneric("getSystemMetadata", function(node, pid, ...) {
 #' part of the URL path and must be escaped accordingly.
 #' @return A list of header elements
 #' @export
-#' @author Scott Chamberlain
 setGeneric("describe", function(node, pid, ...) {
   standardGeneric("describe")
 })
@@ -336,7 +343,6 @@ setGeneric("listQueryEngines", function(node, ...) {
 #' #For the \code{'logsolr'} search engine, \code{\link{logsolr}} and 
 #' \url{http://jenkins-1.dataone.org/jenkins/job/API Documentation - trunk/ws/api-documentation/build/html/design/UsageStatistics.html}
 #' @export
-#' @describeIn CNode
 setMethod("listQueryEngines", signature("D1Node"), function(node) {
   
   url <- paste(node@endpoint, "query", sep="/")
@@ -587,7 +593,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE,
   queryUrl <- paste(serviceUrl, queryParams, sep="")
 
   # Send the query to the Node
-  response <- auth_get(queryUrl)
+  response <- auth_get(queryUrl, node=d1node)
   if(response$status != "200") {
     message(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)

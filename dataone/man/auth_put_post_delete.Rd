@@ -21,7 +21,7 @@ the response object from the method
 }
 \description{
 POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials
-provided in a client certificate.  Authenticated access depends on the suggested
-PKIplus package. If the PKIplus package is not installed, then the request fails.
+provided in a client authentication, either via authentiction token or certificate.
+If the user does not have a valid token or certificate, request fails.
 }
 

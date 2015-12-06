@@ -81,6 +81,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     library(dataone)
     library(digest)
     library(datapackage)
+    library(XML)
     cn <- CNode("SANDBOX2")
     mn <- getMNode(cn, "urn:node:mnDemo2")
     newid <- generateIdentifier(mn, "UUID")
@@ -89,11 +90,27 @@ test_that("MNode create(), update(), archive(), and delete()", {
     expect_that(newid, matches("urn:uuid:"))
     
     # Ensure the user is logged in before running the tests
+    # Set 'user' to authentication subject, if available, so we will have permission to change this object
     am <- AuthenticationManager()
-    authValid <- isAuthValid(am, mn)
-    expect_that(authValid, is_true())
+    if (!isAuthValid(am, mn)) {
+      stop(sprintf("Valid DataONE authentication is required for this test."))
+    }
     user <- getAuthSubject(am)
-    if(is.na(user)) user <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+    # If subject isn't available from the current authentication method, then try
+    # the session configuration.
+    if (is.na(user)) {
+      sc <- getSessionConfig()
+      if (is.null(sc)) {
+        sc <- new("SessionConfig")
+        loadConfig(sc)
+        on.exit(unloadConfig(sc))
+      }
+      # If session config doesn't have subject_dn set, then use the failback DN
+      user <- getConfig(sc, "subject_dn")
+      if (is.null(user)) {
+        user <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+      }
+    }
     expect_that(user, matches("cilogon|dataone"))
     
     # Create a data object, and convert it to csv format
@@ -105,7 +122,10 @@ test_that("MNode create(), update(), archive(), and delete()", {
     format <- "text/csv"
     size <- file.info(csvfile)$size
     sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+    seriesId <- UUIDgenerate()
+    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1,
+                   originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier, seriesId=seriesId)
     sysmeta <- addAccessRule(sysmeta, "public", "read")
     expect_that(sysmeta@checksum, equals(sha1))
     expect_that(sysmeta@submitter, equals(user))
@@ -135,6 +155,13 @@ test_that("MNode create(), update(), archive(), and delete()", {
     expect_that(class(updsysmeta)[1], matches("SystemMetadata"))
     expect_that(updsysmeta@obsoletes, matches(newid))
     
+    # Now get the sysmeta using the seriesId, if supported
+    if(mn@APIversion >= "v2") {
+      headSysmeta <- getSystemMetadata(mn, seriesId)
+      expect_that(class(headSysmeta)[1], matches("SystemMetadata"))
+      expect_that(updsysmeta@identifier, matches(headSysmeta@identifier))
+    }
+      
     # Archive the object
     response <- archive(mn, newid)
     expect_that(response, matches(newid))
@@ -162,15 +189,27 @@ test_that("MNode create() works for large files", {
     cname <- class(newid)
     expect_that(cname, matches("character"))
     expect_that(newid, matches("urn:uuid:"))
-    
-    # Ensure the user is logged in before running the tests   
+    # Ensure the user is logged in before running the tests
+    # Set 'user' to authentication subject, if available, so we will have permission to change this object
     am <- AuthenticationManager()
-    authValid <- isAuthValid(am, mn)
-    expect_that(authValid, is_true())
-    user <- getAuthSubject(am)
-    if(is.na(user)) user <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
-    expect_that(user, matches("cilogon|dataone"))
+    if (!isAuthValid(am, cn)) {
+      stop(sprintf("Valid DataONE authentication is required for this test."))
+    }
+    subject <- getAuthSubject(am)
+    # If subject isn't available from the current authentication method, then try
+    # the session configuration.
+    if (is.na(subject)) {
+      sc <- new("SessionConfig")
+      loadConfig(sc)
+      subject <- getConfig(sc, "subject_dn")
+      unloadConfig(sc)  
+      # If session config doesn't have subject_dn set, then use the failback DN
+      if (is.null(subject)) {
+        subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+      }
+    }
     
+    expect_that(user, matches("cilogon|dataone"))
     # TODO: Create a large data object using fallocate through a system call (only on linux)
     csvfile <- 'testdata.csv'
     csvsize <- '4G'
