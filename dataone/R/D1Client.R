@@ -528,9 +528,22 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
             if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
             do <- setPublicAccess(do)
         }
+        if (!is.na(do@sysmeta@dateUploaded)) {
+          message(sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", doId, do@sysmeta@dateUploaded))
+          message("This object will not be uploaded.")
+          next
+        }
         if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", x@mn@endpoint, doId))
         returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
-        if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
+        if(!is.null(returnId)) {
+          if(!quiet) cat(sprintf("Uploaded identifier: %s\n", returnId))
+          # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
+          do@sysmeta@dateUploaded <- datapackage:::defaultUTCDate()
+          removeMember(dp, doId)
+          addData(dp, do)
+        } else {
+          warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
+        }
     }
     
     # Create a resource map for this DataPackage and upload it
