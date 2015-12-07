@@ -372,13 +372,13 @@ setMethod("listQueryEngines", signature("D1Node"), function(node) {
 #' @param xml The XML capabilities representing the node to be created
 #' @param ... (not yet used)
 #' @return The Node object with modified capabilities properties from the XML
-#' @export
+## @export
 setGeneric("parseCapabilities", function(node, xml, ...) {
   standardGeneric("parseCapabilities")
 })
 
 #' @describeIn parseCapabilities
-#' @export
+## @export
 setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), function(node, xml) {
   
   # Parse the rest of the node information
