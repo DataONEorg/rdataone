@@ -111,9 +111,25 @@ test_that("D1Client uploadDataPackage works", {
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
+  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  if (!isAuthValid(am, d1c@mn)) {
+    stop(sprintf("Valid DataONE authentication is required for this test."))
+  }
+  subject <- getAuthSubject(am)
+  # If subject isn't available from the current authentication method, then try
+  # check R options
+  if (is.na(subject)) {
+    subject <- getOption("subject_dn")
+    # If session config doesn't have subject_dn set, then use the failback DN
+    if (is.null(subject)) {
+      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+    }
+  }
+  
   dp <- new("DataPackage")
   # Create DataObject for the science data 
-  sciObj <- new("DataObject", format="text/csv", user="uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org", mnNodeId=getMNodeId(d1c), filename=csvfile)
+  sciObj <- new("DataObject", format="text/csv", user=subject, mnNodeId=getMNodeId(d1c), filename=csvfile)
   # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
   expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
   sciObj <- setPublicAccess(sciObj)
@@ -124,7 +140,8 @@ test_that("D1Client uploadDataPackage works", {
 
   # Create metadata object that describes science data
   emlFile <- system.file("testfiles/testdoc-eml-2.1.0.xml", package="dataone")
-  metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user="uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org", mnNodeId=getMNodeId(d1c), filename=emlFile)
+  metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user=subject, 
+                     mnNodeId=getMNodeId(d1c), filename=emlFile)
   expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
   addData(dp, metadataObj)
   expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
