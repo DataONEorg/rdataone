@@ -179,7 +179,7 @@ test_that("D1Node archive() works",{
   # Set 'user' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
   if (!isAuthValid(am, d1c@mn)) {
-    stop(sprinf("Valid DataONE authentication is required for this test."))
+    stop(sprintf("Valid DataONE authentication is required for this test."))
   }
   subject <- getAuthSubject(am)
   # If subject isn't available from the current authentication method, then try
