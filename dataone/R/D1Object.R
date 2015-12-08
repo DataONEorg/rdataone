@@ -25,11 +25,6 @@
 #' @author Matthew Jones
 #' @keywords classes
 #' @import datapackage
-#' @examples
-#' \dontrun{
-#' cn <- CNode("STAGING2")
-#' mn <- getMNode(cn, "urn:node:mnTestKNB")
-#' }
 setClass("D1Object", slots = c(proxyObject="DataObject") )
 
 ########################
@@ -39,8 +34,10 @@ setClass("D1Object", slots = c(proxyObject="DataObject") )
 ## generic
 setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
 
-setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId, filename) {
-
+setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=NA, 
+                                             format=as.character(NA), mnNodeId=as.character(NA), 
+                                             filename=as.character(NA)) {
+  .Deprecated("DataObject", package="dataone")
   if (typeof(id) == "character") {
   } else {
   }
