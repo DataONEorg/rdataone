@@ -429,34 +429,34 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @details The default data package file format is a Bagit file (\link{https://tools.ietf.org/html/draft-kunze-bagit-09}).
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
-#' @param x A MNode instance.
-#' @param identifier A character string containing the identifier of the resource map.
+#' @param x A MNode instance representing a DataONE Member Node repository.
+#' @param identifier A character string containing the identifier of the resource map of the package.
+#' @param format The name of the package format to request. Defaults to BagIt.
 #' @param ... (not yet used)
-#' @param format 
 #' @return The location of the package file downloaded from the member node.
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @export
-setGeneric("getPackage", function(node, id, ...) { 
+setGeneric("getPackage", function(node, ...) { 
     standardGeneric("getPackage")
 })
 
 #' @describeIn getPackage
-setMethod("getPackage", signature("MNode", "character"), function(node, id, format="application/bagit-097") {
-  
-  # getPackage was implemented in API v1.2
-  url <- sprintf("%s/packages/%s/%s", node@endpoint, URLencode(format, reserved=T), id)
-  response <- auth_get(url, node=node)
-  
-  if (response$status == "200") {
-    packageFile <- tempfile(pattern=sprintf("%s-", id), fileext=".zip")
-    packageBin <- content(response, as="raw")
-    writeBin(packageBin, packageFile)
-    return(packageFile)
-  } else {
-    warning(sprintf("Error calling getPackage: %s\n", getErrorDescription(response)))
-    return(NULL)
-  }
- })
+setMethod("getPackage", signature("MNode"), function(node, identifier, format="application/bagit-097") {
+    
+    # getPackage was implemented in API v1.2
+    url <- sprintf("%s/packages/%s/%s", node@endpoint, URLencode(format, reserved=T), identifier)
+    response <- auth_get(url, node=node)
+    
+    if (response$status == "200") {
+        packageFile <- tempfile(pattern=sprintf("%s-", identifier), fileext=".zip")
+        packageBin <- content(response, as="raw")
+        writeBin(packageBin, packageFile)
+        return(packageFile)
+    } else {
+        warning(sprintf("Error calling getPackage: %s\n", getErrorDescription(response)))
+        return(NULL)
+    }
+})
 
 ############# Private functions, internal to this class, not for external callers #################
 

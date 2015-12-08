@@ -4,7 +4,7 @@
 \name{getEndpoint}
 \alias{getEndpoint}
 \alias{getEndpoint,D1Client-method}
-\title{Return the URL endpoint for the DataONE Coordinating Node}
+\title{Return the URL endpoint for the DataONE Coordinating Node.}
 \usage{
 getEndpoint(x, ...)
 

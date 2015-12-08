@@ -2,7 +2,7 @@
 % Please edit documentation in R/D1Client.R
 \name{getDataObject}
 \alias{getDataObject}
-\title{Download a DataObject from the DataONE Federation.}
+\title{Download a data object from the DataONE Federation as a DataObject.}
 \usage{
 getDataObject(x, identifier, ...)
 }

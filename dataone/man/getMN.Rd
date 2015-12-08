@@ -5,7 +5,7 @@
 \alias{getMN}
 \alias{getMN,D1Client,ANY-method}
 \alias{getMN,D1Client,character-method}
-\title{Get a member node client based on its node identifier}
+\title{Get a member node client based on its node identifier.}
 \usage{
 getMN(x, nodeid, ...)
 
@@ -21,7 +21,7 @@ getMN(x, nodeid, ...)
 \item{...}{(Not yet used)}
 }
 \description{
-Get a member node client based on its node identifier
+Get a member node client based on its node identifier.
 }
 \section{Methods (by class)}{
 \itemize{

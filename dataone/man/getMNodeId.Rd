@@ -4,7 +4,7 @@
 \name{getMNodeId}
 \alias{getMNodeId}
 \alias{getMNodeId,D1Client-method}
-\title{Get for the member node identifier associated with this client.}
+\title{Get the member node identifier associated with this D1Client object..}
 \usage{
 getMNodeId(x)
 

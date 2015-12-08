@@ -130,77 +130,67 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
     return(.Object)
 })
 
-#' Download a data package from the DataONE Federation.
-#' @description Given a valid identifier for a ResourceMap, instantiate an R DataPackage
-#' object containing all of the package members. 
-#' @param x D1Client
-#' @param identifier character: identifier of the ResourceMap 
-#' @param ... (not yet used)
-#' @return A DataPackage object.
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-#' @export
-setGeneric("getPackage", function(x, identifier, ...) { 
-    standardGeneric("getPackage")
-})
-
-#' @describeIn getPackage
-setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
-    
-    dp <- new("DataPackage")
-    
-    # Download the ResourceMap from the DataONE CN
-    resmapDO <- getDataObject(x@cn, id=identifier)
-    if(is.null(resmap)) {
-      stop(sprint("Unable to download object with id: %s\n", identifier))
-    }
-    
-    # Deserialize the ResourceMap into a ResourceMap instance
-    resmapData <- rawToChar(getData(resmapDO), multiple=FALSE)
-    resmapTmp <- tempfile()
-    writeLines(resmapTmp, resmapData)
-    
-    world <- new("World")
-    storage <- new("Storage", world, "hashes", name="", options="hash-type='memory'")
-    model <- new("Model", world, storage, options="")
-    parser <- new("Parser", world)
-    
-    parseFileIntoModel(parser, world, resmapTmp, model)
-    
-    queryString <- 'PREFIX dataone: <https://cn.dataone.org/cn/v1/resolve/> PREFIX prov: <http://www.w3.org/ns/prov#> SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
-    query <- new("Query", world, queryString, base_uri=NULL, query_language="sparql", query_uri=NULL)
-    expect_that(class(query), matches("Query"))
-    queryResult <- executeQuery(query, model)
-    expect_that(class(queryResult), matches("QueryResult"))
-    
-    # Retrieve query results and check the actual result count against the expected count
-    result <- getNextResult(queryResult)
-    i <- 0
-    while(!is.null(result)) {
-      i <- i + 1
-      # Something went wrong, break loop
-      if(i > 5) {
-        break
-      }
-      expect_that(class(result), matches("list"))
-      result <- getNextResult(queryResult)
-    }
-    expect_that(i, equals(5))
-    
-    freeQuery(query)
-    rm(query)
-    freeQueryResults(queryResult)
-    rm(queryResult)
-    
-    
-    # TODO: Create a new DataPackage instance with info from the ResourceMap
-    
-    # TODO: Loop over the aggregated package members
-        # Download it and add it to the package
-        # Add any relationships for this member
-    
-    # Return the newly constructed DataPackage
-    return(dp)
-})
+# setGeneric("getPackage", function(x, identifier, ...) { 
+#     standardGeneric("getPackage")
+# })
+# 
+# setMethod("getPackage", signature("D1Client", "character"), function(x, identifier) {
+#     
+#     dp <- new("DataPackage")
+#     
+#     # Download the ResourceMap from the DataONE CN
+#     resmapDO <- getDataObject(x@cn, id=identifier)
+#     if(is.null(resmap)) {
+#       stop(sprint("Unable to download object with id: %s\n", identifier))
+#     }
+#     
+#     # Deserialize the ResourceMap into a ResourceMap instance
+#     resmapData <- rawToChar(getData(resmapDO), multiple=FALSE)
+#     resmapTmp <- tempfile()
+#     writeLines(resmapTmp, resmapData)
+#     
+#     world <- new("World")
+#     storage <- new("Storage", world, "hashes", name="", options="hash-type='memory'")
+#     model <- new("Model", world, storage, options="")
+#     parser <- new("Parser", world)
+#     
+#     parseFileIntoModel(parser, world, resmapTmp, model)
+#     
+#     queryString <- 'PREFIX dataone: <https://cn.dataone.org/cn/v1/resolve/> PREFIX prov: <http://www.w3.org/ns/prov#> SELECT ?a ?b ?c WHERE { ?a ?b ?c . }'
+#     query <- new("Query", world, queryString, base_uri=NULL, query_language="sparql", query_uri=NULL)
+#     expect_that(class(query), matches("Query"))
+#     queryResult <- executeQuery(query, model)
+#     expect_that(class(queryResult), matches("QueryResult"))
+#     
+#     # Retrieve query results and check the actual result count against the expected count
+#     result <- getNextResult(queryResult)
+#     i <- 0
+#     while(!is.null(result)) {
+#       i <- i + 1
+#       # Something went wrong, break loop
+#       if(i > 5) {
+#         break
+#       }
+#       expect_that(class(result), matches("list"))
+#       result <- getNextResult(queryResult)
+#     }
+#     expect_that(i, equals(5))
+#     
+#     freeQuery(query)
+#     rm(query)
+#     freeQueryResults(queryResult)
+#     rm(queryResult)
+#     
+#     
+#     # TODO: Create a new DataPackage instance with info from the ResourceMap
+#     
+#     # TODO: Loop over the aggregated package members
+#         # Download it and add it to the package
+#         # Add any relationships for this member
+#     
+#     # Return the newly constructed DataPackage
+#     return(dp)
+# })
 
 #' Download a data object from the DataONE Federation.
 #' @description An objectd is download from the DataONE network for the identifier that is provided.

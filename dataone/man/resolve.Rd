@@ -27,8 +27,8 @@ Returns a list of nodes (MNs or CNs) known to hold copies of the object identifi
 }}
 \examples{
 \dontrun{
-cn <- CNode("SANDBOX")
-id <- "doi:10.5072/FK2/LTER/knb-lter-gce.100.15"
+cn <- CNode("STAGING")
+id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"
 resolve(cn,id)
 }
 }

@@ -45,6 +45,7 @@
 #' @slot authInfo value of type \code{"hash"} containing authentication information.
 #' @rdname AuthenticationManager-class
 #' @import hash
+#' @include D1Node.R
 #' @examples
 #' am <- AuthenticationManager()
 setClass("AuthenticationManager", slots = c(

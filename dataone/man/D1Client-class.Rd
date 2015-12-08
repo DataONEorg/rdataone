@@ -24,7 +24,7 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 
 \itemize{
  \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a D1Client object.}
- \item{\code{\link{getDataPackage}}}{: Download a data package from the DataONE Federation.}
+ \item{\code{\link{getPackage}}}{: Download a data package from the DataONE Federation.}
  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
  \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}

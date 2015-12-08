@@ -2,12 +2,12 @@
 % Please edit documentation in R/D1Client.R
 \name{createDataPackage}
 \alias{createDataPackage}
-\title{Create a DataPackage in the DataONE System}
+\title{Create a DataPackage on a DataONE Member Node}
 \usage{
 createDataPackage(x, dataPackage, ...)
 }
 \arguments{
-\item{x}{D1Client}
+\item{x}{A D1Client instance.}
 
 \item{dataPackage}{The DataPackage instance to be submitted to DataONE for creation.}
 
@@ -24,7 +24,8 @@ pre-existing in the system, and skipped.
 The DataPackage describes the collection of data object and their associated
 metadata object, with the relationships and members serialized into a document
 stored under, and retrievable with, the packageId as it's own distinct object.
-
+}
+\note{
 Members are created serially, and most errors in creating one object will
 interrupt the create process for the whole, with the result that some members will
 be created, and the remainder not.

@@ -4,7 +4,7 @@
 \name{listMemberNodes}
 \alias{listMemberNodes}
 \alias{listMemberNodes,D1Client-method}
-\title{List DataONE Member Nodes}
+\title{List DataONE Member Nodes.}
 \usage{
 listMemberNodes(x)
 

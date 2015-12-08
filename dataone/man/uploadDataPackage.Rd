@@ -3,17 +3,21 @@
 \docType{methods}
 \name{uploadDataPackage}
 \alias{uploadDataPackage}
-\alias{uploadDataPackage,MNode,DataPackage-method}
-\title{Upload a DataPackage to a DataONE member node}
+\alias{uploadDataPackage,D1Client,DataPackage-method}
+\title{Upload a DataPackage to a DataONE member node.}
 \usage{
-uploadDataPackage(mn, dp, ...)
+uploadDataPackage(x, dp, ...)
 
-\S4method{uploadDataPackage}{MNode,DataPackage}(mn, dp, replicate = NA,
+\S4method{uploadDataPackage}{D1Client,DataPackage}(x, dp, replicate = NA,
   numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
   accessRules = NA, quiet = as.logical(TRUE),
   resolveURI = as.character(NA), ...)
 }
 \arguments{
+\item{x}{A D1Client instance.}
+
+\item{dp}{The DataPackage instance to be submitted to DataONE for creation.}
+
 \item{replicate}{A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes}
 
 \item{numberReplicas}{A value of type \code{"numeric"}, for number of supported replicas.}
@@ -25,10 +29,6 @@ uploadDataPackage(mn, dp, ...)
 \item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
-
-\item{The}{MNode object that represents the member node to upload the package to.}
-
-\item{dataPackage}{The DataPackage instance to be submitted to DataONE for creation.}
 }
 \value{
 id The identifier of the resource map for this data package
@@ -47,7 +47,7 @@ pre-existing in the system, and skipped.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{mn = MNode,dp = DataPackage}: 
+\item \code{x = D1Client,dp = DataPackage}: 
 }}
 \note{
 Member objects are created serially, and most errors in creating one object will

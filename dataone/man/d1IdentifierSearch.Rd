@@ -4,7 +4,7 @@
 \name{d1IdentifierSearch}
 \alias{d1IdentifierSearch}
 \alias{d1IdentifierSearch,D1Client,character-method}
-\title{Query the DataONE Solr endpoint of the Coordinating Node}
+\title{Query the DataONE Solr endpoint of the Coordinating Node.}
 \usage{
 d1IdentifierSearch(x, solrQuery)
 

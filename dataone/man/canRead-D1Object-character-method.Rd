@@ -10,12 +10,12 @@
 \arguments{
 \item{x}{D1Client}
 
-\item{subject}{: character}
+\item{subject}{A character containing the subject to check read access for.}
 
 \item{...}{(not yet used)}
 }
 \value{
-TRUE or FALSE
+A logical value
 }
 \description{
 Using the AccessPolicy, tests whether the subject has read permission

@@ -2,14 +2,14 @@
 % Please edit documentation in R/D1Client.R
 \name{uploadDataObject}
 \alias{uploadDataObject}
-\title{Upload a DataObject to a DataONE repository}
+\title{Upload a DataObject to a DataONE member node.}
 \usage{
-uploadDataObject(mn, do, ...)
+uploadDataObject(x, do, ...)
 }
 \arguments{
-\item{do}{The DataObject instance to be uploaded to DataONE.}
+\item{x}{A D1Client instance.}
 
-\item{A}{MNode instance that contains the MNode object that represents the member node to upload the package to.}
+\item{do}{The DataObject instance to be uploaded to DataONE.}
 
 \item{public}{A \code{'logical'}, if TRUE then all objects in this package wil be accessible by any user}
 
@@ -25,7 +25,7 @@ uploadDataObject(mn, do, ...)
 id The id of the DataObject that was uploaded
 }
 \description{
-Upload a DataObject to a DataONE repository
+Upload a DataObject to a DataONE member node.
 }
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}

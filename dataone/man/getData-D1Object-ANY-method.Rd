@@ -5,7 +5,7 @@
 \alias{getData,D1Object,ANY-method}
 \title{Get the Contents of the Specified Data Object}
 \usage{
-\S4method{getData}{D1Object,ANY}(x, fileName = NA)
+\S4method{getData}{D1Object,ANY}(x, id)
 }
 \arguments{
 \item{x}{D1Object: the object from which to retrieve bytes of data}
