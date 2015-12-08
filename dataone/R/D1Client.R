@@ -216,7 +216,7 @@ setGeneric("getD1Object", function(x, identifier, ...) {
 
 #' @describeIn getD1Object
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-  .Deprecated("getD1Object", "dataone", "getD1Object(d1client, nodeId)", "getDataObject(D1Client, identifier, ...)")
+  .Deprecated("getDataObject", "dataone")
   #d1o <- get(x@cn, identifier)    # Resolve the object location
   return(getDataObject(x, identifier))
 })
@@ -358,7 +358,7 @@ setGeneric("createDataPackage", function(x, dataPackage, ...) {
 #' @export
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
-  .Deprecated("uploadDataPackage", "dataone", "createDataPackage() has been superceded by uploadDataPackage()", "createDataPackage(x, datapackage, ...)")
+  .Deprecated("uploadDataPackage", "dataone")
   # createDataPackage has been superceded by uploadDataPackage
   uploadDataPackage(x, dataPackage)
 })
@@ -448,7 +448,7 @@ setGeneric("getMN", function(x, nodeid, ...) {
 #' @describeIn getMN
 #' @export
 setMethod("getMN", signature("D1Client"), function(x, ...) {
-    .Deprecated("getMnode", "dataone", "getMN(x) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, ...)")
+    .Deprecated("getMnode", "dataone") 
     return(x@mn)
 })
 
