@@ -285,7 +285,7 @@ setGeneric("reserveIdentifier", function(x, id, ...) {
 #' @return The reserved pid if it was sucessfully reserved, otherwise NULL
 setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id) {
   url <- paste(x@endpoint, "reserve", sep="/")
-  response <- auth_post(url, encode="multipart", body=list(pid=URLencode(id)), node=x)
+  response <- auth_post(url, encode="multipart", body=list(pid=id), node=x)
   # Note: the DataONE reserveIdentifier service uses the subject from the client certificate
   # as the subject to reserve the identifier for.
   if(response$status != "200") {
