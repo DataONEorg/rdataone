@@ -1,6 +1,7 @@
 context("CertificateManager tests")
 
 test_that("CertificateManager getCertLocation()", {
+  skip_on_cran()
     cm <- CertificateManager()
     expect_that(is.null(cm), is_false())
     location <- getCertLocation(cm)
@@ -54,6 +55,7 @@ test_that("showClientSubject", {
 })
 
 test_that("obscureCert and restoreCert", {
+  skip_on_cran()
     cm <- CertificateManager()
     subject1 <- showClientSubject(cm)
     if (subject1 == "public") {
@@ -72,7 +74,8 @@ test_that("custom certificate location", {
     cm <- CertificateManager()
     subject1 <- showClientSubject(cm)
     if (subject1 == "public") {
-        expect_that(obscureCert(cm), throws_error())
+      cm <- obscureCert(cm)
+        expect_true(is.na(cm@location))
     } else {
         cert <- getCertLocation(cm)
         custom_cert <- paste0(tempfile(), ".x509")

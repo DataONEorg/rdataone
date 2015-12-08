@@ -4,13 +4,11 @@ test_that("dataone library loads", {
 })
 test_that("MNode constructors", {
 	library(dataone)
-  skip_on_cran()
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 	mn <- MNode(mn_uri)
 	expect_that(mn@endpoint, matches(mn_uri))
 })
 test_that("MNode getCapabilities()", {
-  skip_on_cran()
 	library(dataone)
 	library(XML)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
@@ -21,7 +19,6 @@ test_that("MNode getCapabilities()", {
 	expect_that(mn@identifier, matches("urn:node"))
 })
 test_that("MNode get(), getChecksum()", {
-  skip_on_cran()
     library(dataone)
     mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
     mn <- MNode(mn_uri)
@@ -47,7 +44,6 @@ test_that("MNode get(), getChecksum()", {
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
-  skip_on_cran()
     library(dataone)
     cn <- CNode()
     mn <- getMNode(cn, "urn:node:KNB")
@@ -58,6 +54,7 @@ test_that("MNode getSystemMetadata()", {
     expect_that(sysmeta@identifier, matches("doi:10.5063/F1QN64NZ"))
 })
 test_that("MNode generateIdentifier()", {
+    # Skip as this test requires authentication
     skip_on_cran()
     library(dataone)
     cn <- CNode("SANDBOX2")
@@ -68,7 +65,6 @@ test_that("MNode generateIdentifier()", {
     expect_that(newid, matches("urn:uuid:"))
 })
 test_that("MNode describe()", {
-  skip_on_cran()
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
   mn <- MNode(mn_uri)
@@ -83,7 +79,15 @@ test_that("MNode create(), update(), archive(), and delete()", {
     library(datapackage)
     library(XML)
     cn <- CNode("SANDBOX2")
-    mn <- getMNode(cn, "urn:node:mnDemo2")
+    # mnDemo1 is api v1 on 20151208, but that could change
+    # Use this v1 node to test with both a current token available
+    # and a certificate.
+    mnId <- "urn:node:mnDemo1"
+    mn <- getMNode(cn, mnId)
+    am <- AuthenticationManager()
+    if (!isAuthValid(am, mn)) {
+      stop(sprintf("Valid DataONE authentication for the node %s with API version %s is required for this test.", mnId, mn@APIversion))
+    }
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
     expect_that(cname, matches("character"))
@@ -91,22 +95,13 @@ test_that("MNode create(), update(), archive(), and delete()", {
     
     # Ensure the user is logged in before running the tests
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
-    am <- AuthenticationManager()
-    if (!isAuthValid(am, mn)) {
-      stop(sprintf("Valid DataONE authentication is required for this test."))
-    }
+
     user <- getAuthSubject(am)
     # If subject isn't available from the current authentication method, then try
     # the session configuration.
     if (is.na(user)) {
-      sc <- getSessionConfig()
-      if (is.null(sc)) {
-        sc <- new("SessionConfig")
-        loadConfig(sc)
-        on.exit(unloadConfig(sc))
-      }
       # If session config doesn't have subject_dn set, then use the failback DN
-      user <- getConfig(sc, "subject_dn")
+      user <- getOption("subject_dn")
       if (is.null(user)) {
         user <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
       }

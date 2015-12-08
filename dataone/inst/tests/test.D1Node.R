@@ -4,7 +4,6 @@ test_that("dataone library loads", {
 })
 
 test_that("CNode ping", {
-  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   cn <- CNode("STAGING2")
   alive <- ping(cn)
@@ -12,7 +11,6 @@ test_that("CNode ping", {
 })
 
 test_that("CNode object index query works with query list param", {
-  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
@@ -56,7 +54,6 @@ test_that("CNode object index query works with query list param", {
 })
 
 test_that("Object listing works for CNode, MNode", {
-  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   
   #cn <- CNode("STAGING2")
@@ -94,12 +91,11 @@ test_that("Object listing works for CNode, MNode", {
 })
 
 test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", {
-  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   
   #cn <- CNode("STAGING2")
   # Get list of query engines for a CN, and get description for each engine
-  cn <- CNode("STAGING")
+  cn <- CNode("SANDBOX")
   engines <- listQueryEngines(cn)
   expect_more_than(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -110,7 +106,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   }
   
   # Get list of query engines for an MN, and get description for each engine
-  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+  mn <- getMNode(cn, "urn:node:mnSandboxUCSB2")
   engines <- listQueryEngines(mn)
   expect_more_than(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -122,7 +118,6 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
 })
 
 test_that("CNode object index query works with query string param", {
-  skip_on_cran() # Sys.setenv(NOT_CRAN = "true") to disable
   library(dataone)
   
   cn <- CNode("STAGING2")
@@ -136,7 +131,6 @@ test_that("CNode object index query works with query string param", {
 })
 
 test_that("MNode object index query works", {
-  skip_on_cran()
   library(dataone)
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   #queryParams <- 'q=attribute:"net primary production" AND (abstract:"above ground" OR title:"above ground")'
@@ -178,8 +172,10 @@ test_that("D1Node archive() works",{
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  mnId <- "urn:node:mnStageUCSB2"
-  d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  #mnId <- "urn:node:mnStageUCSB2"
+  #d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  mnId <- "urn:node:mnSandboxUCSB2"
+  d1c <- new("D1Client", env="SANDBOX", mNodeid=mnId)
   # Set 'user' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
   if (!isAuthValid(am, d1c@mn)) {
@@ -189,10 +185,7 @@ test_that("D1Node archive() works",{
   # If subject isn't available from the current authentication method, then try
   # the session configuration.
   if (is.na(subject)) {
-    sc <- new("SessionConfig")
-    loadConfig(sc)
-    subject <- getConfig(sc, "subject_dn")
-    unloadConfig(sc)  
+    subject <- getOption("subject_dn")
     # If session config doesn't have subject_dn set, then use the failback DN
     if (is.null(subject)) {
       subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
@@ -203,15 +196,12 @@ test_that("D1Node archive() works",{
   # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
   uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
   id1 <- getIdentifier(do1)
-  md1 <- getSystemMetadata(mn, id1)
   md1 <- getSystemMetadata(d1c@mn, id1)
   # Run the archive test if both metadata objects sync'd
   if (!is.null(md1)) {
-    tstPid <- archive(mn, id1, quiet=FALSE)
     tstPid <- archive(d1c@mn, id1, quiet=FALSE)
-    #expect_equal(tstPid, id1)
+    expect_equal(tstPid, id1)
   }
-  tstMd1 <- getSystemMetadata(mn, id1)
   tstMd1 <- getSystemMetadata(d1c@mn, id1)
   expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
 })

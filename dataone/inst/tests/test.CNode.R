@@ -14,7 +14,6 @@ test_that("CNode constructors", {
 	expect_that(cn@endpoint, matches("https://cn-stage-2.test.dataone.org/cn"))
 })
 test_that("CNode listNodes()", {
-  skip_on_cran()  # Sys.setenv(NOT_CRAN = "true") to disable and run tests
   library(dataone)
   cn <- CNode("PROD")
   nodelist <- listNodes(cn)
@@ -30,7 +29,6 @@ test_that("CNode listNodes()", {
 })
 
 test_that("CNode get()", {
-  skip_on_cran()
   library(dataone)
   cn <- CNode()
   pid <- "aceasdata.3.2"
@@ -44,7 +42,6 @@ test_that("CNode get()", {
 })
 
 test_that("CNode getSystemMetadata()", {
-  skip_on_cran()
   library(dataone)
   cn <- CNode()
   pid <- "aceasdata.3.2"
@@ -53,7 +50,6 @@ test_that("CNode getSystemMetadata()", {
 })
 
 test_that("CNode describe()", {
-  skip_on_cran()
   library(dataone)
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
@@ -63,7 +59,6 @@ test_that("CNode describe()", {
 })
 
 test_that("CNode getMNode()", {
-  skip_on_cran()
   library(dataone)
   cn <- CNode()
   nodelist <- listNodes(cn)
@@ -79,7 +74,6 @@ test_that("CNode getMNode()", {
 })
 
 test_that("CNode resolve()",{
-  skip_on_cran()
   library(dataone) 
   cn <- CNode()
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
@@ -109,10 +103,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   # If subject isn't available from the current authentication method, then try
   # the session configuration.
   if (is.na(subject)) {
-    sc <- new("SessionConfig")
-    loadConfig(sc)
-    subject <- getConfig(sc, "subject_dn")
-    unloadConfig(sc)  
+    subject <- getOption("subject_dn")
     # If session config doesn't have subject_dn set, then use the failback DN
     if (is.null(subject)) {
       subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
@@ -132,7 +123,7 @@ test_that("CNode setObsoletedBy() works",{
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
   cn <- CNode("SANDBOX")
-  mnId <- "urn:node:mnSandboxUNM1"
+  mnId <- "urn:node:mnSandboxUCSB2"
   mn <- getMNode(cn, mnId)
   # Set 'user' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
@@ -143,10 +134,7 @@ test_that("CNode setObsoletedBy() works",{
   # If subject isn't available from the current authentication method, then try
   # the session configuration.
   if (is.na(subject)) {
-    sc <- new("SessionConfig")
-    loadConfig(sc)
-    subject <- getConfig(sc, "subject_dn")
-    unloadConfig(sc)  
+    subject <- getOption("subject_dn")
     # If session config doesn't have subject_dn set, then use the failback DN
     if (is.null(subject)) {
       subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
@@ -190,7 +178,6 @@ test_that("CNode setObsoletedBy() works",{
 })
 
 test_that("CNode listFormats, getFormat",{
-  skip_on_cran()
   library(dataone) 
   cn <- CNode()
   fmts <- listFormats(cn)
