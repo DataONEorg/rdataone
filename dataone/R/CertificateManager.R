@@ -86,7 +86,8 @@ setGeneric("CertificateManager", function(...) {
 })
 
 #' @describeIn CertificateManager
-setMethod("CertificateManager", , function() {
+setMethod("CertificateManager", signature=character(), function() {
+  .Deprecated("AuthenticationManager", "dataone") 
     if (!requireNamespace("PKIplus", quietly = TRUE)) {
         stop("CertificateManager functions require the PKIplus package to be installed.")
     }
@@ -271,7 +272,6 @@ setGeneric("getCertLocation", function(x, ...) {
 
 #' @describeIn CertificateManager
 setMethod("getCertLocation", signature("CertificateManager"), function(x) {
-    
     # default Globus Grid Security Infrastructure (GSI) location, which is /tmp/x509up_u${UID} on Unix 
     # or ${tmpdir}/x509up_u${UID} on Windows or ${tmpdir}/x509up_u${user.name} if ${UID} is not defined
     
