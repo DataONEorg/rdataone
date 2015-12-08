@@ -2,17 +2,35 @@
 % Please edit documentation in R/AuthenticationManager.R
 \name{getAuthExpires}
 \alias{getAuthExpires}
+\alias{obscureAuth}
+\alias{restoreAuth}
 \title{Get DataONE Identity as Stored in the CILogon Certificate.}
 \usage{
 getAuthExpires(x, ...)
+
+obscureAuth(x, ...)
+
+restoreAuth(x, ...)
 }
 \arguments{
+\item{x}{an Authentication instance}
+
+\item{x}{an Authentication instance}
+
 \item{x}{an Authentication instance}
 }
 \value{
 The expiration date for the current authentication mechanism being used.
+
+The expiration date for the current authentication mechanism being used.
+
+The expiration date for the current authentication mechanism being used.
 }
 \description{
+Get DataONE Identity as Stored in the CILogon Certificate.
+
+Get DataONE Identity as Stored in the CILogon Certificate.
+
 Get DataONE Identity as Stored in the CILogon Certificate.
 }
 

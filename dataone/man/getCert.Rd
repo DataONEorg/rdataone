@@ -4,7 +4,7 @@
 \name{getCert}
 \alias{getCert}
 \alias{getCert,AuthenticationManager-method}
-\title{Get the DataONE X.509 Certificate.}
+\title{Get the DataONE X.509 Certificate location.}
 \usage{
 getCert(x, ...)
 
@@ -17,7 +17,7 @@ getCert(x, ...)
 The filename of the current DataONE X.509 Certificate if it is available.
 }
 \description{
-Get the DataONE X.509 Certificate.
+Get the DataONE X.509 Certificate location.
 }
 \section{Methods (by class)}{
 \itemize{

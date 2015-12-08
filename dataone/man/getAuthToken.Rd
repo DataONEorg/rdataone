@@ -2,7 +2,6 @@
 % Please edit documentation in R/AuthenticationManager.R
 \docType{methods}
 \name{getAuthToken}
-\alias{getAuthTo}
 \alias{getAuthToken}
 \alias{getAuthToken,AuthenticationManager-method}
 \title{Get the value of the DataONE Authentication Token, if one exists.}
