@@ -68,6 +68,7 @@ setMethod("AuthenticationManager", signature=character(), function() {
     result@authInfo$authMethod <- as.character(NA)
     result@authInfo$token <- as.character(NA)
     result@authInfo$cert <- as.character(NA)
+    options(D1AuthObscured = FALSE)
     return(result)
 })
 
@@ -96,9 +97,15 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
   # Currently, if a token is found it is considered to be valid. When an R package is
   # available to decode JSON Web Tokens, then we will be able to check the expiration
   # date of the token.
+  if(getOption("D1AuthObscured")) {
+    #warning("DataONE authentication is currenly disabled. See \"?restoreAuth\" to enable it again.")
+    return(FALSE)
+  }
   if (!is.null(node) && node@APIversion >= "v2") {
-    authToken <- readAuthToken()
-    if(!is.na(authToken)) {
+    authToken <- getOption("authentication_token")
+    # auth token will be null if not set with options(); NA might be set by user
+    # TODO: verify token when JWT available.
+    if(!is.null(authToken) && !is.na(authToken)) {
       x@authInfo$authMethod <- "token"
       x@authInfo$token <- authToken
       x@authInfo$cert <- as.character(NA)
@@ -110,7 +117,12 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
   # available.
   if (check4PKI()) {
     # Check if a valid certificate is available
-    cm = CertificateManager()
+    oldWarnLevel <- getOption("warn")
+    # Turn off warnings so that the Deprecated msg doesn't get printed
+    options(warn = -1)
+    cm <- CertificateManager()
+    # Restore warnings to previous level
+    options(warn = oldWarnLevel)
     cert <- getCertLocation(cm)
     if (!is.null(cert) && (file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
       x@authInfo$authMethod <- "cert"
@@ -138,7 +150,7 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
 
 #' Get the value of the DataONE Authentication Token, if one exists.
 #' @rdname getAuthToken
-#' @aliases getAuthTo
+#' @aliases getAuthToken
 #' @param x an AuthenticationManager instance
 #' @return The current authentication token.
 #' @export
@@ -147,15 +159,18 @@ setGeneric("getAuthToken", function(x, ...) {
 })
 
 #' @describeIn getAuthToken
-setMethod("getAuthToken", signature("AuthenticationManager"), function(x) {  
-   if(is.na(x@authInfo[["authMethod"]])) {
+setMethod("getAuthToken", signature("AuthenticationManager"), function(x) {
+  if(getOption("D1AuthObscured")) {
+    return(as.character(NA))
+  }
+  if(is.na(x@authInfo[["authMethod"]])) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
   } 
   return(x@authInfo[["token"]])
 })
     
-#' Get the DataONE X.509 Certificate.
+#' Get the DataONE X.509 Certificate location.
 #' @rdname getCert
 #' @aliases getCert
 #' @param x an AuthenticationManager instance
@@ -167,6 +182,9 @@ setGeneric("getCert", function(x, ...) {
 
 #' @describeIn getCert
 setMethod("getCert", signature("AuthenticationManager"), function(x) { 
+  if(getOption("D1AuthObscured")) {
+    return(as.character(NA))
+  }
   if(is.na(x@authInfo[["authMethod"]])) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
@@ -186,6 +204,9 @@ setGeneric("getAuthMethod", function(x, ...) {
 
 #' @describeIn getAuthMethod
 setMethod("getAuthMethod", signature("AuthenticationManager"), function(x) {
+  if(getOption("D1AuthObscured")) {
+    return(as.character(NA))
+  }
   if(is.na(x@authInfo[["authMethod"]])) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
@@ -205,16 +226,24 @@ setGeneric("getAuthSubject", function(x, ...) {
 
 #' @describeIn getAuthSubject
 setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
+  PUBLIC <- "public"
+  if(getOption("D1AuthObscured")) {
+    return(as.character(PUBLIC))
+  }
   authMethod <- getAuthMethod(x)
   if(is.na(authMethod)) {
     warning("Please call isAuthValid() before calling this method.")
-    return(as.character(NA))
+    return(as.character(PUBLIC))
   }
   # TODO: set client subject for a token when JWT package is available.
   if(authMethod == "token") {
     return(as.character(NA))
   } else {
+    oldWarnLevel <- getOption("warn")
+    # Turn off warnings so that the Deprecated msg doesn't get printed
+    options(warn = -1)
     cm <- CertificateManager()
+    options(warn = oldWarnLevel)
     return(showClientSubject(cm))
   }
 })
@@ -231,6 +260,9 @@ setGeneric("getAuthExpires", function(x, ...) {
 
 #' @describeIn AuthenticationManager
 setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
+  if(getOption("D1AuthObscured")) {
+    return(as.character(NA))
+  } 
   authMethod <- getAuthMethod(x)
   if(is.na(authMethod)) {
     warning("Please call isAuthValid() before calling this method.")
@@ -240,25 +272,73 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
   if(authMethod == "token") {
     return(as.character(NA))
   } else {
+    # Turn off warnings the Deprecated msg doesn't get printed
+    oldWarnLevel <- getOption("warn")
+    options(warn = -1)
     cm <- CertificateManager()
+    options(warn = oldWarnLevel)
     return(getCertExpires(cm))
   }
 })
+#' CHeck if the currently valid authentication method has reached the expiratin time.
+#' @rdname isAuthExpired
+#' @aliases isAuthExpired
+#' @param x an Authentication instance
+#' @return A logical value: TRUE if authenentication has expired, FALSE if not.
+#' @export
+setGeneric("isAuthExpired", function(x, ...) { 
+  standardGeneric("isAuthExpired")
+})
 
-# Private functions
-# Read the authentication token from the Session Configuration. 
-readAuthToken <- function() {
-  # Check is a SessonConfig is currently active and if not initialize and load a new one.
-  sc <- getSessionConfig()
-  if (is.null(sc)) {
-    sc <- new("SessionConfig")
-    loadConfig(sc)
-    on.exit(unloadConfig(sc))
+#' @describeIn AuthenticationManager
+setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
+  if(getOption("D1AuthObscured")) {
+    return(TRUE)
+  } 
+  authMethod <- getAuthMethod(x)
+  if(is.na(authMethod)) {
+    warning("Please call isAuthValid() before calling this method.")
+    return(TRUE)
   }
-  # check if a DataONE authentication token has been entered into the configuration file.
-  authToken <- getConfig(sc, "authentication_token")
-  if (is.null(authToken)) {
-    authToken <- as.character(NA)
+  # TODO: set client subject for a token when JWT package is available.
+  # Until JWT is available, we have to assume that a token has not expired. 
+  if(authMethod == "token") {
+    return(TRUE)
+  } else {
+    # Turn off warnings so that the Deprecated msg doesn't get printed
+    oldWarnLevel <- getOption("warn")
+    options(warn = -1)
+    cm <- CertificateManager()
+    options(warn = oldWarnLevel)
+    return(isCertExpired(cm))
   }
-  return(authToken)
-}
+})
+
+#' Get DataONE Identity as Stored in the CILogon Certificate.
+#' @rdname getAuthExpires
+#' @aliases getAuthExpires
+#' @param x an Authentication instance
+#' @return The expiration date for the current authentication mechanism being used.
+#' @export
+setGeneric("obscureAuth", function(x, ...) { 
+  standardGeneric("obscureAuth")
+})
+
+#' @describeIn AuthenticationManager
+setMethod("obscureAuth", signature("AuthenticationManager"), function(x) {
+  options(D1AuthObscured = TRUE)
+})
+#' Get DataONE Identity as Stored in the CILogon Certificate.
+#' @rdname getAuthExpires
+#' @aliases getAuthExpires
+#' @param x an Authentication instance
+#' @return The expiration date for the current authentication mechanism being used.
+#' @export
+setGeneric("restoreAuth", function(x, ...) { 
+  standardGeneric("restoreAuth")
+})
+
+#' @describeIn AuthenticationManager
+setMethod("restoreAuth", signature("AuthenticationManager"), function(x) {
+  options(D1AuthObscured = FALSE)
+})
