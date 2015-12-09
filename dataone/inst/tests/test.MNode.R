@@ -78,11 +78,13 @@ test_that("MNode create(), update(), archive(), and delete()", {
     library(digest)
     library(datapackage)
     library(XML)
-    cn <- CNode("SANDBOX2")
+    #cn <- CNode("SANDBOX")
+    cn <- CNode("DEV2")
     # mnDemo1 is api v1 on 20151208, but that could change
     # Use this v1 node to test with both a current token available
     # and a certificate.
-    mnId <- "urn:node:mnDemo1"
+    #mnId <- "urn:node:mnSandboxUCSB2"
+    mnId <- "urn:node:mnDevUCSB2"
     mn <- getMNode(cn, mnId)
     am <- AuthenticationManager()
     if (!isAuthValid(am, mn)) {
@@ -194,12 +196,9 @@ test_that("MNode create() works for large files", {
     # If subject isn't available from the current authentication method, then try
     # the session configuration.
     if (is.na(subject)) {
-      sc <- new("SessionConfig")
-      loadConfig(sc)
-      subject <- getConfig(sc, "subject_dn")
-      unloadConfig(sc)  
+      subject <- getOption("subject_dn")
       # If session config doesn't have subject_dn set, then use the failback DN
-      if (is.null(subject)) {
+      if (is.null(subject) || is.na(subject)) {
         subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
       }
     }
