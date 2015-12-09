@@ -97,16 +97,13 @@ test_that("MNode create(), update(), archive(), and delete()", {
     
     # Ensure the user is logged in before running the tests
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
-
     user <- getAuthSubject(am)
     # If subject isn't available from the current authentication method, then try
     # the session configuration.
     if (is.na(user)) {
       # If session config doesn't have subject_dn set, then use the failback DN
       user <- getOption("subject_dn")
-      if (is.null(user)) {
-        user <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
-      }
+      expect_false(is.null(user) || is.na(user), info="This test requires that \"subject_dn\" is set, see \"dataone-overview\" vignette") 
     }
     expect_that(user, matches("cilogon|dataone"))
     
@@ -197,11 +194,8 @@ test_that("MNode create() works for large files", {
     # the session configuration.
     if (is.na(subject)) {
       subject <- getOption("subject_dn")
-      # If session config doesn't have subject_dn set, then use the failback DN
-      if (is.null(subject) || is.na(subject)) {
-        subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
-      }
-    }
+      expect_false(is.null(user) || is.na(user), info="This test requires that \"subject_dn\" is set, see \"dataone-overview\" vignette") 
+    }    
     
     expect_that(user, matches("cilogon|dataone"))
     # TODO: Create a large data object using fallocate through a system call (only on linux)
@@ -248,5 +242,56 @@ test_that("MNode getPackage() works", {
   #notApid <- sprintf("urn:uuid:%s", UUIDgenerate())
   #err <- try(bagitFile <- getPackage(mn, id=notApid), silent=TRUE)
   #expect_that(class(err), matches("try-error"))
+  
+})
+
+test_that("Obsoleting an object with updateSystemMetadata() works",{
+  skip_on_cran()
+  library(dataone)
+  # Create a csv file for the data object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  mnId <- "urn:node:mnSandboxUCSB2"
+  d1c <- D1Client(env="SANDBOX", mNodeid=mnId)
+  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  if (!isAuthValid(am, d1c@mn)) {
+    warning(sprintf("Valid DataONE authentication is required for this test."))
+  }
+  subject <- getAuthSubject(am)
+  # If subject isn't available from the current authentication method, then try
+  # the session configuration.
+  if (is.na(subject)) {
+    subject <- getOption("subject_dn")
+    # If option "subject_dn" not set, exit 
+    if (is.null(subject)) {
+      warning(sprintf("This test requires setting the \"subject_dn\" option. Please see \"dataone-overview\" vignette."))
+      skip("Need to set subject_dn to run this test.")
+    }
+  }
+  
+  do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+  uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
+  do2 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+  uploadDataObject(d1c, do2, replicate=FALSE, public=TRUE)
+  id1 <- getIdentifier(do1)
+  id2 <- getIdentifier(do2)
+  md1 <- getSystemMetadata(d1c@mn, id1)
+  expect_false(is.null(md1))
+  md2 <- getSystemMetadata(d1c@mn, id2)
+  expect_false(is.null(md2))
+  md1@obsoletedBy <- id2
+  md2@obsoletes <- id1
+  
+  expect_true(updateSystemMetadata(d1c@mn, md1@identifier, md1))
+  expect_true(updateSystemMetadata(d1c@mn, md2@identifier, md2))
+  
+  tstmd1 <- getSystemMetadata(d1c@mn, id1)
+  expect_equal(tstmd1@obsoletedBy, id2)
+  tstmd2 <- getSystemMetadata(d1c@mn, id2)
+  expect_equal(tstmd2@obsoletes, id1)
   
 })
