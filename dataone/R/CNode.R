@@ -102,7 +102,10 @@ setMethod("CNode", signature("character"), function(env) {
   result <- new("CNode")
   # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
   # yet that is needed to construct the service URL.
-  response <- GET(CN_URI)
+  response <- GET(CN_URI)   
+  if(response$status != "200") {
+    stop(sprintf("Error accessing %s: %s\n", CN_URI, getErrorDescription(response)))
+  }
   # Search for the 'node' element. Have to search for local name in xpath, as DataONE v1 and v2 use different namespaces
   # and one xpath expression with namespaces can't find both (that I know of).
   xml <- getNodeSet(content(response, as="parsed"), "/*[local-name() = 'node']")
