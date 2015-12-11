@@ -69,6 +69,10 @@ setMethod("AuthenticationManager", signature=character(), function() {
     result@authInfo$authMethod <- as.character(NA)
     result@authInfo$token <- as.character(NA)
     result@authInfo$cert <- as.character(NA)
+    # The node that authentication was checked for. 
+    result@authInfo$authNode <- as.character(NA)
+    # Did we perform the check?
+    result@authInfo$init <- FALSE
     options(D1AuthObscured = FALSE)
     return(result)
 })
@@ -76,10 +80,11 @@ setMethod("AuthenticationManager", signature=character(), function() {
 #' Verify authentication for a member node.
 #' @rdname isAuthValid
 #' @aliases isAuthValid
-#' @description The currently used authentication methonism (either tokens or X.509 certificates)
-#' is checked and verified for the specified member node. If an authentication token is availalbe
-#' via the dataone package Session Configuration, it will be used.  However, authentication tokens can only be used for
-#' DataONE v2.0 or higher nodes. X.509 certificates can be used with DataONE v1.0.0 or higher member nodes.
+#' @description The currently used DataONE client authentication method (either tokens or X.509 certificates)
+#' is checked and verified for the specified node (either CN or MN). If an authentication token is availalbe
+#' via the R options facility, it will be used i.e. available via getOption("authentication_token").  However, 
+#' authentication tokens can only be used for DataONE v2 or higher nodes. X.509 certificates can be used 
+#' with DataONE v1 or higher nodes. 
 #' See the \emph{"dataone"} vignette \emph{"dataone-overview"} for more information on authentication.
 #' @param x a AuthenticationManager instance
 #' @return A logical value: TRUE if authentication is valid, false if not.
@@ -110,6 +115,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       x@authInfo$authMethod <- "token"
       x@authInfo$token <- authToken
       x@authInfo$cert <- as.character(NA)
+      x@authInfo$node <- node@identifier
+      x@authInfo$init <- TRUE
       return(TRUE)
     }
   }
@@ -129,6 +136,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       x@authInfo$authMethod <- "cert"
       x@authInfo$token <- as.character(NA)
       x@authInfo$cert <- cert
+      x@authInfo$node <- node@identifier
+      x@authInfo$init <- TRUE
       return(TRUE)
     } else {
       # The certificate is invalid or unreadable, so fall back to unauthenticated?
@@ -136,6 +145,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       x@authInfo$authMethod <- as.character(NA)
       x@authInfo$token <- as.character(NA)
       x@authInfo$cert <- as.character(NA)
+      x@authInfo$node <- node@identifier
+      x@authInfo$init <- TRUE
       return(FALSE)
     }
   } else {
@@ -145,6 +156,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
     x@authInfo$authMethod <- as.character(NA)
     x@authInfo$token <- as.character(NA)
     x@authInfo$cert <- as.character(NA)
+    x@authInfo$node <- node@identifier
+    x@authInfo$init <- TRUE
     return(FALSE)
   }
 })
@@ -186,7 +199,7 @@ setMethod("getCert", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
   }
-  if(is.na(x@authInfo[["authMethod"]])) {
+  if(is.na(x@authInfo$authMethod)) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
   }
@@ -208,10 +221,11 @@ setMethod("getAuthMethod", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
   }
-  if(is.na(x@authInfo[["authMethod"]])) {
+  if(!x@authInfo$init) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
   }
+  
   return(x@authInfo[["authMethod"]])
 })
 
@@ -231,13 +245,18 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(PUBLIC))
   }
-  authMethod <- getAuthMethod(x)
-  if(is.na(authMethod)) {
+  
+  if(!x@authInfo$init) {
     warning("Please call isAuthValid() before calling this method.")
+    return(as.character(NA))
+  }
+  
+  # Authentication is either uninitialized or no method present (no cert or token available)
+  if(is.na(x@authInfo[["authMethod"]])) {
     return(as.character(PUBLIC))
   }
   # TODO: set client subject for a token when JWT package is available.
-  if(authMethod == "token") {
+  if(x@authInfo$authMethod == "token") {
     return(as.character(NA))
   } else {
     oldWarnLevel <- getOption("warn")
@@ -264,13 +283,12 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
   } 
-  authMethod <- getAuthMethod(x)
-  if(is.na(authMethod)) {
+  if(!x@authInfo$init) {
     warning("Please call isAuthValid() before calling this method.")
     return(as.character(NA))
   }
   # TODO: set client subject for a token when JWT package is available.
-  if(authMethod == "token") {
+  if(x@authInfo$authMethod == "token") {
     return(as.character(NA))
   } else {
     # Turn off warnings the Deprecated msg doesn't get printed
@@ -296,15 +314,14 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(TRUE)
   } 
-  authMethod <- getAuthMethod(x)
-  if(is.na(authMethod)) {
+  if(!x@authInfo$init) {
     warning("Please call isAuthValid() before calling this method.")
     return(TRUE)
   }
   # TODO: set client subject for a token when JWT package is available.
   # Until JWT is available, we have to assume that a token has not expired. 
-  if(authMethod == "token") {
-    return(TRUE)
+  if(x@authInfo$authMethod == "token") {
+    return(FALSE)
   } else {
     # Turn off warnings so that the Deprecated msg doesn't get printed
     oldWarnLevel <- getOption("warn")
@@ -330,8 +347,8 @@ setMethod("obscureAuth", signature("AuthenticationManager"), function(x) {
   options(D1AuthObscured = TRUE)
 })
 #' Get DataONE Identity as Stored in the CILogon Certificate.
-#' @rdname getAuthExpires
-#' @aliases getAuthExpires
+#' @rdname restoreAuth
+#' @aliases restoreAuth
 #' @param x an Authentication instance
 #' @return The expiration date for the current authentication mechanism being used.
 #' @export
@@ -339,7 +356,33 @@ setGeneric("restoreAuth", function(x, ...) {
   standardGeneric("restoreAuth")
 })
 
-#' @describeIn AuthenticationManager
+#' @describeIn restoreAuth
 setMethod("restoreAuth", signature("AuthenticationManager"), function(x) {
   options(D1AuthObscured = FALSE)
+})
+
+#' Display all authentication information
+#' @rdname showAuth
+#' @aliases showAuth
+#' @param x an Authentication instance
+#' @export
+setGeneric("showAuth", function(x, ...) { 
+  standardGeneric("showAuth")
+})
+
+#' @describeIn showAuth
+setMethod("showAuth", signature("AuthenticationManager"), function(x) {
+  obscured <- getOption("D1AuthObscured")
+  if(obscured) {
+    message("DataONE authentication is currently disabled. See \"?restoreAuth\" to re-enable authentication")
+  }
+  if(!x@authInfo$init) {
+    message("DataONE authentication has not been initialized. See \"?isAuthValid\"")
+  } else {
+    message(sprintf("Authentication method: %s", x@authInfo$authMethod))
+    if(!is.na(x@authInfo$authMethod) && x@authInfo$authMethod == "cert") {
+      message(sprintf("Certification location: %s", x@authInfo$cert))
+    }
+    message(sprintf("Authenticated node: %s", x@authInfo$node))
+  }
 })
