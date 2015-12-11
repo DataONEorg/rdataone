@@ -7,7 +7,6 @@
 \alias{getAuthExpires,AuthenticationManager-method}
 \alias{isAuthExpired,AuthenticationManager-method}
 \alias{obscureAuth,AuthenticationManager-method}
-\alias{restoreAuth,AuthenticationManager-method}
 \title{AuthenticationManager provides mechanisms to}
 \usage{
 \S4method{AuthenticationManager}{ANY}()
@@ -17,8 +16,6 @@
 \S4method{isAuthExpired}{AuthenticationManager}(x)
 
 \S4method{obscureAuth}{AuthenticationManager}(x)
-
-\S4method{restoreAuth}{AuthenticationManager}(x)
 }
 \description{
 AuthenticationManager
@@ -54,8 +51,6 @@ of their existing accounts. For more information about the CILogon service, see
 \item \code{isAuthExpired}: 
 
 \item \code{obscureAuth}: 
-
-\item \code{restoreAuth}: 
 }}
 \section{Slots}{
 

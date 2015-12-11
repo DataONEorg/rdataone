@@ -5,7 +5,7 @@ test_that("dataone library loads", {
 
 test_that("CNode ping", {
   library(dataone)
-  cn <- CNode("STAGING2")
+  cn <- CNode("STAGING")
   alive <- ping(cn)
   expect_true(alive)
 })
@@ -14,14 +14,22 @@ test_that("CNode object index query works with query list param", {
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
-  cn <- CNode("STAGING2")
+  cn <- CNode("STAGING2")  
+  am <- AuthenticationManager()
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, cn)
+  options(warn = warnLevel)
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  }
   result <- query(cn, queryParams, as="list")
   #resultList <- parseSolrResult(result)
   expect_true(length(result) == 2)
   expect_match(result[[2]]$id, "doi:")
   size <- result[[1]]$size
   expect_is(size, "numeric")
-  
+
   # Test query of CN object index using query list
   queryParamList <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="list")
@@ -32,7 +40,6 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$abstract, "chlorophyll")
   
   # Test a query that contains embedded quotes
-  cn <- CNode("SANDBOX2")
   queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
                         fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="data.frame")
@@ -40,7 +47,6 @@ test_that("CNode object index query works with query list param", {
   expect_true(nrow(result) > 0)
   
   # Test if query can handle solr syntax error
-  cn <- CNode("SANDBOX2")
   queryParamList <- list(q="(attribute:lake) and attribute:\"Percent Nitrogen\")", rows="1000",
                          fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="data.frame")
@@ -56,7 +62,6 @@ test_that("CNode object index query works with query list param", {
 test_that("Object listing works for CNode, MNode", {
   library(dataone)
   
-  #cn <- CNode("STAGING2")
   cn <- CNode("STAGING")
   fromDate <- "2013-01-01T01:01:01.000+00:00"
   toDate <- "2015-12-31T01:01:01.000+00:00"
@@ -95,7 +100,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   
   #cn <- CNode("STAGING2")
   # Get list of query engines for a CN, and get description for each engine
-  cn <- CNode("SANDBOX")
+  cn <- CNode("STAGING")
   engines <- listQueryEngines(cn)
   expect_more_than(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -106,7 +111,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   }
   
   # Get list of query engines for an MN, and get description for each engine
-  mn <- getMNode(cn, "urn:node:mnSandboxUCSB2")
+  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   engines <- listQueryEngines(mn)
   expect_more_than(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -121,7 +126,14 @@ test_that("CNode object index query works with query string param", {
   library(dataone)
   
   cn <- CNode("STAGING2")
-  #cn <- CNode("SANDBOX2")
+  am <- AuthenticationManager()
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, cn)
+  options(warn = warnLevel)
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  }
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   result <- query(cn, queryParams, as="list")
   expect_true(length(result) == 2)
@@ -137,6 +149,14 @@ test_that("MNode object index query works", {
   #mn_uri <- "https://dev.nceas.ucsb.edu/knb/d1/mn/v1"
   mn_uri <- "https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn/v1"
   mn <- MNode(mn_uri)
+  am <- AuthenticationManager()
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, mn)
+  options(warn = warnLevel)
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  }
   result <- query(mn, queryParams, as="list")
   #expect_is(result, "XMLInternalDocument")
   #resultList <- parseSolrResult(result)
@@ -172,36 +192,36 @@ test_that("D1Node archive() works",{
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  #mnId <- "urn:node:mnStageUCSB2"
-  #d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
-  mnId <- "urn:node:mnSandboxUCSB2"
-  d1c <- new("D1Client", env="SANDBOX", mNodeid=mnId)
-  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  mnId <- "urn:node:mnStageUCSB2"
+  d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  
   am <- AuthenticationManager()
-  if (!isAuthValid(am, d1c@mn)) {
-    stop(sprintf("Valid DataONE authentication is required for this test."))
-  }
-  subject <- getAuthSubject(am)
-  # If subject isn't available from the current authentication method, then try
-  # the session configuration.
-  if (is.na(subject)) {
-    subject <- getOption("subject_dn")
-    # If session config doesn't have subject_dn set, then use the failback DN
-    if (is.null(subject)) {
-      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, d1c@mn)
+  options(warn = warnLevel)
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+    subject <- getAuthSubject(am)
+    # If subject isn't available from the current authentication method, then try
+    # R options
+    if (is.na(subject) || subject == "public") {
+      subject <- getOption("subject_dn")
+      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
     }
+    
+    do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+    # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
+    uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
+    id1 <- getIdentifier(do1)
+    md1 <- getSystemMetadata(d1c@mn, id1)
+    # Run the archive test if both metadata objects sync'd
+    if (!is.null(md1)) {
+      tstPid <- archive(d1c@mn, id1, quiet=FALSE)
+      expect_equal(tstPid, id1)
+    }
+    tstMd1 <- getSystemMetadata(d1c@mn, id1)
+    expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
   }
- 
-  do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
-  # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
-  uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
-  id1 <- getIdentifier(do1)
-  md1 <- getSystemMetadata(d1c@mn, id1)
-  # Run the archive test if both metadata objects sync'd
-  if (!is.null(md1)) {
-    tstPid <- archive(d1c@mn, id1, quiet=FALSE)
-    expect_equal(tstPid, id1)
-  }
-  tstMd1 <- getSystemMetadata(d1c@mn, id1)
-  expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
 })

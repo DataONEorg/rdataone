@@ -86,36 +86,39 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   skip_on_cran()
   library(dataone)
   library(uuid)
-  cn <- CNode("SANDBOX")
+  cn <- CNode("STAGING")
    
   # For hasReservation(), we have to use the same subject that is in the authorization token or X.509 certificate.
   # Until the dataone package can decrypt auth tokens, we have to manually provide same subject
   # used by reserveIdentifier.  
   am <- AuthenticationManager()
-  if (!isAuthValid(am, cn)) {
-    stop(sprintf("Valid DataONE authentication is required for this test."))
-  }
-  
-  subject <- getAuthSubject(am)
-  # If subject isn't available from the current authentication method, then try
-  # the session configuration.
-  if (is.na(subject)) {
-    subject <- getOption("subject_dn")
-    # If session config doesn't have subject_dn set, then use the failback DN
-    if (is.null(subject)) {
-      warning(sprintf("This test requires setting the \"subject_dn\" option. Please see \"dataone-overview\" vignette."))
-      skip("Need to set subject_dn to run this test.")
+  # Suppress PKIplus, cert missing warnings
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, cn)
+  options(warn = warnLevel)
+  # First check if authentication is available and if not, skip this test
+  if (authValid) {
+    # TODO: remove this check when Mac OS X can be used with certificates
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    subject <- getAuthSubject(am)
+    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+    subject <- getAuthSubject(am)
+    # If subject isn't available from the current authentication method, then try
+    # R options
+    if (is.na(subject) || subject == "public") {
+      subject <- getOption("subject_dn")
+      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
     }
+    
+    myId <- sprintf("urn:uuid:%s", UUIDgenerate())
+    # researveIdentifier will create the reservation using only the client subject from
+    # the current authentication method - either auth token or certificate. 
+    newId <- reserveIdentifier(cn, myId)
+    expect_equal(myId, newId)
+    hasRes <- hasReservation(cn, newId, subject=subject)
+    expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
   }
-  
-  myId <- sprintf("urn:uuid:%s", UUIDgenerate())
-  # researveIdentifier will create the reservation using only the client subject from
-  # the current authentication method - either auth token or certificate. 
-  newId <- reserveIdentifier(cn, myId)
-  expect_equal(myId, newId)
-
-  hasRes <- hasReservation(cn, newId, subject=subject)
-  expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
 })
 
 test_that("CNode listFormats, getFormat",{

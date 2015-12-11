@@ -83,6 +83,14 @@ test_that("D1Client getDataObject", {
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
     
+    am <- AuthenticationManager()
+    warnLevel <- getOption("warn")
+    options(warn = -1)
+    authValid <- isAuthValid(am, cli@cn)
+    options(warn = warnLevel)
+    if (authValid) {
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    } 
     # Try retrieving a known object from the PROD environment
     pid <- "solson.5.1"
     obj <- getDataObject(cli, pid)
@@ -104,52 +112,51 @@ test_that("D1Client uploadDataPackage works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  
-  #d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2") # v1 mn
-  d1c <- D1Client(env="SANDBOX", mNodeid="urn:node:mnSandboxUCSB2")
-  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
+  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
-  # Set 'user' to authentication subject, if available, so we will have permission to change this object
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
-  if (!isAuthValid(am, d1c@mn)) {
-    stop(sprintf("Valid DataONE authentication is required for this test."))
-  }
-  subject <- getAuthSubject(am)
-  # If subject isn't available from the current authentication method, then try
-  # check R options
-  if (is.na(subject)) {
-    subject <- getOption("subject_dn")
-    # If session config doesn't have subject_dn set, then use the failback DN
-    if (is.null(subject)) {
-      subject <- "CN=Peter Slaughter A10499,O=Google,C=US,DC=cilogon,DC=org"
+  warnLevel <- getOption("warn")
+  options(warn = -1)
+  authValid <- isAuthValid(am, d1c@mn)
+  options(warn = warnLevel)
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    # Set 'user' to authentication subject, if available, so we will have permission to change this object
+    subject <- getAuthSubject(am)
+    # If subject isn't available from the current authentication method, then try
+    # R options
+    if (is.na(subject) || subject == "public") {
+      subject <- getOption("subject_dn")
+      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
     }
+    
+    dp <- new("DataPackage")
+    # Create DataObject for the science data 
+    sciObj <- new("DataObject", format="text/csv", user=subject, mnNodeId=getMNodeId(d1c), filename=csvfile)
+    # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
+    expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
+    sciObj <- setPublicAccess(sciObj)
+    accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
+    sciObj <- addAccessRule(sciObj, accessRules)
+    addData(dp, sciObj)
+    expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
+    
+    # Create metadata object that describes science data
+    emlFile <- system.file("testfiles/testdoc-eml-2.1.0.xml", package="dataone")
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user=subject, 
+                       mnNodeId=getMNodeId(d1c), filename=emlFile)
+    expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
+    addData(dp, metadataObj)
+    expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
+    
+    # Associate the metadata object with the science object it describes
+    insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
+    
+    # Upload the data package to DataONE    
+    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
+    expect_true(!is.null(resourceMapId))
   }
-  
-  dp <- new("DataPackage")
-  # Create DataObject for the science data 
-  sciObj <- new("DataObject", format="text/csv", user=subject, mnNodeId=getMNodeId(d1c), filename=csvfile)
-  # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-  expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
-  sciObj <- setPublicAccess(sciObj)
-  accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
-  sciObj <- addAccessRule(sciObj, accessRules)
-  addData(dp, sciObj)
-  expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
-
-  # Create metadata object that describes science data
-  emlFile <- system.file("testfiles/testdoc-eml-2.1.0.xml", package="dataone")
-  metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user=subject, 
-                     mnNodeId=getMNodeId(d1c), filename=emlFile)
-  expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
-  addData(dp, metadataObj)
-  expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
-  
-  # Associate the metadata object with the science object it describes
-  insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
-  
-  # Upload the data package to DataONE    
-  resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
-  expect_true(!is.null(resourceMapId))
 })
