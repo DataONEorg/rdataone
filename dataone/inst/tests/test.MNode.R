@@ -73,6 +73,32 @@ test_that("MNode generateIdentifier()", {
       expect_that(newid, matches("urn:uuid:"))
     }
 })
+
+test_that("MNode generateIdentifier() on API v1 node", {
+    # Skip as this test requires authentication
+    skip_on_cran()
+    library(dataone)
+    # Currently this is a v1 node, so only X.509 certs work for authentication
+    # so this test should find and use a cert if it is available.
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnDemo9")
+    # Suppress PKIplus, cert missing warnings
+    am <- AuthenticationManager()
+    warnLevel <- getOption("warn")
+    options(warn = -1)
+    authValid <- isAuthValid(am, mn)
+    options(warn = warnLevel)
+    if(authValid) {
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      newid <- generateIdentifier(mn, "UUID")
+      cname <- class(newid)
+      expect_that(cname, matches("character"))
+      expect_that(newid, matches("urn:uuid:"))
+    } else {
+      skip("This test requires valid authentication.")
+    }
+})
+
 test_that("MNode describe()", {
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
