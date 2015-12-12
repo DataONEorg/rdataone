@@ -88,9 +88,6 @@ test_that("D1Client getDataObject", {
     options(warn = -1)
     authValid <- isAuthValid(am, cli@cn)
     options(warn = warnLevel)
-    if (authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
-    } 
     # Try retrieving a known object from the PROD environment
     pid <- "solson.5.1"
     obj <- getDataObject(cli, pid)
