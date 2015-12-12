@@ -118,6 +118,8 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
     expect_equal(myId, newId)
     hasRes <- hasReservation(cn, newId, subject=subject)
     expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
+  } else {
+      skip("This test requires valid authentication.")
   }
 })
 

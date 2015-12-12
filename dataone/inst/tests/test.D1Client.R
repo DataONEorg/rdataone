@@ -155,5 +155,7 @@ test_that("D1Client uploadDataPackage works", {
     # Upload the data package to DataONE    
     resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
     expect_true(!is.null(resourceMapId))
+  } else {
+      skip("This test requires valid authentication.")
   }
 })

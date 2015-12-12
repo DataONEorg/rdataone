@@ -53,6 +53,7 @@ test_that("MNode getSystemMetadata()", {
     expect_that(cname, matches("SystemMetadata"))
     expect_that(sysmeta@identifier, matches("doi:10.5063/F1QN64NZ"))
 })
+
 test_that("MNode generateIdentifier()", {
     # Skip as this test requires authentication
     skip_on_cran()
@@ -71,6 +72,8 @@ test_that("MNode generateIdentifier()", {
       cname <- class(newid)
       expect_that(cname, matches("character"))
       expect_that(newid, matches("urn:uuid:"))
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
 
@@ -98,6 +101,7 @@ test_that("MNode generateIdentifier() on API v1 node", {
       skip("This test requires valid authentication.")
     }
 })
+
 
 test_that("MNode describe()", {
   library(dataone)
@@ -201,6 +205,8 @@ test_that("MNode create(), update(), archive(), and delete()", {
       newsysmeta <- getSystemMetadata(mn, newid)
       expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
       expect_that(newsysmeta@archived, is_true())
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
 
@@ -267,6 +273,8 @@ test_that("MNode create() works for large files", {
       
       # Remove the big data file we created locally
       unlink(csvfile)
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
 
@@ -336,5 +344,7 @@ test_that("updateSystemMetadata() works",{
     # Did the access policy get updated?
     ap <- md1New@accessPolicy
     expect_true(ap[ap$subject==id,"subject"] == id)
+  } else {
+      skip("This test requires valid authentication.")
   }
 })
