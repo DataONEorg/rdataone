@@ -53,6 +53,7 @@ test_that("MNode getSystemMetadata()", {
     expect_that(cname, matches("SystemMetadata"))
     expect_that(sysmeta@identifier, matches("doi:10.5063/F1QN64NZ"))
 })
+
 test_that("MNode generateIdentifier()", {
     # Skip as this test requires authentication
     skip_on_cran()
@@ -71,8 +72,37 @@ test_that("MNode generateIdentifier()", {
       cname <- class(newid)
       expect_that(cname, matches("character"))
       expect_that(newid, matches("urn:uuid:"))
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
+
+test_that("MNode generateIdentifier() on API v1 node", {
+    # Skip as this test requires authentication
+    skip_on_cran()
+    library(dataone)
+    # Currently this is a v1 node, so only X.509 certs work for authentication
+    # so this test should find and use a cert if it is available.
+    cn <- CNode("STAGING2")
+    mn <- getMNode(cn, "urn:node:mnDemo9")
+    # Suppress PKIplus, cert missing warnings
+    am <- AuthenticationManager()
+    warnLevel <- getOption("warn")
+    options(warn = -1)
+    authValid <- isAuthValid(am, mn)
+    options(warn = warnLevel)
+    if(authValid) {
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      newid <- generateIdentifier(mn, "UUID")
+      cname <- class(newid)
+      expect_that(cname, matches("character"))
+      expect_that(newid, matches("urn:uuid:"))
+    } else {
+      skip("This test requires valid authentication.")
+    }
+})
+
+
 test_that("MNode describe()", {
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
@@ -175,6 +205,8 @@ test_that("MNode create(), update(), archive(), and delete()", {
       newsysmeta <- getSystemMetadata(mn, newid)
       expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
       expect_that(newsysmeta@archived, is_true())
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
 
@@ -241,6 +273,8 @@ test_that("MNode create() works for large files", {
       
       # Remove the big data file we created locally
       unlink(csvfile)
+    } else {
+      skip("This test requires valid authentication.")
     }
 })
 
@@ -310,5 +344,7 @@ test_that("updateSystemMetadata() works",{
     # Did the access policy get updated?
     ap <- md1New@accessPolicy
     expect_true(ap[ap$subject==id,"subject"] == id)
+  } else {
+      skip("This test requires valid authentication.")
   }
 })

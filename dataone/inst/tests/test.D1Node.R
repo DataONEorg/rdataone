@@ -223,5 +223,7 @@ test_that("D1Node archive() works",{
     }
     tstMd1 <- getSystemMetadata(d1c@mn, id1)
     expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
+  } else {
+      skip("This test requires valid authentication.")
   }
 })
