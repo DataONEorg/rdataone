@@ -540,3 +540,73 @@ setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function
     return(NULL)
   }
 })
+
+#' Echo the credentials used to make the call. 
+#' @description This method can be used to verify the client certificate is valid 
+#' and contains the expected information.
+#' @details The authentication credentials contained in the X.509 certificate or
+#' authentication token are send with the request.
+#' @rdname echoCredentials
+#' @aliases echoCredentials
+#' @param cnode The coordinating node to send the request to.
+#' @param ... (Not yet used)
+#' @return A list containing authentication info.
+#' @export
+#' @examples \dontrun{
+#' cn <- CNode("STAGING")
+#' creds <- echoCredentials(cn)
+#' print(creds$person$subject)
+#' }
+setGeneric("echoCredentials", function(cnode, ...) {
+  standardGeneric("echoCredentials")
+})
+
+#' @describeIn echoCredentials
+setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
+  url <- sprintf("%s/diag/subject", cnode@endpoint)
+  response <- auth_get(url, node=cnode)
+  if(response$status != "200") {
+    warning(sprintf("Error checking credentails %s", getErrorDescription(response)))
+    return(as.character(NA))
+  }
+  result <- xmlToList(content(response,as="parsed"))
+  return(result)
+})
+
+#' Check if an action is authorized for the specified identifier
+#' @description Test if the user identified by the provided token has 
+#' authorization for operation on the specified object.
+#' @details The identifer parameter may be either a DataONE persistant identifier (pid)
+#' or series identifier (sid).
+#' @rdname isAuthorized
+#' @aliases isAuthorized
+#' @param id The DataONE identifier (pid or sid) to check access for.
+#' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
+#' @param ... (Not yet used)
+#' @return a logical, TRUE if the action is authorized, false if not.
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
+#' @export
+#' @examples \dontrun{
+#' cn <- CNode("STAGING")
+#' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "read")
+#' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "write")
+#' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "changePermission")
+#' }
+setGeneric("isAuthorized", function(cnode, id, action, ...) {
+  standardGeneric("isAuthorized")
+})
+
+#' @describeIn isAuthorized
+setMethod("isAuthorized", signature("CNode", "character", "character"), function(cnode, id, action) {
+  url <- sprintf("%s/isAuthorized/%s?action=%s", cnode@endpoint,id,action)
+  response <- auth_get(url, node=cnode)
+  # Status = 200 means that the action is authorized for the id.
+  # Status = 401 means that the subject is not authorized for the action, not an error.
+  if(response$status == "401") {
+    return(FALSE)
+  } else if (response$status != "200") {
+    warning(sprintf("Error checking authorized for action \"%s\" on id:\" %s\": %s", action, id, getErrorDescription(response)))
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
