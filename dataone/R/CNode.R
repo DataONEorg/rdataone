@@ -33,7 +33,7 @@
 #'  \item{\code{\link{getFormat}}}{: Get information for a single DataONE object format } 
 #'  \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
 #'  \item{\code{\link{listNodes}}}{: Get the list of nodes associated with a CN.} 
-#'  \item{\code{\link{reserveIdentifie}}}{: Reserve a identifier that is unique in the DataONE network.}
+#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a identifier that is unique in the DataONE network.}
 #'  \item{\code{\link{hasReservation}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
 #'  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
 #'  \item{\code{\link{get}}}{: Get the bytes associated with an object on this Coordinating Node.} 
@@ -43,6 +43,7 @@
 #'  \item{\code{\link{getMNode}}}{: Get a reference to a node based on its identifier.} 
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
+#' @import methods
 #' @export
 setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
@@ -181,6 +182,7 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 #' @rdname getFormat
 #' @aliases getFormat
 #' @param cnode A CNode object instance
+#' @param ... (Not yet used)
 #' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @examples
@@ -382,14 +384,6 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
   }
 })
 
-#' Get the bytes associated with an object on this Coordinating Node.
-#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
-#' present in the default location of the file system, in which case the access will be authenticated.
-#' @param node The CNode instance from which the pid will be downloaded
-#' @param pid The identifier of the object to be downloaded
-#' @return the bytes of the object
-#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
-#' @export
 #' @describeIn get
 setMethod("get", signature("CNode", "character"), function(node, pid) {
     url <- paste(node@endpoint, "object", pid, sep="/")
@@ -430,16 +424,8 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
     
     return(sysmeta)
 })
-#' Efficiently determine basic properties about the requested object.
-#' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
-#' determine basic properties of the referenced object.
-#' @rdname describe
-#' @aliases describe
-#' @param mnode The CNode instance from which the identifier will be generated
-#' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
-#' part of the URL path and must be escaped accordingly.
-#' @return A list of header elements
-#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
+
+#' @describeIn describe
 #' @export
 setMethod("describe", signature("CNode", "character"), function(node, pid) {
   url <- file.path(node@endpoint, "object", pid)
@@ -519,6 +505,7 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
 #' @aliases getMNode
 #' @param cnode The coordinating node to query for its registered Member Nodes
 #' @param nodeid The standard identifier string for this node
+#' @param ... (Not yet used)
 #' @return the Member Node as an MNode reference, or NULL if not found
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
@@ -610,3 +597,4 @@ setMethod("isAuthorized", signature("CNode", "character", "character"), function
   } else {
     return(TRUE)
   }
+})
