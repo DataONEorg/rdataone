@@ -1,6 +1,5 @@
 ---
 title: "Searching DataONE Data Holdings"
-author: "Peter Slaughter"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -23,12 +22,13 @@ Additional information about searching DataONE can be viewed at [Content Discove
 
 ## Using The `query` Method
 
-Some familiarity with Solr is necessary to use the `query` method
-effectively, however basic queries can be very powerful and the examples in this document can provide a starting point.
+Some familiarity with Solr is helpful to use the `query` method
+effectively, however basic queries can be very powerful and the examples in this document can provide a starting point. Also, it is possible to use the `query` method just specifying name, value pairs (See the section: *A Simplied Search")
+
 
 Additional information about the `query` method can be obtained from the R help facility, e.g. `?query` from the R command line.
 
-### Query and return an R list
+## Query and return an R list
 
 The following example queries DataONE and return values in an R list, with each value converted from the Solr result to the appropriate R data type: 
 
@@ -36,7 +36,7 @@ The following example queries DataONE and return values in an R list, with each 
 library(dataone)
 cn <- CNode("PROD")
 queryParamList <- list(q="id:doi*", rows="2", fq="abstract:chlorophyll", fl="id,title,dateUploaded,abstract,datasource,size")
-result <- query(cn, queryParamList, as="list")
+result <- query(cn, solrQuery=queryParamList, as="list")
 ```
 
 The `result` object contains all the data values returned from the query. Each element of the returned list contains information
@@ -75,9 +75,32 @@ The `result` is a data frame with each row containing information for one datase
 ```{r}
 result[,'id']
 ```
-  
-### Filter query results for a specific member node
 
+### Using a Simplified Search.
+A search may be performed by just specifying query fields and values using the \code{'searchTerms'} parameter.
+For example, to search for datasets that mention 'kelp' in the abstract and have an attribute discription that contains the word 'biomass', the following query could be used:
+```{r, warning=F}
+cn <- CNode("PROD")
+mn <- getMNode(cn, "urn:node:mnKNB")
+mySearchTerms <- list(abstract="kelp", attribute="biomass")
+result <- query(cn, searchTerms=mySearchTerms, as="data.frame")
+```
+
+Using the \code{'searchTerms'} parameter causes the \code{'query'} method to construct a Solr query 
+based on the list, that is passed on to the DataONE node specified.
+
+The names in the *searchTerm* list are the query field names available from the Solr query engine
+being used. These names can be determined using the *queryEngineDescription* method, or simply
+navigating a web browser to the appropriate link. For the example above, the query engine
+description can be found at https://knb.ecoinformatics.org/knb/d1/mn/v1/query/solr.
+
+## Search the entire DataONE network
+[To be completed]
+
+## Search just a member node
+[To be completed]
+
+### Filter query results for a specific member node
 In order to limit a search to data holdings that originated from a specific member node a Solr filter query parameter (`&fq`) can be used
 for the `datasource` field:
 

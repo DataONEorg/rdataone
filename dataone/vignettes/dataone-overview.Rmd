@@ -1,0 +1,89 @@
+---
+title: "dataone R package overview"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dataone R Package Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+## DataONE Overview 
+
+The *dataone* R package enables R scripts to search, download and upload science data and metadata
+to the DataONE Federation. This package calls DataONE web services that allow client programs
+to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN).
+
+- Detailed overview [DataONE CN API](https://purl.dataone.org/architecturev2/apis/CN_APIs.html)
+- Detailed overview [DataONE MN API](https://purl.dataone.org/architecturev2/apis/MN_APIs.html)
+
+Searching for data in DataONE described in vignette *searching-dataone*. 
+
+Downloading data from DataONE described in vignette *download-data*
+
+Uploading data to DataONE is described in vignette *upload-data*. This document also
+discusses maintenance operations that can be performed on datasets after they have been uploaded
+to a DataONE member node, such as updating the dataset or updating system information about the
+dataset.
+
+## New Features in DataONE Version 2.0
+### Series Identifiers
+All data, metadata, and resource map objects in DataONE have a unique identifier, a Persistent
+Identifier (PID). A PID is associated with one object in DataONE and always refers to the same object, the same set of bytes that are stored on the DataONE network. 
+
+When an object is replaced in DataONE using MNode.update() for example, the new object must have a new 
+PID assigned to it. The new object *obsoletes* the replaced object, and to access the new object, the
+new pid must be used. Objects updated in this way create a series of objects, with the last object
+added being unobsoleted by any other object and serving as the *head* of the series.
+
+With DataONE V2.0, an additional, optional identifier can be associated with an object, the Series Identifier (SID).
+The SIDs always accesses the object at the *head* of the object series. Using SIDs, the most current version
+of an object can be obtained, without the need to determine the PID of the new object.
+
+The older versions of the object can still be obtained using the PID for each object.
+
+### New Authentication Mechanism
+Datasets and metadata that reside in DataONE are available for viewing and downloading according to access
+policies that specify which DataONE users access the data. The access policies are specified by the data owner when data is first uploaded to DataONE. When a request is made to a DataONE node, the user identity is determined and compared against the access policy for an object to determine if that user identity can access the object. In
+DataONE Version 1.x, the identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
+adds an additional method to provide identity information - an *authentication token*, also refered to as
+an identity code.
+
+Authentication tokens can be obtained from a user's DataONE account settings web page. This page
+can be found by:
+
+- Navigate to https://search.dataone.org
+- Click *Sign in*, or *Sign up* if necessary
+- Once signed in, click on the user name and select 'My account' in the drop down menu
+- The *authentication token* (aka identification code) is displayed in the text window
+- Note the identity string and expiration date of the token.
+- Click on the *Copy* button to copy the token.
+- in the R console enter the following command, replacing the token string value where indicated:
+```
+  options(authentication_token = "<paste token string here>")
+```
+- Note that this command can be entered in a user's ~/.Rprofile file so that this command is entered
+when R is started.
+- Remember that the console command must be re-entered with a new token value when the token expires
+
+If the authentication token is defined as shown above, it will automatically be used when using methods
+from the *dataone* R client.
+
+The authentication token must be safegaurded like a password. Anyone with access to it can access content in DataONE as the user identity contained in the token. Care should be taken to not add this code to any published scripts or documents. This code will expire after a certain time period after which it will be necessary to 
+obtain a new one.
+
+Detailed, technical information about user identities and authentication in DataONE can be viewed at 
+
+[DataONE Authentication](https://purl.dataone.org/architecturev2/design/Authentication.html)
+ 
+### Ability To Update SystemMetadata
+Metadata is maintained by DataONE for each object that has been uploaded to it. This SystemMetadata for an object contains
+information such as the access policy that determines the users that can read or update the data, the data's format type,
+how many replicated copies of the data to create, etc.
+
+DataONE Version 2 adds the ability to update the SystemMetadata of a data object without having to update (replace) the data
+object. So for example, an object can be uploaded to DataONE without having 'public' read enabled (the data creator or
+*rightsholder* and possibly a specified list of users could have access however). At a later date, the SystemMetadata
+could be updated to allow public read.
+
+See ```help("updateSystemMetadata")``` for more information.

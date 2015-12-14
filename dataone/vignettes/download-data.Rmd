@@ -1,0 +1,94 @@
+---
+title: "Downloading Data From DataONE"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Downloading Data From DataONE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+## Downloading Data from DataONE
+
+This document describes how to download data from the DataONE Federation of Member Nodes.
+Before data can be downloaded from DataONE it is necessary to find the identifiers that
+associated with the data. The DataONE search facility is used to find these identifiers, and 
+is described in the "searching-dataone" vignette.
+
+### Search all of DataONE
+
+The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes in the network.
+Sending a query to the CN may find matching datasets located on potential any Member Node in the network.
+The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
+search term in the query send to the CN, or by just sending the query to the MN of interest.
+
+The following query shows how to query the entire DataONE network and locate and download data from 
+any MN that has the desired data.
+```{r, warning=F}
+library(dataone)
+cn <- CNode("PROD")
+# Ask for the id, title and abstract
+queryParams <- list(q="abstract:kelp", fq="attribute:abundance", fq="formatType:DATA", fl="id,title,abstract") 
+result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
+```
+
+The *result* object, a data.frame, can be inspected to determine which matching dataset to download, as
+multiple matching dataset identifiers may be returned from the query.
+(As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at http://search.dataone.org to find the identifiers of data to download.)
+
+In the R example, after inspecting the *result* data, we will use the sixth matching dataset:
+```{r, warning=F}
+ pid <- result[6,'id']
+```
+
+Now that the pid is determined, the MN that holds the data must be located. For this, the *resolve*
+method is used to find an MN that holds the data and that is currently available. 
+
+```{r, warning=F, error=F, cache=pid}
+locations <- resolve(cn, pid)
+mnId <- locations$data[1, "nodeIdentifier"]
+mn <- getMNode(cn, mnId)
+```
+
+Multiple MNs may hold the data, depending on the replication policy that is in effect for the dataset and which member nodes are currenctly available. In this example the first one from the resolve list will be used. Now the call can be made that downloads the object itself:
+```{r, warning=F, cache=pid,mn} 
+obj <- get(mn, pid)
+```
+
+If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statments:
+    
+```{r, warning=F}
+# Query the data holdings on a member node
+cn <- CNode("PROD")
+mn <- getMNode(cn, "urn:node:KNB")
+queryParams <- list(q="abstract:habitat", fl="id,title,abstract") 
+result <- query(mn, queryParams, as="data.frame", parse=FALSE)
+# Choose the first matchin PID
+pid <- result[1,'id']
+obj <- get(mn, pid)
+```
+
+## Alternate Method for DataONE-wide search and download
+- dataone R package uses datapackage
+
+```{r, warning=F}
+d1c <- D1Client("PROD", "urn:node:KNB")
+# Ask for the id, title and abstract
+queryParams <- list(q="abstract:kelp", fl="id,title,abstract") 
+result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
+pid <- result[6,'id']
+dataObj <- getDataObject(d1c, pid)
+```
+
+This method uses the R *datapackage* package and returns a DataObject which includes
+the data itself and the DataONE SystemMetadata for the object.
+
+getIdentifier(obj)
+getFormatId(obj)
+getData(obj)
+
+### getSystemMetadata 
+[to be completed]
+
+### download a data package
+[to be completed]
