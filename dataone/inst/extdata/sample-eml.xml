@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packageId="df35b.248.3" system="knb" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 eml.xsd">
+  <access authSystem="knb" order="allowFirst">
+    <allow>
+      <principal>uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org</principal>
+      <permission>all</permission>
+    </allow>
+  </access>
+  <dataset>
+    <title>Test Data</title>
+    <creator id="1428093495114">
+      <individualName>
+        <givenName>Peter</givenName>
+        <surName>Slaughter</surName>
+      </individualName>
+      <organizationName>NCEAS</organizationName>
+      <address>
+        <deliveryPoint>735 State St.</deliveryPoint>
+        <city>Santa Barbara</city>
+        <administrativeArea>CA</administrativeArea>
+        <postalCode>93101</postalCode>
+      </address>
+    </creator>
+    <abstract>
+      <para>This database is for testing purposes only.</para>
+    </abstract>
+    <keywordSet>
+      <keyword>test</keyword>
+      <keyword>DatONE</keyword>
+    </keywordSet>
+    <coverage>
+      <geographicCoverage>
+        <geographicDescription>Santa Barbara County</geographicDescription>
+        <boundingCoordinates>
+          <westBoundingCoordinate>-124.50</westBoundingCoordinate>
+          <eastBoundingCoordinate>-114.26</eastBoundingCoordinate>
+          <northBoundingCoordinate>41.98</northBoundingCoordinate>
+          <southBoundingCoordinate>32.42</southBoundingCoordinate>
+        </boundingCoordinates>
+      </geographicCoverage>
+    </coverage>
+    <contact>
+      <references>1428093495114</references>
+    </contact>
+    <contact id="1428093606116">
+      <individualName>
+        <givenName>Peter</givenName>
+        <surName>Slaughter</surName>
+      </individualName>
+      <organizationName>National Center for Ecological Anaylsis and Synthesis (NCEAS)</organizationName>
+    </contact>
+    <otherEntity>
+      <entityName>Samples input file</entityName>
+      <entityDescription>Sample data for testing DataONE R Client</entityDescription>
+      <physical>
+        <objectName>sample.csv</objectName>
+        <size unit="byte">145017</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>text/csv</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+  </dataset>
+</eml:eml>
