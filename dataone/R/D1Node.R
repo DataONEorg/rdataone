@@ -533,16 +533,21 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' @param encode A boolean, if true then the entire query string is URLencoded if it is a character, or each parameter value if a list.
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
 #' @param parse A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.
+#' @param searchTerm A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.
 #' @return search results
 # Need plyr for rbind.fill in query()
 #' @import plyr
 #' @examples
 #' \dontrun{
 #' cn <- CNode("PROD")
-#' queryParams <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+#' queryParams <- list(q="id:doi*", rows="5", 
+#'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
+#'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- query(cn, queryParams, as="list")
 #' 
-#' queryParams <- list(q="id:doi*", rows="3", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+#' queryParams <- list(q="id:doi*", rows="3", 
+#'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
+#'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 #' 
 #' queryParams <- "q=id:doi*&rows=2&wt=json"
@@ -552,7 +557,12 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' cn <- CNode("SANDBOX2")
 #' queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
 #'                        fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
-#'  result <- query(cn, queryParamList, as="data.frame")
+#' result <- query(cn, queryParamList, as="data.frame")
+#' 
+#' # The following query uses the searchTerms parameter
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' mySearchTerms <- list(abstract="kelp", attribute="biomass")
+#' result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
 #' }
 #' @export
 setGeneric("query", function(d1node, ...) {
@@ -560,36 +570,59 @@ setGeneric("query", function(d1node, ...) {
 })
 
 #' @export
-setMethod("query", signature("D1Node"), function(d1node, solrQuery, encode=TRUE, as="list", parse=TRUE, ...) {
+setMethod("query", signature("D1Node"), function(d1node, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, searchTerms=as.character(NA), ...) {
   
   returnTypes <- c("json", "xml", "list", "data.frame")
   if (!is.element(as, returnTypes)) {
     stop(sprintf("Invalid return type: \"%s\". Please specify one of \"%s\"", as, paste(returnTypes, collapse=",")))
   }
+  
+  if( all(is.na(solrQuery)) && all(is.na(searchTerms)) ) {
+    stop(sprintf("Please specify either \"solrQuery\" or \"searchTerms\" parameters"))
+  }
+  
+  if(!all(is.na(solrQuery)) && !all(is.na(searchTerms)) ) {
+    stop(sprintf("Please specify either \"solrQuery\" or \"searchTerms\" parameters, not both"))
+  }
+  
   # The CN API has a slightly different format for the solr query engine than the MN API,
   # so the appropriate URL is set in the CNode or MNode class.
   serviceUrl <- d1node@serviceUrls[d1node@serviceUrls$service=="query.solr", "Url"]
-                        
-  # The 'solrQuery' parameter can be specified as either a character string or a named list
-  if (is(solrQuery, "list")) {
-    encodedKVs <- character()
-    for(key in attributes(solrQuery)$names) {
+  
+  if (!all(is.na(solrQuery))) {
+    # The 'solrQuery' parameter can be specified as either a character string or a named list
+    if (is(solrQuery, "list")) {
+      encodedKVs <- character()
+      for(key in attributes(solrQuery)$names) {
+        if (encode) {
+          kv <- paste0(key, "=", URLencode(solrQuery[[key]]))
+        } else {
+          kv <- paste0(key, "=", solrQuery[[key]])
+        }
+        encodedKVs[length(encodedKVs)+1] <- kv
+      }
+      queryParams <- paste(encodedKVs,collapse="&")
+    } else {
       if (encode) {
-        kv <- paste0(key, "=", URLencode(solrQuery[[key]]))
+        queryParams <- URLencode(solrQuery)
       } else {
-        kv <- paste0(key, "=", solrQuery[[key]])
+        queryParams <- solrQuery
+      }
+    }
+  } else {
+    # Process 'searchTerms'
+    encodedKVs <- character()
+    for(key in attributes(searchTerms)$names) {
+      if (encode) {
+        kv <- sprintf("&fq=%s:%s", URLencode(key), URLencode(searchTerms[[key]]))
+      } else {
+        kv <- sprintf("&fq=%:%s", URLencode(key), URLencode(searchTerms[[key]]))
       }
       encodedKVs[length(encodedKVs)+1] <- kv
     }
-    queryParams <- paste(encodedKVs,collapse="&")
-  } else {
-    if (encode) {
-      queryParams <- URLencode(solrQuery)
-    } else {
-      queryParams <- solrQuery
-    }
+    queryParams <- sprintf("q=id:*%s", paste(encodedKVs,collapse=""))
   }
-  
+    
   queryUrl <- paste(serviceUrl, queryParams, sep="")
 
   # Send the query to the Node
