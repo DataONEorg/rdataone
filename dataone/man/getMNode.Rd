@@ -14,6 +14,8 @@ getMNode(cnode, nodeid, ...)
 \item{cnode}{The coordinating node to query for its registered Member Nodes}
 
 \item{nodeid}{The standard identifier string for this node}
+
+\item{...}{(Not yet used)}
 }
 \value{
 the Member Node as an MNode reference, or NULL if not found

@@ -12,6 +12,8 @@ auth_put(url, encode = "multipart", body = as.list(NA), node = NULL)
 \item{encode}{the type of encoding to use for the PUT body, defaults to 'multipart'}
 
 \item{body}{a list of data to be included in the body of the PUT request}
+
+\item{node}{The D1Node object that the request will be made to.}
 }
 \value{
 the HTTP response from the request

@@ -6,6 +6,9 @@
 \usage{
 AuthenticationManager(...)
 }
+\arguments{
+\item{...}{(not yet used)}
+}
 \value{
 the AuthenticationManager object
 }

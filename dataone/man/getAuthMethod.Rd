@@ -12,6 +12,8 @@ getAuthMethod(x, ...)
 }
 \arguments{
 \item{x}{a getAuthMethod instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 The current authentication mechanism as a character string, either "token" or "cert".

@@ -8,6 +8,8 @@ showClientSubject(x, ...)
 }
 \arguments{
 \item{x}{a CertificateManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 the DataONE Subject that is your client's identity

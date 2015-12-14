@@ -25,6 +25,8 @@
 #' A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
 #'
 #' @docType package
+#' @rdname dataone
+#' @aliases dataone
 #' @name dataone
 #' @author Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
 NULL

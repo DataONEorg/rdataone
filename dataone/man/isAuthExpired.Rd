@@ -8,6 +8,8 @@ isAuthExpired(x, ...)
 }
 \arguments{
 \item{x}{an Authentication instance}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 A logical value: TRUE if authenentication has expired, FALSE if not.

@@ -11,13 +11,15 @@ create(mnode, pid, ...)
 \S4method{create}{MNode,character}(mnode, pid, filepath, sysmeta)
 }
 \arguments{
+\item{mnode}{The MNode instance on which the object will be created}
+
 \item{pid}{The identifier of the object to be created}
+
+\item{...}{(Not yet used.)}
 
 \item{filepath}{the absolute file location of the object to be uploaded}
 
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
-
-\item{node}{The MNode instance on which the object will be created}
 }
 \value{
 XML describing the result of the operation, including the identifier if successful
@@ -30,6 +32,8 @@ provided in the \code{'mnode'} parameter.
 This operation requires an X.509 certificate to be present in the default location of the file
 system. This certificate provides authentication credentials from
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+In the dataone R client version 2.0 and higher, DataONE authentication codes can also be used for authentication.
+Type \code{vignette("dataone-overview")} for details.
 }
 \section{Methods (by class)}{
 \itemize{

@@ -14,20 +14,6 @@ createDataPackage(x, dataPackage, ...)
 \item{...}{(not yet used)}
 }
 \description{
-Creates the D1Objects contained in the DataPackage by calling the createD1Object()
-on each of the members, as well as assembling the resourceMap object from the
-recorded relationships, and calling create() on it as well.
-Any objects in the data map that have a dataUploaded value are assumed to be
-pre-existing in the system, and skipped.
-}
-\details{
-The DataPackage describes the collection of data object and their associated
-metadata object, with the relationships and members serialized into a document
-stored under, and retrievable with, the packageId as it's own distinct object.
-}
-\note{
-Members are created serially, and most errors in creating one object will
-interrupt the create process for the whole, with the result that some members will
-be created, and the remainder not.
+This method has been superceded by \link{updateDataPacakge}.
 }
 

@@ -2,8 +2,9 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{getIdentifier,D1Object-method}
+\alias{getIdentifier}
 \alias{getIdentifier,D1Object-method}
-\title{Get the Identifier of the D1Object}
+\title{Get the Identifier of the DataObject}
 \usage{
 \S4method{getIdentifier}{D1Object}(x)
 }
@@ -16,9 +17,6 @@
 the identifier
 }
 \description{
-Get the Identifier of the D1Object
-}
-\author{
-rnahf
+Get the Identifier of the DataObject
 }
 

@@ -24,7 +24,7 @@ A CNode represents a DataONE Coordinating Node and can be used to access its ser
  \item{\code{\link{getFormat}}}{: Get information for a single DataONE object format }
  \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
  \item{\code{\link{listNodes}}}{: Get the list of nodes associated with a CN.}
- \item{\code{\link{reserveIdentifie}}}{: Reserve a identifier that is unique in the DataONE network.}
+ \item{\code{\link{reserveIdentifier}}}{: Reserve a identifier that is unique in the DataONE network.}
  \item{\code{\link{hasReservation}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
  \item{\code{\link{get}}}{: Get the bytes associated with an object on this Coordinating Node.}

@@ -8,6 +8,8 @@ listObjects(node, ...)
 }
 \arguments{
 \item{node}{The Node instance from which the SystemMetadata will be downloaded}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 list Objects that met the search criteria

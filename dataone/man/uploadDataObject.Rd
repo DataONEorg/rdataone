@@ -11,15 +11,13 @@ uploadDataObject(x, do, ...)
 
 \item{do}{The DataObject instance to be uploaded to DataONE.}
 
-\item{public}{A \code{'logical'}, if TRUE then all objects in this package wil be accessible by any user}
-
 \item{replicate}{A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes}
-
-\item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
 
 \item{numberReplicas}{A value of type \code{"numeric"}, for number of supported replicas.}
 
 \item{preferredNodes}{A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.}
+
+\item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
 }
 \value{
 id The id of the DataObject that was uploaded

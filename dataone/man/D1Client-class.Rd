@@ -2,13 +2,31 @@
 % Please edit documentation in R/D1Client.R
 \docType{class}
 \name{D1Client-class}
+\alias{D1Client,ANY,ANY-method}
+\alias{D1Client,character,ANY-method}
+\alias{D1Client,character,character-method}
 \alias{D1Client-class}
 \title{The D1Client class contains methods that perform high level DataONE tasks}
+\usage{
+\S4method{D1Client}{ANY,ANY}()
+
+\S4method{D1Client}{character,ANY}(env, mNodeid, ...)
+
+\S4method{D1Client}{character,character}(env, mNodeid)
+}
 \description{
 The methods in the D1Client class call the low level DataONE API to
 perform involved tasks such as uploading all the packages in a DataPackage (i.e
 \code{\link{uploadDataPackage}})
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{D1Client}: 
+
+\item \code{D1Client}: 
+
+\item \code{D1Client}: 
+}}
 \section{Slots}{
 
 \describe{
@@ -23,7 +41,7 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 \section{Methods}{
 
 \itemize{
- \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a D1Client object.}
+ \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
  \item{\code{\link{getPackage}}}{: Download a data package from the DataONE Federation.}
  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
@@ -44,5 +62,11 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 }
 \seealso{
 \code{\link{dataone}}{ package description.}
+
+\code{\link[=D1Client-class]{D1Client}}{ class description.}
+
+\code{\link[=D1Client-class]{D1Client}}{ class description.}
+
+\code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
 

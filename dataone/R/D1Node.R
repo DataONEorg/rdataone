@@ -34,7 +34,8 @@
 #' @slot services A data.frame containing the service tiers supported by this node.
 #' @slot serviceUrls a data.frame that contains DataONE service Urls
 #' @slot APIversion The version of the DataONE API for this node
-#' @export
+#' @import methods
+#y @export
 setClass("D1Node",
          slots = c(	identifier = "character",
 					name = "character",
@@ -59,13 +60,11 @@ setClass("D1Node",
 ## Node constructors
 #########################
 
-## @param baseurl The node URL with which this node is registered in DataONE
-## @param ... (not yet used)
-## @returnType Node  
-## @return the Node object representing the DataONE environment
-## 
-## @author jones
-## @export
+#' Create a D1Node object.
+#' @param xml An XML object that describes the node to be initialized (see \link{listNodes}).
+#' @param ... (not yet used)
+#' @return the Node object representing the DataONE environment
+#' @export
 setGeneric("D1Node", function(xml, ...) {
   standardGeneric("D1Node")
 })
@@ -76,16 +75,11 @@ setMethod("initialize", "D1Node",function(.Object) {
    return(.Object)
 })
 
-## Construct a Node, using a passed in node url
-## @param baseurl The node url with which this node is registered in DataONE
-## @returnType Node  
-## @return the Node object representing the DataONE environment
-## 
-## @author jones
-## @export
+#' @describeIn D1Node
+#' @export
 setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 
-  ## create new Node object
+  # create new Node object
 	node <- new("D1Node")
 	newnode <- parseCapabilities(node, xml)
 	return(newnode)
@@ -114,7 +108,6 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' @param node The MNode or CNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used)
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.archive}
 #' @export
 setGeneric("archive", function(node, pid, ...) {
   standardGeneric("archive")
@@ -149,6 +142,7 @@ setMethod("archive", signature("D1Node", "character"), function(node, pid, quiet
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @param node The Node instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
+#' @param ... (Not yet used).
 #' @return the bytes of the object
 #' @export
 setGeneric("get", function(node, pid, ...) {
@@ -244,6 +238,7 @@ setMethod("getQueryEngineDescription", signature("D1Node", "character"), functio
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @param node The Node instance from which the SystemMetadata will be downloaded
 #' @param pid The identifier of the object
+#' @param ... (Not yet used.)
 #' @return SystemMetadata for the object
 #' @import datapackage
 #' @export
@@ -251,12 +246,23 @@ setGeneric("getSystemMetadata", function(node, pid, ...) {
   standardGeneric("getSystemMetadata")
 })
 
-#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
+#' Efficiently get systemmetadat for an object.
+#' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
 #' determine basic properties of the referenced object.
-#' @param mnode The Node instance from which the identifier will be generated
+#' @param mnode The MNode instance from which the identifier will be generated
 #' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
 #' part of the URL path and must be escaped accordingly.
+#' @rdname describe
+#' @aliases describe
 #' @return A list of header elements
+#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
+#' @examples \dontrun{
+#' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+#' mn <- MNode(mn_uri)
+#' pid <- "knb.473.1"
+#' describe(mn, pid)
+#' describe(mn, "adfadf") # warning message when wrong pid
+#' }
 #' @export
 setGeneric("describe", function(node, pid, ...) {
   standardGeneric("describe")
@@ -264,6 +270,7 @@ setGeneric("describe", function(node, pid, ...) {
 
 #' Retrieve the list of objects that match the search parameters
 #' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @param ... (Not yet used.)
 #' @return list Objects that met the search criteria
 #' @export
 setGeneric("listObjects", function(node, ...) {
@@ -330,6 +337,7 @@ setMethod("listObjects", signature("D1Node"), function(node,
 
 #' List the query engines available for a DataONE member node or coordinating node
 #' @param node The CNode or MNode to list the query engines for.
+#' @param ... (Not yet used.)
 #' @return list The list of query engines.
 #' @export
 setGeneric("listQueryEngines", function(node, ...) {
@@ -440,11 +448,9 @@ setMethod("ping", signature("D1Node"), function(node) {
   }
 })
 
-## This function parses a DataONE service response message for errors, and extracts and
-## prints error information.
-## @param x The DataONE service response
-##
-## @author Scott Chamberlain
+#' This function parses a DataONE service response message for errors, and extracts and
+#' prints error information.
+#' @param x The DataONE service response
 d1_errors <- function(x){
   headnames <- names(x$headers)
   tmp <- grep('dataone-exception-description', headnames, value = TRUE)
@@ -457,17 +463,20 @@ d1_errors <- function(x){
   #  list(exc_name=exc_name, detailcode=detailcode, message=mssg)
 }
 
-# Extract an error message from an http response. Http requests can fail
-# for a variety of reasons, so getErrorDescription first tries to
-# determine what type of response was sent. 
-# The return types handled by this function are:
-#   o An incorrect url is sent to DataONE and an error is returned by
-#     the web server, not a specified DataOne service url. In this case,
-#     a generic error message may be returned, e.g. status=404, URL not found
-#   o A DataOne service was called, and retunred an error message. In this
-#     case the DataONE response is parsed in an attemp to retrieve a
-#     meaningfull error message.
-# 
+#' Extract an error message from an http response. 
+#' @description Http requests can fail
+#' for a variety of reasons, so getErrorDescription first tries to
+#' determine what type of response was sent. 
+#' @details
+#' The return types handled by this function are:
+#'   o An incorrect url is sent to DataONE and an error is returned by
+#'     the web server, not a specified DataOne service url. In this case,
+#'     a generic error message may be returned, e.g. status=404, URL not found
+#'   o A DataOne service was called, and retunred an error message. In this
+#'     case the DataONE response is parsed in an attemp to retrieve a
+#'     meaningfull error message.
+#'
+#' @param response The httr response object to extract the error description from. 
 getErrorDescription <- function(response) {
   # Return NA if no error message found
   errorMsg <- as.character(NA)
@@ -492,10 +501,10 @@ getErrorDescription <- function(response) {
 }
 
 #' Encode the input for Solr Queries
-#' 
-#' Treating all special characters and spaces as literals, backslash escape special
+#' @description Treating all special characters and spaces as literals, backslash escape special
 #' characters, and double-quote if necessary.
 #' @param segment : a string to encode
+#' @param ... (not yet used.)
 #' @return the encoded form of the input
 #' @examples encodeSolr("this & that")
 #' @export
@@ -519,6 +528,9 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' If "xml" is specified and \code{'parsed=TRUE'} then the query result is returned as an R XMLInternalDocument. If \code{'parsed'} is
 #' false then a character variable with the XML string is returned. Specify 'list' to have 
 #' the result parseed to an R list, with each list element containing one Solr result as a list of values, for example.
+#' As an alternative to specifying the Solr query terms using the \code{'solrquery'} parameter, the \code{'searchTerms'} parameter
+#' can be specified. This parameter is a list with query field / value pairs, i.e. searchTerms=list(abstract=kelp, attribute=biomass).
+#' The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}} 
 #' \code{'result[[1]]$id'} would be the DataONE identifier value of the first result (if the query parameters specified that
 #' the id field shoudl be returned from the query). If \code{'json'} is specified, then the Solr response writer argument
 #' \code{'&wt=json'} must be included in the \code{'solQuery'} parameter. Currently for a json return type the \code{'parse'} parameter

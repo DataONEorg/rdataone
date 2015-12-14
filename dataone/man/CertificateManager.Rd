@@ -6,6 +6,9 @@
 \usage{
 CertificateManager(...)
 }
+\arguments{
+\item{...}{(Not yet used)}
+}
 \value{
 the CertificateManager object
 }

@@ -5,7 +5,6 @@
 \alias{MNode,D1Node-method}
 \alias{MNode,character-method}
 \alias{MNode-class}
-\alias{describe,MNode,character-method}
 \alias{generateIdentifier,MNode-method}
 \alias{getSystemMetadata,MNode,character-method}
 \alias{listObjects,D1Node-method}
@@ -26,8 +25,6 @@
 \S4method{MNode}{D1Node}(x)
 
 \S4method{getSystemMetadata}{MNode,character}(node, pid)
-
-\S4method{describe}{MNode,character}(node, pid)
 
 \S4method{generateIdentifier}{MNode}(mnode, scheme = "UUID",
   fragment = NULL)
@@ -51,19 +48,12 @@ This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+0
 
 \item{pid}{The identifier of the object}
 
-\item{mnode}{The MNode instance from which the identifier will be generated}
-
 \item{node}{The MNode instance from which the SystemMetadata will be downloaded}
-
-\item{pid}{Identifier for the object in question. May be either a PID or a SID. Transmitted as
-part of the URL path and must be escaped accordingly.}
 }
 \value{
 list Objects that met the search criteria
 
 SystemMetadata for the object
-
-A list of header elements
 }
 \description{
 Retrieve the list of objects present on the MN that match the calling parameters.
@@ -76,9 +66,6 @@ metadata objects.
 
 The SystemMetadata includes information about the identity, type, access control, and other system
 level details about the object.
-
-This method provides a lighter weight mechanism than getSystemMetadata() for a client to
-determine basic properties of the referenced object.
 }
 \details{
 The list of objects that is returned is paged according to the \code{'start'} and
@@ -102,8 +89,6 @@ present in the default location of the file system, in which case the access wil
 \item \code{MNode}: 
 
 \item \code{getSystemMetadata}: 
-
-\item \code{describe}: 
 
 \item \code{generateIdentifier}: 
 }}
@@ -138,15 +123,9 @@ write.csv(testdf, csvfile, row.names=FALSE)
 f <- "text/csv"
 size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u,
+    rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
 response <- create(mn, newid, csvfile, sysmeta)
-}
-\dontrun{
-mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-mn <- MNode(mn_uri)
-pid <- "knb.473.1"
-describe(mn, pid)
-describe(mn, "adfadf") # warning message when wrong pid
 }
 }
 \seealso{
@@ -155,7 +134,5 @@ describe(mn, "adfadf") # warning message when wrong pid
 \code{\link{dataone}}{ package description.}
 
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.getSystemMetadata}
-
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
 }
 

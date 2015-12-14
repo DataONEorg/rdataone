@@ -19,8 +19,7 @@
 #
 
 #' GET a resource with authenticated credentials if available.
-#' 
-#' Retrieve the data at a URL using an HTTP GET request using authentication credentials 
+#' @description Retrieve the data at a URL using an HTTP GET request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
 #' PKIplus package. If the PKIplus package is not installed, then the request falls back
 #' to an unauthenticated request, which may fail due to insufficient permissions.
@@ -29,6 +28,7 @@
 #' of available options.
 #' @param url The URL to be accessed via authenticated GET.
 #' @param nconfig HTTP configuration options as used by curl, defaults to empty list
+#' @param node The D1Node object that the request will be made to.
 #' @return the response object from the method
 #' @import httr
 auth_get <- function(url, nconfig=config(), node=NULL) {
@@ -56,14 +56,14 @@ auth_get <- function(url, nconfig=config(), node=NULL) {
 }
 
 #' POST, PUT, or DELETE a resource with authenticated credentials.
-#' 
-#' POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
+#' @description POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
 #' provided in a client authentication, either via authentiction token or certificate.
 #' If the user does not have a valid token or certificate, request fails.
 #' @param method a string indicating which HTTP method to use (post, put, or delete)
 #' @param url The URL to be accessed via authenticated PUT
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
+#' @param node The D1Node object that the request will be made to.
 #' @return the response object from the method
 #' @import httr
 auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node=NULL) {
@@ -118,13 +118,13 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 }
 
 #' POST a resource with authenticated credentials.
-#' 
-#' POST data to a URL using an HTTP POST request using authentication credentials 
+#' @description POST data to a URL using an HTTP POST request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
 #' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated POST
 #' @param encode the type of encoding to use for the POST body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the POST request
+#' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
 auth_post <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
@@ -133,13 +133,13 @@ auth_post <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
 }
 
 #' PUT a resource with authenticated credentials.
-#' 
-#' PUT data to a URL using an HTTP PUT request using authentication credentials 
+#' @description PUT data to a URL using an HTTP PUT request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
 #' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated PUT
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
+#' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
 auth_put <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
@@ -148,13 +148,13 @@ auth_put <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
 }
 
 #' DELETE a resource with authenticated credentials.
-#' 
-#' DELETE data at a URL using an HTTP DELETE request using authentication credentials 
+#' @description DELETE data at a URL using an HTTP DELETE request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
 #' PKIplus package. If the PKIplus package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated DELETE
 #' @param encode the type of encoding to use for the DELETE body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the DELETE request
+#' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
 auth_delete <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
@@ -172,8 +172,7 @@ check4PKI <- function() {
 }
 
 #' User agent string
-#' 
-#' Get a string representation of the user agent to be sent to the server along
+#' @description Get a string representation of the user agent to be sent to the server along
 #' with other request details.
 #' @import httr
 get_user_agent <- function() {

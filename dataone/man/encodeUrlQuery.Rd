@@ -11,7 +11,11 @@ encodeUrlQuery(x, querySegment, ...)
 \S4method{encodeUrlQuery}{D1Client,character}(x, querySegment, ...)
 }
 \arguments{
+\item{x}{A D1Client object.}
+
 \item{querySegment}{: a string to encode}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 the encoded form of the input
@@ -26,7 +30,8 @@ characters in url strings.  Will also encode non-ASCII unicode characters.
 }}
 \examples{
 \dontrun{
-fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
+fullyEncodedQuery <- paste0("q=id:",
+    encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 }
 }
 \seealso{

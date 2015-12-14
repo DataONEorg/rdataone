@@ -2,23 +2,18 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{getData,D1Object,ANY-method}
+\alias{getData}
 \alias{getData,D1Object,ANY-method}
-\title{Get the Contents of the Specified Data Object}
+\title{Get the data content of a specified data object}
 \usage{
 \S4method{getData}{D1Object,ANY}(x, id)
 }
 \arguments{
-\item{x}{D1Object: the object from which to retrieve bytes of data}
+\item{x}{D1Object the data structure from where to get the data}
 
-\item{...}{(not yet used)}
-}
-\value{
-character representation of the data
+\item{id}{Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from}
 }
 \description{
-Get the Contents of the Specified Data Object
-}
-\author{
-rnahf
+Get the data content of a specified data object
 }
 

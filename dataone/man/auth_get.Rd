@@ -10,6 +10,8 @@ auth_get(url, nconfig = config(), node = NULL)
 \item{url}{The URL to be accessed via authenticated GET.}
 
 \item{nconfig}{HTTP configuration options as used by curl, defaults to empty list}
+
+\item{node}{The D1Node object that the request will be made to.}
 }
 \value{
 the response object from the method

@@ -40,7 +40,4 @@ Also, administrator priviledge is required to run archive() on a DataONE Coordin
 \itemize{
 \item \code{node = D1Node,pid = character}: 
 }}
-\seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.archive}
-}
 

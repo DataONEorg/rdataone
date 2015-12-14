@@ -15,6 +15,8 @@ getSystemMetadata(node, pid, ...)
 
 \item{pid}{The identifier of the object}
 
+\item{...}{(Not yet used.)}
+
 \item{node}{The Node instance from which the SystemMetadata will be downloaded}
 
 \item{pid}{The identifier of the object}

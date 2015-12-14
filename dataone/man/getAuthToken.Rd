@@ -12,6 +12,8 @@ getAuthToken(x, ...)
 }
 \arguments{
 \item{x}{an AuthenticationManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 The current authentication token.

@@ -12,6 +12,8 @@ restoreAuth(x, ...)
 }
 \arguments{
 \item{x}{an Authentication instance}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 The expiration date for the current authentication mechanism being used.

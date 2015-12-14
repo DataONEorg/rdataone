@@ -12,6 +12,8 @@ getCert(x, ...)
 }
 \arguments{
 \item{x}{an AuthenticationManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 The filename of the current DataONE X.509 Certificate if it is available.

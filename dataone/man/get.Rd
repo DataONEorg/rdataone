@@ -5,7 +5,7 @@
 \alias{get}
 \alias{get,CNode,character-method}
 \alias{get,MNode,character-method}
-\title{Get the bytes associated with an object on this Coordinating Node.}
+\title{Get the bytes associated with an object on this Node.}
 \usage{
 \S4method{get}{CNode,character}(node, pid)
 
@@ -14,41 +14,21 @@ get(node, pid, ...)
 \S4method{get}{MNode,character}(node, pid, check = as.logical(FALSE))
 }
 \arguments{
-\item{node}{The CNode instance from which the pid will be downloaded}
-
-\item{pid}{The identifier of the object to be downloaded}
-
-\item{check}{Check if the requested pid has been obsoleted and print a warning if true}
-
 \item{node}{The Node instance from which the pid will be downloaded}
 
 \item{pid}{The identifier of the object to be downloaded}
 
-\item{node}{The MNode instance from which the pid will be downloaded}
+\item{...}{(Not yet used).}
 
-\item{pid}{The identifier of the object to be downloaded}
+\item{check}{A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.}
 }
 \value{
 the bytes of the object
-
-the bytes of the object
-
-the bytes of the object
 }
 \description{
-Get the bytes associated with an object on this Coordinating Node.
-
 Get the bytes associated with an object on this Node.
-
-Get the bytes associated with an object on this Member Node.
 }
 \details{
-This operation acts as the 'public' anonymous user unless an X.509 certificate is
-present in the default location of the file system, in which case the access will be authenticated.
-
-This operation acts as the 'public' anonymous user unless an X.509 certificate is
-present in the default location of the file system, in which case the access will be authenticated.
-
 This operation acts as the 'public' anonymous user unless an X.509 certificate is
 present in the default location of the file system, in which case the access will be authenticated.
 }
@@ -58,9 +38,4 @@ present in the default location of the file system, in which case the access wil
 
 \item \code{node = MNode,pid = character}: 
 }}
-\seealso{
-\code{\link[=CNode-class]{CNode}}{ class description.}
-
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.get}
-}
 

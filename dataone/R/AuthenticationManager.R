@@ -44,6 +44,7 @@
 #' 
 #' @slot authInfo value of type \code{"hash"} containing authentication information.
 #' @rdname AuthenticationManager-class
+#' @aliases AuthenticationManager-class
 #' @import hash
 #' @include D1Node.R
 #' @examples
@@ -56,6 +57,7 @@ setClass("AuthenticationManager", slots = c(
 #' Create an AuthenticationManager object
 #' @description Construct an instance of AuthenticationManager to provide mechanisms to load, verify, and 
 #' display DataONE authenticatin information.  
+#' @param ... (not yet used)
 #' @return the AuthenticationManager object
 #' @export
 setGeneric("AuthenticationManager", function(...) {
@@ -87,6 +89,8 @@ setMethod("AuthenticationManager", signature=character(), function() {
 #' with DataONE v1 or higher nodes. 
 #' See the \emph{"dataone"} vignette \emph{"dataone-overview"} for more information on authentication.
 #' @param x a AuthenticationManager instance
+#' @param node The node object (MNode or CNode) that authentication is being checked for.
+#' @param ... (Not yet used)
 #' @return A logical value: TRUE if authentication is valid, false if not.
 #' @export
 setGeneric("isAuthValid", function(x, node, ...) { 
@@ -166,6 +170,7 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
 #' @rdname getAuthToken
 #' @aliases getAuthToken
 #' @param x an AuthenticationManager instance
+#' @param ... (Not yet used)
 #' @return The current authentication token.
 #' @export
 setGeneric("getAuthToken", function(x, ...) { 
@@ -188,6 +193,7 @@ setMethod("getAuthToken", signature("AuthenticationManager"), function(x) {
 #' @rdname getCert
 #' @aliases getCert
 #' @param x an AuthenticationManager instance
+#' @param ... (Not yet used)
 #' @return The filename of the current DataONE X.509 Certificate if it is available.
 #' @export
 setGeneric("getCert", function(x, ...) { 
@@ -210,6 +216,7 @@ setMethod("getCert", signature("AuthenticationManager"), function(x) {
 #' @rdname getAuthMethod
 #' @aliases getAuthMethod
 #' @param x a getAuthMethod instance
+#' @param ... (Not yet used)
 #' @return The current authentication mechanism as a character string, either "token" or "cert".
 #' @export
 setGeneric("getAuthMethod", function(x, ...) { 
@@ -233,6 +240,7 @@ setMethod("getAuthMethod", signature("AuthenticationManager"), function(x) {
 #' @rdname getAuthSubject
 #' @aliases getAuthSubject
 #' @param x an AuthenticationManager instance
+#' @param ... (Not yet used)
 #' @return the DataONE Subject that is your client's identity
 #' @export
 setGeneric("getAuthSubject", function(x, ...) { 
@@ -272,6 +280,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
 #' @rdname getAuthExpires
 #' @aliases getAuthExpires
 #' @param x an Authentication instance
+#' @param ... (Not yet used.)
 #' @return The expiration date for the current authentication mechanism being used.
 #' @export
 setGeneric("getAuthExpires", function(x, ...) { 
@@ -303,6 +312,7 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
 #' @rdname isAuthExpired
 #' @aliases isAuthExpired
 #' @param x an Authentication instance
+#' @param ... (Not yet used.)
 #' @return A logical value: TRUE if authenentication has expired, FALSE if not.
 #' @export
 setGeneric("isAuthExpired", function(x, ...) { 
@@ -333,9 +343,10 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
 })
 
 #' Get DataONE Identity as Stored in the CILogon Certificate.
-#' @rdname getAuthExpires
-#' @aliases getAuthExpires
+#' @rdname obscureAuth
+#' @aliases obscureAuth
 #' @param x an Authentication instance
+#' @param ... (Not yet used.)
 #' @return The expiration date for the current authentication mechanism being used.
 #' @export
 setGeneric("obscureAuth", function(x, ...) { 
@@ -350,6 +361,7 @@ setMethod("obscureAuth", signature("AuthenticationManager"), function(x) {
 #' @rdname restoreAuth
 #' @aliases restoreAuth
 #' @param x an Authentication instance
+#' @param ... (Not yet used.)
 #' @return The expiration date for the current authentication mechanism being used.
 #' @export
 setGeneric("restoreAuth", function(x, ...) { 
@@ -365,6 +377,7 @@ setMethod("restoreAuth", signature("AuthenticationManager"), function(x) {
 #' @rdname showAuth
 #' @aliases showAuth
 #' @param x an Authentication instance
+#' @param ... (Not yet used.)
 #' @export
 setGeneric("showAuth", function(x, ...) { 
   standardGeneric("showAuth")

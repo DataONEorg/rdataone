@@ -12,6 +12,8 @@ getFormat(cnode, ...)
 }
 \arguments{
 \item{cnode}{A CNode object instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 A dataframe of all object formats registered in the DataONE Object Format Vocabulary.

@@ -8,6 +8,8 @@ restoreCert(x, ...)
 }
 \arguments{
 \item{x}{a CertificateManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 the modified CertificateManager instance

@@ -13,8 +13,5 @@ a wrapper for data and associated SystemMetadata.
 \describe{
 \item{\code{dataObject}}{A backing instance of a DataObject, to which all methods and state are proxied}
 }}
-\author{
-Matthew Jones
-}
 \keyword{classes}
 

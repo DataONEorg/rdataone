@@ -33,7 +33,7 @@
 #' @import datapackage
 #' @section Methods:
 #' \itemize{
-#'  \item{\code{\link[=initialize-D1Client]{initialize}}}{: Initialize a D1Client object.}
+#'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
 #'  \item{\code{\link{getPackage}}}{: Download a data package from the DataONE Federation.}
 #'  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
 #'  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
@@ -61,8 +61,8 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #########################
 
 #' The DataONE client class used to downlaod, update and search for data in the DataONE network.
-#' @rdname D1Client-initialize
-#' @aliases D1Client-initialize
+#' @rdname D1Client
+#' @aliases D1Client
 #' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param mNodeidThe node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
 #' @param ... (not yet used)
@@ -73,20 +73,15 @@ setGeneric("D1Client", function(env, mNodeid, ...) {
     standardGeneric("D1Client")
 })
 
-#' Construct a D1Client, using default env ("PROD") and nodeid ("")
-#' @rdname D1Client-initialize
-#' @aliases D1Client-initialize
-#' @return the D1Client object representing the DataONE environment
+#' @describeIn D1Client
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-setMethod("D1Client", , function() {
+setMethod("D1Client", signature=character(), function() {
     result <- D1Client("PROD", "")
     return(result)
 })
 
-#' Pass in the environment to be used by this D1Client, but use
-#' @rdname D1Client-initialize
-#' @aliases D1Client-initialize
+#' @describeIn D1Client
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setMethod("D1Client", signature("character"), function(env, ...) {
@@ -95,13 +90,10 @@ setMethod("D1Client", signature("character"), function(env, ...) {
     return(result)
 })
 
-#' Pass in the environment to be used by this D1Client, plus the 
-#' @rdname D1Client-initialize
-#' @aliases D1Client-initialize
+#' @describeIn D1Client
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setMethod("D1Client", signature("character", "character"), function(env, mNodeid) {
-  
     result <- new("D1Client", env=env, mNodeid=mNodeid)
     return(result)
 })
@@ -228,6 +220,7 @@ setGeneric("getDataObject", function(x, identifier, ...) {
     standardGeneric("getDataObject")
 })
 
+#' @describeIn getDataObject
 #' @export
 setMethod("getDataObject", "D1Client", function(x, identifier) {
     
@@ -270,7 +263,9 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
 #' @return the solr response (XML)
 #' @export
 #' @examples \dontrun{
-#' queryParams <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+#' queryParams <- list(q="id:doi*", rows="5", 
+#'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
+#'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- d1SolrQuery(cli, queryParams)
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
@@ -325,17 +320,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 })
 
 #' Create a DataPackage on a DataONE Member Node
-#' @description Creates the D1Objects contained in the DataPackage by calling the createD1Object()
-#' on each of the members, as well as assembling the resourceMap object from the
-#' recorded relationships, and calling create() on it as well. 
-#' Any objects in the data map that have a dataUploaded value are assumed to be 
-#' pre-existing in the system, and skipped.
-#' @details The DataPackage describes the collection of data object and their associated 
-#' metadata object, with the relationships and members serialized into a document
-#' stored under, and retrievable with, the packageId as it's own distinct object.
-#' @note Members are created serially, and most errors in creating one object will 
-#' interrupt the create process for the whole, with the result that some members will 
-#' be created, and the remainder not.
+#' @description This method has been superceded by \link{updateDataPacakge}.
 #' @param x A D1Client instance.
 #' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
 #' @param ... (not yet used)
@@ -492,6 +477,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link{=datapackage}{serializePackage}
 #' @return id The identifier of the resource map for this data package
 #' @import datapackage
 #' @import uuid
@@ -550,11 +536,10 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' Upload a DataObject to a DataONE member node.
 #' @param x A D1Client instance. 
 #' @param do The DataObject instance to be uploaded to DataONE.
-#' @param public A \code{'logical'}, if TRUE then all objects in this package wil be accessible by any user
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
+#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @return id The id of the DataObject that was uploaded
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @import datapackage
@@ -647,10 +632,13 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' Encode the Input for a URL Query Segment.
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
+#' @param x A D1Client object.
 #' @param querySegment : a string to encode
+#' @param ... (Not yet used.)
 #' @return the encoded form of the input
 #' @examples \dontrun{
-#' fullyEncodedQuery <- paste0("q=id:",encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
+#' fullyEncodedQuery <- paste0("q=id:",
+#'     encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 #' }
 #' @export
 setGeneric("encodeUrlQuery", function(x, querySegment, ...) {
@@ -676,10 +664,13 @@ setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), f
 #' Encode the Input for a URL Path Segment.
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
+#' @param x A D1Client object
 #' @param pathSegment : a string to encode
+#' @param ... (Not yet used.)
 #' @return the encoded form of the input
 #' @examples \dontrun{
-#' fullyEncodedPath <- paste0("cn/v1/object/",encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
+#' fullyEncodedPath <- paste0("cn/v1/object/", 
+#'     encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export

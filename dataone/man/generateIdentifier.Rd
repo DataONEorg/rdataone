@@ -9,6 +9,8 @@ generateIdentifier(mnode, ...)
 \arguments{
 \item{mnode}{The MNode instance on which the object will be created}
 
+\item{...}{(Not yet used.)}
+
 \item{scheme}{The identifier scheme to be used, such as DOI, UUID, etc.}
 
 \item{fragment}{An optional fragment to be prepended to the identifier for schemes that support it (not all do).}

@@ -2,11 +2,19 @@
 % Please edit documentation in R/D1Node.R
 \docType{class}
 \name{D1Node-class}
+\alias{D1Node,XMLInternalElementNode-method}
 \alias{D1Node-class}
 \title{A class representing a Member Node repository, which can expose and store data}
+\usage{
+\S4method{D1Node}{XMLInternalElementNode}(xml)
+}
 \description{
 A class representing a Member Node repository, which can expose and store data
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{D1Node}: 
+}}
 \section{Slots}{
 
 \describe{

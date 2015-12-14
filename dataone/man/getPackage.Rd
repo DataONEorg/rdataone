@@ -28,7 +28,7 @@ Given a valid identifier for a resource map, download a package file
 containing all of the package members of the corresponding DataONE data package.
 }
 \details{
-The default data package file format is a Bagit file (\link{https://tools.ietf.org/html/draft-kunze-bagit-09}).
+The default data package file format is a Bagit file (\url{https://tools.ietf.org/html/draft-kunze-bagit-09}).
 The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 file. Other packaging formats can be requested if they have been implemented by the requested member node.
 }

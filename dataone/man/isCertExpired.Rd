@@ -8,6 +8,8 @@ isCertExpired(x, ...)
 }
 \arguments{
 \item{x}{a CertificateManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 TRUE if the certificate is expired

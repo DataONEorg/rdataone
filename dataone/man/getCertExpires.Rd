@@ -8,6 +8,8 @@ getCertExpires(x, ...)
 }
 \arguments{
 \item{x}{a CertificateManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 POSIXct value

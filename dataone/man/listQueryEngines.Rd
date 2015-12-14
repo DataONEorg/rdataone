@@ -8,6 +8,8 @@ listQueryEngines(node, ...)
 }
 \arguments{
 \item{node}{The CNode or MNode to list the query engines for.}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 list The list of query engines.

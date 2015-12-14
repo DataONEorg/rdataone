@@ -12,6 +12,8 @@ getAuthSubject(x, ...)
 }
 \arguments{
 \item{x}{an AuthenticationManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 the DataONE Subject that is your client's identity

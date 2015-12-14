@@ -12,6 +12,10 @@ isAuthValid(x, node, ...)
 }
 \arguments{
 \item{x}{a AuthenticationManager instance}
+
+\item{node}{The node object (MNode or CNode) that authentication is being checked for.}
+
+\item{...}{(Not yet used)}
 }
 \value{
 A logical value: TRUE if authentication is valid, false if not.

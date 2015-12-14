@@ -17,6 +17,8 @@ updateSystemMetadata(node, pid, sysmeta, ...)
 \item{pid}{The identifier of the object}
 
 \item{sysmeta}{a SystemMetadata instance with updated information.}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 A logical value, TRUE if the operation was sucessful, FALSE if there was an error.

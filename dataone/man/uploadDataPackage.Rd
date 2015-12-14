@@ -29,6 +29,8 @@ uploadDataPackage(x, dp, ...)
 \item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
+
+\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link{=datapackage}{serializePackage}}
 }
 \value{
 id The identifier of the resource map for this data package

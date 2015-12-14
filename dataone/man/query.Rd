@@ -16,6 +16,8 @@ query(d1node, ...)
 \item{as}{The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.}
 
 \item{parse}{A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.}
+
+\item{searchTerm}{A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.}
 }
 \value{
 search results
@@ -28,6 +30,9 @@ Several different return types can be specified with the \code{"as"} parameter: 
 If "xml" is specified and \code{'parsed=TRUE'} then the query result is returned as an R XMLInternalDocument. If \code{'parsed'} is
 false then a character variable with the XML string is returned. Specify 'list' to have
 the result parseed to an R list, with each list element containing one Solr result as a list of values, for example.
+As an alternative to specifying the Solr query terms using the \code{'solrquery'} parameter, the \code{'searchTerms'} parameter
+can be specified. This parameter is a list with query field / value pairs, i.e. searchTerms=list(abstract=kelp, attribute=biomass).
+The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}}
 \code{'result[[1]]$id'} would be the DataONE identifier value of the first result (if the query parameters specified that
 the id field shoudl be returned from the query). If \code{'json'} is specified, then the Solr response writer argument
 \code{'&wt=json'} must be included in the \code{'solQuery'} parameter. Currently for a json return type the \code{'parse'} parameter
@@ -41,10 +46,14 @@ it is expected to have field names as attributes and search values as the values
 \examples{
 \dontrun{
 cn <- CNode("PROD")
-queryParams <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+queryParams <- list(q="id:doi*", rows="5",
+    fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])",
+    fl="title,id,abstract,size,dateUploaded,attributeName")
 result <- query(cn, queryParams, as="list")
 
-queryParams <- list(q="id:doi*", rows="3", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+queryParams <- list(q="id:doi*", rows="3",
+    fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])",
+    fl="title,id,abstract,size,dateUploaded,attributeName")
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 
 queryParams <- "q=id:doi*&rows=2&wt=json"
@@ -54,7 +63,12 @@ result <- query(cn, queryParams, as="json")
 cn <- CNode("SANDBOX2")
 queryParamList <- list(q="(attribute:lake) and (attribute:\\"Percent Nitrogen\\")", rows="1000",
                        fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
- result <- query(cn, queryParamList, as="data.frame")
+result <- query(cn, queryParamList, as="data.frame")
+
+# The following query uses the searchTerms parameter
+mn <- getMNode(cn, "urn:node:KNB")
+mySearchTerms <- list(abstract="kelp", attribute="biomass")
+result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
 }
 }
 

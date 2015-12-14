@@ -8,6 +8,8 @@ getCertLocation(x, ...)
 }
 \arguments{
 \item{x}{a CertificateManager instance}
+
+\item{...}{(Not yet used)}
 }
 \value{
 character the path to the certificate

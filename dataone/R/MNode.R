@@ -33,6 +33,7 @@
 #' @aliases MNode-class
 #' @include D1Node.R
 #' @include auth_request.R
+#' @import methods
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{MNode}}}{: Create a MNode object representing a DataONE Member Node repository.}
@@ -59,7 +60,8 @@
 #' f <- "text/csv"
 #' size <- file.info(csvfile)$size
 #' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, 
+#'     rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
 #' response <- create(mn, newid, csvfile, sysmeta)
 #' }
 setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
@@ -159,15 +161,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
     return(xml)
 })
 
-#' Get the bytes associated with an object on this Member Node.
-#' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
-#' present in the default location of the file system, in which case the access will be authenticated.
-#' @param node The MNode instance from which the pid will be downloaded
-#' @param pid The identifier of the object to be downloaded
-#' @param check Check if the requested pid has been obsoleted and print a warning if true
-#' @return the bytes of the object
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.get}
-#' @export
+#' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
 #' @describeIn get
 setMethod("get", signature("MNode", "character"), function(node, pid, check=as.logical(FALSE)) {
   
@@ -223,21 +217,7 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     return(sysmeta)
 })
 
-#' This method provides a lighter weight mechanism than getSystemMetadata() for a client to
-#' determine basic properties of the referenced object.
-#' @param mnode The MNode instance from which the identifier will be generated
-#' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
-#' part of the URL path and must be escaped accordingly.
-#' @return A list of header elements
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
-#' @examples \dontrun{
-#' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-#' mn <- MNode(mn_uri)
-#' pid <- "knb.473.1"
-#' describe(mn, pid)
-#' describe(mn, "adfadf") # warning message when wrong pid
-#' }
-#' @describeIn MNode
+#' @describeIn describe
 #' @export
 setMethod("describe", signature("MNode", "character"), function(node, pid) {
     url <- file.path(node@endpoint, "object", pid)
@@ -269,21 +249,21 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
   return(returnVal)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects
-# public ObjectList listObjects(Date fromDate, Date toDate, ObjectFormatIdentifier formatid, Boolean replicaStatus, Integer start, Integer count) 
-
 #' Create an object on a Member Node.
 #' @description This method provides the ability to upload a data or metadata object to the Member Node
 #' provided in the \code{'mnode'} parameter.  
 #' @details This operation requires an X.509 certificate to be present in the default location of the file 
 #' system. This certificate provides authentication credentials from 
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+#' In the dataone R client version 2.0 and higher, DataONE authentication codes can also be used for authentication.
+#' Type \code{vignette("dataone-overview")} for details.
 #' @rdname create
 #' @aliases create
-#' @param node The MNode instance on which the object will be created
+#' @param mnode The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param filepath the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
 #' @import datapackage
@@ -326,6 +306,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
 #' @param filepath the absolute file location of the object to be uploaded
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
 #' @import datapackage
@@ -361,6 +342,7 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
 #' @param node The MNode instance from which the SystemMetadata will be downloaded
 #' @param pid The identifier of the object
 #' @param sysmeta a SystemMetadata instance with updated information.
+#' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 #' @import datapackage
@@ -397,6 +379,7 @@ setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadat
 #' @param mnode The MNode instance on which the object will be created
 #' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
 #' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
+#' @param ... (Not yet used.)
 #' @return the character string of the generated unique identifier
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
@@ -426,7 +409,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' Download a data package from a member node.
 #' @description Given a valid identifier for a resource map, download a package file
 #' containing all of the package members of the corresponding DataONE data package. 
-#' @details The default data package file format is a Bagit file (\link{https://tools.ietf.org/html/draft-kunze-bagit-09}).
+#' @details The default data package file format is a Bagit file (\url{https://tools.ietf.org/html/draft-kunze-bagit-09}).
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
 #' @param x A MNode instance representing a DataONE Member Node repository.

@@ -34,7 +34,9 @@ values as the values in the list.
 }}
 \examples{
 \dontrun{
-queryParams <- list(q="id:doi*", rows="5", fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", fl="title,id,abstract,size,dateUploaded,attributeName")
+queryParams <- list(q="id:doi*", rows="5",
+    fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])",
+    fl="title,id,abstract,size,dateUploaded,attributeName")
 result <- d1SolrQuery(cli, queryParams)
 }
 }

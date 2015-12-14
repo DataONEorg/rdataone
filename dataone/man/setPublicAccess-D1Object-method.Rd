@@ -2,8 +2,9 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{setPublicAccess,D1Object-method}
+\alias{setPublicAccess}
 \alias{setPublicAccess,D1Object-method}
-\title{Add a Rule to the AccessPolicy to Make the Object Publicly Readable}
+\title{Add a Rule to the AccessPolicy to make the object publicly readable.}
 \usage{
 \S4method{setPublicAccess}{D1Object}(x)
 }
@@ -12,13 +13,17 @@
 
 \item{...}{(not yet used)}
 }
+\value{
+D1Object with modified access rules
+}
 \description{
 To be called prior to creating the object in DataONE.  When called before
 creating the object, adds a rule to the access policy that makes this object
 publicly readable.  If called after creation, it will only change the system
-metadata locally, and will not have any affect.
+metadata locally, and will not have any effect on remotely uploaded copies of
+the D1Object.
 }
-\author{
-rnahf
+\seealso{
+\code{\link[=DataObject-class]{DataObject}}{ class description.}
 }
 

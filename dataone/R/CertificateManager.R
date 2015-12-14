@@ -79,6 +79,7 @@ setClass("CertificateManager", slots = c(
 #' location is searched, which is \code{'/tmp/x509up_u${UID}'} on Unix 
 #' or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} if \code{'${UID}'} 
 #' is not defined.
+#' @param ... (Not yet used)
 #' @return the CertificateManager object
 #' @export
 setGeneric("CertificateManager", function(...) {
@@ -103,6 +104,7 @@ setMethod("CertificateManager", signature=character(), function() {
 #' require a user identity for access control authorization. If the certificate is missing on expired, then
 #' the subject 'public' is returned.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return the DataONE Subject that is your client's identity
 #' @export
 setGeneric("showClientSubject", function(x, ...) { 
@@ -132,6 +134,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
 #' certificate validity dates, 2) the certificate is not valid according to a trusted Certificate Authority, or
 #' 3) no certificate can be found.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return TRUE if the certificate is expired
 #' @export
 setGeneric("isCertExpired", function(x, ...) { 
@@ -157,6 +160,7 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 #' @description Each X.509 has a range of certificate validity times.  This method returns the X.509 
 #' \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return POSIXct value
 #' @export
 setGeneric("getCertExpires", function(x, ...) { 
@@ -180,10 +184,11 @@ setMethod("getCertExpires", signature("CertificateManager"), function(x) {
 #' \url{'https://cilogon.org/?skin=DataONE'}. Logging into CILogon will allow
 #' you to download your X.509 certificate to your local computer.  Typically,
 #' the certificate is saved in the default Globus location for certificates 
-#' (\code{\link{showCertLocation}}) and once it is there, the \code{'dataone'} 
+#' (\code{\link{getCertLocation}}) and once it is there, the \code{'dataone'} 
 #' package will use the certificate for all authenticated operations.  Deleting 
 #' the certificate file is the equivalent of logging out.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return NULL
 #' @export
 setGeneric("downloadCert", function(x, ...) { 
@@ -202,6 +207,7 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 #' client certificate is obscured via the renaming, you will not be able to create objects in 
 #' DataONE, or utilize any other methods that require authentication.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return the modified CertificateManager instance
 #' @seealso \code{\link{restoreCert}} is this method's inverse operation   
 #' @export
@@ -225,6 +231,7 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 #' renames an obscured certificate file to its original location, allowing authenticated 
 #' operations.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return the modified CertificateManager instance
 #' @seealso \code{\link{obscureCert}} is this method's inverse operation
 #' @import stringr
@@ -264,6 +271,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
 #' on Unix or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} 
 #' if \code{'${UID}'} is not defined.
 #' @param x a CertificateManager instance
+#' @param ... (Not yet used)
 #' @return character the path to the certificate
 #' @export
 setGeneric("getCertLocation", function(x, ...) { 

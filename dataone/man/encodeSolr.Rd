@@ -8,6 +8,8 @@ encodeSolr(segment, ...)
 }
 \arguments{
 \item{segment}{: a string to encode}
+
+\item{...}{(not yet used.)}
 }
 \value{
 the encoded form of the input

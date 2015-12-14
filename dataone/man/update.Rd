@@ -13,6 +13,8 @@ update(mnode, pid, ...)
 \arguments{
 \item{pid}{The identifier of the object to be updated}
 
+\item{...}{(Not yet used.)}
+
 \item{filepath}{the absolute file location of the object to be uploaded}
 
 \item{newpid}{The identifier of the new object to be created}

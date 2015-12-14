@@ -12,6 +12,8 @@ showAuth(x, ...)
 }
 \arguments{
 \item{x}{an Authentication instance}
+
+\item{...}{(Not yet used.)}
 }
 \description{
 Display all authentication information

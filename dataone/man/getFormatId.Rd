@@ -2,8 +2,9 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{getFormatId,D1Object-method}
+\alias{getFormatId}
 \alias{getFormatId,D1Object-method}
-\title{Get the FormatId of the D1Object}
+\title{Get the FormatId of the DataObject}
 \usage{
 \S4method{getFormatId}{D1Object}(x)
 }
@@ -16,9 +17,6 @@
 the formatId
 }
 \description{
-Get the FormatId of the D1Object
-}
-\author{
-rnahf
+Get the FormatId of the DataObject
 }
 
