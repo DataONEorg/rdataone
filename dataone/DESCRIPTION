@@ -1,6 +1,6 @@
 Package: dataone
 Version: 1.1.0.9006
-Date: 2015-10-03
+Date: 2015-12-15
 Title: R interface to the DataONE REST API
 Authors@R: c( person("Matthew", "Jones", role = c("aut", "cre"), email =
     "jones@nceas.ucsb.edu"), person("Rob", "Nahf", role = "aut", email =
@@ -17,7 +17,6 @@ Description: A package that provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
 Depends:
     R (>= 3.1.0),
-    methods
 Suggests:
     knitr,
     testthat,
@@ -25,8 +24,9 @@ Suggests:
     PKIplus (>= 0.0.1.9001)
 Imports:
     XML (>= 3.95-0.1),
-    curl,
+    hash,
     httr (>= 1.0.0),
+    methods,
     stringr,
     datapackage (>= 0.9.0.9003),
     plyr,
