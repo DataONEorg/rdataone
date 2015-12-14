@@ -89,8 +89,8 @@ Writing a CSV file to a DataONE Member Node requires authentication via CILogon,
   > createD1Object(cli, d1Object)
 
 
-Version 2 Alpha
----------------
+Version 2 Release Candidate
+---------------------------
 
 We are currently working on a `version 2 release milestone`_ that removes the dependency on rJava.  
 This work is partially complete and significantly changes the base API to correspond to the published 
@@ -104,24 +104,37 @@ Because the v2 package has not been released to CRAN, nor have its dependencies,
 dependencies manually before installing the package itself.  The main dependency is the redlands librdf 
 binary, which must be installed on your OS prior to installing the R code::
 
+Before the `redland` R package can be installed, the redland C libraries must be installed.
 
-  # For MacOS X, use MacPorts
-  $ sudo port install redland
+On Mac OSX you can use the package management system [HomeBrew](http://brew.sh) to install the necessary libraries. The HomeBrew
+software can be installed with the following command entered at a terminal window:
+
+```
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Once HomeBrew has been installed, you can then enter the following command to install the Redland C libraries:
+
+```
+brew install redland
+```
+
+
   
   # For ubuntu, use the appropriate .deb packages
   $ sudo apt-get install librdf0 librdf0-dev
 
 
-Once redland is installed, using the devtools package one can install 
-all of the R dependencies needed using the install.packages() and the
-install_github() function::
+Once redland is installed, using the CRAN 'drat' package and the NCEAS repository, one can install 
+all of the R dependencies needed using drat and the install.packages() 
 
+ ```
   $ R
-  > install.packages(c("XML", "httr", "stringr"))
-  > devtools::install_github("ropensci/redland-bindings", subdir="R/redland")
-  > devtools::install_github("ropensci/datapackage")
-  > devtools::install_github("NCEAS/PKIplus")
-  > devtools::install_github("DataONEorg/rdataone/dataone")
+  > install.packages("drat")
+  > library(drat)
+  > addRepo("NCEAS")
+  > install.packages("dataone")
+ ``` 
 
 Development logs
 ----------------
