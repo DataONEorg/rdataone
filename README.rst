@@ -107,34 +107,26 @@ binary, which must be installed on your OS prior to installing the R code::
 Before the `redland` R package can be installed, the redland C libraries must be installed.
 
 On Mac OSX you can use the package management system [HomeBrew](http://brew.sh) to install the necessary libraries. The HomeBrew
-software can be installed with the following command entered at a terminal window:
+software can be installed with the following command entered at a terminal window::
 
-```
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
+  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-Once HomeBrew has been installed, you can then enter the following command to install the Redland C libraries:
+Once HomeBrew has been installed, you can then enter the following command to install the Redland C libraries::
 
-```
-brew install redland
-```
+  brew install redland
 
+For ubuntu, use the appropriate .deb packages::
 
-  
-  # For ubuntu, use the appropriate .deb packages
   $ sudo apt-get install librdf0 librdf0-dev
 
-
 Once redland is installed, using the CRAN 'drat' package and the NCEAS repository, one can install 
-all of the R dependencies needed using drat and the install.packages() 
+all of the R dependencies needed using drat and the install.packages()::
 
- ```
   $ R
   > install.packages("drat")
   > library(drat)
   > addRepo("NCEAS")
   > install.packages("dataone")
- ``` 
 
 Development logs
 ----------------
