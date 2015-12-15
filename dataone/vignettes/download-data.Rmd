@@ -8,6 +8,12 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
+<!--
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+-->
+
 ## Downloading Data from DataONE
 
 This document describes how to download data from the DataONE Federation of Member Nodes.
@@ -15,16 +21,16 @@ Before data can be downloaded from DataONE it is necessary to find the identifie
 associated with the data. The DataONE search facility is used to find these identifiers, and 
 is described in the "searching-dataone" vignette.
 
-### Search all of DataONE
+### Search all of DataONE For Datasets of Interest
 
 The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes in the network.
-Sending a query to the CN may find matching datasets located on potential any Member Node in the network.
+Sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
 The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
 search term in the query send to the CN, or by just sending the query to the MN of interest.
 
 The following query shows how to query the entire DataONE network and locate and download data from 
 any MN that has the desired data.
-```{r, warning=F}
+```{r,warning=F,autodep=T}
 library(dataone)
 cn <- CNode("PROD")
 # Ask for the id, title and abstract
@@ -44,14 +50,14 @@ In the R example, after inspecting the *result* data, we will use the sixth matc
 Now that the pid is determined, the MN that holds the data must be located. For this, the *resolve*
 method is used to find an MN that holds the data and that is currently available. 
 
-```{r, warning=F, error=F, cache=pid}
+```{r, warning=F, error=F}
 locations <- resolve(cn, pid)
 mnId <- locations$data[1, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
 ```
 
 Multiple MNs may hold the data, depending on the replication policy that is in effect for the dataset and which member nodes are currenctly available. In this example the first one from the resolve list will be used. Now the call can be made that downloads the object itself:
-```{r, warning=F, cache=pid,mn} 
+```{r, warning=F} 
 obj <- get(mn, pid)
 ```
 
@@ -68,7 +74,7 @@ pid <- result[1,'id']
 obj <- get(mn, pid)
 ```
 
-## Alternate Method for DataONE-wide search and download
+### Alternate Method for DataONE-wide search and download
 - dataone R package uses datapackage
 
 ```{r, warning=F}

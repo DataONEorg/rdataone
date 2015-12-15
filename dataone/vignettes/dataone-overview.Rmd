@@ -49,6 +49,9 @@ DataONE Version 1.x, the identity of a user was provided by an X.509 client cert
 adds an additional method to provide identity information - an *authentication token*, also refered to as
 an identity code.
 
+The process of providing user identity information either via an X.509 certificate or with an authentication token
+is refered to as *authentication*
+
 Authentication tokens can be obtained from a user's DataONE account settings web page. This page
 can be found by:
 
@@ -75,6 +78,38 @@ obtain a new one.
 Detailed, technical information about user identities and authentication in DataONE can be viewed at 
 
 [DataONE Authentication](https://purl.dataone.org/architecturev2/design/Authentication.html)
+
+
+### Disabling 'warning' Messages Related To Authentication.
+If a *dataone* R client method is called that might require authentication (create, update, etc) then a warning
+message will be printed stating that the service requires authentication. Methods that upload or modify data in
+DataONE always require authentication. Methods that read data, such as MNode.query will use authentication if
+it is present. However, if an authentication method isn't available, then only data that is publicly available
+will be accessed.
+
+The *dataone* R client then, prints R warning messages if authentication is required or just recommended. 
+
+These authentication warning messages can be disabled by either disabling all warning messages for R, or just
+disabling warnings for just the authentication warning messages.
+
+In order to disable warnings for all of R:
+```
+options(warn = -1)
+```
+
+See ```help("warnings")``` for more information about disabling and enabling warnings.
+
+In order to disable warnings for just *dataone* R package authentication warnings:
+
+```
+options(auth_warn=FALSE)
+```
+
+To re-enable the authentication warnings:
+
+```
+options(auth_warn=TRUE)
+```
  
 ### Ability To Update SystemMetadata
 Metadata is maintained by DataONE for each object that has been uploaded to it. This SystemMetadata for an object contains

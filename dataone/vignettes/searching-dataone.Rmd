@@ -95,13 +95,40 @@ navigating a web browser to the appropriate link. For the example above, the que
 description can be found at https://knb.ecoinformatics.org/knb/d1/mn/v1/query/solr.
 
 ## Search the entire DataONE network
-[To be completed]
+
+The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes in the network.
+Sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
+The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
+search term in the query send to the CN, or by just sending the query to the MN of interest.
+
+The following query shows how to query the entire DataONE network and locate and download data from 
+any MN that has the desired data.
+```{r,warning=F,autodep=T}
+library(dataone)
+cn <- CNode("PROD")
+# Ask for the id, title and abstract
+queryParams <- list(q="abstract:kelp", fq="attribute:abundance", fq="formatType:DATA", fl="id,title,abstract") 
+result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
+```
+
 
 ## Search just a member node
-[To be completed]
+If it is known which Member Node holds the data of interest, then the search can be limited to just that
+MN by sending the search directly to that MN instead of the CN. For example, if the dataset of interest
+is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statments:
+    
+```{r, warning=F}
+# Query the data holdings on a member node
+cn <- CNode("PROD")
+mn <- getMNode(cn, "urn:node:KNB")
+queryParams <- list(q="abstract:habitat", fl="id,title,abstract") 
+result <- query(mn, queryParams, as="data.frame", parse=FALSE)
+# Choose the first matchin PID
+pid <- result[1,'id']
+```
 
 ### Filter query results for a specific member node
-In order to limit a search to data holdings that originated from a specific member node a Solr filter query parameter (`&fq`) can be used
+An alternative way to locate datasets on a particular node is to send the query to the CN but limit the returned results to data holdings that originated from the specific member node by using Solr filter query parameter (`&fq`) can be used
 for the `datasource` field:
 
 ```{r,warning=F}
@@ -110,4 +137,3 @@ queryParams <- 'q=id:*&fl=id,title&fq="datasource:urn:node:KNB"&rows=5'
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 result[,'id']
 ```
-  
