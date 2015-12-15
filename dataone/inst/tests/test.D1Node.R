@@ -218,7 +218,7 @@ test_that("D1Node archive() works",{
     md1 <- getSystemMetadata(d1c@mn, id1)
     # Run the archive test if both metadata objects sync'd
     if (!is.null(md1)) {
-      tstPid <- archive(d1c@mn, id1, quiet=FALSE)
+      tstPid <- archive(d1c@mn, id1)
       expect_equal(tstPid, id1)
     }
     tstMd1 <- getSystemMetadata(d1c@mn, id1)
