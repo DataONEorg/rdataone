@@ -47,7 +47,14 @@ auth_get <- function(url, nconfig=config(), node=NULL) {
     }
   } else {
     # Send request as the public user
-    warning("Attempting to call as public user without being authenticated.")
+    authWarn <- getOption("auth_warn")
+    if(!is.null(authWarn) && !is.na(authWarn)) {
+      if(authWarn) {
+        warning("Attempting to call as public user without being authenticated.")
+      }
+    } else {
+        warning("Attempting to call as public user without being authenticated.")
+    }
     response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
   }
   rm(am)
@@ -113,7 +120,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
       )
     }
   } else {
-    stop("Unable to perform the operation as unauthenticated (public) user.")
+    stop("Unable to perform the operation as unauthenticated (public) user. See vignette(\"dataone-overview\") for more information")
   }
 }
 

@@ -145,7 +145,14 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       return(TRUE)
     } else {
       # The certificate is invalid or unreadable, so fall back to unauthenticated?
-      warning("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+      authWarn <- getOption("auth_warn")
+      if(!is.null(authWarn) && !is.na(authWarn)) {
+        if(authWarn) {
+          warning("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+        }
+      } else {
+        warning("Your login certificate is expired or invalid. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+      }
       x@authInfo$authMethod <- as.character(NA)
       x@authInfo$token <- as.character(NA)
       x@authInfo$cert <- as.character(NA)
@@ -155,8 +162,16 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
     }
   } else {
     # PKIplus is not available, so print a warning and fall back to unauthenticated
-    warning("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
-    warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
+    authWarn <- getOption("auth_warn")
+    if(!is.null(authWarn) && !is.na(authWarn)) {
+      if(authWarn) {
+        warning("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
+        warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
+      } else {
+        warning("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
+        warning("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
+      }
+    }
     x@authInfo$authMethod <- as.character(NA)
     x@authInfo$token <- as.character(NA)
     x@authInfo$cert <- as.character(NA)
