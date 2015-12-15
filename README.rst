@@ -31,6 +31,8 @@ Documentation for the DataONE R Client is provided as help files within the R fr
 Installation Notes
 ------------------
 
+.. _GitHub: https://github.com/DataONEorg/rdataone
+
 The easiest way to install the client is via the GitHub_ repository::
 
 
@@ -88,12 +90,11 @@ Writing a CSV file to a DataONE Member Node requires authentication via CILogon,
   > setPublicAccess(d1Object)
   > createD1Object(cli, d1Object)
 
-
 Version 2 Release Candidate
 ---------------------------
 
 We are currently working on a `version 2 release milestone`_ that removes the dependency on rJava.  
-This work is partially complete and significantly changes the base API to correspond to the published 
+This work is almost complete and significantly changes the base API to correspond to the published 
 DataONE API.  Previous methods for accessing DataONE will be maintained, but new methods will be added.
 Consequently, the current development snapshot in the master branch is quite different from the 1.0.0
 release.  Be aware that there are API differences that are not fully finalized.
@@ -101,13 +102,18 @@ release.  Be aware that there are API differences that are not fully finalized.
 .. _version 2 release milestone: https://github.com/DataONEorg/rdataone/milestones/2.0.0
 
 Because the v2 package has not been released to CRAN, nor have its dependencies, you need to install the 
-dependencies manually before installing the package itself.  The main dependency is the redlands librdf 
-binary, which must be installed on your OS prior to installing the R code::
+dependencies manually before installing the package itself.  The main dependency is the `redland` R package
+which must be installed on your OS prior to installing the R code.
 
-Before the `redland` R package can be installed, the redland C libraries must be installed.
+Before the `redland` R package can be installed, the Redland C libraries must be installed.
 
-On Mac OSX you can use the package management system [HomeBrew](http://brew.sh) to install the necessary libraries. The HomeBrew
-software can be installed with the following command entered at a terminal window::
+Installing on Mac OS X
+**********************
+
+.. _HomeBrew: http://brew.sh
+
+On Mac OS X you can use the package management system `HomeBrew`_ to install the 
+necessary libraries. The HomeBrew software can be installed with the following command entered at a terminal window::
 
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
@@ -115,12 +121,23 @@ Once HomeBrew has been installed, you can then enter the following command to in
 
   brew install redland
 
-For ubuntu, use the appropriate .deb packages::
+Next, use the CRAN 'drat' package and the NCEAS repository to install  all of the R dependencies needed:: 
+
+  $ R
+  > install.packages("drat")
+  > library(drat)
+  > addRepo("NCEAS")
+  > install.packages("redland", type="binary")
+  > install.packages("dataone")
+  
+Installing on Ubuntu
+********************
+
+For ubuntu, install the required Redland C libraies::
 
   $ sudo apt-get install librdf0 librdf0-dev
 
-Once redland is installed, using the CRAN 'drat' package and the NCEAS repository, one can install 
-all of the R dependencies needed using drat and the install.packages()::
+Then install the R packages::
 
   $ R
   > install.packages("drat")
@@ -153,3 +170,4 @@ Authors
 - Scott Chamberlain <myrmecocystus@gmail.com>
 - Edmund Hart <edmund.m.hart@gmail.com>
 - Jordan Read <jread@usgs.gov>
+- Peter Slaughter <slaughter.nceas.ucsb.edu>
