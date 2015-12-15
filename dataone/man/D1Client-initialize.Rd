@@ -9,6 +9,17 @@
 \S4method{initialize}{D1Client}(.Object, cn = NA, mn = NA,
   env = as.character(NA), mNodeid = as.character(NA))
 }
+\arguments{
+\item{.Object}{A D1client object.}
+
+\item{cn}{The Member Node object to associate this D1Client with.}
+
+\item{mn}{The Member Node object to associate this D1Client with.}
+
+\item{env}{The DataONE environment to intialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"}
+
+\item{mNodeid}{The node identifier of the Member Node to associate with this D1Client.}
+}
 \description{
 Initialize a D1Client object
 }

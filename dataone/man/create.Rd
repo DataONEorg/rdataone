@@ -31,7 +31,7 @@ provided in the \code{'mnode'} parameter.
 \details{
 This operation requires an X.509 certificate to be present in the default location of the file
 system. This certificate provides authentication credentials from
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 In the dataone R client version 2.0 and higher, DataONE authentication codes can also be used for authentication.
 Type \code{vignette("dataone-overview")} for details.
 }

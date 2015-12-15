@@ -12,6 +12,8 @@ getEndpoint(x, ...)
 }
 \arguments{
 \item{x}{A D1Client object}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 A character vector containing the URL of the Coordinating Node

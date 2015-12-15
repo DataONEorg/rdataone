@@ -28,6 +28,9 @@ data and metadata are written.
 \itemize{
 \item \code{x = D1Client,id = character}: 
 }}
+\author{
+setMNodeId
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

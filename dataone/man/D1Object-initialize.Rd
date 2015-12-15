@@ -2,6 +2,7 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{initialize,D1Object-method}
+\alias{D1Object-initialize}
 \alias{initialize,D1Object-method}
 \title{Initialize a D1Object}
 \usage{
@@ -10,7 +11,7 @@
   filename = as.character(NA))
 }
 \arguments{
-\item{.Object}{}
+\item{.Object}{A D1Object instance.}
 
 \item{id}{The identifier for the object}
 

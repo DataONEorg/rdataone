@@ -9,9 +9,9 @@ D1Client(env, mNodeid, ...)
 \arguments{
 \item{env}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')}
 
-\item{...}{(not yet used)}
+\item{mNodeid}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'}
 
-\item{mNodeidThe}{node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'}
+\item{...}{(not yet used)}
 }
 \value{
 the D1Client object representing the DataONE environment
@@ -19,7 +19,7 @@ the D1Client object representing the DataONE environment
 \description{
 The DataONE client class used to downlaod, update and search for data in the DataONE network.
 }
-\author{
-mbjones
+\seealso{
+\code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
 

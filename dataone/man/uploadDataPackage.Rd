@@ -18,6 +18,8 @@ uploadDataPackage(x, dp, ...)
 
 \item{dp}{The DataPackage instance to be submitted to DataONE for creation.}
 
+\item{...}{(Not yet used.)}
+
 \item{replicate}{A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes}
 
 \item{numberReplicas}{A value of type \code{"numeric"}, for number of supported replicas.}
@@ -30,7 +32,7 @@ uploadDataPackage(x, dp, ...)
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link{=datapackage}{serializePackage}}
+\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapackage]{serializePackage}}
 }
 \value{
 id The identifier of the resource map for this data package

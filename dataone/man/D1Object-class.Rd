@@ -3,15 +3,102 @@
 \docType{class}
 \name{D1Object-class}
 \alias{D1Object-class}
+\alias{canRead,D1Object,character-method}
+\alias{getData,D1Object,ANY-method}
+\alias{getFormatId,D1Object-method}
+\alias{getIdentifier,D1Object-method}
+\alias{setPublicAccess,D1Object-method}
 \title{D1Object (Deprecated) is a representation of a DataObject.}
+\usage{
+\S4method{getData}{D1Object,ANY}(x, id)
+
+\S4method{getIdentifier}{D1Object}(x)
+
+\S4method{getFormatId}{D1Object}(x)
+
+\S4method{setPublicAccess}{D1Object}(x)
+
+\S4method{canRead}{D1Object,character}(x, subject)
+}
+\arguments{
+\item{x}{D1Object the data structure from where to get the data}
+
+\item{id}{Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from}
+
+\item{subject}{: the subject name of the person/system to check for read permissions}
+
+\item{x}{D1Object}
+
+\item{...}{(not yet used)}
+
+\item{x}{D1Object}
+
+\item{...}{(not yet used)}
+
+\item{x}{D1Object}
+
+\item{...}{(not yet used)}
+
+\item{x}{D1Object}
+
+\item{...}{Additional arguments}
+}
+\value{
+the identifier
+
+the formatId
+
+D1Object with modified access rules
+
+boolean TRUE if the subject has read permission, or FALSE otherwise
+}
 \description{
 D1Object has been deprecated in favor of datapackage::DataObject, which provides
 a wrapper for data and associated SystemMetadata.
+
+Get the data content of a specified data object
+
+Get the Identifier of the DataObject
+
+Get the FormatId of the DataObject
+
+To be called prior to creating the object in DataONE.  When called before
+creating the object, adds a rule to the access policy that makes this object
+publicly readable.  If called after creation, it will only change the system
+metadata locally, and will not have any effect on remotely uploaded copies of
+the D1Object.
+
+Using the AccessPolicy, tests whether the subject has read permission
+for the object.  This method is meant work prior to submission to a repository,
+and will show the permissions that would be enfirced by the repository on submission.
+Currently it only uses the AccessPolicy to determine who can read (and not the rightsHolder field,
+which always can read an object).  If an object has been granted read access by the
+special "public" subject, then all subjects have read access.
 }
+\details{
+The subject name used in both the AccessPolicy and in the \code{'subject'}
+argument to this method is a string value, but is generally formatted as an X.509
+name formatted according to RFC 2253.
+}
+\section{Methods (by generic)}{
+\itemize{
+\item \code{getData}: 
+
+\item \code{getIdentifier}: 
+
+\item \code{getFormatId}: 
+
+\item \code{setPublicAccess}: 
+
+\item \code{canRead}: 
+}}
 \section{Slots}{
 
 \describe{
 \item{\code{dataObject}}{A backing instance of a DataObject, to which all methods and state are proxied}
 }}
+\seealso{
+\code{\link[=DataObject-class]{DataObject}}{ class description.}
+}
 \keyword{classes}
 

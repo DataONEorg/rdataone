@@ -35,4 +35,7 @@ dataone library.
 \itemize{
 \item \code{D1Client}: 
 }}
+\seealso{
+\code{\link[=D1Client-class]{D1Client}}{ class description.}
+}
 

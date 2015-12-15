@@ -19,7 +19,9 @@ getChecksum(node, pid, ...)
 
 \item{pid}{The identifier of the object}
 
-\item{checksumAlgorith}{The algorithm used to calculate the checksum. Default="SHA-1"}
+\item{...}{(Not yet used)}
+
+\item{checksumAlgorithm}{The algorithm used to calculate the checksum. Default="SHA-1"}
 }
 \value{
 character the checksum value, with the checksum algorithm as the attribute "algorithm"

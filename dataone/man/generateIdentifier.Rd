@@ -10,10 +10,6 @@ generateIdentifier(mnode, ...)
 \item{mnode}{The MNode instance on which the object will be created}
 
 \item{...}{(Not yet used.)}
-
-\item{scheme}{The identifier scheme to be used, such as DOI, UUID, etc.}
-
-\item{fragment}{An optional fragment to be prepended to the identifier for schemes that support it (not all do).}
 }
 \value{
 the character string of the generated unique identifier
@@ -28,7 +24,8 @@ support the UUID scheme, but may also support other schemes such as DOI and othe
 \details{
 This operation requires an X.509 certificate to be present in the default location of the file
 system. This certificate provides authentication credentials from
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+In DataONE Version 2.0, authentication tokens can also be used for authentication.
 }
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}

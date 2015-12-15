@@ -10,6 +10,9 @@ listMemberNodes(x)
 
 \S4method{listMemberNodes}{D1Client}(x)
 }
+\arguments{
+\item{x}{A D1Client object.}
+}
 \description{
 A D1Client object is associated with a DataONE Coordinating Node. The
 \code{listMemberNodes} method lists all member nodes associated with a CN.

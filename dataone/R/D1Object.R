@@ -44,12 +44,14 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 setGeneric("D1Object", function(...) { standardGeneric("D1Object")} )
 
 #' Initialize a D1Object
-#' @param .Object
+#' @param .Object A D1Object instance.
 #' @param id The identifier for the object
 #' @param data An R object (data or metadata) that this D1Object contains.
 #' @param format The Object format.
 #' @param mnNodeId The DataONE node identifier associated with this object, i.e. "urn:node:KNB"
 #' @param filename A filename that this D1Object contains.
+#' @rdname D1Object-initialize
+#' @aliases D1Object-initialize
 setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=NA, 
                                              format=as.character(NA), mnNodeId=as.character(NA), 
                                              filename=as.character(NA)) {
@@ -77,7 +79,7 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
 #' 
 #' @param x  D1Object the data structure from where to get the data
 #' @param id Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from
-#' @aliases getData
+#' @describeIn D1Object
 #' @export
 setMethod("getData", signature("D1Object"), function(x, id) {
     data <- get(x@mn, id, check=as.logical(FALSE))
@@ -86,9 +88,8 @@ setMethod("getData", signature("D1Object"), function(x, id) {
 #' Get the Identifier of the DataObject
 #' @param x D1Object
 #' @param ... (not yet used)
+#' @describeIn D1Object
 #' @return the identifier
-#' @rdname getIdentifier
-#' @aliases getIdentifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
   getIdentifier(x@dataObject)
@@ -98,8 +99,7 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @return the formatId
-#' @rdname getFormatId
-#' @aliases getFormatId
+#' @describeIn D1Object
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
   getFormatId(x@dataObject)
@@ -114,8 +114,8 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @return D1Object with modified access rules
-#' @aliases setPublicAccess
 #' @seealso \code{\link[=DataObject-class]{DataObject}}{ class description.}
+#' @describeIn D1Object
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
   setPublicAccess(x@dataObject)
@@ -135,8 +135,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @param subject : the subject name of the person/system to check for read permissions
 #' @param ... Additional arguments
 #' @return boolean TRUE if the subject has read permission, or FALSE otherwise
-#' @rdname canRead
-#' @aliases canRead
+#' @describeIn D1Object
 #' @export
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
   canRead(x@dataObject, subject)
@@ -146,8 +145,6 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 #' how to parse the data table (which parameters to set)
 #' 'reference' is the metadata D1Object that gives instruction on how to read the data
 #' into the dataFrame
-#' @rdname asDataFrame
-#' @aliases asDataFrame
 #' @param x A D1Object
 #' @param reference A reference to a D1Object
 #' @param ... (Additional parameters)

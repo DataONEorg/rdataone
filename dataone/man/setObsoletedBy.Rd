@@ -12,6 +12,8 @@ setObsoletedBy(cnode, pid, obsoletedByPid, ...)
   serialVersion)
 }
 \arguments{
+\item{cnode}{The CNode instance on which the object will be created}
+
 \item{pid}{The identifier of the object to be obsoleted}
 
 \item{obsoletedByPid}{The identifier of the object that obsoletes the object identified by pid.}
@@ -19,8 +21,6 @@ setObsoletedBy(cnode, pid, obsoletedByPid, ...)
 \item{...}{(Not yet used)}
 
 \item{serialVersion}{The serial version of the system metadata of the pid being obsoleted.}
-
-\item{node}{The CNode instance on which the object will be created}
 }
 \value{
 TRUE if the pid was obsoleted, otherwise FALSE is returned
@@ -28,7 +28,8 @@ TRUE if the pid was obsoleted, otherwise FALSE is returned
 \description{
 Updates the SystemMetadata 'obsoletedBy' property for an object, indicating that the object
 specified by pid has been obsoleted by the identifier in obsoletedByPid.
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+In DataONE version 2.0, authentication tokens can also be used.
 }
 \section{Methods (by class)}{
 \itemize{

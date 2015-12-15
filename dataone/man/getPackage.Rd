@@ -12,13 +12,17 @@ getPackage(node, ...)
   format = "application/bagit-097")
 }
 \arguments{
+\item{node}{A MNode instance representing a DataONE Member Node repository.}
+
 \item{...}{(not yet used)}
 
 \item{identifier}{A character string containing the identifier of the resource map of the package.}
 
 \item{format}{The name of the package format to request. Defaults to BagIt.}
 
-\item{x}{A MNode instance representing a DataONE Member Node repository.}
+\item{identifier}{The identifier of the package to retrieve.}
+
+\item{format}{The format to send the package in.}
 }
 \value{
 The location of the package file downloaded from the member node.

@@ -11,6 +11,8 @@ update(mnode, pid, ...)
 \S4method{update}{MNode,character}(mnode, pid, filepath, newpid, sysmeta)
 }
 \arguments{
+\item{mnode}{The MNode instance on which the object will be created}
+
 \item{pid}{The identifier of the object to be updated}
 
 \item{...}{(Not yet used.)}
@@ -20,8 +22,6 @@ update(mnode, pid, ...)
 \item{newpid}{The identifier of the new object to be created}
 
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
-
-\item{node}{The MNode instance on which the object will be created}
 }
 \value{
 XML describing the result of the operation, including the identifier if successful
@@ -35,7 +35,8 @@ used to reflect the fact that the new object replaces the old.  Both objects rem
 \details{
 This operation requires an X.509 certificate to be present in the default location of the file
 system. This certificate provides authentication credentials from
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+In DataONE Version 2.0, authentication tokens can also be used.
 }
 \section{Methods (by class)}{
 \itemize{

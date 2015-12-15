@@ -11,7 +11,7 @@ isAuthValid(x, node, ...)
 \S4method{isAuthValid}{AuthenticationManager,D1Node}(x, node)
 }
 \arguments{
-\item{x}{a AuthenticationManager instance}
+\item{x}{An AuthenticationManager instance}
 
 \item{node}{The node object (MNode or CNode) that authentication is being checked for.}
 

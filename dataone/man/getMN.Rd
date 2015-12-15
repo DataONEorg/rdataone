@@ -16,7 +16,7 @@ getMN(x, nodeid, ...)
 \arguments{
 \item{x}{A D1Client object.}
 
-\item{nodeid}{}
+\item{nodeid}{The identifier of the node to retreive.}
 
 \item{...}{(Not yet used)}
 }
@@ -29,9 +29,10 @@ Get a member node client based on its node identifier.
 
 \item \code{x = D1Client,nodeid = character}: 
 }}
+\note{
+This method has been superceded by \code{\link{getMNodeId}}
+}
 \seealso{
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
-
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
 

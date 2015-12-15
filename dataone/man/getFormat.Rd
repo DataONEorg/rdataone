@@ -14,6 +14,8 @@ getFormat(cnode, ...)
 \item{cnode}{A CNode object instance}
 
 \item{...}{(Not yet used)}
+
+\item{formatId}{The formatId to retrieve.}
 }
 \value{
 A dataframe of all object formats registered in the DataONE Object Format Vocabulary.

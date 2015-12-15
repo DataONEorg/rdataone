@@ -20,6 +20,9 @@ Get the coordinating node associated with this D1Client object.
 \itemize{
 \item \code{D1Client}: 
 }}
+\note{
+The method getCN has been deprecated.
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

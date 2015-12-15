@@ -8,7 +8,7 @@
 \usage{
 archive(node, pid, ...)
 
-\S4method{archive}{D1Node,character}(node, pid, quiet = TRUE)
+\S4method{archive}{D1Node,character}(node, pid)
 }
 \arguments{
 \item{node}{The MNode or CNode instance on which the object will be created}
@@ -16,8 +16,6 @@ archive(node, pid, ...)
 \item{pid}{The identifier of the object to be created}
 
 \item{...}{(Not yet used)}
-
-\item{quiet}{A logical value - if TRUE (the default) then informational messages are not printed.}
 }
 \value{
 The pid that was archived if successful, otherwise NULL
@@ -33,11 +31,15 @@ contents of archived objects if they have the identifier, but will not discover 
 \details{
 This operation requires an X.509 certificate to be present in the default location of the file
 system. This certificate provides authentication credentials from
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+For DataONE Version 2.0, an authentication token can also be used for authentication.
 Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{node = D1Node,pid = character}: 
 }}
+\seealso{
+\code{\link[=D1Node-class]{D1Node}}{ class description.}
+}
 

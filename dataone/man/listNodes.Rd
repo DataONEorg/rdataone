@@ -14,6 +14,8 @@ listNodes(cnode, ...)
 \item{cnode}{The coordinating node to query for its registered Member Nodes}
 
 \item{...}{(Not yet used)}
+
+\item{url}{Optianal - the url of the CN.}
 }
 \value{
 the list of nodes in the DataONE CN environment

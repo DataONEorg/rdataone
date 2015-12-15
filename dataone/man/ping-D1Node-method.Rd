@@ -7,12 +7,6 @@
 \usage{
 \S4method{ping}{D1Node}(node)
 }
-\arguments{
-\item{node}{The CNode or MNode to check.}
-}
-\value{
-list Objects that met the search criteria
-}
 \description{
 Test if a node is online and accepting DataONE requests
 }

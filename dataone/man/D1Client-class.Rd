@@ -30,13 +30,9 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 \section{Slots}{
 
 \describe{
-\item{\code{endpoint}}{The baseurl of the CN in that en  vironment}
+\item{\code{cn}}{The Coordinating Node associated with the D1Client object}
 
-\item{\code{mn.nodeid}}{The NodeReference for the 'home' MemberNode for this application, where creates/updates will happen.}
-
-\item{\code{client}}{The reference to the internally held Java D1Client instance}
-
-\item{\code{session}}{The reference to the internally held Java Session instance}
+\item{\code{mn}}{The Member Node associated with this D1Client object}
 }}
 \section{Methods}{
 
@@ -62,11 +58,5 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 }
 \seealso{
 \code{\link{dataone}}{ package description.}
-
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
-
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
-
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
 

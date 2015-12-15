@@ -11,7 +11,7 @@ getAuthMethod(x, ...)
 \S4method{getAuthMethod}{AuthenticationManager}(x)
 }
 \arguments{
-\item{x}{a getAuthMethod instance}
+\item{x}{A AuthenticationManager instance}
 
 \item{...}{(Not yet used)}
 }

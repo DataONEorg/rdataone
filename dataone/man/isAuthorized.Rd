@@ -11,6 +11,8 @@ isAuthorized(cnode, id, action, ...)
 \S4method{isAuthorized}{CNode,character,character}(cnode, id, action)
 }
 \arguments{
+\item{cnode}{The node to send the request to.}
+
 \item{id}{The DataONE identifier (pid or sid) to check access for.}
 
 \item{action}{The DataONE action to check, possible values: "read", "write", "changePermission"}

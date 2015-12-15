@@ -12,6 +12,8 @@ getCapabilities(mnode, ...)
 }
 \arguments{
 \item{mnode}{The node identifier with which this node is registered in DataONE}
+
+\item{...}{(Not yet used.)}
 }
 \value{
 the MNode object representing the DataONE environment

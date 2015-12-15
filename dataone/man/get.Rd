@@ -38,4 +38,7 @@ present in the default location of the file system, in which case the access wil
 
 \item \code{node = MNode,pid = character}: 
 }}
+\seealso{
+\code{\link[=D1Node-class]{D1Node}}{ class description.}
+}
 

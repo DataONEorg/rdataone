@@ -199,6 +199,7 @@ setGeneric("getFormat", function(cnode, ...) {
 })
 
 #' @describeIn getFormat
+#' @param formatId The formatId to retrieve.
 #' @export
 setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
@@ -243,6 +244,7 @@ setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ..
 #' @rdname listNodes
 #' @aliases listNodes
 #' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param url Optianal - the url of the CN.
 #' @param ... (Not yet used)
 #' @return the list of nodes in the DataONE CN environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -358,8 +360,9 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
 #' Set a pid as being obsoleted by another pid
 #' @description Updates the SystemMetadata 'obsoletedBy' property for an object, indicating that the object 
 #' specified by pid has been obsoleted by the identifier in obsoletedByPid.
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{{CertificateManager}}} for details.
-#' @param node The CNode instance on which the object will be created
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+#' In DataONE version 2.0, authentication tokens can also be used.
+#' @param cnode The CNode instance on which the object will be created
 #' @param pid The identifier of the object to be obsoleted
 #' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
 #' @param serialVersion The serial version of the system metadata of the pid being obsoleted. 
@@ -402,8 +405,6 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
 #' level details about the object.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
 #' present in the default location of the file system, in which case the access will be authenticated.
-#' @param node The CNode instance from which the SystemMetadata will be downloaded
-#' @param pid The identifier of the object
 #' @return SystemMetadata for the object
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @import datapackage
@@ -567,6 +568,7 @@ setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
 #' or series identifier (sid).
 #' @rdname isAuthorized
 #' @aliases isAuthorized
+#' @param cnode The node to send the request to.
 #' @param id The DataONE identifier (pid or sid) to check access for.
 #' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
 #' @param ... (Not yet used)
@@ -584,6 +586,7 @@ setGeneric("isAuthorized", function(cnode, id, action, ...) {
 })
 
 #' @describeIn isAuthorized
+#' @export
 setMethod("isAuthorized", signature("CNode", "character", "character"), function(cnode, id, action) {
   url <- sprintf("%s/isAuthorized/%s?action=%s", cnode@endpoint,id,action)
   response <- auth_get(url, node=cnode)

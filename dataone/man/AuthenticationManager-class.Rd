@@ -4,18 +4,9 @@
 \name{AuthenticationManager-class}
 \alias{AuthenticationManager,ANY-method}
 \alias{AuthenticationManager-class}
-\alias{getAuthExpires,AuthenticationManager-method}
-\alias{isAuthExpired,AuthenticationManager-method}
-\alias{obscureAuth,AuthenticationManager-method}
 \title{AuthenticationManager provides mechanisms to}
 \usage{
 \S4method{AuthenticationManager}{ANY}()
-
-\S4method{getAuthExpires}{AuthenticationManager}(x)
-
-\S4method{isAuthExpired}{AuthenticationManager}(x)
-
-\S4method{obscureAuth}{AuthenticationManager}(x)
 }
 \description{
 AuthenticationManager
@@ -45,12 +36,6 @@ of their existing accounts. For more information about the CILogon service, see
 \section{Methods (by generic)}{
 \itemize{
 \item \code{AuthenticationManager}: 
-
-\item \code{getAuthExpires}: 
-
-\item \code{isAuthExpired}: 
-
-\item \code{obscureAuth}: 
 }}
 \section{Slots}{
 

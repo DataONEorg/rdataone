@@ -11,7 +11,7 @@ showAuth(x, ...)
 \S4method{showAuth}{AuthenticationManager}(x)
 }
 \arguments{
-\item{x}{an Authentication instance}
+\item{x}{an AuthenticationManager instance}
 
 \item{...}{(Not yet used.)}
 }

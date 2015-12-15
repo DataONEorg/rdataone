@@ -11,7 +11,7 @@ restoreAuth(x, ...)
 \S4method{restoreAuth}{AuthenticationManager}(x)
 }
 \arguments{
-\item{x}{an Authentication instance}
+\item{x}{an AuthenticationManager instance}
 
 \item{...}{(Not yet used.)}
 }

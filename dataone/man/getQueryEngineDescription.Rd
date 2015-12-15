@@ -4,7 +4,7 @@
 \name{getQueryEngineDescription}
 \alias{getQueryEngineDescription}
 \alias{getQueryEngineDescription,D1Node,character-method}
-\title{Retrieve a description of a query engine from a coordinating node or member node}
+\title{Query a node for the list of query engines available on the node}
 \usage{
 getQueryEngineDescription(node, queryEngineName)
 
@@ -13,20 +13,18 @@ getQueryEngineDescription(node, queryEngineName)
 \arguments{
 \item{node}{The CNode or MNode to query}
 
-\item{queryEngine}{The query engine name to get a description for.}
-
-\item{node}{The CNode or MNode instance to list the query engines for.}
+\item{queryEngineName}{The query engine name to get a description for.}
 }
 \value{
 list The query engine description
-
-list Objects that met the search criteria
 }
 \description{
-Retrieve a description of a query engine from a coordinating node or member node
-
 Query a node for the list of query engines available on the node
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{node = D1Node,queryEngineName = character}: 
+}}
 \examples{
 \dontrun{
 cn <- CNode("SANDBOX")

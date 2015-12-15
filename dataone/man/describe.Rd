@@ -14,10 +14,12 @@ describe(node, pid, ...)
 \S4method{describe}{MNode,character}(node, pid)
 }
 \arguments{
+\item{node}{The MNode instance from which the identifier will be generated}
+
 \item{pid}{Identifier for the object in question. May be either a PID or a SID. Transmitted as
 part of the URL path and must be escaped accordingly.}
 
-\item{mnode}{The MNode instance from which the identifier will be generated}
+\item{...}{(Not yet used)}
 }
 \value{
 A list of header elements
