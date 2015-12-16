@@ -107,8 +107,9 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
     # If subject isn't available from the current authentication method, then try
     # R options
     if (is.na(subject) || subject == "public") {
-      subject <- getOption("subject_dn")
-      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+      creds <- echoCredentials(cn)
+      subject <- creds$person$subject
+      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
     }
     
     myId <- sprintf("urn:uuid:%s", UUIDgenerate())

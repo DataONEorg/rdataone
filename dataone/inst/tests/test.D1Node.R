@@ -204,11 +204,11 @@ test_that("D1Node archive() works",{
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)
-    # If subject isn't available from the current authentication method, then try
-    # R options
+    # If subject isn't available from the current authentication method, then get from DataONE
     if (is.na(subject) || subject == "public") {
-      subject <- getOption("subject_dn")
-      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+      creds <- echoCredentials(d1c@cn)
+      subject <- creds$person$subject
+      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
     }
     
     do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)

@@ -110,6 +110,8 @@ test_that("D1Client uploadDataPackage works", {
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
   d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
+  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
@@ -126,8 +128,9 @@ test_that("D1Client uploadDataPackage works", {
     # If subject isn't available from the current authentication method, then try
     # R options
     if (is.na(subject) || subject == "public") {
-      subject <- getOption("subject_dn")
-      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+      creds <- echoCredentials(d1c@cn)
+      subject <- creds$person$subject
+      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
     }
     
     dp <- new("DataPackage")
@@ -142,8 +145,8 @@ test_that("D1Client uploadDataPackage works", {
     expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Create metadata object that describes science data
-    emlFile <- system.file("testfiles/testdoc-eml-2.1.0.xml", package="dataone")
-    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.0", user=subject, 
+    emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", user=subject, 
                        mnNodeId=getMNodeId(d1c), filename=emlFile)
     expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
     addData(dp, metadataObj)

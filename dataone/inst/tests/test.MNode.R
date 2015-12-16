@@ -145,8 +145,9 @@ test_that("MNode create(), update(), archive(), and delete()", {
       # If subject isn't available from the current authentication method, then try
       # R options
       if (is.na(user) || user == "public") {
-        user <- getOption("subject_dn")
-        if(is.null(user) || is.na(user)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+        creds <- echoCredentials(d1c@cn)
+        user <- creds$person$subject
+        if(is.null(user) || is.na(user)) skip("This test requires a valid DataONE user identity>\")")
       }
       
       expect_that(user, matches("cilogon|dataone"))
@@ -240,8 +241,9 @@ test_that("MNode create() works for large files", {
       # If subject isn't available from the current authentication method, then try
       # the R options.
       if (is.na(subject) || user == "public") {
-        subject <- getOption("subject_dn")
-        if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+        creds <- echoCredentials(cn)
+        subject <- creds$person$subject
+        if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
       }
       
       expect_that(subject, matches("cilogon|dataone"))
@@ -327,8 +329,9 @@ test_that("updateSystemMetadata() works",{
     # If subject isn't available from the current authentication method, then try
     # R options
     if (is.na(subject) || subject == "public") {
-      subject <- getOption("subject_dn")
-      if(is.null(subject) || is.na(subject)) skip("This test requires that you set options(subject_dn = \"<your identity>\")")
+      creds <- echoCredentials(d1c@cn)
+      subject <- creds$person$subject
+      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
     }
     
     do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
