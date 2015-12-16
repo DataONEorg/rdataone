@@ -155,6 +155,16 @@ test_that("D1Client uploadDataPackage works", {
     # Upload the data package to DataONE    
     resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
     expect_true(!is.null(resourceMapId))
+    
+    # Now test if the package members can be uploaded a second time. uploadDataObject should test the sysmeta@dataUploaded of each object
+    # and not let it be uploaded again.
+    ids <- getIdentifiers(dp)
+    for(idInd in 1:length(ids)) {
+      thisId <- ids[idInd]
+      thisObj <- getMember(dp, thisId)
+      testId <- uploadDataObject(d1c, thisObj)
+      expect_null(testId)
+    }
   } else {
       skip("This test requires valid authentication.")
   }
