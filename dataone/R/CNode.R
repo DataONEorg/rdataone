@@ -41,6 +41,8 @@
 #'  \item{\code{\link{describe}}}{: Get a list of coordinating nodes holding a given pid.} 
 #'  \item{\code{\link{resolve}}}{: Get a list of coordinating nodes holding a given pid.}
 #'  \item{\code{\link{getMNode}}}{: Get a reference to a node based on its identifier.} 
+#'  \item{\code{\link{echoCredentials}}}{: Echo the credentials used to make the call.} 
+#'  \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @import methods
