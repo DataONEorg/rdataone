@@ -21,7 +21,7 @@ test_that("CNode object index query works with query list param", {
   authValid <- isAuthValid(am, cn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   result <- query(cn, queryParams, as="list")
   #resultList <- parseSolrResult(result)
@@ -132,7 +132,7 @@ test_that("CNode object index query works with query string param", {
   authValid <- isAuthValid(am, cn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   result <- query(cn, queryParams, as="list")
@@ -155,7 +155,7 @@ test_that("MNode object index query works", {
   authValid <- isAuthValid(am, mn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   result <- query(mn, queryParams, as="list")
   #expect_is(result, "XMLInternalDocument")
@@ -201,7 +201,7 @@ test_that("D1Node archive() works",{
   authValid <- isAuthValid(am, d1c@mn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)
     # If subject isn't available from the current authentication method, then get from DataONE

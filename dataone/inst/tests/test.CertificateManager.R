@@ -2,7 +2,7 @@ context("CertificateManager tests")
 
 test_that("CertificateManager getCertLocation()", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   warnLevel <- getOption("warn")
   options(warn = -1)
   cm <- CertificateManager()
@@ -20,14 +20,14 @@ test_that("CertificateManager getCertLocation()", {
 
 test_that("CertificateManager loads", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   cm <- CertificateManager()
   expect_that(is.null(cm), is_false())
 })
 
 test_that("getCertExpires", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     warnLevel <- getOption("warn")
     options(warn = -1)
     cm <- CertificateManager()
@@ -44,7 +44,7 @@ test_that("getCertExpires", {
 
 test_that("isCertExpired", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     warnLevel <- getOption("warn")
     options(warn = -1)
     cm <- CertificateManager()
@@ -63,7 +63,7 @@ test_that("isCertExpired", {
 
 test_that("showClientSubject", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     warnLevel <- getOption("warn")
     options(warn = -1)
     cm <- CertificateManager()
@@ -84,7 +84,7 @@ test_that("showClientSubject", {
 
 test_that("obscureCert and restoreCert", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     warnLevel <- getOption("warn")
     options(warn = -1)
     cm <- CertificateManager()
@@ -102,7 +102,7 @@ test_that("obscureCert and restoreCert", {
 
 test_that("custom certificate location", {
   skip_on_cran()
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     warnLevel <- getOption("warn")
     options(warn = -1)
     cm <- CertificateManager()

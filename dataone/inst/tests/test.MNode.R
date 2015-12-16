@@ -67,7 +67,7 @@ test_that("MNode generateIdentifier()", {
     authValid <- isAuthValid(am, mn)
     options(warn = warnLevel)
     if(authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -92,7 +92,7 @@ test_that("MNode generateIdentifier() on API v1 node", {
     authValid <- isAuthValid(am, mn)
     options(warn = warnLevel)
     if(authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -134,7 +134,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
     authValid <- isAuthValid(am, mn)
     options(warn = warnLevel)
     if (authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -235,7 +235,7 @@ test_that("MNode create() works for large files", {
     authValid <- isAuthValid(am, mn)
     options(warn = warnLevel)
     if (authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       # Set 'subject' to authentication subject, if available, so we will have permission to change this object
       subject <- getAuthSubject(am)
       # If subject isn't available from the current authentication method, then try
@@ -293,7 +293,7 @@ test_that("MNode getPackage() works", {
   authValid <- isAuthValid(am, mn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   
   bagitFile <- getPackage(mn, id=resMapPid)
@@ -323,7 +323,7 @@ test_that("updateSystemMetadata() works",{
   authValid <- isAuthValid(am, d1c@mn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)
     # If subject isn't available from the current authentication method, then try

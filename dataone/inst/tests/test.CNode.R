@@ -100,7 +100,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   # First check if authentication is available and if not, skip this test
   if (authValid) {
     # TODO: remove this check when Mac OS X can be used with certificates
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     subject <- getAuthSubject(am)
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)

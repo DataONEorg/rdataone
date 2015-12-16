@@ -122,7 +122,7 @@ test_that("D1Client uploadDataPackage works", {
   authValid <- isAuthValid(am, d1c@mn)
   options(warn = warnLevel)
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authenticatin w/cert on Mac OS X")
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)
     # If subject isn't available from the current authentication method, then try
