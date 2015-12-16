@@ -533,11 +533,7 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
             if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
             do <- setPublicAccess(do)
         }
-        if (!is.na(do@sysmeta@dateUploaded)) {
-          message(sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", doId, do@sysmeta@dateUploaded))
-          message("This object will not be uploaded.")
-          next
-        }
+        
         if(!quiet) cat(sprintf("Uploading data object to %s with id: %s\n", x@mn@endpoint, doId))
         returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
         if(!is.null(returnId)) {
@@ -611,6 +607,13 @@ setMethod("uploadDataObject", signature("D1Client", "DataObject"),
     # addAccessRule will add all rules (rows) in accessRules in one call
     if(!all(is.na(accessRules))) {
         do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
+    }
+    
+    if (!is.na(do@sysmeta@dateUploaded)) {
+      msg <- sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", do@sysmeta@identifier, do@sysmeta@dateUploaded)
+      msg <- sprintf("%sThis object will not be uploaded.", msg)
+      warning(msg)
+      return(NULL)
     }
     
     # Upload the data to the MN using create(), checking for success and a returned identifier
