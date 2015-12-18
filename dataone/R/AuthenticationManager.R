@@ -46,8 +46,6 @@
 #' @aliases AuthenticationManager-class
 #' @import hash
 #' @include D1Node.R
-#' @examples
-#' am <- AuthenticationManager()
 setClass("AuthenticationManager", slots = c(
     authInfo="hash"
     )
@@ -128,13 +126,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
   # The authentication token is undefined or invalid, so check if a valid certificate is 
   # available.
   if (check4PKI()) {
-    # Check if a valid certificate is available
-    oldWarnLevel <- getOption("warn")
-    # Turn off warnings so that the Deprecated msg doesn't get printed
-    options(warn = -1)
-    cm <- CertificateManager()
-    # Restore warnings to previous level
-    options(warn = oldWarnLevel)
+    # Suppress "deprecated" warning
+    cm <- suppressWarnings(CertificateManager())
     cert <- getCertLocation(cm)
     if (!is.null(cert) && (file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
       x@authInfo$authMethod <- "cert"
@@ -283,11 +276,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   if(x@authInfo$authMethod == "token") {
     return(as.character(NA))
   } else {
-    oldWarnLevel <- getOption("warn")
-    # Turn off warnings so that the Deprecated msg doesn't get printed
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = oldWarnLevel)
+    cm <- suppressWarnings(CertificateManager())
     return(showClientSubject(cm))
   }
 })
@@ -318,10 +307,7 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
     return(as.character(NA))
   } else {
     # Turn off warnings the Deprecated msg doesn't get printed
-    oldWarnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = oldWarnLevel)
+    cm <- suppressWarnings(CertificateManager())
     return(getCertExpires(cm))
   }
 })
@@ -352,10 +338,7 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
     return(FALSE)
   } else {
     # Turn off warnings so that the Deprecated msg doesn't get printed
-    oldWarnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = oldWarnLevel)
+    cm <- suppressWarnings(CertificateManager())
     return(isCertExpired(cm))
   }
 })
