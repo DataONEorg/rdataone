@@ -36,7 +36,7 @@
 #' @slot APIversion The version of the DataONE API for this nod
 #' #' @section Methods:
 #' \itemize{
-#'   \item{\code{\link[=initialize-D1Node]{initialize}}}{: Initialize a D1Node}
+#'   \item{\code{\link[=D1Node-initialize]{initialize}}}{: Initialize a D1Node}
 #'  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
 #'  \item{\code{\link{archive}}}{: Create an object on a Member Node.}
 #'  \item{\code{\link{get}}}{: Get the bytes associated with an object on a node.}
@@ -79,7 +79,6 @@ setClass("D1Node",
 #' @param xml An XML object that describes the node to be initialized (see \link{listNodes}).
 #' @param ... (not yet used)
 #' @rdname D1Node
-#' @aliases D1Node
 #' @return the Node object representing the DataONE environment
 #' @export
 setGeneric("D1Node", function(xml, ...) {
@@ -88,15 +87,15 @@ setGeneric("D1Node", function(xml, ...) {
 
 #' Initialize a D1Node
 #' @param .Object the D1Node object
-#' @rdname initialize-D1Node
-#' @aliases initialize-D1Node
+#' @rdname D1Node-initialize
+#' @aliases D1Node-initialize
 setMethod("initialize", "D1Node",function(.Object) {
     info <- sessionInfo()
     # Force loading of packages now, to get package info
    return(.Object)
 })
 
-#' @describeIn D1Node
+#' @rdname D1Node
 #' @export
 setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
   # create new Node object
@@ -449,12 +448,13 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
 #' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @rdname ping
 #' @aliases ping
+#' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @export
 setGeneric("ping", function(node) {
   standardGeneric("ping")
 })
 
-#' Test if a node is online and accepting DataONE requests
+#' @describeIn ping
 #' @export
 setMethod("ping", signature("D1Node"), function(node) {
   

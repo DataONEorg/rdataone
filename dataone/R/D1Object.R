@@ -76,10 +76,9 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
 #########################################################
 
 #' Get the data content of a specified data object
-#' 
 #' @param x  D1Object the data structure from where to get the data
 #' @param id Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from
-#' @describeIn D1Object
+#' @describeIn getData
 #' @export
 setMethod("getData", signature("D1Object"), function(x, id) {
     data <- get(x@mn, id, check=as.logical(FALSE))
@@ -88,7 +87,7 @@ setMethod("getData", signature("D1Object"), function(x, id) {
 #' Get the Identifier of the DataObject
 #' @param x D1Object
 #' @param ... (not yet used)
-#' @describeIn D1Object
+#' @describeIn getIdentifier
 #' @return the identifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
@@ -99,7 +98,7 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @return the formatId
-#' @describeIn D1Object
+#' @describeIn getFormatId
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
   getFormatId(x@dataObject)
@@ -115,7 +114,7 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @param ... (not yet used)
 #' @return D1Object with modified access rules
 #' @seealso \code{\link[=DataObject-class]{DataObject}}{ class description.}
-#' @describeIn D1Object
+#' @describeIn setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
   setPublicAccess(x@dataObject)
@@ -135,7 +134,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @param subject : the subject name of the person/system to check for read permissions
 #' @param ... Additional arguments
 #' @return boolean TRUE if the subject has read permission, or FALSE otherwise
-#' @describeIn D1Object
+#' @describeIn canRead
 #' @export
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
   canRead(x@dataObject, subject)
@@ -148,6 +147,8 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 #' @param x A D1Object
 #' @param reference A reference to a D1Object
 #' @param ... (Additional parameters)
+#' @rdname asDataFrame
+#' @aliases asDataFrame
 #' @export
 setGeneric("asDataFrame", function(x, reference, ...) { 
             standardGeneric("asDataFrame")

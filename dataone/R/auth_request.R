@@ -181,7 +181,6 @@ check4PKI <- function() {
 #' User agent string
 #' @description Get a string representation of the user agent to be sent to the server along
 #' with other request details.
-#' @import httr
 get_user_agent <- function() {
     info <- sessionInfo()
     if (is.element("httr", names(info$otherPkgs))) {

@@ -60,7 +60,6 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
 #' The DataONE client class used to downlaod, update and search for data in the DataONE network.
 #' @rdname D1Client
-#' @aliases D1Client
 #' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param mNodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
 #' @param ... (not yet used)
@@ -71,14 +70,14 @@ setGeneric("D1Client", function(env, mNodeid, ...) {
     standardGeneric("D1Client")
 })
 
-#' @describeIn D1Client
+#' @rdname D1Client
 #' @export
 setMethod("D1Client", signature=character(), function() {
     result <- D1Client("PROD", "")
     return(result)
 })
 
-#' @describeIn D1Client
+#' @rdname D1Client
 #' @export
 setMethod("D1Client", signature("character"), function(env, ...) {
     #message("Instantiating D1Client without a default Member Node.")
@@ -86,7 +85,7 @@ setMethod("D1Client", signature("character"), function(env, ...) {
     return(result)
 })
 
-#' @describeIn D1Client
+#' @rdname D1Client
 #' @export
 setMethod("D1Client", signature("character", "character"), function(env, mNodeid) {
     result <- new("D1Client", env=env, mNodeid=mNodeid)
@@ -94,13 +93,13 @@ setMethod("D1Client", signature("character", "character"), function(env, mNodeid
 })
 
 #' Initialize a D1Client object
-#' @rdname D1Client-initialize
-#' @aliases D1Client-initialize
 #' @param .Object A D1client object.
 #' @param cn The Member Node object to associate this D1Client with.
 #' @param mn The Member Node object to associate this D1Client with.
 #' @param env The DataONE environment to intialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"
 #' @param mNodeid The node identifier of the Member Node to associate with this D1Client.
+#' @rdname D1Client-initialize
+#' @aliases D1Client-initialize
 #' @export
 #' @seealso \code{\link[=D1Client-class]{dataone}}{ class description.}
 setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
@@ -329,7 +328,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 })
 
 #' Create a DataPackage on a DataONE Member Node
-#' @description This method has been superceded by \code{\link{updateDataPackage}}
+#' @description This method has been superceded by \code{\link{uploadDataPackage}}
 #' @param x A D1Client instance.
 #' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
 #' @param ... (not yet used)

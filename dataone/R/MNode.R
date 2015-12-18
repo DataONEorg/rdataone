@@ -78,9 +78,8 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, then it is cast to a MNode
 #' instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
 #' way to retrieve an instance of an MNode.
+#' @param x a URI representing a  base URL; or a reference to a dataone::Node instance
 #' @rdname MNode
-#' @aliases MNode
-#' @param x a URI representing a node base URL, or a reference to a dataone::Node instance
 #' @return the MNode object-
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @export
@@ -88,7 +87,7 @@ setGeneric("MNode", function(x) {
     standardGeneric("MNode")
 })
 
-#' @describeIn MNode
+#' @rdname MNode
 setMethod("MNode", signature("character"), function(x) {
 
     ## create new MNode object and insert uri endpoint
@@ -105,7 +104,7 @@ setMethod("MNode", signature("character"), function(x) {
     return(mnode)
 })
 
-#' @describeIn MNode
+#' @rdname MNode
 setMethod("MNode", signature("D1Node"), function(x) {
   
     if (x@type == "mn") {
@@ -255,8 +254,6 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
 #' @aliases create
 #' @param mnode The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
-#' @param filepath the absolute file location of the object to be uploaded
-#' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
@@ -267,6 +264,8 @@ setGeneric("create", function(mnode, pid, ...) {
 })
 
 #' @describeIn create
+#' @param filepath the absolute file location of the object to be uploaded
+#' @param sysmeta a SystemMetadata instance describing properties of the object
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
@@ -298,9 +297,6 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
 #' In DataONE Version 2.0, authentication tokens can also be used.
 #' @param mnode The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be updated
-#' @param filepath the absolute file location of the object to be uploaded
-#' @param newpid The identifier of the new object to be created
-#' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
@@ -310,6 +306,9 @@ setGeneric("update", function(mnode, pid, ...) {
     standardGeneric("update")
 })
 
+#' @param filepath the absolute file location of the object to be uploaded
+#' @param newpid The identifier of the new object to be created
+#' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @describeIn update
 setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
@@ -335,8 +334,6 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
 #' updating the object that it describes, so that mutable attribures such as accessPolicy
 #' can be updated easily.
 #' @param node The MNode instance from which the SystemMetadata will be downloaded
-#' @param pid The identifier of the object
-#' @param sysmeta a SystemMetadata instance with updated information.
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
@@ -347,6 +344,8 @@ setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
 })
 
 #' @describeIn updateSystemMetadata
+#' @param pid The identifier of the object
+#' @param sysmeta a SystemMetadata instance with updated information.
 #' @export
 setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadata"), function(node, pid, sysmeta) {
     url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -374,6 +373,8 @@ setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadat
 #' In DataONE Version 2.0, authentication tokens can also be used for authentication.
 #' @param mnode The MNode instance on which the object will be created
 #' @param ... (Not yet used.)
+#' @rdname generateIdentifier
+#' @aliases enerateIdentifier
 #' @return the character string of the generated unique identifier
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
@@ -381,7 +382,7 @@ setGeneric("generateIdentifier", function(mnode, ...) {
     standardGeneric("generateIdentifier")
 })
 
-#' @describeIn MNode
+#' @describeIn generateIdentifier
 #' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
 #' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
 setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
@@ -409,8 +410,6 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
 #' @param node A MNode instance representing a DataONE Member Node repository.
-#' @param identifier A character string containing the identifier of the resource map of the package.
-#' @param format The name of the package format to request. Defaults to BagIt.
 #' @param ... (not yet used)
 #' @return The location of the package file downloaded from the member node.
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}

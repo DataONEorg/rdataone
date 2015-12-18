@@ -103,6 +103,8 @@ setMethod("CertificateManager", signature=character(), function() {
 #' field of the X.509 certificate.  The value is a Distinguished Name, and can be used in all fields that
 #' require a user identity for access control authorization. If the certificate is missing on expired, then
 #' the subject 'public' is returned.
+#' @rdname showClientSubject
+#' @aliases showClientSubject
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
 #' @return the DataONE Subject that is your client's identity
@@ -111,7 +113,7 @@ setGeneric("showClientSubject", function(x, ...) {
     standardGeneric("showClientSubject")
 })
 
-#' @describeIn CertificateManager
+#' @describeIn showClientSubject
 setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     PUBLIC="public"
     certfile <- getCertLocation(x)
@@ -135,13 +137,15 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
 #' 3) no certificate can be found.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname isCertExpired
+#' @aliases isCertExpired
 #' @return TRUE if the certificate is expired
 #' @export
 setGeneric("isCertExpired", function(x, ...) { 
             standardGeneric("isCertExpired")
         })
 
-#' @describeIn CertificateManager
+#' @describeIn isCertExpired
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
     expires <- getCertExpires(x)
     if (is.null(expires)) {
@@ -161,13 +165,15 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 #' \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname getCertExpires
+#' @aliases getCertExpires
 #' @return POSIXct value
 #' @export
 setGeneric("getCertExpires", function(x, ...) { 
             standardGeneric("getCertExpires")
         })
 
-#' @describeIn CertificateManager
+#' @describeIn getCertExpires
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
@@ -189,13 +195,15 @@ setMethod("getCertExpires", signature("CertificateManager"), function(x) {
 #' the certificate file is the equivalent of logging out.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname downloadCert
+#' @aliases downloadCert
 #' @return NULL
 #' @export
 setGeneric("downloadCert", function(x, ...) { 
     standardGeneric("downloadCert")
 })
 
-#' @describeIn CertificateManager
+#' @describeIn downloadCert
 setMethod("downloadCert", signature("CertificateManager"), function(x) {
     browseURL("https://cilogon.org/?skin=DataONE")
 })
@@ -208,6 +216,8 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 #' DataONE, or utilize any other methods that require authentication.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname obscureCert
+#' @aliases obscureCert
 #' @return the modified CertificateManager instance
 #' @seealso \code{\link{restoreCert}} is this method's inverse operation   
 #' @export
@@ -215,7 +225,7 @@ setGeneric("obscureCert", function(x, ...) {
     standardGeneric("obscureCert")
 })
 
-#' @describeIn CertificateManager
+#' @describeIn obscureCert
 setMethod("obscureCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
@@ -232,6 +242,8 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 #' operations.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname restoreCert
+#' @aliases restoreCert
 #' @return the modified CertificateManager instance
 #' @seealso \code{\link{obscureCert}} is this method's inverse operation
 #' @import stringr
@@ -240,7 +252,7 @@ setGeneric("restoreCert", function(x, ...) {
     standardGeneric("restoreCert")
 })
 
-#' @describeIn CertificateManager
+#' @describeIn restoreCert
 setMethod("restoreCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
@@ -272,13 +284,15 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
 #' if \code{'${UID}'} is not defined.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
+#' @rdname getCertLocation
+#' @aliases getCertLocation
 #' @return character the path to the certificate
 #' @export
 setGeneric("getCertLocation", function(x, ...) { 
     standardGeneric("getCertLocation")
 })
 
-#' @describeIn CertificateManager
+#' @describeIn getCertLocation
 setMethod("getCertLocation", signature("CertificateManager"), function(x) {
     # default Globus Grid Security Infrastructure (GSI) location, which is /tmp/x509up_u${UID} on Unix 
     # or ${tmpdir}/x509up_u${UID} on Windows or ${tmpdir}/x509up_u${user.name} if ${UID} is not defined
