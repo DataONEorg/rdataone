@@ -58,13 +58,15 @@
 #' @rdname CertificateManager-class
 #' @keywords classes
 #' @examples
-#' cm <- CertificateManager()
+#' \dontrun{
+#' cm <- suppressWarnings(CertificateManager())
 #' cert <- getCertLocation(cm)
-#' s <- showClientSubject(cm)
+#' subject <- showClientSubject(cm)
 #' expires <- getCertExpires(cm)
 #' isExpired <- isCertExpired(cm)
 #' cm <- obscureCert(cm)
 #' cm <- restoreCert(cm)
+#' }
 setClass("CertificateManager", slots = c(
     location="character", 
     obscuredpath="character"

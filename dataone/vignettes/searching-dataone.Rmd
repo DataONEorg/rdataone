@@ -133,7 +133,7 @@ for the `datasource` field:
 
 ```{r,warning=F}
 cn <- CNode("PROD")
-queryParams <- 'q=id:*&fl=id,title&fq="datasource:urn:node:KNB"&rows=5'
+queryParams <- 'q=id:*&fl=id,title&fq=datasource:"urn:node:KNB"&rows=5'
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 result[,'id']
 ```

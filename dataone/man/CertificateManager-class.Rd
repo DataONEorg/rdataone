@@ -54,13 +54,17 @@ the first time you interact with DataONE each day.
 \item{\code{obscuredpath}}{value of type \code{"character"}, containing the path used to temporarily obscure a certificate}
 }}
 \examples{
-cm <- CertificateManager()
+\dontrun{
+# Suppress "Deprecated warning"
+# Note: CertificateManager is deprecated, use AuthenticationManager
+cm <- suppressWarnings(CertificateManager())
 cert <- getCertLocation(cm)
-s <- showClientSubject(cm)
+subject <- showClientSubject(cm)
 expires <- getCertExpires(cm)
 isExpired <- isCertExpired(cm)
 cm <- obscureCert(cm)
 cm <- restoreCert(cm)
+}
 }
 \author{
 Matthew Jones, Rob Nahf

@@ -34,6 +34,25 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateMan
  \item{\code{\link{updateSystemMetadata}}}{: Update the system metadata associated with an object.}
 }
 }
+\examples{
+\dontrun{
+cn <- CNode("STAGING2")
+mn <- getMNode(cn, "urn:node:mnTestKNB")
+mnid <- mn@identifier
+newid <- generateIdentifier(mn, "UUID")
+cm <- CertificateManager()
+u <- showClientSubject(cm)
+testdf <- data.frame(x=1:10,y=11:20)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+f <- "text/csv"
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u,
+    rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+response <- create(mn, newid, csvfile, sysmeta)
+}
+}
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
