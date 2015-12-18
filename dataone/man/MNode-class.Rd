@@ -2,24 +2,8 @@
 % Please edit documentation in R/MNode.R
 \docType{class}
 \name{MNode-class}
-\alias{MNode,D1Node-method}
-\alias{MNode,character-method}
 \alias{MNode-class}
-\alias{generateIdentifier,MNode-method}
 \title{MNode is a class representing a Member Node repository within the DataONE federation of data repositories.}
-\usage{
-\S4method{MNode}{character}(x)
-
-\S4method{MNode}{D1Node}(x)
-
-\S4method{generateIdentifier}{MNode}(mnode, scheme = "UUID",
-  fragment = NULL)
-}
-\arguments{
-\item{scheme}{The identifier scheme to be used, such as DOI, UUID, etc.}
-
-\item{fragment}{An optional fragment to be prepended to the identifier for schemes that support it (not all do).}
-}
 \description{
 MNode provides functions interacting with the a DataONE Member Node repository, which
 is a repository that provides access for reading and writing data and metadata using the common
@@ -32,14 +16,6 @@ Methods that perform write operations on the Member Node generally require
 authentication, which is managed via a client-side X.509 certificate via
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 }
-\section{Methods (by generic)}{
-\itemize{
-\item \code{MNode}: 
-
-\item \code{MNode}: 
-
-\item \code{generateIdentifier}: 
-}}
 \section{Slots}{
 
 \describe{
@@ -56,25 +32,6 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateMan
  \item{\code{\link{getPackage}}}{: Download a data package from a member node.}
  \item{\code{\link{update}}}{: Update an object on a Member Node, by creating a new object that replaces an original.}
  \item{\code{\link{updateSystemMetadata}}}{: Update the system metadata associated with an object.}
-}
-}
-\examples{
-\dontrun{
-cn <- CNode("STAGING2")
-mn <- getMNode(cn, "urn:node:mnTestKNB")
-mnid <- mn@identifier
-newid <- generateIdentifier(mn, "UUID")
-cm <- CertificateManager()
-u <- showClientSubject(cm)
-testdf <- data.frame(x=1:10,y=11:20)
-csvfile <- paste(tempfile(), ".csv", sep="")
-write.csv(testdf, csvfile, row.names=FALSE)
-f <- "text/csv"
-size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u,
-    rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
-response <- create(mn, newid, csvfile, sysmeta)
 }
 }
 \seealso{

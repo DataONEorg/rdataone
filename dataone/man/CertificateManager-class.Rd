@@ -4,30 +4,9 @@
 \name{CertificateManager-class}
 \alias{CertificateManager,ANY-method}
 \alias{CertificateManager-class}
-\alias{downloadCert,CertificateManager-method}
-\alias{getCertExpires,CertificateManager-method}
-\alias{getCertLocation,CertificateManager-method}
-\alias{isCertExpired,CertificateManager-method}
-\alias{obscureCert,CertificateManager-method}
-\alias{restoreCert,CertificateManager-method}
-\alias{showClientSubject,CertificateManager-method}
 \title{CertficateManager provides mechanisms to obtain, load, verify, and display X509 certificates.}
 \usage{
 \S4method{CertificateManager}{ANY}()
-
-\S4method{showClientSubject}{CertificateManager}(x)
-
-\S4method{isCertExpired}{CertificateManager}(x)
-
-\S4method{getCertExpires}{CertificateManager}(x)
-
-\S4method{downloadCert}{CertificateManager}(x)
-
-\S4method{obscureCert}{CertificateManager}(x)
-
-\S4method{restoreCert}{CertificateManager}(x)
-
-\S4method{getCertLocation}{CertificateManager}(x)
 }
 \description{
 CertficateManager provides management functions for X.509 certificates that are
@@ -66,20 +45,6 @@ the first time you interact with DataONE each day.
 \section{Methods (by generic)}{
 \itemize{
 \item \code{CertificateManager}: 
-
-\item \code{showClientSubject}: 
-
-\item \code{isCertExpired}: 
-
-\item \code{getCertExpires}: 
-
-\item \code{downloadCert}: 
-
-\item \code{obscureCert}: 
-
-\item \code{restoreCert}: 
-
-\item \code{getCertLocation}: 
 }}
 \section{Slots}{
 

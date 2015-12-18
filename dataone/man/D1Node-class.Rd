@@ -2,19 +2,11 @@
 % Please edit documentation in R/D1Node.R
 \docType{class}
 \name{D1Node-class}
-\alias{D1Node,XMLInternalElementNode-method}
 \alias{D1Node-class}
 \title{A base class for CNode and MNode.}
-\usage{
-\S4method{D1Node}{XMLInternalElementNode}(xml)
-}
 \description{
 A base class for CNode and MNode.
 }
-\section{Methods (by generic)}{
-\itemize{
-\item \code{D1Node}: 
-}}
 \section{Slots}{
 
 \describe{
@@ -46,7 +38,7 @@ A base class for CNode and MNode.
 \section{Methods}{
 
 \itemize{
-  \item{\code{\link[=initialize-D1Node]{initialize}}}{: Initialize a D1Node}
+  \item{\code{\link[=D1Node-initialize]{initialize}}}{: Initialize a D1Node}
  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
  \item{\code{\link{archive}}}{: Create an object on a Member Node.}
  \item{\code{\link{get}}}{: Get the bytes associated with an object on a node.}

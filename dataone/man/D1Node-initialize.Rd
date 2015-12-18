@@ -2,8 +2,8 @@
 % Please edit documentation in R/D1Node.R
 \docType{methods}
 \name{initialize,D1Node-method}
+\alias{D1Node-initialize}
 \alias{initialize,D1Node-method}
-\alias{initialize-D1Node}
 \title{Initialize a D1Node}
 \usage{
 \S4method{initialize}{D1Node}(.Object)

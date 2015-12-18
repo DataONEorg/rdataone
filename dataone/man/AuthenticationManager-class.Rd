@@ -42,7 +42,4 @@ of their existing accounts. For more information about the CILogon service, see
 \describe{
 \item{\code{authInfo}}{value of type \code{"hash"} containing authentication information.}
 }}
-\examples{
-am <- AuthenticationManager()
-}
 

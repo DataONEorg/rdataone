@@ -2,31 +2,13 @@
 % Please edit documentation in R/D1Client.R
 \docType{class}
 \name{D1Client-class}
-\alias{D1Client,ANY,ANY-method}
-\alias{D1Client,character,ANY-method}
-\alias{D1Client,character,character-method}
 \alias{D1Client-class}
 \title{The D1Client class contains methods that perform high level DataONE tasks}
-\usage{
-\S4method{D1Client}{ANY,ANY}()
-
-\S4method{D1Client}{character,ANY}(env, mNodeid, ...)
-
-\S4method{D1Client}{character,character}(env, mNodeid)
-}
 \description{
 The methods in the D1Client class call the low level DataONE API to
 perform involved tasks such as uploading all the packages in a DataPackage (i.e
 \code{\link{uploadDataPackage}})
 }
-\section{Methods (by generic)}{
-\itemize{
-\item \code{D1Client}: 
-
-\item \code{D1Client}: 
-
-\item \code{D1Client}: 
-}}
 \section{Slots}{
 
 \describe{

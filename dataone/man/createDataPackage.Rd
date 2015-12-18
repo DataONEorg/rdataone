@@ -18,7 +18,7 @@ createDataPackage(x, dataPackage, ...)
 \item{...}{(not yet used)}
 }
 \description{
-This method has been superceded by \code{\link{updateDataPackage}}
+This method has been superceded by \code{\link{uploadDataPackage}}
 }
 \section{Methods (by class)}{
 \itemize{

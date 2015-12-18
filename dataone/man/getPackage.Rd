@@ -16,10 +16,6 @@ getPackage(node, ...)
 
 \item{...}{(not yet used)}
 
-\item{identifier}{A character string containing the identifier of the resource map of the package.}
-
-\item{format}{The name of the package format to request. Defaults to BagIt.}
-
 \item{identifier}{The identifier of the package to retrieve.}
 
 \item{format}{The format to send the package in.}

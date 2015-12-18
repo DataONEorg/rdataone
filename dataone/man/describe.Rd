@@ -34,15 +34,6 @@ determine basic properties of the referenced object.
 
 \item \code{node = MNode,pid = character}: 
 }}
-\examples{
-\dontrun{
-mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
-mn <- MNode(mn_uri)
-pid <- "knb.473.1"
-describe(mn, pid)
-describe(mn, "adfadf") # warning message when wrong pid
-}
-}
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
 }
