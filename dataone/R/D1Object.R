@@ -60,7 +60,7 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
   } else {
   }
   
-  .Object@dataObject <- new("DataObject", id = id, dataObj = data, format = format,
+  .Object@dataObject <- new("DataObject", id = id, dataobj = data, format = format,
                             mnNodeId = mnNodeId, filename = filename)
   return(.Object)
 })
@@ -117,7 +117,8 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @describeIn setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
-  setPublicAccess(x@dataObject)
+  x@dataObject <- setPublicAccess(x@dataObject)
+  return(x)
 })
 
 #' Test whether the provided subject can read an object.

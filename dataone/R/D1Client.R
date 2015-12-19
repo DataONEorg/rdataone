@@ -183,6 +183,37 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #     return(dp)
 # })
 
+#' Create the Object in the DataONE System
+#' 
+#' @param x : D1Client
+#' @param d1Object A D1Object instance to upload to DataONE 
+#' @param ... (not yet used)
+#' @rdname createD1Object
+#' @aliases createD1Object
+#' @return TRUE if the object was successfully uploaded, FALSE if not.
+#' @export
+#' @examples
+#' \dontrun{
+#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' d1o <- new("D1Object", file=system.file("extdata/sample-eml.xml", package="dataone"))
+#' d1o <- setPublicAccess(d1o)
+#' uploaded <- createD1Object(d1c, d1o)
+#'}
+setGeneric("createD1Object", function(x, d1Object, ...) {
+  standardGeneric("createD1Object")
+})
+
+#' @describeIn createD1Object
+setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
+  newId <- uploadDataObject(x, d1Object@dataObject)
+  if (!is.null(newId)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+  
+})
+
 #' Download a data object from the DataONE Federation.
 #' @description An objectd is download from the DataONE network for the identifier that is provided.
 #' @param x A D1Client instance
