@@ -143,7 +143,7 @@ metadataObj <- new("DataObject", id=newid, user="uid=slaughter,O=NCEAS,DC=ecoinf
 
 (Note that the example uses a DataONE test environment, and not the production environment.)
 
-The `generateIdentifier` method requests that the DataONE CN generate a properly formatted DOI. 
+The `generateIdentifier` method requests that the DataONE MN generate a properly formatted DOI. 
 
 ### Add each DataObject to the DataPackage
 The DataPackage object serves as a container for a set of data objects that will be uploaded to DataONE. The metadata 
