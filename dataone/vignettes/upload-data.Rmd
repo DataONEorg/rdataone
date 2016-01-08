@@ -1,4 +1,4 @@
-  ---
+---
 title: "Uploading Data to DataONE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
