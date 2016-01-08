@@ -52,7 +52,7 @@ method is used to find an MN that holds the data and that is currently available
 
 ```{r, warning=F, error=F}
 locations <- resolve(cn, pid)
-mnId <- locations$data[1, "nodeIdentifier"]
+mnId <- locations$data[2, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
 ```
 
@@ -80,21 +80,32 @@ obj <- get(mn, pid)
 ```{r, warning=F}
 d1c <- D1Client("PROD", "urn:node:KNB")
 # Ask for the id, title and abstract
-queryParams <- list(q="abstract:kelp", fl="id,title,abstract") 
+queryParams <- list(q="id:doi*", fq="abstract:kelp", fl="id,title,abstract") 
 result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
-pid <- result[6,'id']
+pid <- result[1,'id']
 dataObj <- getDataObject(d1c, pid)
 ```
 
-This method uses the R *datapackage* package and returns a DataObject which includes
-the data itself and the DataONE SystemMetadata for the object.
+This method uses the *getDataObject* method from the R package *datapackage*.  The *getDataObject* method determines which 
+member node in DataONE holds the data item and downloads it into a datapackage::DataObject. The DataObject R object is 
+a wrapper that contains the data bytes for the DataONE dataset requested, as well as the and returns a DataObject which includes
+the data itself and the DataONE system metadata for the object. The following functions are available to extract
+information from the wrapper:
 
-getIdentifier(obj)
-getFormatId(obj)
-getData(obj)
+- getIdentifier(obj)
+- getFormatId(obj)
+- getData(obj)
 
-### getSystemMetadata 
-[to be completed]
+To extract the data byes from the DataObject:
+```{r, warnings=F}
+dataBytes <- getData(dataObj)
+```
 
+Note that the complete set of information from the DataONE system metadata is available from the 
+object's slot:
+
+```
+str(dataObj@sysmeta)
+```
 ### download a data package
 [to be completed]

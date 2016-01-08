@@ -1,4 +1,4 @@
----
+  ---
 title: "Uploading Data to DataONE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -13,43 +13,41 @@ vignette: >
 This document describes how to use the *dataone* R package to upload data to DataONE, and how to perform
 maintenance operations on the data after it has been uploaded.
 
-DataONE provides an Application Programming Interface (API) to allow client programs to search, download, upload and
-perform maintainence operations on datasets in the DataONE Federation. This API is described in the documents:
-
-* https://purl.dataone.org/architecturev2/apis/MN_APIs.html
-* https://purl.dataone.org/architecturev2/apis/CN_APIs.html
-
-The *dataone* package provides methods to allow R scripts to call these DataONE [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) services to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN), with each method calling the corresponding DataONE web service. For example, the *dataone* `listNodes` R method can call the
-DataONE web service located at (https://cn.dataone.org/cn/d1/v2/nodes) and described at (https://purl.dataone.org/architecturev2/apis/CN_APIs.html#CNCore.listNodes)
-
-The *dataone* package also provides higher level R methods that take care of many of the
-details of interacting with the DataONE web services. For example, the `uploadDataPackage` method can be used to upload a set of data files
-and metadata file to DataONE that will be viewable and accessible as a single
-[DataONE data package](https://purl.dataone.org/architecturev2/design/DataPackage.html).
+The *dataone* package provides methods to allow R scripts to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN). The *dataone* R package takes care of the details of calling the 
+corresponding DataONE web service on a DataONE node. For example, the *dataone* `create` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecturev2/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
 
 ## Uploading a data package using `uploadDataPackage`
-A workflow for preparing and uploading a data package using the `uploadDataPackage` method will be shown. A complete
-script that uses this workflow is shown here, but each section of this script will be explained in the following sections:
+Datasets and metadata can be uploaded individually or as a data package. Uploading a data package
+will be described first and a workflow for preparing and uploading a data package using the `uploadDataPackage` method will be shown. 
+A complete script that uses this workflow is shown here: 
 
-```
+```{r, warning=F, eval=F}
 library(dataone)
 library(datapackage)
 dp <- new("DataPackage")
 sampleData <- system.file("extdata/sample.csv", package="dataone")
-dataObj <- new("DataObject", user="uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org", format="text/csv", file=sampleData)
+# Have DataONE echo back the DataONE username that is uploading the data.
+# This is the "subject" name that is present in the current authentication method,
+# either an authentication token or an X.509 certificate
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+credentials <- echoCredentials(cn)
+user <- credentials$person$subject
+dataObj <- new("DataObject", user=user, format="text/csv", file=sampleData)
 dataObj <- setPublicAccess(dataObj)
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
-metadataObj <- new("DataObject", user="uid=slaughter,O=NCEAS,DC=ecoinformatics,DC=org",
-               format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- new("DataObject", user=user, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 addData(dp, metadataObj)
 addData(dp, sciDataObj, metadataObj)
 d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=2, quiet=F)
 ```
 
-## Create a DataPackage object.
-In order to use `uploadDataPackage`, it is necessary to prepare an R DataPackage that will serve as a container for the set of files that
-will be included in the data package:  
+The following sections describe each line of this script in detail.
+
+### 1. Create a DataPackage object.
+In order to use `uploadDataPackage`, it is necessary to prepare an R *DataPackage* object that will serve as a container for the set
+of files  that will be included in the data package:  
 
 ```{r, warning=F, message=F}
 library(dataone)
@@ -57,18 +55,20 @@ library(datapackage)
 dp <- new("DataPackage")
 ```
 When using the `uploadDataPackage` method, data structures that are required by DataONE are created, 
-maintained and uploaded automatically. These data structures include a ResourceMap that describes the data package, and SystemMetadata objects that 
-contain DataONE system information for each of the science datasets and associated science metadata. 
+configured and uploaded automatically with the date package. These data structures include a 
+[ResourceMap](https://purl.dataone.org/architecturev2/design/DataPackage.html#generating-resource-maps)
+that describes the data package, and SystemMetadata objects that contain DataONE system information for each 
+of the science datasets and associated science metadata. 
 
-### Prepare a metadata file that will describe the files in the data package
+### 2. Prepare a metadata file that will describe the files in the data package
 The next step is to prepare a metadata file that will describe the science datasets in the
-datapackage. The most common metadata format used in the DataONE network is the
-Ecological Metadata Langauage. Other supported formats include FGDC and ISO 19113.
+data package. The most common metadata format used in the DataONE network is the
+Ecological Metadata Langauage (EML). Other supported formats include FGDC and ISO 19113.
 Additional information about EML is available at \link{https://knb.ecoinformatics.org/#external//emlparser/docs/index.html}.
 
-Detailed directions regarding authoring metadata documents is outside the scope of this document.
+Detailed directions regarding authoring metadata documents are outside the scope of this document.
 
-### Determine what access your data and metadata should have 
+### 3. Determine what access your data and metadata should have 
 The levels of access available to objects in DataOne are "read", "write", and "changePermission".
 The "read" permission allows a user the ability to view the content of a DataONE object.
 The "write" permission allows a user the ability to change the content of an object via update services. 
@@ -77,75 +77,81 @@ Permissions are hierarchical, so write permission also includes read permission
 The "changePermission" permission allows the ability to change the access policy for an object and includes 
 both read and write permissions.
 
+Each of these permissions can be granted to a single user, a group of users, or the special *public* user
+which means all users.
+
 Each object in DataONE can have one or more access rules that control the access of that object. The
 complete set of access rules for an object is refered to as it's access policy.
 
-### Create a DataObject for each data file
-The DataObject class is a wrapper for the science datasets and science metadata that will be uploaded and maintains information
-about these objects that will be needed by DataONE.
+The next section shows how to apply the desired access rules to items that will be added to a data package
+before upload.
+
+### 4. Create a DataObject for each data file
+The DataObject class is a wrapper for each science datasets and science metadata that will be included in the data package.
+The DataObject maintains information about an object that will be needed by DataONE.
 
 A DataObject must be created for each science dataset and science metadata that will be uploaded to DataONE. 
 A SystemMetadata object will be created automatically and stored in each DataObject. The SystemMetadata object will
 be used by DataONE to maintain low level information about the dataset, such as the access policy, the user identity
-of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. More information about DataONE 
-SystemMetdata is availalbe at \link{https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html}.
+of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. 
+More information about DataONE  SystemMetdata is availalbe at
+\link{https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html}.
 
-The example below creates a DataObject for a science dataset
+The example below creates a DataObject for a science dataset:
 
-```
+```{r, warning=F}
 sampleData <- system.file("extdata/sample.csv", package="dataone")
-dataObj <- new("DataObject", user="uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org", format="text/csv", file=sampleData)
+dataObj <- new("DataObject", user=user, format="text/csv", file=sampleData)
 ```
 
-The *user* specified in the examples above will become the DataONE rightsholder of the dataset when it is uploaded. The rightsholder has full priviledge
-to the object.
+The *user* specified in the examples above will become the DataONE rightsholder of the dataset when it is uploaded. The rightsholder 
+has full priviledge to the object.
 
-Access rules can be added to each DataObject after it has been created. Access rules can be added to grant permissions to a single user.
-Access can also be granted to the *public* user, which means any and all users. For example, public read access can be set using the
-`setPublicAccess` method:
+Access rules can be added to each DataObject after it has been created. Access rules can be added to grant permissions to a
+single user. Access can also be granted to the *public* user, which means any and all users. For example, public read access
+can be set using the `setPublicAccess` method:
 
-```
+```{r}
 dataObj <- setPublicAccess(dataObj)
 ```
 
 Individual access rules to be applied to a DataONE user identify can also be added to the access policy. 
 
 Access rules are added to a DataObject using the `addAccessRule` method. The following access rule will grant
-user 'collins' changePermission access to the dataset after it is uploaded:
+user 'collins' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
 
-```
+```{r}
 accessRules <- data.frame(subject="uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org", permission="changePermission")
 sciDataObj <- addAccessRule(dataObj, accessRules)
 ```
 
-### Create a DataObject for the metadata file
+### 5. Create a DataObject for the metadata file
 When a DataObject is created, a unique identifier is generated if one is not specified. This automatically generated
 identifier has the format "urn:uuid:<a unique string>", for example "urn:uuid:c3443142-6260-4ea5-aaa1-1114981e04ad".
 
 The following command creates the DataObject for the science metadata, using an automatically generated identifier:
 
-```
+```{r}
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
-metadataObj <- new("DataObject", user="uid=slaughter,O=NCEAS,DC=ecoinformatics,DC=org", 
-               format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- new("DataObject", user=user, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```
 
 Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata DataObject, using the *generateIdentifier* method:
 
-```
-cn <- CNode("SANDBOX")
-mn <- getMNode(cn, "urn:node:mnSandboxUCSB2")
+```{r, eval=F}
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 newid <- generateIdentifier(mn, "DOI")
 metadataObj <- new("DataObject", id=newid, user="uid=slaughter,O=NCEAS,DC=ecoinformatics,DC=org", 
                format="eml://ecoinformatics.org/eml-2.1.1",
                file=sampleEML)
 ```    
 
-(Note that the example uses a DataONE test environment, and not the production environment.)
+(Note that the example uses a DataONE test environment *STAGING*, and not the production environment.)
 
 The `generateIdentifier` method requests that the DataONE MN generate a properly formatted DOI. 
 
-### Add each DataObject to the DataPackage
+### 6. Add each DataObject to the DataPackage
 The DataPackage object serves as a container for a set of data objects that will be uploaded to DataONE. The metadata 
 DataObject and all science data DataObjects must be added to the DataPackage before calling `uploadDataPackage`.
 
@@ -161,46 +167,146 @@ added.
 
 Now add the metadata object to the DataPackage:
 
-```
+```{r}
 addData(dp, metadataObj)
 ```
 
-Then specify the metadat object when each science data object is added:
+Then specify the metadat object when each science data object is added, associating the metadata object with the
+science object:
 
-```
+```{r}
 addData(dp, sciDataObj, metadataObj)
 ```
 
-### Upload the DataPackage
+### 7. Upload the DataPackage
 
 When all DataObjects have been added to the DataPackage, call the `uploadDataPackage` method to upload the 
 entire DataPackage:
 
-```
-d1c <- D1Client(env="SANDBOX", mNodeid="urn:node:mnSandboxUCSB2")
+```{r, eval=F}
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=2)
 message(sprintf("Uploaded data package with identifier: %s", packageId))
 ```
 
-(Note that the example uses a DataONE test environment, and not the production environment.)
+(Note that the example uses a DataONE test environment *STAGING*, and not the production environment.)
 
-After uploadDataPackage has been called sucessfully, the data package can be viewed on the member node, searched for
+After *uploadDataPackage* has been called sucessfully, the data package can be viewed on the member node, searched for
 using the DataONE search facility. Note that if objects in DataONE are not publicly readable, and the authenticated
 user performing the search isn't granted access in an object's access policy, then the objects will not be 
-viewable or discoverable via the search facility.
+viewable or discoverable via the search facility for that user.
 
 ## Uploading Individual Datasets And Metadata
-[Not yet completed]
+
+A single dataset or metadata file can be uploaded to a DataONE MN using the *create* method.
+When uploading a single dataset using this method, additional information must be supplied to DataONE that
+controls how DataONE interacts with the uploaded dataset. This additional information is stored
+in DataONE as a *system metadata* object and contains information such as who can access or update
+the dataset, how many copies of the dataset should be maintained, has the object been superceded by
+another object, etc. A system metadata object is created in R using the *datapackage::SystemMetadata*
+class, as shown below:
+
+```{r,warning=F}
+library(uuid)
+library(digest)
+# Create a system metadata object for a data file. 
+# Just for demonstration purposes, create a temporary data file.
+testdf <- data.frame(x=1:20,y=11:30)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+format <- "text/csv"
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+# Generate a unique identifier for the dataset
+pid <- sprintf("urn:uuid:%s", UUIDgenerate())
+# Have DataONE echo back the DataONE username that is uploading the data.
+# This is the "subject" name that is present in the current authentication method,
+# either an authentication token or an X.509 certificate
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+credentials <- echoCredentials(cn)
+user <- credentials$person$subject
+sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1)
+sysmeta <- addAccessRule(sysmeta, "public", "read")
+```
+
+Alternatively, the system metadata could have been created with a *seriesId*. The *seriesId* is explained in the
+*dataone_overview* vignette. The following example shows the creation of a *SystemMetadata* object using the
+optional *seriesId*:
+
+```{r,warning=F}
+# Create a system metadata object for a data file. 
+# Just for demonstration purposes, create a temporary data file.
+testdf <- data.frame(x=1:20,y=11:30)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+format <- "text/csv"
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+# Generate a unique identifier for the dataset
+pid <- sprintf("urn:uuid:%s", UUIDgenerate())
+# The seriesId can be any unique character string.
+seriesId <- sprintf("urn:uuid:%s", UUIDgenerate())
+# Have DataONE echo back the DataONE username that is uploading the data.
+# This is the "subject" name that is present in the current authentication method,
+# either an authentication token or an X.509 certificate
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+credentials <- echoCredentials(cn)
+user <- credentials$person$subject
+sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1, 
+               submitter=user, rightsHolder=user, seriesId=seriesId)
+sysmeta <- addAccessRule(sysmeta, "public", "read")
+```
+A unique identifier must be specified for each system metadata, whether or not a seriesId is used.
+
+The dataset can now be uploaded to DataONE with the associated system metadata:
+```{r,warning=F, eval=F}
+response <- create(mn, pid, csvfile, sysmeta)
+```
+
+Note that for this example, the DataONE test environment *STAGING* is used, and not the production environment.
+
 ## Maintaining Uploaded Datasets
+After date has been uploaded to DataONE, maintenance operations can be performed on these objects using the methods described in the following sections.
+
+### Update the DataONE system metadata for an object (MNode: updateSystemMetadata)
+The system metadata can be updated for an object in DataONE without updating the data bytes of the object itself. For
+example, if an object was only readable by the data submitter, the access policy for an object can be updated to enable 
+public access. System metadata is updated for an object using the *updateSystemMetadata* method:
+
+The following exmaple first downloads the current system metadata for an object, then updates the access policy that
+will be applied to the object and uploads the new system metadata to DataONE so that the changes will be applied: 
+
+```{r, eval=F}
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+myPid <- "urn:uuid:2fb13ee6-fb8a-4eea-b9ee-f52e85b35a7a"
+sysmeta <- getSystemMetadata(mn, myPid)
+sysmeta <- addAccessRule(sysmeta, "public", "read")
+status <- updateSystemMetadata(mn, myPid, sysmeta)
+```
+### Replace an object with a newer version (MNode: update)
 [Not yet completed]
+
 <!--
-After datasets and their metadata have been uploaded to DataONE, maintenance operations can be performed on these objects using the methods described in the following sections:
-
-* Update the DataONE system metadata for an object (MNode: updateSystemMetadata)
-Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. 
-
-* Replace an object with a newer version (MNode: update)
 Updates an existing object by creating a new object identified by newPid on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of pid and newPid.
+
+```
+# Update the object with a new version
+updateid <- generateIdentifier(mn, "UUID")
+testdf <- data.frame(x=1:20,y=11:30)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sysmeta@identifier <- updateid
+sysmeta@size <- size
+sysmeta@checksum <- sha1
+sysmeta@obsoletes <- newid
+response <- update(mn, newid, csvfile, updateid, sysmeta)
+updsysmeta <- getSystemMetadata(mn, updateid)
+```
 
 The Member Node sets Types.SystemMetadata.obsoletedBy on the object being obsoleted to the pid of the new object. It then updates Types.SystemMetadata.dateSysMetadataModified on both the new and old objects. The modified system metadata entries then become available in MNRead.listObjects(). This ensures that a Coordinating Node will pick up the changes when filtering on Types.SystemMetadata.dateSysMetadataModified.
 
@@ -224,4 +330,7 @@ Member Nodes MUST check that the caller is authorized to perform this function.
 
 If the object does not exist on the node servicing the request, then an Exceptions.NotFound exception is raised. The message body of the exception SHOULD contain a hint as to the location of the CNRead.resolve() method.
 
+```{r, eval=F}
+response <- archive(mn, newid)
+```
 -->
