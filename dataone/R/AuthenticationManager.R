@@ -45,6 +45,8 @@
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
 #' @import hash
+#' @import base64enc
+#' @import jsonlite
 #' @include D1Node.R
 setClass("AuthenticationManager", slots = c(
     authInfo="hash"
@@ -69,7 +71,7 @@ setMethod("AuthenticationManager", signature=character(), function() {
     result@authInfo$token <- as.character(NA)
     result@authInfo$cert <- as.character(NA)
     # The node that authentication was checked for. 
-    result@authInfo$authNode <- as.character(NA)
+    result@authInfo$node <- as.character(NA)
     # Did we perform the check?
     result@authInfo$init <- FALSE
     options(D1AuthObscured = FALSE)
@@ -118,8 +120,30 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       x@authInfo$token <- authToken
       x@authInfo$cert <- as.character(NA)
       x@authInfo$node <- node@identifier
-      x@authInfo$init <- TRUE
-      return(TRUE)
+      tokenInfo <- parseAuthToken(authToken)
+      # issuedAt is GMT
+      issuedAt <- tokenInfo[['issuedAt']]
+      # Remove the ISO 8601 'T' from the time, R doesn't handle it well.
+      issuedAt <- gsub("T", " ", issuedAt)
+      startDT <- as.POSIXct(issuedAt, "GMT")
+      startSeconds <- as.integer(startDT)
+      ttl <- tokenInfo[['ttl']]
+      # ttl is 'time to live' in seconds. Calculate expiration date
+      # by adding this to 'issuedAt'
+      expiresSeconds <- startSeconds + ttl
+      # Seconds since the start of the epoch according to R = 1970-01-01
+      expiresDT <- as.POSIXct(expiresSeconds, origin="1970-01-01", tz="GMT")
+      x@authInfo$expires <- expiresDT
+      x@authInfo$subject <- tokenInfo[['sub']]
+      # Check if the authToken is expired
+      if(as.POSIXct(Sys.time(), "GMT") > x@authInfo$expires) {
+        x@authInfo$init <- FALSE
+        warning("Your authentication token is expired or invalid. Please login to search.dataone.org and generate a new token.")
+        return(FALSE)
+      } else {
+        x@authInfo$init <- TRUE
+        return(TRUE)
+      }
     }
   }
   
@@ -135,6 +159,8 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
       x@authInfo$cert <- cert
       x@authInfo$node <- node@identifier
       x@authInfo$init <- TRUE
+      x@authInfo$expires <- getCertExpires(cm)
+      x@authInfo$subject <- showClientSubject(cm)
       return(TRUE)
     } else {
       # The certificate is invalid or unreadable, so fall back to unauthenticated?
@@ -274,7 +300,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   }
   # TODO: set client subject for a token when JWT package is available.
   if(x@authInfo$authMethod == "token") {
-    return(as.character(NA))
+    return(x@authInfo$subject)
   } else {
     cm <- suppressWarnings(CertificateManager())
     return(showClientSubject(cm))
@@ -304,7 +330,7 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
   }
   # TODO: set client subject for a token when JWT package is available.
   if(x@authInfo$authMethod == "token") {
-    return(as.character(NA))
+    return(x@authInfo$expires)
   } else {
     # Turn off warnings the Deprecated msg doesn't get printed
     cm <- suppressWarnings(CertificateManager())
@@ -335,7 +361,11 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
   # TODO: set client subject for a token when JWT package is available.
   # Until JWT is available, we have to assume that a token has not expired. 
   if(x@authInfo$authMethod == "token") {
-    return(FALSE)
+    if(as.POSIXct(Sys.time(), "GMT") > x@authInfo$expires) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
   } else {
     # Turn off warnings so that the Deprecated msg doesn't get printed
     cm <- suppressWarnings(CertificateManager())
@@ -403,3 +433,12 @@ setMethod("showAuth", signature("AuthenticationManager"), function(x) {
     message(sprintf("Authenticated node: %s", x@authInfo$node))
   }
 })
+
+parseAuthToken <- function(authToken) {
+  # TODO: put in checks for a valid token format
+  payload <- unlist(strsplit(authToken, "\\."))[[2]]
+  payloadRaw <- base64decode(payload)
+  payloadChar <- rawToChar(payloadRaw)
+  tokenInfo <- fromJSON(payloadChar)
+  return(tokenInfo)
+}
