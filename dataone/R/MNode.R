@@ -269,6 +269,23 @@ setGeneric("create", function(mnode, pid, ...) {
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
+    
+    # Check if the user has set the sysmeta submitter and rightsHolder, 
+    # if not, then set them to the values contained in their authentication token 
+    # or X.509 certificate.
+    am <- AuthenticationManager()
+    suppressWarnings(isValid <- isAuthValid(am, mnode))
+    # If authentication isn't valid, then let this call fail in auth_post, so the
+    # appropriate messages are printed.
+    if (isValid) {
+      if(is.na(sysmeta@submitter)) {
+        sysmeta@submitter <- getAuthSubject(am)
+      }
+      if(is.na(sysmeta@rightsHolder)) {
+        sysmeta@rightsHolder <- sysmeta@submitter
+      }
+    }
+    
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
@@ -313,6 +330,23 @@ setGeneric("update", function(mnode, pid, ...) {
 setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
+    
+    # Check if the user has set the sysmeta submitter and rightsHolder, 
+    # if not, then set them to the values contained in their authentication token 
+    # or X.509 certificate.
+    am <- AuthenticationManager()
+    suppressWarnings(isValid <- isAuthValid(am, mnode))
+    # If authentication isn't valid, then let this call fail in auth_put, so the
+    # appropriate messages are printed.
+    if (isValid) {
+      if(is.na(sysmeta@submitter)) {
+        sysmeta@submitter <- getAuthSubject(am)
+      }
+      if(is.na(sysmeta@rightsHolder)) {
+        sysmeta@rightsHolder <- sysmeta@submitter
+      }
+    }
+    
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
@@ -349,6 +383,23 @@ setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
 #' @export
 setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadata"), function(node, pid, sysmeta) {
     url <- paste(node@endpoint, "meta", pid, sep="/")
+    
+    # Check if the user has set the sysmeta submitter and rightsHolder, 
+    # if not, then set them to the values contained in their authentication token 
+    # or X.509 certificate.
+    am <- AuthenticationManager()
+    suppressWarnings(isValid <- isAuthValid(am, node))
+    # If authentication isn't valid, then let this call fail in auth_put, so the
+    # appropriate messages are printed.
+    if (isValid) {
+      if(is.na(sysmeta@submitter)) {
+        sysmeta@submitter <- getAuthSubject(am)
+      }
+      if(is.na(sysmeta@rightsHolder)) {
+        sysmeta@rightsHolder <- sysmeta@submitter
+      }
+    } 
+    
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=node@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
