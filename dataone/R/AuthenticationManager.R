@@ -46,7 +46,7 @@
 #' @aliases AuthenticationManager-class
 #' @import hash
 #' @import base64enc
-#' @import jsonlite
+#' @importFrom jsonlite fromJSON
 #' @include D1Node.R
 setClass("AuthenticationManager", slots = c(
     authInfo="hash"
