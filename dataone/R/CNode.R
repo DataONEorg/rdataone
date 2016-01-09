@@ -527,6 +527,7 @@ setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function
     mn <- MNode(output.list[[1]])
     return(mn)  
   } else {
+    warning(sprintf("Member node %s not found.", nodeid))
     return(NULL)
   }
 })
