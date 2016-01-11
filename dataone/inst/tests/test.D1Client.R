@@ -82,12 +82,7 @@ test_that("D1Client getDataObject", {
     expect_that(cli, not(is_null()))
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
-    
-    am <- AuthenticationManager()
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    authValid <- isAuthValid(am, cli@cn)
-    options(warn = warnLevel)
+
     # Try retrieving a known object from the PROD environment
     pid <- "solson.5.1"
     obj <- getDataObject(cli, pid)
@@ -123,19 +118,10 @@ test_that("D1Client uploadDataPackage works", {
   options(warn = warnLevel)
   if (authValid) {
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    # Set 'user' to authentication subject, if available, so we will have permission to change this object
-    subject <- getAuthSubject(am)
-    # If subject isn't available from the current authentication method, then try
-    # R options
-    if (is.na(subject) || subject == "public") {
-      creds <- echoCredentials(d1c@cn)
-      subject <- creds$person$subject
-      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
-    }
     
     dp <- new("DataPackage")
     # Create DataObject for the science data 
-    sciObj <- new("DataObject", format="text/csv", user=subject, mnNodeId=getMNodeId(d1c), filename=csvfile)
+    sciObj <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
     expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
     sciObj <- setPublicAccess(sciObj)
@@ -146,8 +132,7 @@ test_that("D1Client uploadDataPackage works", {
     
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
-    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", user=subject, 
-                       mnNodeId=getMNodeId(d1c), filename=emlFile)
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
     expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
     addData(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
