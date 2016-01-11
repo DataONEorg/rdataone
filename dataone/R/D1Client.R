@@ -32,7 +32,6 @@
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
-#'  \item{\code{\link{getPackage}}}{: Download a data package from the DataONE Federation.}
 #'  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
 #'  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
 #'  \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
@@ -265,14 +264,14 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
       message("Unable to download object with identifier: %s\n", identifier)
       return(NULL)
     }
-    mntable <- result[[2]]
+    mntable <- result$data
     
     # Get the SystemMetadata and object bytes from one of the MNs
     # Process them in order, until we get non-NULL responses from a node
     sysmeta <- NA
     bytes <- NA
     for (i in 1:length(mntable)) { 
-        currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier)
+        suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
         if (!is.null(currentMN)) {
             sysmeta <- getSystemMetadata(currentMN, identifier)
             bytes <- get(currentMN, identifier)
