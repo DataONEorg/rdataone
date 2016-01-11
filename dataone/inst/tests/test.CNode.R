@@ -30,6 +30,7 @@ test_that("CNode listNodes()", {
 
 test_that("CNode get()", {
   library(dataone)
+  library(XML)
   cn <- CNode()
   pid <- "aceasdata.3.2"
   obj <- get(cn, pid)
@@ -101,22 +102,14 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   if (authValid) {
     # TODO: remove this check when Mac OS X can be used with certificates
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    # Set 'subject' to authentication subject, if available, so this userId can check a reservation that it made
     subject <- getAuthSubject(am)
-    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
-    subject <- getAuthSubject(am)
-    # If subject isn't available from the current authentication method, then try
-    # R options
-    if (is.na(subject) || subject == "public") {
-      creds <- echoCredentials(cn)
-      subject <- creds$person$subject
-      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
-    }
-    
     myId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # researveIdentifier will create the reservation using only the client subject from
     # the current authentication method - either auth token or certificate. 
     newId <- reserveIdentifier(cn, myId)
     expect_equal(myId, newId)
+    # Have to specify the subject for hasReservation
     hasRes <- hasReservation(cn, newId, subject=subject)
     expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
   } else {
