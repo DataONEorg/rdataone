@@ -26,17 +26,12 @@ library(dataone)
 library(datapackage)
 dp <- new("DataPackage")
 sampleData <- system.file("extdata/sample.csv", package="dataone")
-# Have DataONE echo back the DataONE username that is uploading the data.
-# This is the "subject" name that is present in the current authentication method,
-# either an authentication token or an X.509 certificate
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-credentials <- echoCredentials(cn)
-user <- credentials$person$subject
-dataObj <- new("DataObject", user=user, format="text/csv", file=sampleData)
+dataObj <- new("DataObject", format="text/csv", file=sampleData)
 dataObj <- setPublicAccess(dataObj)
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
-metadataObj <- new("DataObject", user=user, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 addData(dp, metadataObj)
 addData(dp, sciDataObj, metadataObj)
 d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
@@ -101,11 +96,14 @@ The example below creates a DataObject for a science dataset:
 
 ```{r, warning=F}
 sampleData <- system.file("extdata/sample.csv", package="dataone")
-dataObj <- new("DataObject", user=user, format="text/csv", file=sampleData)
+dataObj <- new("DataObject", format="text/csv", file=sampleData)
 ```
 
-The *user* specified in the examples above will become the DataONE rightsholder of the dataset when it is uploaded. The rightsholder 
-has full priviledge to the object.
+An optional *user* argument can be specified when creating a *DataObject*, which will be used to set the DataONE *submitter* and *rightsholder* of the dataset when it is uploaded. The *rightsholder* is the
+DataONE user that has full priviledge to the object.
+
+If a *user* is not specified for a *DataObject*, then it will automatically be set to the DataONE user 
+that created the authentication token or X.509 certificate. 
 
 Access rules can be added to each DataObject after it has been created. Access rules can be added to grant permissions to a
 single user. Access can also be granted to the *public* user, which means any and all users. For example, public read access
@@ -133,7 +131,7 @@ The following command creates the DataObject for the science metadata, using an 
 
 ```{r}
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
-metadataObj <- new("DataObject", user=user, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```
 
 Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata DataObject, using the *generateIdentifier* method:
@@ -142,9 +140,7 @@ Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata 
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 newid <- generateIdentifier(mn, "DOI")
-metadataObj <- new("DataObject", id=newid, user="uid=slaughter,O=NCEAS,DC=ecoinformatics,DC=org", 
-               format="eml://ecoinformatics.org/eml-2.1.1",
-               file=sampleEML)
+metadataObj <- new("DataObject", id=newid, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```    
 
 (Note that the example uses a DataONE test environment *STAGING*, and not the production environment.)
@@ -219,13 +215,8 @@ size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 # Generate a unique identifier for the dataset
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
-# Have DataONE echo back the DataONE username that is uploading the data.
-# This is the "subject" name that is present in the current authentication method,
-# either an authentication token or an X.509 certificate
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-credentials <- echoCredentials(cn)
-user <- credentials$person$subject
 sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
@@ -247,15 +238,9 @@ sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
 # The seriesId can be any unique character string.
 seriesId <- sprintf("urn:uuid:%s", UUIDgenerate())
-# Have DataONE echo back the DataONE username that is uploading the data.
-# This is the "subject" name that is present in the current authentication method,
-# either an authentication token or an X.509 certificate
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-credentials <- echoCredentials(cn)
-user <- credentials$person$subject
-sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1, 
-               submitter=user, rightsHolder=user, seriesId=seriesId)
+sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1,  seriesId=seriesId)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
 A unique identifier must be specified for each system metadata, whether or not a seriesId is used.
@@ -281,15 +266,13 @@ will be applied to the object and uploads the new system metadata to DataONE so 
 ```{r, eval=F}
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-myPid <- "urn:uuid:2fb13ee6-fb8a-4eea-b9ee-f52e85b35a7a"
-sysmeta <- getSystemMetadata(mn, myPid)
+pid <- "urn:uuid:2fb13ee6-fb8a-4eea-b9ee-f52e85b35a7a"
+sysmeta <- getSystemMetadata(mn, pid )
 sysmeta <- addAccessRule(sysmeta, "public", "read")
-status <- updateSystemMetadata(mn, myPid, sysmeta)
+status <- updateSystemMetadata(mn, pid, sysmeta)
 ```
 ### Replace an object with a newer version (MNode: update)
-[Not yet completed]
 
-<!--
 Updates an existing object by creating a new object identified by newPid on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of pid and newPid.
 
 ```
@@ -313,24 +296,25 @@ The Member Node sets Types.SystemMetadata.obsoletedBy on the object being obsole
 The update operation MUST fail with Exceptions.InvalidRequest on objects that have the Types.SystemMetadata.archived property set to true.
 
 A new, unique Types.SystemMetadata.seriesId may be included when beginning a series, or a series may be extended if the newPid obsoletes the existing pid.
--->
 
-### Remove an object from DataONE search (MNode: archive)
-[Not yet completed]
-<!--
-Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
+### Remove an object from DataONE search
 
-The operation does not delete the object bytes, but instead sets the Types.SystemMetadata.archived flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+An object can be removed from searches done with the DataONE search mechanism by calling the *archive*
+method with the pid of the object. This operation does not delete the object bytes, but instead updates
+the system metadata for the object to set the *archived* flag to true. The object can still be 
+referenced with it's pid and downloaded, but it will not appear in any search results.
 
-Objects that are archived can not be updated through the MNStorage.update() operation.
+Objects that are archived can not be updated using the *updatei* method.  Once an object is archived it cannot be un-archived. 
 
-Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
-
-Member Nodes MUST check that the caller is authorized to perform this function.
-
-If the object does not exist on the node servicing the request, then an Exceptions.NotFound exception is raised. The message body of the exception SHOULD contain a hint as to the location of the CNRead.resolve() method.
-
-```{r, eval=F}
+```{r, eval=FALSE}
+# Obtain a pid with query() or by using the member node GUI, i.e. metacatui
+response <- archive(mn, pid)
+newsysmeta <- getSystemMetadata(mn, pid)
 response <- archive(mn, newid)
 ```
--->
+
+The following commands can be used to verify that the object was archived.
+```{r, eval=FALSE}
+sysmeta <- getSystemMetadata(mn, newid)
+str(sysmeta)
+```
