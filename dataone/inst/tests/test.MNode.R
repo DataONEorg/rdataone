@@ -135,21 +135,11 @@ test_that("MNode create(), update(), archive(), and delete()", {
     options(warn = warnLevel)
     if (authValid) {
       if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      user <- getAuthSubject(am)
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
       expect_that(newid, matches("urn:uuid:"))
-      
-      # Set 'user' to authentication subject, if available, so we will have permission to change this object
-      user <- getAuthSubject(am)
-      # If subject isn't available from the current authentication method, then try
-      # R options
-      if (is.na(user) || user == "public") {
-        creds <- echoCredentials(d1c@cn)
-        user <- creds$person$subject
-        if(is.null(user) || is.na(user)) skip("This test requires a valid DataONE user identity>\")")
-      }
-      
       expect_that(user, matches("cilogon|dataone"))
       # Create a data object, and convert it to csv format
       testdf <- data.frame(x=1:10,y=11:20)
@@ -162,12 +152,10 @@ test_that("MNode create(), update(), archive(), and delete()", {
       sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
       # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
       seriesId <- UUIDgenerate()
-      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1,
+      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
                      originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier, seriesId=seriesId)
       sysmeta <- addAccessRule(sysmeta, "public", "read")
       expect_that(sysmeta@checksum, equals(sha1))
-      expect_that(sysmeta@submitter, equals(user))
-      expect_that(sysmeta@rightsHolder, equals(user))
       expect_that(sysmeta@originMemberNode, equals(mn@identifier))
       expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
       
@@ -236,17 +224,7 @@ test_that("MNode create() works for large files", {
     options(warn = warnLevel)
     if (authValid) {
       if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      # Set 'subject' to authentication subject, if available, so we will have permission to change this object
-      subject <- getAuthSubject(am)
-      # If subject isn't available from the current authentication method, then try
-      # the R options.
-      if (is.na(subject) || user == "public") {
-        creds <- echoCredentials(cn)
-        subject <- creds$person$subject
-        if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
-      }
-      
-      expect_that(subject, matches("cilogon|dataone"))
+      user <- getAuthSubject(am)
       # TODO: Create a large data object using fallocate through a system call (only on linux)
       csvfile <- 'testdata.csv'
       csvsize <- '4G'
@@ -260,15 +238,14 @@ test_that("MNode create() works for large files", {
       format <- "text/csv"
       size <- file.info(csvfile)$size
       sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, submitter=user, rightsHolder=user, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1, originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
       sysmeta <- addAccessRule(sysmeta, "public", "read")
       expect_that(sysmeta@checksum, equals(sha1))
-      expect_that(sysmeta@submitter, equals(user))
-      expect_that(sysmeta@rightsHolder, equals(user))
       expect_that(sysmeta@originMemberNode, equals(mn@identifier))
       expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
       
       # Upload the data to the MN using create(), checking for success and a returned identifier
+      # Note: create() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
       response <- create(mn, newid, csvfile, sysmeta)
       expect_that(response, not(is_null()))
       expect_that(xmlValue(xmlRoot(response)), matches(newid)) 
@@ -324,16 +301,7 @@ test_that("updateSystemMetadata() works",{
   options(warn = warnLevel)
   if (authValid) {
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    # Set 'user' to authentication subject, if available, so we will have permission to change this object
     subject <- getAuthSubject(am)
-    # If subject isn't available from the current authentication method, then try
-    # R options
-    if (is.na(subject) || subject == "public") {
-      creds <- echoCredentials(d1c@cn)
-      subject <- creds$person$subject
-      if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
-    }
-    
     do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
     # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
     uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
