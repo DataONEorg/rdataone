@@ -464,6 +464,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @param ... (not yet used)
 #' @return The location of the package file downloaded from the member node.
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
+#' @import uuid
 #' @export
 setGeneric("getPackage", function(node, ...) { 
     standardGeneric("getPackage")
@@ -479,7 +480,7 @@ setMethod("getPackage", signature("MNode"), function(node, identifier, format="a
     response <- auth_get(url, node=node)
     
     if (response$status == "200") {
-        packageFile <- tempfile(pattern=sprintf("%s-", identifier), fileext=".zip")
+        packageFile <- tempfile(pattern=sprintf("%s-", UUIDgenerate()), fileext=".zip")
         packageBin <- content(response, as="raw")
         writeBin(packageBin, packageFile)
         return(packageFile)
