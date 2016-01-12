@@ -58,13 +58,13 @@ test_that("D1Client methods", {
   expect_match(cli@mn@identifier, "urn:node:mnDemo2")
   
   # Test getMN (deprecated)
-  testMN <- getMN(cli)
+  suppressWarnings(testMN <- getMN(cli))
   expect_match(testMN@identifier, "urn:node:mnDemo2")
-  testMN <- getMN(cli, nodeid="urn:node:mnDemo2")
+  suppressWarnings(testMN <- getMN(cli, nodeid="urn:node:mnDemo2"))
   expect_match(testMN@identifier, "urn:node:mnDemo2")
   
   # Test getCN (deprecated)
-  testCN <- getCN(cli)
+  suppressWarnings(testCN <- getCN(cli))
   expect_match(testCN@baseURL, "test.dataone")
   
   # Test listMemberNodes
@@ -83,17 +83,25 @@ test_that("D1Client getDataObject", {
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
 
-    # Try retrieving a known object from the PROD environment
-    pid <- "solson.5.1"
-    obj <- getDataObject(cli, pid)
-    cname <- class(obj)[1]
-    expect_that(cname, matches("DataObject"))
-    expect_that(class(obj@sysmeta), matches("SystemMetadata"))
-    expect_that(getIdentifier(obj), matches(pid))
-    expect_that(getFormatId(obj), matches("text/csv"))
-    data <- getData(obj)
-    sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-    expect_that(sha1, matches(obj@sysmeta@checksum))
+    am <- AuthenticationManager()
+    suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
+    
+    if(authValid) {
+      # Skip if Mac OS and X.509 Certificate
+      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      
+      # Try retrieving a known object from the PROD environment
+      pid <- "solson.5.1"
+      obj <- getDataObject(cli, pid)
+      cname <- class(obj)[1]
+      expect_that(cname, matches("DataObject"))
+      expect_that(class(obj@sysmeta), matches("SystemMetadata"))
+      expect_that(getIdentifier(obj), matches(pid))
+      expect_that(getFormatId(obj), matches("text/csv"))
+      data <- getData(obj)
+      sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
+      expect_that(sha1, matches(obj@sysmeta@checksum))
+    }
 })
 
 test_that("D1Client uploadDataPackage works", {
