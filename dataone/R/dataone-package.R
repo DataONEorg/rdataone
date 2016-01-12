@@ -21,12 +21,18 @@
 #' services for interoperability, making each of the repositories accessible to client tools such as the DataONE R Client 
 #' using a standard interface. The DataONE R Client can be used to access data files and to write new data and metadata files 
 #' to nodes in the DataONE network.
-#' 
-#' A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
-#'
 #' @docType package
 #' @rdname dataone
 #' @aliases dataone
 #' @name dataone
 #' @author Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
+#' @section Classes:
+#' \itemize{
+#'  \item{\code{\link[=AuthenticationManager-class]{AuthenticationManager}}}{: AuthenticationManager provides methods to validate DataONE authentication.}
+#'  \item{\code{\link[=CNode-class]{CNode}}}{: A CNode represents a DataONE Coordinating Node and can be used to access its services.}
+#'  \item{\code{\link[=D1Client-class]{D1Client}}}{: The D1Client class contains methods that perform high level DataONE tasks.}
+#'  \item{\code{\link[=D1Node-class]{D1Node}}}{: A base class for CNode and MNode.}
+#'  \item{\code{\link[=MNode-class]{MNode}}}{: MNode provides functions interacting with the a DataONE Member Node repository.}
+#' }
+#' @seealso A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
 NULL
