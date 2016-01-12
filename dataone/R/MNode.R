@@ -78,7 +78,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, then it is cast to a MNode
 #' instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
 #' way to retrieve an instance of an MNode.
-#' @param x a URI representing a  base URL; or a reference to a dataone::Node instance
+#' @param x a URI representing a  base URL; or a reference to a dataone::Node instance, i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2
 #' @rdname MNode
 #' @return the MNode object-
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
@@ -88,6 +88,7 @@ setGeneric("MNode", function(x) {
 })
 
 #' @rdname MNode
+#' @export 
 setMethod("MNode", signature("character"), function(x) {
 
     ## create new MNode object and insert uri endpoint
@@ -105,6 +106,8 @@ setMethod("MNode", signature("character"), function(x) {
 })
 
 #' @rdname MNode
+#' @param x A D1Node instance
+#' @export
 setMethod("MNode", signature("D1Node"), function(x) {
   
     if (x@type == "mn") {
@@ -150,7 +153,7 @@ setGeneric("getCapabilities", function(mnode, ...) {
     standardGeneric("getCapabilities")
 })
 
-#' @describeIn getCapabilities
+#' @rdname getCapabilities
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
     url <- paste(mnode@endpoint, "node", sep="/")
     # Don't need privileged access, so call GET directly vs auth_get
@@ -164,7 +167,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 })
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
-#' @describeIn get
+#' @rdname get
 setMethod("get", signature("MNode", "character"), function(node, pid, check=as.logical(FALSE)) {
   
     if(!class(check) == "logical") {
@@ -193,7 +196,7 @@ setMethod("get", signature("MNode", "character"), function(node, pid, check=as.l
 
 #' @import datapackage
 #' @export
-#' @describeIn getSystemMetadata
+#' @rdname getSystemMetadata
 setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -210,7 +213,7 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     return(sysmeta)
 })
 
-#' @describeIn describe
+#' @rdname describe
 #' @export
 setMethod("describe", signature("MNode", "character"), function(node, pid) {
     url <- file.path(node@endpoint, "object", pid)
@@ -222,7 +225,7 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
     }
 })
 
-#' @describeIn getChecksum
+#' @rdname getChecksum
 #' @param checksumAlgorithm The algorithm used to calculate the checksum. Default="SHA-1"
 #' @export
 setMethod("getChecksum", signature("MNode", "character"), function(node, pid, checksumAlgorithm="SHA-1") {
@@ -263,7 +266,7 @@ setGeneric("create", function(mnode, pid, ...) {
     standardGeneric("create")
 })
 
-#' @describeIn create
+#' @rdname create
 #' @param filepath the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
@@ -329,7 +332,7 @@ setGeneric("update", function(mnode, pid, ...) {
 #' @param filepath the absolute file location of the object to be uploaded
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-#' @describeIn update
+#' @rdname update
 setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
@@ -383,7 +386,7 @@ setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
     standardGeneric("updateSystemMetadata")
 })
 
-#' @describeIn updateSystemMetadata
+#' @rdname updateSystemMetadata
 #' @param pid The identifier of the object
 #' @param sysmeta a SystemMetadata instance with updated information.
 #' @export
@@ -439,7 +442,7 @@ setGeneric("generateIdentifier", function(mnode, ...) {
     standardGeneric("generateIdentifier")
 })
 
-#' @describeIn generateIdentifier
+#' @rdname generateIdentifier
 #' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
 #' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
 setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
@@ -476,7 +479,7 @@ setGeneric("getPackage", function(node, ...) {
     standardGeneric("getPackage")
 })
 
-#' @describeIn getPackage
+#' @rdname getPackage
 #' @param identifier The identifier of the package to retrieve.
 #' @param format The format to send the package in.
 setMethod("getPackage", signature("MNode"), function(node, identifier, format="application/bagit-097") {

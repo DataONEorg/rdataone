@@ -137,7 +137,7 @@ setGeneric("archive", function(node, pid, ...) {
   standardGeneric("archive")
 })
 
-#' @describeIn archive
+#' @rdname archive
 setMethod("archive", signature("D1Node", "character"), function(node, pid) {
     url <- paste(node@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
     response <- auth_put(url, node=node)
@@ -209,7 +209,7 @@ setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
   standardGeneric("getQueryEngineDescription")
 })
 
-#' @describeIn getQueryEngineDescription
+#' @rdname getQueryEngineDescription
 #' @export
 setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
   
@@ -316,7 +316,7 @@ setGeneric("listObjects", function(node, ...) {
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
 #' @import parsedate
 #' @export
-#' @describeIn listObjects
+#' @rdname listObjects
 setMethod("listObjects", signature("D1Node"), function(node, 
                                                       fromDate=as.character(NA), toDate=as.character(NA),
                                                       formatId=as.character(NA), replicaStatus=as.logical(TRUE), 
@@ -369,7 +369,7 @@ setGeneric("listQueryEngines", function(node, ...) {
   standardGeneric("listQueryEngines")
 })
 
-#' @describeIn listQueryEngines
+#' @rdname listQueryEngines
 #' @export
 setMethod("listQueryEngines", signature("D1Node"), function(node) {
   
@@ -405,7 +405,7 @@ setGeneric("parseCapabilities", function(node, xml, ...) {
   standardGeneric("parseCapabilities")
 })
 
-#' @describeIn parseCapabilities
+#' @rdname parseCapabilities
 ## @export
 setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), function(node, xml) {
   
@@ -454,7 +454,7 @@ setGeneric("ping", function(node) {
   standardGeneric("ping")
 })
 
-#' @describeIn ping
+#' @rdname ping
 #' @export
 setMethod("ping", signature("D1Node"), function(node) {
   
@@ -533,7 +533,7 @@ setGeneric("encodeSolr", function(segment, ... ) {
     standardGeneric("encodeSolr")
 })
 
-#' @describeIn encodeSolr
+#' @rdname encodeSolr
 #' @export
 setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
     inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
@@ -601,7 +601,7 @@ setGeneric("query", function(d1node, ...) {
   standardGeneric("query")
 })
 
-#' @describeIn query
+#' @rdname query
 #' @param solrQuery The query parameters to be searched, either as a string or as list with named attributes.
 #' @param encode A boolean, if true then the entire query string is URLencoded if it is a character, or each parameter value if a list.
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
@@ -729,7 +729,7 @@ setGeneric("parseSolrResult", function(doc, ...) {
   standardGeneric("parseSolrResult")
 })
 
-#' @describeIn parseSolrResult
+#' @rdname parseSolrResult
 #' @export
 setMethod("parseSolrResult", signature("XMLInternalDocument"), function(doc, parse, ...) {
   resultList <- xpathApply(doc, "/response/result/doc", parseResultDoc, parse)

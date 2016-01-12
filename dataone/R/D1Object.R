@@ -78,7 +78,7 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
 #' Get the data content of a specified data object
 #' @param x  D1Object the data structure from where to get the data
 #' @param id Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from
-#' @describeIn getData
+#' @rdname getData
 #' @export
 setMethod("getData", signature("D1Object"), function(x, id) {
     data <- get(x@mn, id, check=as.logical(FALSE))
@@ -87,7 +87,7 @@ setMethod("getData", signature("D1Object"), function(x, id) {
 #' Get the Identifier of the DataObject
 #' @param x D1Object
 #' @param ... (not yet used)
-#' @describeIn getIdentifier
+#' @rdname getIdentifier
 #' @return the identifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
@@ -98,7 +98,7 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @return the formatId
-#' @describeIn getFormatId
+#' @rdname getFormatId
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
   getFormatId(x@dataObject)
@@ -114,7 +114,7 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @param ... (not yet used)
 #' @return D1Object with modified access rules
 #' @seealso \code{\link[=DataObject-class]{DataObject}}{ class description.}
-#' @describeIn setPublicAccess
+#' @rdname setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
   x@dataObject <- setPublicAccess(x@dataObject)
@@ -135,7 +135,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @param subject : the subject name of the person/system to check for read permissions
 #' @param ... Additional arguments
 #' @return boolean TRUE if the subject has read permission, or FALSE otherwise
-#' @describeIn canRead
+#' @rdname canRead
 #' @export
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
   canRead(x@dataObject, subject)
@@ -155,7 +155,7 @@ setGeneric("asDataFrame", function(x, reference, ...) {
             standardGeneric("asDataFrame")
 })
 
-#' @describeIn asDataFrame
+#' @rdname asDataFrame
 #' @export
 setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, reference, ...) {
     ## reference is a metadata D1Object
@@ -173,7 +173,7 @@ setMethod("asDataFrame", signature("D1Object", "D1Object"), function(x, referenc
     return( df )
 })
 
-#' @describeIn asDataFrame
+#' @rdname asDataFrame
 #' @export
 setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), function(x, reference, ...) {
             
@@ -237,7 +237,7 @@ setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), functi
             return(df)
         })
 
-#' @describeIn asDataFrame
+#' @rdname asDataFrame
 #' @export
 setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
     ## Load the data into a dataframe

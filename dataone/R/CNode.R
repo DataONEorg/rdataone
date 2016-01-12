@@ -65,14 +65,12 @@ setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
 
-#' @rdname CNode
 #' @export
 setMethod("CNode", signature=character(), function() {
     result <- CNode("PROD")
     return(result)
 })
 
-#' @rdname CNode
 #' @export
 setMethod("CNode", signature("character"), function(env) {
 
@@ -145,7 +143,7 @@ setGeneric("listFormats", function(cnode, ...) {
   standardGeneric("listFormats")
 })
 
-#' @describeIn listFormats
+#' @rdname listFormats
 #' @import plyr
 #' @export
 setMethod("listFormats", signature("CNode"), function(cnode) {
@@ -200,7 +198,7 @@ setGeneric("getFormat", function(cnode, ...) {
   standardGeneric("getFormat")
 })
 
-#' @describeIn getFormat
+#' @rdname getFormat
 #' @param formatId The formatId to retrieve.
 #' @export
 setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
@@ -220,7 +218,7 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
   return(fmt)
 })
 
-#' @describeIn getChecksum
+#' @rdname getChecksum
 #' @export
 setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ...) {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
@@ -255,7 +253,7 @@ setGeneric("listNodes", function(cnode, ...) {
     standardGeneric("listNodes")
 })
 
-#' @describeIn listNodes
+#' @rdname listNodes
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA), ...) {
     # If an optional url argument is specified, use that. This might be used if
@@ -290,7 +288,7 @@ setGeneric("reserveIdentifier", function(x, id, ...) {
   standardGeneric("reserveIdentifier")
 })
 
-#' @describeIn reserveIdentifier
+#' @rdname reserveIdentifier
 #' @return The reserved pid if it was sucessfully reserved, otherwise NULL
 setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id) {
   url <- paste(x@endpoint, "reserve", sep="/")
@@ -320,7 +318,7 @@ setGeneric("hasReservation", function(cnode, ...) {
   standardGeneric("hasReservation")
 })
 
-#' @describeIn hasReservation
+#' @rdname hasReservation
 #' @param pid The identifier that is being checked for existing as a reserved identifier or is in use as 
 #' an identifier for an existing object
 #' @param subject The subject of the principal (user) that made the reservation. If not specified, then
@@ -364,6 +362,8 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
 #' specified by pid has been obsoleted by the identifier in obsoletedByPid.
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 #' In DataONE version 2.0, authentication tokens can also be used.
+#' @rdname setObsoletedBy
+#' @aliases setObsoletedBy
 #' @param cnode The CNode instance on which the object will be created
 #' @param pid The identifier of the object to be obsoleted
 #' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
@@ -375,7 +375,7 @@ setGeneric("setObsoletedBy", function(cnode, pid, obsoletedByPid, ...) {
   standardGeneric("setObsoletedBy")
 })
 
-#' @describeIn setObsoletedBy
+#' @rdname setObsoletedBy
 #' @return TRUE if the pid was obsoleted, otherwise FALSE is returned
 setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid, obsoletedByPid, serialVersion) {
   url <- paste(cnode@endpoint, "obsoletedBy", URLencode(pid, reserved=TRUE), sep="/")
@@ -389,7 +389,7 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
   }
 })
 
-#' @describeIn get
+#' @rdname get
 setMethod("get", signature("CNode", "character"), function(node, pid) {
     url <- paste(node@endpoint, "object", pid, sep="/")
     response <- auth_get(url, node=node)
@@ -411,7 +411,7 @@ setMethod("get", signature("CNode", "character"), function(node, pid) {
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @import datapackage
 #' @export
-#' @describeIn getSystemMetadata
+#' @rdname getSystemMetadata
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -428,7 +428,7 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
     return(sysmeta)
 })
 
-#' @describeIn describe
+#' @rdname describe
 #' @export
 setMethod("describe", signature("CNode", "character"), function(node, pid) {
   url <- file.path(node@endpoint, "object", pid)
@@ -456,7 +456,7 @@ setGeneric("resolve", function(cnode,pid) {
   standardGeneric("resolve")
 })
 
-#' @describeIn resolve
+#' @rdname resolve
 #' @export
 setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
@@ -516,7 +516,7 @@ setGeneric("getMNode", function(cnode, nodeid, ...) {
   standardGeneric("getMNode")
 })
 
-#' @describeIn getMNode
+#' @rdname getMNode
 setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function(cnode, nodeid) {
   nodelist <- listNodes(cnode)
   match <- sapply(nodelist, function(node) { 
@@ -552,7 +552,7 @@ setGeneric("echoCredentials", function(cnode, ...) {
   standardGeneric("echoCredentials")
 })
 
-#' @describeIn echoCredentials
+#' @rdname echoCredentials
 setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
   url <- sprintf("%s/diag/subject", cnode@endpoint)
   response <- auth_get(url, node=cnode)
@@ -588,7 +588,7 @@ setGeneric("isAuthorized", function(cnode, id, action, ...) {
   standardGeneric("isAuthorized")
 })
 
-#' @describeIn isAuthorized
+#' @rdname isAuthorized
 #' @export
 setMethod("isAuthorized", signature("CNode", "character", "character"), function(cnode, id, action) {
   url <- sprintf("%s/isAuthorized/%s?action=%s", cnode@endpoint,id,action)

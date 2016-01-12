@@ -88,7 +88,7 @@ setGeneric("CertificateManager", function(...) {
     standardGeneric("CertificateManager")
 })
 
-#' @describeIn CertificateManager
+#' @rdname CertificateManager
 setMethod("CertificateManager", signature=character(), function() {
   .Deprecated("AuthenticationManager", "dataone") 
     if (!requireNamespace("PKIplus", quietly = TRUE)) {
@@ -115,7 +115,7 @@ setGeneric("showClientSubject", function(x, ...) {
     standardGeneric("showClientSubject")
 })
 
-#' @describeIn showClientSubject
+#' @rdname showClientSubject
 setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     PUBLIC="public"
     certfile <- getCertLocation(x)
@@ -147,7 +147,7 @@ setGeneric("isCertExpired", function(x, ...) {
             standardGeneric("isCertExpired")
         })
 
-#' @describeIn isCertExpired
+#' @rdname isCertExpired
 setMethod("isCertExpired", signature("CertificateManager"), function(x) {
     expires <- getCertExpires(x)
     if (is.null(expires)) {
@@ -175,7 +175,7 @@ setGeneric("getCertExpires", function(x, ...) {
             standardGeneric("getCertExpires")
         })
 
-#' @describeIn getCertExpires
+#' @rdname getCertExpires
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
@@ -205,7 +205,7 @@ setGeneric("downloadCert", function(x, ...) {
     standardGeneric("downloadCert")
 })
 
-#' @describeIn downloadCert
+#' @rdname downloadCert
 setMethod("downloadCert", signature("CertificateManager"), function(x) {
     browseURL("https://cilogon.org/?skin=DataONE")
 })
@@ -227,7 +227,7 @@ setGeneric("obscureCert", function(x, ...) {
     standardGeneric("obscureCert")
 })
 
-#' @describeIn obscureCert
+#' @rdname obscureCert
 setMethod("obscureCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
@@ -254,7 +254,7 @@ setGeneric("restoreCert", function(x, ...) {
     standardGeneric("restoreCert")
 })
 
-#' @describeIn restoreCert
+#' @rdname restoreCert
 setMethod("restoreCert", signature("CertificateManager"), function(x) {
     certpath <- getCertLocation(x)
     if (!is.null(certpath)) {
@@ -294,7 +294,7 @@ setGeneric("getCertLocation", function(x, ...) {
     standardGeneric("getCertLocation")
 })
 
-#' @describeIn getCertLocation
+#' @rdname getCertLocation
 setMethod("getCertLocation", signature("CertificateManager"), function(x) {
     # default Globus Grid Security Infrastructure (GSI) location, which is /tmp/x509up_u${UID} on Unix 
     # or ${tmpdir}/x509up_u${UID} on Windows or ${tmpdir}/x509up_u${user.name} if ${UID} is not defined

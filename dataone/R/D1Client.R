@@ -202,7 +202,7 @@ setGeneric("createD1Object", function(x, d1Object, ...) {
   standardGeneric("createD1Object")
 })
 
-#' @describeIn createD1Object
+#' @rdname createD1Object
 setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Object) {
   newId <- uploadDataObject(x, d1Object@dataObject)
   if (!is.null(newId)) {
@@ -227,7 +227,7 @@ setGeneric("getD1Object", function(x, identifier, ...) {
   standardGeneric("getD1Object")
 })
 
-#' @describeIn getD1Object
+#' @rdname getD1Object
 setMethod("getD1Object", "D1Client", function(x, identifier) {
   .Deprecated("getDataObject", "dataone")
   #d1o <- get(x@cn, identifier)    # Resolve the object location
@@ -254,7 +254,7 @@ setGeneric("getDataObject", function(x, identifier, ...) {
     standardGeneric("getDataObject")
 })
 
-#' @describeIn getDataObject
+#' @rdname getDataObject
 #' @export
 setMethod("getDataObject", "D1Client", function(x, identifier) {
     
@@ -309,13 +309,13 @@ setGeneric("d1SolrQuery", function(x, solrQuery) {
     standardGeneric("d1SolrQuery")
 })
 
-#' @describeIn d1SolrQuery
+#' @rdname d1SolrQuery
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
   result <- query(x@cn, solrQuery, encode=TRUE, as="list", parse=TRUE)
   return(result)
 })
 
-#' @describeIn d1SolrQuery
+#' @rdname d1SolrQuery
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
   result <- query(x@cn, solrQuery, encode=TRUE, as="list", parse=TRUE)
   return(result)
@@ -339,7 +339,7 @@ setGeneric("d1IdentifierSearch", function(x, solrQuery) {
     standardGeneric("d1IdentifierSearch")    
 })
 
-#' @describeIn d1IdentifierSearch
+#' @rdname d1IdentifierSearch
 #' @export
 setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
   # TODO: Check if this is still true: Empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
@@ -350,7 +350,7 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
   return(result)
 })
 
-#' @describeIn reserveIdentifier
+#' @rdname reserveIdentifier
 #' @export
 setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
   reserveIdentifier(x@cn, id)
@@ -372,7 +372,7 @@ setGeneric("createDataPackage", function(x, dataPackage, ...) {
 })
 
 #' @export
-#' @describeIn createDataPackage
+#' @rdname createDataPackage
 setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
   .Deprecated("uploadDataPackage", "dataone")
   # createDataPackage has been superceded by uploadDataPackage
@@ -397,7 +397,7 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @export
 setGeneric("getEndpoint", function(x, ...) { standardGeneric("getEndpoint")} )
 
-#' @describeIn getEndpoint
+#' @rdname getEndpoint
 #' @export
 setMethod("getEndpoint", "D1Client", function(x) {
     res <- x@cn@baseURL
@@ -417,7 +417,7 @@ setGeneric("getMNodeId", function(x) {
     standardGeneric("getMNodeId")
 })
 
-#' @describeIn getMNodeId
+#' @rdname getMNodeId
 #' @export
 setMethod("getMNodeId", signature("D1Client"), function(x) {
    if(nchar(x@mn@endpoint) == 0) {
@@ -444,7 +444,7 @@ setGeneric("setMNodeId", function(x, id) {
     standardGeneric("setMNodeId")
 })
 
-#' @describeIn setMNodeId
+#' @rdname setMNodeId
 #' @export
 setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
     if(!is.null(id) && id != "") {
@@ -471,14 +471,14 @@ setGeneric("getMN", function(x, nodeid, ...) {
     standardGeneric("getMN")
 })
 
-#' @describeIn getMN
+#' @rdname getMN
 #' @export
 setMethod("getMN", signature("D1Client"), function(x, ...) {
     .Deprecated("getMNode", "dataone") 
     return(x@mn)
 })
 
-#' @describeIn getMN
+#' @rdname getMN
 setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
     .Deprecated("getMNodeId", "dataone", "getMN(cnode, nodeId) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, nodeid")
   
@@ -504,7 +504,7 @@ setGeneric("getCN", function(x) {
     standardGeneric("getCN")
 })
 
-#' @describeIn getCN
+#' @rdname getCN
 #' @export
 setMethod("getCN", signature("D1Client"), function(x) {
     .Deprecated("getCN(x)", "dataone", "The getCN(x) function no longer returns a Java object. This new function returns a CNode object", "getMN(D1Client, ...)")
@@ -537,7 +537,7 @@ setGeneric("uploadDataPackage", function(x, dp, ...) {
   standardGeneric("uploadDataPackage")
 })
 
-#' @describeIn uploadDataPackage
+#' @rdname uploadDataPackage
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
@@ -601,7 +601,7 @@ setGeneric("uploadDataObject", function(x, do, ...) {
     standardGeneric("uploadDataObject")
 })
 
-#' @describeIn uploadDataObject
+#' @rdname uploadDataObject
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
@@ -668,7 +668,7 @@ setGeneric("listMemberNodes", function(x) {
     standardGeneric("listMemberNodes")
 })
 
-#' @describeIn listMemberNodes
+#' @rdname listMemberNodes
 #' @export
 setMethod("listMemberNodes", signature("D1Client"), function(x) {
     return (listNodes(x@cn))
@@ -692,7 +692,7 @@ setGeneric("convert.csv", function(x, ...) {
     standardGeneric("convert.csv")
 })
 
-#' @describeIn convert.csv
+#' @rdname convert.csv
 #' @export
 setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
     con <- textConnection("data", "w")
@@ -721,7 +721,7 @@ setGeneric("encodeUrlQuery", function(x, querySegment, ...) {
   standardGeneric("encodeUrlQuery")
 })
 
-#' @describeIn encodeUrlQuery
+#' @rdname encodeUrlQuery
 #' @export
 setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), function(x, querySegment, ...) {
     #luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
@@ -755,7 +755,7 @@ setGeneric("encodeUrlPath", function(x, pathSegment, ...) {
     standardGeneric("encodeUrlPath")
 })
 
-#' @describeIn encodeUrlPath
+#' @rdname encodeUrlPath
 #' @export
 setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), function(x, pathSegment, ...) {
      return(URLencode(pathSegment))

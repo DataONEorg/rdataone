@@ -18,8 +18,8 @@
 #   limitations under the License.
 #
 
-#' AuthenticationManager provides mechanisms to 
-#' @description AuthenticationManager
+#' AuthenticationManager provides mechanisms to validate DataONE authentication,
+#' when either a DataONE authentication token or X.509 Certificate is used.
 #' @details   
 #' Understanding how your identity is managed is important for working with DataONE, especially to 
 #' avoid unexpected results. For example, depending your authorization status, searches may or may 
@@ -35,7 +35,8 @@
 #' DataONE version 2.0.0 provides an addition authentication mechanism known as
 #' authentication tokens. For information about tokens and instructions for generating
 #' a token for use with the DataONE R client, view the package overview by
-#' entering the command: \code{'vignette("dataone-overview")'}
+#' entering the command: \code{'vignette("dataone-overview")'}. DataONE authentication
+#' tokens can be obtained by signing in to your DataONE account at https://search.dataone.org.
 #' 
 #' CILogon recognizes many identity providers, including many universities as well as
 #' Google, so most times users new to DataONE can get certificates using one
@@ -44,10 +45,26 @@
 #' @slot authInfo value of type \code{"hash"} containing authentication information.
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
+#' @section Methods:
+#' \itemize{
+#'  \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
+#'  \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
+#'  \item{\code{\link{getAuthToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
+#'  \item{\code{\link{getCert}}}{: Get the DataONE X.509 Certificate location.}
+#'  \item{\code{\link{getAuthMethod}}}{: Get the current valid authentication mechanism.}
+#'  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
+#'  \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
+#'  \item{\code{\link{isAuthExpired}}}{: CHeck if the currently valid authentication method has reached the expiratin time.}
+#'  \item{\code{\link{obscureAuth}}}{: Temporarity disable DataONE authentication.}
+#'  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
+#'  \item{\code{\link{showAuth}}}{: Display all authentication information.}
+#' }
+#' @seealso \code{\link{dataone}}{ package description.}
 #' @import hash
 #' @import base64enc
 #' @importFrom jsonlite fromJSON
 #' @include D1Node.R
+#' @export
 setClass("AuthenticationManager", slots = c(
     authInfo="hash"
     )
@@ -63,7 +80,7 @@ setGeneric("AuthenticationManager", function(...) {
     standardGeneric("AuthenticationManager")
 })
 
-#' @describeIn AuthenticationManager
+#' @rdname AuthenticationManager
 setMethod("AuthenticationManager", signature=character(), function() {
     result <- new("AuthenticationManager")
     result@authInfo <- new("hash")
@@ -96,7 +113,7 @@ setGeneric("isAuthValid", function(x, node, ...) {
     standardGeneric("isAuthValid")
 })
 
-#' @describeIn isAuthValid
+#' @rdname isAuthValid
 #' @export
 setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(x, node) {
   # First check if an authentication token is available. 
@@ -211,7 +228,7 @@ setGeneric("getAuthToken", function(x, ...) {
     standardGeneric("getAuthToken")
 })
 
-#' @describeIn getAuthToken
+#' @rdname getAuthToken
 setMethod("getAuthToken", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
@@ -234,7 +251,7 @@ setGeneric("getCert", function(x, ...) {
   standardGeneric("getCert")
 })
 
-#' @describeIn getCert
+#' @rdname getCert
 setMethod("getCert", signature("AuthenticationManager"), function(x) { 
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
@@ -257,7 +274,7 @@ setGeneric("getAuthMethod", function(x, ...) {
   standardGeneric("getAuthMethod")
 })
 
-#' @describeIn getAuthMethod
+#' @rdname getAuthMethod
 setMethod("getAuthMethod", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
     return(as.character(NA))
@@ -281,7 +298,7 @@ setGeneric("getAuthSubject", function(x, ...) {
   standardGeneric("getAuthSubject")
 })
 
-#' @describeIn getAuthSubject
+#' @rdname getAuthSubject
 #' @export
 setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   PUBLIC <- "public"
@@ -307,7 +324,9 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   }
 })
 
-#' Get DataONE Identity as Stored in the CILogon Certificate.
+#' Get the expiration date of the current authentication method.
+#' @description The expiration date of the current authentication method, either
+#' authentication token or X.509 certificate, is returned as a Greenich Mean Time (GMT) value.
 #' @rdname getAuthExpires
 #' @aliases getAuthExpires
 #' @param x an AuthenticationManager instance
@@ -318,7 +337,7 @@ setGeneric("getAuthExpires", function(x, ...) {
   standardGeneric("getAuthExpires")
 })
 
-#' @describeIn getAuthExpires
+#' @rdname getAuthExpires
 #' @export
 setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
@@ -348,7 +367,7 @@ setGeneric("isAuthExpired", function(x, ...) {
   standardGeneric("isAuthExpired")
 })
 
-#' @describeIn isAuthExpired
+#' @rdname isAuthExpired
 #' @export
 setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
   if(getOption("D1AuthObscured")) {
@@ -373,7 +392,11 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
   }
 })
 
-#' Get DataONE Identity as Stored in the CILogon Certificate.
+#' Temporarity disable DataONE authentication.
+#' @description Calling \code{obscureAuth} temporarily disables authentication so that
+#' @details This method is intended to be used for authentication testing.
+#' \code{isAuthValid} will return FALSE. Authentication can be re-enabled by calling
+#' \code{restoreAuth}.
 #' @rdname obscureAuth
 #' @aliases obscureAuth
 #' @param x an AuthenticationManager instance
@@ -384,12 +407,12 @@ setGeneric("obscureAuth", function(x, ...) {
   standardGeneric("obscureAuth")
 })
 
-#' @describeIn obscureAuth
+#' @rdname obscureAuth
 #' @export
 setMethod("obscureAuth", signature("AuthenticationManager"), function(x) {
   options(D1AuthObscured = TRUE)
 })
-#' Get DataONE Identity as Stored in the CILogon Certificate.
+#' Restore authentication (after being disabled with \code{obscureAuth}).
 #' @rdname restoreAuth
 #' @aliases restoreAuth
 #' @param x an AuthenticationManager instance
@@ -400,7 +423,7 @@ setGeneric("restoreAuth", function(x, ...) {
   standardGeneric("restoreAuth")
 })
 
-#' @describeIn restoreAuth
+#' @rdname restoreAuth
 #' @export
 setMethod("restoreAuth", signature("AuthenticationManager"), function(x) {
   options(D1AuthObscured = FALSE)
@@ -416,7 +439,7 @@ setGeneric("showAuth", function(x, ...) {
   standardGeneric("showAuth")
 })
 
-#' @describeIn showAuth
+#' @rdname showAuth
 #' @export
 setMethod("showAuth", signature("AuthenticationManager"), function(x) {
   obscured <- getOption("D1AuthObscured")
