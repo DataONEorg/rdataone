@@ -94,7 +94,7 @@ could be updated to allow public read.
 
 See ```help("updateSystemMetadata")``` for more information.
 
-## Configurating DataONE
+## Configuring DataONE
 ### Disabling 'warning' Messages Related To Authentication.
 If a *dataone* R client method is called that might require authentication (create, update, etc) then a warning
 message will be printed stating that the service requires authentication. Methods that upload or modify data in
