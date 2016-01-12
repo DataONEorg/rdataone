@@ -688,6 +688,7 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("convert.csv", function(x, ...) {
+    .Deprecated("write.csv", "utils")
     standardGeneric("convert.csv")
 })
 
