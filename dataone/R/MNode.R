@@ -25,9 +25,14 @@
 #' unique persistent identifier (pid), as well as for creating, updating, and archiving these data and
 #' metadata objects.  
 #' @details   
-#' Methods that perform write operations on the Member Node generally require
-#' authentication, which is managed via a client-side X.509 certificate via
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+#' Methods that perform write operations (such as create and update) on the Member Node generally require
+#' authentication. In the version 2.0 library and higher, these operations can utilize an 
+#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+#' See the \code{vignette("dataone-overview")} for details.
+#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+#' system can also be used. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @slot endpoint The url to access node services, which is the baseURL plus the version string
 #' @rdname MNode-class
 #' @aliases MNode-class
@@ -248,11 +253,14 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
 #' Create an object on a Member Node.
 #' @description This method provides the ability to upload a data or metadata object to the Member Node
 #' provided in the \code{'mnode'} parameter.  
-#' @details This operation requires an X.509 certificate to be present in the default location of the file 
-#' system. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-#' In the dataone R client version 2.0 and higher, DataONE authentication codes can also be used for authentication.
-#' Type \code{vignette("dataone-overview")} for details.
+#' @details In the version 2.0 library and higher, this operation can utilize an 
+#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+#' See the \code{vignette("dataone-overview")} for details.
+#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+#' system can also be used. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
+
 #' @rdname create
 #' @aliases create
 #' @param mnode The MNode instance on which the object will be created
@@ -314,10 +322,13 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
 #' provided in the \code{'mnode'} parameter.  In DataONE, both the original object and the new object are
 #' maintained, each with its own persistent identifier, and the 'obsoletes' field in the SystemMetadata is
 #' used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
-#' @details This operation requires an X.509 certificate to be present in the default location of the file 
-#' system. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-#' In DataONE Version 2.0, authentication tokens can also be used.
+#' @details In the version 2.0 library and higher, this operation can utilize an 
+#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+#' See the \code{vignette("dataone-overview")} for details.
+#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+#' system can also be used. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @param mnode The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be updated
 #' @param ... (Not yet used.)
@@ -376,6 +387,13 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
 #' updated information. This function allow updating of the system metadata without
 #' updating the object that it describes, so that mutable attribures such as accessPolicy
 #' can be updated easily.
+#' @details In the version 2.0 library and higher, this operation can utilize an 
+#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+#' See the \code{vignette("dataone-overview")} for details.
+#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+#' system can also be used. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @param node The MNode instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
@@ -427,10 +445,13 @@ setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadat
 #' ensuring that they are unique. Each identifier conforms to an identifier scheme, which determines the syntax and
 #' rules for how the identifier that is generated is formatted.  All Member Nodes that implement this method must 
 #' support the UUID scheme, but may also support other schemes such as DOI and others.
-#' @details This operation requires an X.509 certificate to be present in the default location of the file 
-#' system. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-#' In DataONE Version 2.0, authentication tokens can also be used for authentication.
+#' @details In the version 2.0 library and higher, this operation can utilize an 
+#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+#' See the \code{vignette("dataone-overview")} for details.
+#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+#' system can also be used. This certificate provides authentication credentials from 
+#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @param mnode The MNode instance on which the object will be created
 #' @param ... (Not yet used.)
 #' @rdname generateIdentifier
