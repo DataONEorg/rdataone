@@ -284,6 +284,9 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter
       }
+      if(is.na(sysmeta@authoritativeMemberNode)) {
+        sysmeta@authoritativeMemberNode <- mnode@identifier
+      }
     }
     
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
@@ -344,6 +347,9 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
       }
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter
+      }
+      if(is.na(sysmeta@authoritativeMemberNode)) {
+        sysmeta@authoritativeMemberNode <- mnode@identifier
       }
     }
     
