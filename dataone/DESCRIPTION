@@ -16,19 +16,19 @@ VignetteBuilder: knitr
 Description: A package that provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
 Depends:
-    R (>= 3.2.1),
+    R,
 Suggests:
     knitr,
     testthat,
     digest,
-    PKIplus (>= 0.0.1.9001)
+    PKIplus
 Imports:
     XML (>= 3.95-0.1),
     hash,
-    httr (>= 1.0.0),
+    httr,
     methods,
     stringr,
-    datapackage (>= 0.9.0.9003),
+    datapackage,
     plyr,
     parsedate,
     uuid,
