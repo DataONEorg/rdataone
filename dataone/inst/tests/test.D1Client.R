@@ -78,14 +78,12 @@ test_that("D1Client methods", {
 test_that("D1Client getDataObject", {
     library(dataone)
     library(digest)
-    cli <- new("D1Client")
+    cli <- D1Client("PROD", "urn:node:KNB")
     expect_that(cli, not(is_null()))
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
-
     am <- AuthenticationManager()
-    suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
-    
+    suppressWarnings(authValid <- isAuthValid(am, cli@mn))
     if(authValid) {
       # Skip if Mac OS and X.509 Certificate
       if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
