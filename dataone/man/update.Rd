@@ -8,7 +8,7 @@
 \usage{
 update(mnode, pid, ...)
 
-\S4method{update}{MNode,character}(mnode, pid, filepath, newpid, sysmeta)
+\S4method{update}{MNode,character}(mnode, pid, file, newpid, sysmeta)
 }
 \arguments{
 \item{mnode}{The MNode instance on which the object will be created}
@@ -17,7 +17,7 @@ update(mnode, pid, ...)
 
 \item{...}{(Not yet used.)}
 
-\item{filepath}{the absolute file location of the object to be uploaded}
+\item{file}{the absolute file location of the object to be uploaded}
 
 \item{newpid}{The identifier of the new object to be created}
 
@@ -33,10 +33,13 @@ maintained, each with its own persistent identifier, and the 'obsoletes' field i
 used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
 }
 \details{
-This operation requires an X.509 certificate to be present in the default location of the file 
-system. This certificate provides authentication credentials from 
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-In DataONE Version 2.0, authentication tokens can also be used.
+In the version 2.0 library and higher, this operation can utilize an 
+'authentication_token' option to provide credentials for write operations in DataONE.
+The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+See the \code{vignette("dataone-overview")} for details.
+Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+system can also be used. This certificate provides authentication credentials from 
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}

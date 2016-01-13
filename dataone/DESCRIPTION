@@ -49,3 +49,4 @@ Collate:
     'D1Client.R'
     'EMLParser.R'
     'dataone-package.R'
+RoxygenNote: 5.0.1

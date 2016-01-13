@@ -12,9 +12,14 @@ unique persistent identifier (pid), as well as for creating, updating, and archi
 metadata objects.
 }
 \details{
-Methods that perform write operations on the Member Node generally require
-authentication, which is managed via a client-side X.509 certificate via
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
+Methods that perform write operations (such as create and update) on the Member Node generally require
+authentication. In the version 2.0 library and higher, these operations can utilize an 
+'authentication_token' option to provide credentials for write operations in DataONE.
+The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+See the \code{vignette("dataone-overview")} for details.
+Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+system can also be used. This certificate provides authentication credentials from 
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
 \section{Slots}{
 

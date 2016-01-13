@@ -29,6 +29,15 @@ updated information. This function allow updating of the system metadata without
 updating the object that it describes, so that mutable attribures such as accessPolicy
 can be updated easily.
 }
+\details{
+In the version 2.0 library and higher, this operation can utilize an 
+'authentication_token' option to provide credentials for write operations in DataONE.
+The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
+See the \code{vignette("dataone-overview")} for details.
+Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
+system can also be used. This certificate provides authentication credentials from 
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
+}
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 }
