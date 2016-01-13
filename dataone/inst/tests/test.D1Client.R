@@ -163,3 +163,36 @@ test_that("D1Client uploadDataPackage works", {
       skip("This test requires valid authentication.")
   }
 })
+
+test_that("D1Client createD1Object works", {
+  skip_on_cran()
+  library(dataone)
+  library(datapackage)
+  # Create a csv file for the science object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
+  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  expect_false(is.null(d1c))
+  #preferredNodes <- c("urn:node:mnDemo9")
+  preferredNodes <- NA
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    # Create D1Object for the science data 
+    suppressWarnings(sciObj <- new("D1Object", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile))
+    # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
+    expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    sciObj <- setPublicAccess(sciObj)
+    # Upload the data object to DataONE
+    sucess <- createD1Object(d1c, sciObj)
+    expect_true(success)
+    # Now see if we can download the object from DataONE
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
