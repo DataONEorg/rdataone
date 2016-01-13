@@ -275,9 +275,9 @@ setGeneric("create", function(mnode, pid, ...) {
 })
 
 #' @rdname create
-#' @param filepath the absolute file location of the object to be uploaded
+#' @param file the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-setMethod("create", signature("MNode", "character"), function(mnode, pid, filepath, sysmeta) {
+setMethod("create", signature("MNode", "character"), function(mnode, pid, file, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
     
@@ -304,8 +304,8 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, filepa
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_post(url, encode="multipart", 
-                          body=list(pid=pid, object=upload_file(filepath), 
-                                    sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
+                body=list(pid=pid, object=upload_file(file),
+                sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
     
     if(response$status != "200") {
         #d1_errors(response)
@@ -340,11 +340,11 @@ setGeneric("update", function(mnode, pid, ...) {
     standardGeneric("update")
 })
 
-#' @param filepath the absolute file location of the object to be uploaded
+#' @param file the absolute file location of the object to be uploaded
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @rdname update
-setMethod("update", signature("MNode", "character"), function(mnode, pid, filepath, newpid, sysmeta) {
+setMethod("update", signature("MNode", "character"), function(mnode, pid, file, newpid, sysmeta) {
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
     
@@ -371,8 +371,8 @@ setMethod("update", signature("MNode", "character"), function(mnode, pid, filepa
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_put(url, encode="multipart", 
-                         body=list(pid=pid, object=upload_file(filepath), 
-                                   newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
+                body=list(pid=pid, object=upload_file(file), 
+                newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
     
     if(response$status != "200") {
         #d1_errors(response)
