@@ -20,6 +20,8 @@
 
 #' @include auth_request.R
 #' @title A base class for CNode and MNode.
+#' @description D1Node is a base class for CNode and MNode classes and contains class slots and
+#' methods that are common between these two child classes.
 #' @rdname D1Node-class
 #' @aliases D1Node-class
 #' @slot identifier The node identifier of the MN

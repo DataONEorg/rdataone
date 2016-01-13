@@ -20,7 +20,8 @@
 
 #' @include D1Node.R
 #' @include auth_request.R
-#' @title A CNode represents a DataONE Coordinating Node and can be used to access its services.
+#' @title Provides R API to DataONE Coordinating Node services.
+#' @description The CNode class provides methods that interact with a DataONE Coordinating Node.
 #' @rdname CNode-class
 #' @aliases CNode-class
 #' @slot endpoint A character vector containing URL service endpoint for the Coordinating Node
