@@ -61,7 +61,7 @@
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @import hash
-#' @import base64enc
+#' @import base64
 #' @importFrom jsonlite fromJSON
 #' @include D1Node.R
 #' @export
