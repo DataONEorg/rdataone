@@ -14,9 +14,7 @@ MNode(x)
 \S4method{MNode}{D1Node}(x)
 }
 \arguments{
-\item{x}{a URI representing a  base URL; or a reference to a dataone::Node instance, i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2}
-
-\item{x}{A D1Node instance}
+\item{x}{a URI representing a  base URL (i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2); or a reference to a dataone::Node instance}
 }
 \value{
 the MNode object-

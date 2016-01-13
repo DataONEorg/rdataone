@@ -4,6 +4,10 @@
 \name{D1Node-class}
 \alias{D1Node-class}
 \title{A base class for CNode and MNode.}
+\description{
+D1Node is a base class for CNode and MNode classes and contains class slots and
+methods that are common between these two child classes.
+}
 \section{Slots}{
 
 \describe{

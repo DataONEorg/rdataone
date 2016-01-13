@@ -66,12 +66,14 @@ setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
 
+#' @rdname CNode
 #' @export
 setMethod("CNode", signature=character(), function() {
     result <- CNode("PROD")
     return(result)
 })
 
+#' @rdname CNode
 #' @export
 setMethod("CNode", signature("character"), function(env) {
 

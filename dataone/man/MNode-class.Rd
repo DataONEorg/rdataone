@@ -3,9 +3,9 @@
 \docType{class}
 \name{MNode-class}
 \alias{MNode-class}
-\title{MNode is a class representing a Member Node repository within the DataONE federation of data repositories.}
+\title{Provides R API to DataONE Member Node services.}
 \description{
-MNode provides functions interacting with the a DataONE Member Node repository, which
+MNode provides functions that interact with a DataONE Member Node repository, which
 is a repository that provides access for reading and writing data and metadata using the common
 DataONE service API.  The MNode API includes functions for retrieving data and metadata based on its
 unique persistent identifier (pid), as well as for creating, updating, and archiving these data and

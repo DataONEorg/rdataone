@@ -83,7 +83,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, then it is cast to a MNode
 #' instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
 #' way to retrieve an instance of an MNode.
-#' @param x a URI representing a  base URL; or a reference to a dataone::Node instance, i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2
+#' @param x a URI representing a  base URL (i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2); or a reference to a dataone::Node instance
 #' @rdname MNode
 #' @return the MNode object-
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
@@ -111,7 +111,6 @@ setMethod("MNode", signature("character"), function(x) {
 })
 
 #' @rdname MNode
-#' @param x A D1Node instance
 #' @export
 setMethod("MNode", signature("D1Node"), function(x) {
   

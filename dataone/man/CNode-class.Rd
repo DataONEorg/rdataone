@@ -3,7 +3,10 @@
 \docType{class}
 \name{CNode-class}
 \alias{CNode-class}
-\title{A CNode represents a DataONE Coordinating Node and can be used to access its services.}
+\title{Provides R API to DataONE Coordinating Node services.}
+\description{
+The CNode class provides methods that interact with a DataONE Coordinating Node.
+}
 \section{Slots}{
 
 \describe{
