@@ -59,7 +59,7 @@ of the science datasets and associated science metadata.
 The next step is to prepare a metadata file that will describe the science datasets in the
 data package. The most common metadata format used in the DataONE network is the
 Ecological Metadata Langauage (EML). Other supported formats include FGDC and ISO 19113.
-Additional information about EML is available at \link{https://knb.ecoinformatics.org/#external//emlparser/docs/index.html}.
+Additional information about EML is available at https://knb.ecoinformatics.org/#external//emlparser/docs/index.html.
 
 Detailed directions regarding authoring metadata documents are outside the scope of this document.
 
@@ -90,7 +90,7 @@ A SystemMetadata object will be created automatically and stored in each DataObj
 be used by DataONE to maintain low level information about the dataset, such as the access policy, the user identity
 of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. 
 More information about DataONE  SystemMetdata is availalbe at
-\link{https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html}.
+https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html.
 
 The example below creates a DataObject for a science dataset:
 

@@ -77,7 +77,7 @@ result[,'id']
 ```
 
 ### Using a Simplified Search.
-A search may be performed by just specifying query fields and values using the \code{'searchTerms'} parameter.
+A search may be performed by just specifying query fields and values using the *searchTerms* parameter.
 For example, to search for datasets that mention 'kelp' in the abstract and have an attribute discription that contains the word 'biomass', the following query could be used:
 ```{r, warning=F}
 cn <- CNode("PROD")
@@ -86,7 +86,7 @@ mySearchTerms <- list(abstract="kelp", attribute="biomass")
 result <- query(cn, searchTerms=mySearchTerms, as="data.frame")
 ```
 
-Using the \code{'searchTerms'} parameter causes the \code{'query'} method to construct a Solr query 
+Using the *searchTerms* parameter causes the *query* method to construct a Solr query 
 based on the list, that is passed on to the DataONE node specified.
 
 The names in the *searchTerm* list are the query field names available from the Solr query engine
