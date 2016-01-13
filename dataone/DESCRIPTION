@@ -32,7 +32,7 @@ Imports:
     plyr,
     parsedate,
     uuid,
-    base64,
+    base64enc,
     jsonlite
 License: Apache License 2.0
 URL: http://github.com/DataONEorg/rdataone
