@@ -70,7 +70,7 @@ test_that("CNode getMNode()", {
   expect_that(newnode@type, matches("cn|mn"))
   expect_that(newnode@baseURL, matches("http"))
   expect_that(newnode@subject, matches("urn:node:"))
-  newnode <- getMNode(cn, "NOT_A_NODE_ID")
+  suppressWarnings(newnode <- getMNode(cn, "NOT_A_NODE_ID"))
   expect_that(newnode, is_a("NULL"))
 })
 
