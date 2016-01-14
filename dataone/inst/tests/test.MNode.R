@@ -140,7 +140,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
       cname <- class(newid)
       expect_that(cname, matches("character"))
       expect_that(newid, matches("urn:uuid:"))
-      expect_that(user, matches("cilogon|dataone"))
+      expect_that(user, matches("cilogon|dataone|orcid"))
       # Create a data object, and convert it to csv format
       testdf <- data.frame(x=1:10,y=11:20)
       csvfile <- paste(tempfile(), ".csv", sep="")
