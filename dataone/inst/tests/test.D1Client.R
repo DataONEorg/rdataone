@@ -156,7 +156,9 @@ test_that("D1Client uploadDataPackage works", {
     for(idInd in 1:length(ids)) {
       thisId <- ids[idInd]
       thisObj <- getMember(dp, thisId)
-      testId <- uploadDataObject(d1c, thisObj)
+      # Suppress expected warning, e.g. "SystemMetadata indicates that the object with pid: urn:uuid:cd98ff3f-0cf1-4bf7-9f03-e4a2a092ce72 was already uploaded to DataONE on 2016-01-14T14:16:57Z.
+      # This object will not be uploaded."
+      suppressWarnings(testId <- uploadDataObject(d1c, thisObj))
       expect_null(testId)
     }
   } else {
