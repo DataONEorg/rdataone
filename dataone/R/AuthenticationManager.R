@@ -168,7 +168,7 @@ setMethod("isAuthValid", signature("AuthenticationManager", "D1Node"), function(
   # available.
   if (check4PKI()) {
     # Suppress "deprecated" warning
-    cm <- suppressWarnings(CertificateManager())
+    suppressWarnings(cm <- CertificateManager())
     cert <- getCertLocation(cm)
     if (!is.null(cert) && (file.access(c(cert),4) == 0) && !isCertExpired(cm)) {
       x@authInfo$authMethod <- "cert"
@@ -319,7 +319,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   if(x@authInfo$authMethod == "token") {
     return(x@authInfo$subject)
   } else {
-    cm <- suppressWarnings(CertificateManager())
+    suppressWarnings(cm <- CertificateManager())
     return(showClientSubject(cm))
   }
 })
@@ -352,7 +352,7 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(x) {
     return(x@authInfo$expires)
   } else {
     # Turn off warnings the Deprecated msg doesn't get printed
-    cm <- suppressWarnings(CertificateManager())
+    suppressWarnings(cm <- CertificateManager())
     return(getCertExpires(cm))
   }
 })
@@ -387,7 +387,7 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(x) {
     }
   } else {
     # Turn off warnings so that the Deprecated msg doesn't get printed
-    cm <- suppressWarnings(CertificateManager())
+    suppressWarnings(cm <- CertificateManager())
     return(isCertExpired(cm))
   }
 })
