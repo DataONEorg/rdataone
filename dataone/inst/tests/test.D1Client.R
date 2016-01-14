@@ -178,7 +178,6 @@ test_that("D1Client createD1Object works", {
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
-  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
   suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
   if (authValid) {
@@ -201,6 +200,7 @@ test_that("D1Client getD1Object works", {
   library(dataone)
   library(digest)
   
+  am <- AuthenticationManager()
   d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
   suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
   if (authValid) {
@@ -227,8 +227,8 @@ test_that("D1Client getD1Object works", {
 
 test_that("D1Client d1SolrQuery works", {
   library(dataone)
-  # Test query of CN object index using query string
   d1c <- D1Client("PROD")
+  am <- AuthenticationManager()
   suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
   if (authValid) {
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
@@ -259,7 +259,7 @@ test_that("D1Client listMemberNodes() works", {
 
 test_that("D1Client d1IdentifierSearch works", {
   library(dataone)
-  # Test query of CN object index using query string
+  am <- AuthenticationManager()
   d1c <- D1Client("PROD")
   suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
   if (authValid) {
