@@ -42,7 +42,7 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @export
 setGeneric("D1Object", function(...) { 
-  .Deprecated("DataObject", package="datapackage", msg)
+  .Deprecated("DataObject", package="datapackage")
   standardGeneric("D1Object") 
 })
 

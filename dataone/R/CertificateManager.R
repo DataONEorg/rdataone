@@ -85,8 +85,8 @@ setClass("CertificateManager", slots = c(
 #' @return the CertificateManager object
 #' @export
 setGeneric("CertificateManager", function(...) {
+    .Deprecated("AuthenticationManager", "dataone")
     standardGeneric("CertificateManager") 
-  .Deprecated("AuthenticationManager", "dataone")
 })
 
 #' @rdname CertificateManager
