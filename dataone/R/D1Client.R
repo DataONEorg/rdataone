@@ -225,11 +225,11 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @export
 setGeneric("getD1Object", function(x, identifier, ...) {
   standardGeneric("getD1Object")
+  .Deprecated("getDataObject", "dataone")
 })
 
 #' @rdname getD1Object
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-  .Deprecated("getDataObject", "dataone")
   #d1o <- get(x@cn, identifier)    # Resolve the object location
   return(getDataObject(x, identifier))
 })
@@ -369,13 +369,13 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("createDataPackage", function(x, dataPackage, ...) { 
+  .Deprecated("uploadDataPackage", "dataone")
     standardGeneric("createDataPackage")
 })
 
 #' @export
 #' @rdname createDataPackage
 setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
-  .Deprecated("uploadDataPackage", "dataone")
   # createDataPackage has been superceded by uploadDataPackage
   uploadDataPackage(x, dataPackage)
 })
@@ -469,20 +469,18 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("getMN", function(x, nodeid, ...) { 
+    .Deprecated("getMNodeId", "dataone", "getMN(x, nodeid) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, nodeid")
     standardGeneric("getMN")
 })
 
 #' @rdname getMN
 #' @export
 setMethod("getMN", signature("D1Client"), function(x, ...) {
-    .Deprecated("getMNode", "dataone") 
     return(x@mn)
 })
 
 #' @rdname getMN
 setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
-    .Deprecated("getMNodeId", "dataone", "getMN(cnode, nodeId) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, nodeid")
-  
     if(!is.null(nodeid) && (!nodeid == "")) {
         newMN <- getMNode(x@cn, nodeid)
         if (is.null(newMN)) {
@@ -502,13 +500,13 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("getCN", function(x) { 
+    .Deprecated("getCN(x)", "dataone", "The getCN(x) function no longer returns a Java object. This new function returns a CNode object", "getMN(x, ...)")
     standardGeneric("getCN")
 })
 
 #' @rdname getCN
 #' @export
 setMethod("getCN", signature("D1Client"), function(x) {
-    .Deprecated("getCN(x)", "dataone", "The getCN(x) function no longer returns a Java object. This new function returns a CNode object", "getMN(D1Client, ...)")
     return(x@cn)
 })
 

@@ -85,12 +85,12 @@ setClass("CertificateManager", slots = c(
 #' @return the CertificateManager object
 #' @export
 setGeneric("CertificateManager", function(...) {
-    standardGeneric("CertificateManager")
+    standardGeneric("CertificateManager") 
+  .Deprecated("AuthenticationManager", "dataone")
 })
 
 #' @rdname CertificateManager
 setMethod("CertificateManager", signature=character(), function() {
-  .Deprecated("AuthenticationManager", "dataone") 
     if (!requireNamespace("PKIplus", quietly = TRUE)) {
         stop("CertificateManager functions require the PKIplus package to be installed.")
     }
