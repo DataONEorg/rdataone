@@ -79,7 +79,7 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
 #' @rdname getData
 #' @export
 setMethod("getData", signature("D1Object"), function(x, id) {
-    data <- get(x@mn, id, check=as.logical(FALSE))
+    data <- getObject(x@mn, id, check=as.logical(FALSE))
 })
 
 #' Get the Identifier of the DataObject

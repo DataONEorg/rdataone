@@ -18,24 +18,24 @@ test_that("MNode getCapabilities()", {
 	expect_that(val, matches("node"))
 	expect_that(mn@identifier, matches("urn:node"))
 })
-test_that("MNode get(), getChecksum()", {
+test_that("MNode getObject(), getChecksum()", {
     library(dataone)
     mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
     mn <- MNode(mn_uri)
     pid <- "doi:10.5063/F1QN64NZ"
-    bytes <- get(mn, pid)
+    bytes <- getObject(mn, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
     expect_that(cname, matches("XML"))
     pid <- "solson.5.1"
-    obj <- get(mn, pid)
+    obj <- getObject(mn, pid)
     df <- read.csv(text=rawToChar(obj))
     cname <- class(df)[1]
     expect_that(cname, matches("data.frame"))
     cn <- CNode()
     knb <- getMNode(cn, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
-    bytes <- get(mn, pid)
+    bytes <- getObject(mn, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
     expect_that(cname, matches("XML"))
@@ -111,7 +111,7 @@ test_that("MNode describe()", {
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
-test_that("MNode create(), update(), archive(), and delete()", {
+test_that("MNode create(), updateObject(), archive()", {
     skip_on_cran()
     library(dataone)
     library(digest)
@@ -175,7 +175,7 @@ test_that("MNode create(), update(), archive(), and delete()", {
       sysmeta@size <- size
       sysmeta@checksum <- sha1
       sysmeta@obsoletes <- newid
-      response <- update(mn, newid, csvfile, updateid, sysmeta)
+      response <- updateObject(mn, newid, csvfile, updateid, sysmeta)
       expect_that(xmlValue(xmlRoot(response)), matches(updateid))
       updsysmeta <- getSystemMetadata(mn, updateid)
       expect_that(class(updsysmeta)[1], matches("SystemMetadata"))

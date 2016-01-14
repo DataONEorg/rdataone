@@ -271,7 +271,7 @@ sysmeta <- getSystemMetadata(mn, pid )
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 status <- updateSystemMetadata(mn, pid, sysmeta)
 ```
-### Replace an object with a newer version (MNode: update)
+### Replace an object with a newer version (MNode: updateObject)
 
 Updates an existing object by creating a new object identified by newPid on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of pid and newPid.
 
@@ -287,15 +287,14 @@ sysmeta@identifier <- updateid
 sysmeta@size <- size
 sysmeta@checksum <- sha1
 sysmeta@obsoletes <- newid
-response <- update(mn, newid, csvfile, updateid, sysmeta)
+response <- updateObject(mn, newid, csvfile, updateid, sysmeta)
 updsysmeta <- getSystemMetadata(mn, updateid)
 ```
 
-The Member Node sets Types.SystemMetadata.obsoletedBy on the object being obsoleted to the pid of the new object. It then updates Types.SystemMetadata.dateSysMetadataModified on both the new and old objects. The modified system metadata entries then become available in MNRead.listObjects(). This ensures that a Coordinating Node will pick up the changes when filtering on Types.SystemMetadata.dateSysMetadataModified.
+The Member Node will mark the object as being obsoleted by setting the system metadata obsoletedBy property on the object being 
+obsoleted to the pid of the new object. 
 
-The update operation MUST fail with Exceptions.InvalidRequest on objects that have the Types.SystemMetadata.archived property set to true.
-
-A new, unique Types.SystemMetadata.seriesId may be included when beginning a series, or a series may be extended if the newPid obsoletes the existing pid.
+The updateObject operation will fail with on objects that have the system metadata archived property set to true.
 
 ### Remove an object from DataONE search
 

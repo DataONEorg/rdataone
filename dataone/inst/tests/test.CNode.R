@@ -28,12 +28,12 @@ test_that("CNode listNodes()", {
   expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
 })
 
-test_that("CNode get()", {
+test_that("CNode getObject()", {
   library(dataone)
   library(XML)
   cn <- CNode()
   pid <- "aceasdata.3.2"
-  obj <- get(cn, pid)
+  obj <- getObject(cn, pid)
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
   cname <- class(xml)[1]
   expect_that(cname, matches("XML"))

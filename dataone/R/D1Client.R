@@ -274,7 +274,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
         suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
         if (!is.null(currentMN)) {
             sysmeta <- getSystemMetadata(currentMN, identifier)
-            bytes <- get(currentMN, identifier)
+            bytes <- getObject(currentMN, identifier)
             if (!is.null(sysmeta) & !is.null(bytes)) {
                 success=TRUE
                 break

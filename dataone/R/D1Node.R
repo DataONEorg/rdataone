@@ -165,13 +165,13 @@ setMethod("archive", signature("D1Node", "character"), function(node, pid) {
 #' @param node The Node instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
 #' @param ... (Not yet used).
-#' @rdname get
-#' @aliases get
+#' @rdname getObject
+#' @aliases getObject
 #' @return the bytes of the object
 #' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
 #' @export
-setGeneric("get", function(node, pid, ...) {
-  standardGeneric("get")
+setGeneric("getObject", function(node, pid, ...) {
+  standardGeneric("getObject")
 })
 
 

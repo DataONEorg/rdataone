@@ -27,7 +27,7 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
  \item{\code{\link{reserveIdentifier}}}{: Reserve a identifier that is unique in the DataONE network.}
  \item{\code{\link{hasReservation}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
- \item{\code{\link{get}}}{: Get the bytes associated with an object on this Coordinating Node.} 
+ \item{\code{\link{getObject}}}{: Get the bytes associated with an object on this Coordinating Node.} 
  \item{\code{\link{getSystemMetadata}}}{: Get the bytes associated with an object on this Coordinating Node.}
  \item{\code{\link{describe}}}{: Get a list of coordinating nodes holding a given pid.} 
  \item{\code{\link{resolve}}}{: Get a list of coordinating nodes holding a given pid.}

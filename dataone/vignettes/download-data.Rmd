@@ -60,7 +60,7 @@ mn <- getMNode(cn, mnId)
 
 Multiple MNs may hold the data, depending on the replication policy that is in effect for the dataset and which member nodes are currenctly available. In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
 ```{r, warning=FALSE}
-obj <- get(mn, pid)
+obj <- getObject(mn, pid)
 ```
 
 If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statments:
@@ -73,7 +73,7 @@ queryParams <- list(q="abstract:habitat", fl="id,title,abstract")
 result <- query(mn, queryParams, as="data.frame", parse=FALSE)
 # Choose the first matchin PID
 pid <- result[1,'id']
-obj <- get(mn, pid)
+obj <- getObject(mn, pid)
 ```
 
 ### Alternate Approach for DataONE-wide search and download
