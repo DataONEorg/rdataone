@@ -224,8 +224,8 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("getD1Object", function(x, identifier, ...) {
-  standardGeneric("getD1Object")
   .Deprecated("getDataObject", "dataone")
+  standardGeneric("getD1Object")
 })
 
 #' @rdname getD1Object

@@ -42,6 +42,7 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @export
 setGeneric("D1Object", function(...) { 
+  .Deprecated("DataObject", package="datapackage", msg)
   standardGeneric("D1Object") 
 })
 
@@ -59,10 +60,6 @@ setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=
                                              filename=as.character(NA)) {
   .Object@dataObject <- new("DataObject", id = id, dataobj = data, format = format,
                             mnNodeId = mnNodeId, filename = filename)
-  # Note: .Deprecated doesn't appear to be called when an object is created with 'initialize', so put the 
-  # .Deprecated call here instead of in the generic, and print a standard message.
-  msg <- sprintf("'D1Object' is deprecated.\nUse 'DataObject' instead.\nSee help(\"Deprecated\") and help(\"datapackage-deprecated\").")
-  .Deprecated("DataObject", package="datapackage", msg)
   return(.Object)
 })
 
