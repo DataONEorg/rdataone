@@ -232,7 +232,7 @@ test_that("D1Client d1SolrQuery works", {
   suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
   if (authValid) {
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    queryParams <- list(q="id:doi*", rows="2", wt="xml")
+    queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
     result <- d1SolrQuery(d1c, queryParams)
     expect_match(class(result)[1], "XMLInternalDocument")
     resList <- xmlToList(result)
@@ -255,4 +255,20 @@ test_that("D1Client listMemberNodes() works", {
   expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
   expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
   expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
+})
+
+test_that("D1Client d1IdentifierSearch works", {
+  library(dataone)
+  # Test query of CN object index using query string
+  d1c <- D1Client("PROD")
+  suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
+    result <- d1IdentifierSearch(d1c, queryParams)
+    expect_match(class(result), "character")
+    expect_equal(length(result), 2)
+  } else {
+    skip("This test requires valid authentication.")
+  }
 })

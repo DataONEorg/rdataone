@@ -345,9 +345,10 @@ setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, 
   # TODO: Check if this is still true: Empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
   # negates any other fl or wr values that might be part of the passed in solrQuery
   # (need to do this for parsing the reponse)
-  finalQuery = sprintf("%s&fl=identifier", solrQuery)
-  result <- unlist(query(x@cn, solrQuery=finalQuery, encode=TRUE, as="list", parse=TRUE))
-  return(result)
+  finalQuery <- sprintf("%s&fl=identifier", solrQuery)
+  result <- query(x@cn, solrQuery=finalQuery, encode=TRUE, as="data.frame", parse=TRUE)
+  ids <- result[,'identifier']
+  return(ids)
 })
 
 #' @rdname reserveIdentifier
