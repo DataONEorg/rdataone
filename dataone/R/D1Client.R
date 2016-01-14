@@ -220,7 +220,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @param ... (not yet used)
 #' @rdname getD1Object
 #' @aliases getD1Object
-#' @return A DataONE object
+#' @return A datapackage:DataObject
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("getD1Object", function(x, identifier, ...) {
@@ -311,13 +311,13 @@ setGeneric("d1SolrQuery", function(x, solrQuery) {
 
 #' @rdname d1SolrQuery
 setMethod("d1SolrQuery", signature("D1Client", "list"), function(x, solrQuery) {
-  result <- query(x@cn, solrQuery, encode=TRUE, as="list", parse=TRUE)
+  result <- query(x@cn, solrQuery, encode=TRUE, as="xml", parse=TRUE)
   return(result)
 })
 
 #' @rdname d1SolrQuery
 setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQuery) {
-  result <- query(x@cn, solrQuery, encode=TRUE, as="list", parse=TRUE)
+  result <- query(x@cn, solrQuery, encode=TRUE, as="xml", parse=TRUE)
   return(result)
 })
 

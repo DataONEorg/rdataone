@@ -217,3 +217,20 @@ test_that("D1Client getD1Object works", {
   sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
   expect_that(sha1, matches(dataObj@sysmeta@checksum))
 })
+
+
+test_that("D1Client d1SolrQuery works", {
+  library(dataone)
+  # Test query of CN object index using query string
+  d1c <- D1Client("PROD")
+  suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+  }
+  
+  queryParams <- list(q="id:doi*", rows="2", wt="xml")
+  result <- d1SolrQuery(d1c, queryParams)
+  expect_match(class(result)[1], "XMLInternalDocument")
+  resList <- xmlToList(result)
+  expect_true(length(resList) > 0)
+})
