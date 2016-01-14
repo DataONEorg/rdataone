@@ -266,7 +266,7 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
       url <- paste(cnode@endpoint, "node", sep="/")
     }
     # Don't need authorized access, so call GET directly vs auth_get
-    response <- GET(url, user_agent(get_user_agent()))
+    response <- GET(url)
     if(response$status != "200") {
         return(NULL)
     }
