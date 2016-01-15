@@ -82,17 +82,16 @@ The next section shows how to apply the desired access rules to items that will 
 before upload.
 
 ### 4. Create a DataObject for each data file
-The DataObject class is a wrapper for each science datasets and science metadata that will be included in the data package.
-The DataObject maintains information about an object that will be needed by DataONE.
+A *DataObject* must be created for each metadata file and data file that will be included in the data package.
+The *DataObject* maintains information about an object that will be needed by DataONE.
 
-A DataObject must be created for each science dataset and science metadata that will be uploaded to DataONE. 
-A SystemMetadata object will be created automatically and stored in each DataObject. The SystemMetadata object will
+A *SystemMetadata* object will be created automatically and stored in each DataObject. The *SystemMetadata* object will
 be used by DataONE to maintain low level information about the dataset, such as the access policy, the user identity
 of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. 
 More information about DataONE  SystemMetdata is availalbe at
 https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html.
 
-The example below creates a DataObject for a science dataset:
+The example below creates a *DataObject* for a science dataset:
 
 ```{r, warning=F}
 sampleData <- system.file("extdata/sample.csv", package="dataone")
@@ -105,7 +104,7 @@ DataONE user that has full priviledge to the object.
 If a *user* is not specified for a *DataObject*, then it will automatically be set to the DataONE user 
 that created the authentication token or X.509 certificate. 
 
-Access rules can be added to each DataObject after it has been created. Access rules can be added to grant permissions to a
+Access rules can be added to each *DataObject* after it has been created. Access rules can be added to grant permissions to a
 single user. Access can also be granted to the *public* user, which means any and all users. For example, public read access
 can be set using the `setPublicAccess` method:
 
@@ -115,7 +114,7 @@ dataObj <- setPublicAccess(dataObj)
 
 Individual access rules to be applied to a DataONE user identify can also be added to the access policy. 
 
-Access rules are added to a DataObject using the `addAccessRule` method. The following access rule will grant
+Access rules are added to a *DataObject* using the `addAccessRule` method. The following access rule will grant
 user 'collins' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
 
 ```{r}
@@ -124,17 +123,17 @@ sciDataObj <- addAccessRule(dataObj, accessRules)
 ```
 
 ### 5. Create a DataObject for the metadata file
-When a DataObject is created, a unique identifier is generated if one is not specified. This automatically generated
+When a *DataObject* is created, a unique identifier is generated if one is not specified. This automatically generated
 identifier has the format "urn:uuid:<a unique string>", for example "urn:uuid:c3443142-6260-4ea5-aaa1-1114981e04ad".
 
-The following command creates the DataObject for the science metadata, using an automatically generated identifier:
+The following command creates the *DataObject* for the science metadata, using an automatically generated identifier:
 
 ```{r}
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```
 
-Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata DataObject, using the *generateIdentifier* method:
+Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata *DataObject*, using the *generateIdentifier* method:
 
 ```{r, eval=F}
 cn <- CNode("STAGING")
@@ -149,7 +148,7 @@ The `generateIdentifier` method requests that the DataONE MN generate a properly
 
 ### 6. Add each DataObject to the DataPackage
 The DataPackage object serves as a container for a set of data objects that will be uploaded to DataONE. The metadata 
-DataObject and all science data DataObjects must be added to the DataPackage before calling `uploadDataPackage`.
+*DataObject* and all science data *DataObjects* must be added to the DataPackage before calling `uploadDataPackage`.
 
 Relationships between the objects in a DataPackage are stored in the ResourceMap which is stored in and maintained by the DataPackage.
 One type of relationship that is stored is between the science metadata and the science datasets that are described by
@@ -176,7 +175,7 @@ addData(dp, sciDataObj, metadataObj)
 
 ### 7. Upload the DataPackage
 
-When all DataObjects have been added to the DataPackage, call the `uploadDataPackage` method to upload the 
+When all *DataObjects* have been added to the DataPackage, call the `uploadDataPackage` method to upload the 
 entire DataPackage:
 
 ```{r, eval=F}
@@ -273,7 +272,7 @@ status <- updateSystemMetadata(mn, pid, sysmeta)
 ```
 ### Replace an object with a newer version (MNode: updateObject)
 
-Updates an existing object by creating a new object identified by newPid on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of pid and newPid.
+The *updateObject* updates an existing object by creating a new object identified by a new PID on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of PID and the new PID.
 
 ```
 # Update the object with a new version
@@ -291,22 +290,21 @@ response <- updateObject(mn, newid, csvfile, updateid, sysmeta)
 updsysmeta <- getSystemMetadata(mn, updateid)
 ```
 
-The Member Node will mark the object as being obsoleted by setting the system metadata obsoletedBy property on the object being 
-obsoleted to the pid of the new object. 
+The Member Node will mark the object as being obsoleted by setting the system metadata obsoletedBy property on the object being  obsoleted to the PID of the new object. 
 
 The updateObject operation will fail with on objects that have the system metadata archived property set to true.
 
 ### Remove an object from DataONE search
 
 An object can be removed from searches done with the DataONE search mechanism by calling the *archive*
-method with the pid of the object. This operation does not delete the object bytes, but instead updates
+method with the PID of the object. This operation does not delete the object bytes, but instead updates
 the system metadata for the object to set the *archived* flag to true. The object can still be 
-referenced with it's pid and downloaded, but it will not appear in any search results.
+referenced with it's PID and downloaded, but it will not appear in any search results.
 
 Objects that are archived can not be updated using the *updatei* method.  Once an object is archived it cannot be un-archived. 
 
 ```{r, eval=FALSE}
-# Obtain a pid with query() or by using the member node GUI, i.e. metacatui
+# Obtain a PID with query() or by using the member node GUI, i.e. metacatui
 response <- archive(mn, pid)
 newsysmeta <- getSystemMetadata(mn, pid)
 response <- archive(mn, newid)

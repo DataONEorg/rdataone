@@ -10,7 +10,8 @@ vignette: >
 
 The primary method to locate data in the DataONE network is to use the web based search tool located at https://search.dataone.org.
 
-Data can also be discovered programatically from R using the DataONE R client method `query()`. Both methods access the same
+Data can also be discovered programatically from R using the *dataone* R client method `query`. Both the web page and the R method
+access the same
 underlying search mechanism, the Apache Foundation Solr search engine that runs on the DataONE Coordinating Node (CN) located at
 (https://cn.dataone.org/cn). The DataONE Solr index (similar to a catalog or database) contains infrormation for every dataset that is available from 
 the DataONE network. 
@@ -30,7 +31,7 @@ Additional information about the `query` method can be obtained from the R help 
 
 ## Query and return an R list
 
-The following example queries DataONE and return values in an R list, with each value converted from the Solr result to the appropriate R data type: 
+The following example queries DataONE and returns values in an R list, with each value converted from the Solr result to the appropriate R data type: 
 
 ```{r,warning=F,message=F}
 library(dataone)
@@ -63,7 +64,7 @@ The complete list of possible values stored for a dataset can be viewed at [Data
 the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
 
 ### Return values as a data frame
-To return results as a data frame, use the `as` parameter as shown below. In addittion all values will be stored as `character`, because `parse=FALSE` is specified:
+To return results as a data frame, use the `as` parameter as shown below. In addition all values will be stored as `character`, because `parse=FALSE` is specified:
 
 ```{r,warning=F}
 cn <- CNode("PROD")
@@ -96,7 +97,7 @@ description can be found at https://knb.ecoinformatics.org/knb/d1/mn/v1/query/so
 
 ## Search the entire DataONE network
 
-The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes in the network.
+The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
 Sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
 The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
 search term in the query send to the CN, or by just sending the query to the MN of interest.

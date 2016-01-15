@@ -23,7 +23,7 @@ is described in the "searching-dataone" vignette.
 
 ### Search all of DataONE For Datasets of Interest
 
-The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes in the network.
+The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
 Sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
 The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
 search term in the query sent to the CN, or by just sending the query to a specific MN. 
@@ -42,6 +42,8 @@ result[1,c("id", "title")]
 
 The *result* object, a data.frame, can be inspected to determine which matching dataset to download, as
 multiple matching dataset identifiers may be returned from the query.
+Each object in DataONE is uniquely identified by a Persistent Identifier (PID) that can be used to refer to the object and perform operations on it, such as downloading it to a local machine. 
+
 (As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at http://search.dataone.org to find the identifiers of data to download.)
 
 In the R example, after inspecting the *result* data, we will use the first matching dataset:
@@ -49,7 +51,7 @@ In the R example, after inspecting the *result* data, we will use the first matc
  pid <- result[1,'id']
 ```
 
-Now that the pid is determined, the MN that holds the data must be located. For this, the *resolve*
+Now that the PID is determined, the MN that holds the data must be located. For this, the *resolve*
 method is used to find an MN that holds the data and that is currently available: 
 
 ```{r, warning=FALSE, error=FALSE}
@@ -142,7 +144,8 @@ bagitFileName <- getPackage(mn, id=packagePid)
 Care must be taken, however, as these commands download the entire package. 
 
 The package is downloaded to a single file that is structured according
-to the (Bagit)[https://tools.ietf.org/html/draft-kunze-bagit-10] packaging guidelines.
+to the [Bagit](https://tools.ietf.org/html/draft-kunze-bagit-10) packaging guidelines. The *getPackage*
+method returns the name this file that is created in a temporary directory.
 
 Because the *getPackage* method downloads the entire collection of files for a data package, the
 downloaded Bagit file can be quiet large and may take a significant amount of time to download,
