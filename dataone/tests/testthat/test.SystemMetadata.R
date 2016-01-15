@@ -17,7 +17,7 @@ test_that("XML SystemMetadata parsing works", {
   testid <- "doi:10.xxyy/AA/tesdoc123456789"
   sysmeta <- new("SystemMetadata")
   expect_that(sysmeta@serialVersion, equals(1))
-  doc <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
+  doc <- xmlParseDoc(system.file("testfiles/sysmeta.xml", package="dataone"), asText=FALSE)
   expect_that(xmlValue(xmlRoot(doc)[["identifier"]]), matches(testid))
   xml <- xmlRoot(doc)
   #getEncoding(doc)
@@ -38,7 +38,7 @@ test_that("XML SystemMetadata serialization works", {
     testid <- "doi:10.xxyy/AA/tesdoc123456789"
     sysmeta <- new("SystemMetadata")
     expect_that(sysmeta@serialVersion, equals(1))
-    xml <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
+    xml <- xmlParseDoc(system.file("testfiles/sysmeta.xml", package="dataone"), asText=FALSE)
     expect_that(xmlValue(xmlRoot(xml)[["identifier"]]), matches(testid))
     sysmeta <- parseSystemMetadata(sysmeta, xmlRoot(xml))
     expect_that(sysmeta@identifier, matches(testid))
@@ -63,7 +63,7 @@ test_that("SystemMetadata XML constructor works", {
     library(dataone)
     library(XML)
     testid <- "doi:10.xxyy/AA/tesdoc123456789"
-    doc <- xmlParseDoc("../testfiles/sysmeta.xml", asText=FALSE)
+    doc <- xmlParseDoc(system.file("testfiles/sysmeta.xml", package="dataone"), asText=FALSE)
     expect_that(xmlValue(xmlRoot(doc)[["identifier"]]), matches(testid))
     xml <- xmlRoot(doc)
     sysmeta <- SystemMetadata(xmlRoot(xml))
