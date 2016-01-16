@@ -24,7 +24,22 @@ reserveIdentifier(x, id, ...)
 The reserved pid if it was sucessfully reserved, otherwise NULL
 }
 \description{
-Once a an identifier has been reserved, it and can not be used by any other user.
+The reserveIdentifier method contains the DataONE CN and reserves the specified
+identfier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
+}
+\details{
+This method requires a DataONE authentication token or X.509 Certificate. The reservation is made
+for the DataONE user identity that created the current authentication token or X.509 certificate.
+}
+\examples{
+\dontrun{
+library(dataone)
+library(uuid)
+cn <- CNode()
+myId <- sprintf("urn:uuid:\%s", UUIDgenerate())
+newId <- reserveIdentifier(cn, myId)
+expect_equal(myId, newId)
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

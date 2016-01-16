@@ -6,9 +6,8 @@
 \alias{initialize,D1Object-method}
 \title{Initialize a D1Object}
 \usage{
-\S4method{initialize}{D1Object}(.Object, id = as.character(NA), data = NA,
-  format = as.character(NA), mnNodeId = as.character(NA),
-  filename = as.character(NA))
+\S4method{initialize}{D1Object}(.Object, id, data, format,
+  mnNodeId = as.character(NA))
 }
 \arguments{
 \item{.Object}{A D1Object instance.}
@@ -20,8 +19,6 @@
 \item{format}{The Object format.}
 
 \item{mnNodeId}{The DataONE node identifier associated with this object, i.e. "urn:node:KNB"}
-
-\item{filename}{A filename that this D1Object contains.}
 }
 \description{
 Initialize a D1Object

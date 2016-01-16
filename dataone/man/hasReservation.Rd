@@ -24,7 +24,23 @@ an identifier for an existing object}
 A logical value where TRUE means a reservation exists for the specified pid by the subject.
 }
 \description{
-Checks to determine if the supplied subject is the owner of the reservation of id.
+The hasReservation method checks the reserveration of an identfier that has
+previously been reserved with the \code{reserveIdentifier} method. The identifier must have
+been reserved by the specified DataONE user identity (\code{subject}).
+}
+\details{
+To determine the DataONE identity that is currently being used for DataONE
+authentication, use the \code{echoCredentials} method.
+}
+\examples{
+\dontrun{
+cn <- CNode("PROD")
+creds <- echoCredentials(cn)
+subject <- creds$person$subject
+# Previously reserved pid, e.g. DOI or uuid
+pid <- "urn:node:e27bb4f3-96bb-4af4-8902-f5914def077c"
+hasRes <- hasReservation(cn, pid, subject=subject)
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

@@ -23,6 +23,11 @@ the list of nodes in the DataONE CN environment
 \description{
 Get the list of nodes associated with a CN
 }
+\examples{
+cn <- CNode()
+nodelist <- listNodes(cn)
+nodeid <- nodelist[[2]]@identifier
+}
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }

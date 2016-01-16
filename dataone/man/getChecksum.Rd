@@ -31,6 +31,12 @@ A checksum is calculated for an object when it is uploaded to DataONE and
 is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
 the checksum from the specified coordinating node
 }
+\examples{
+pid <- "doi:10.5063/F1QN64NZ"
+cn <- CNode()
+pid <- "doi:10.5063/F1QN64NZ"
+chksum <- getChecksum(cn, pid)
+}
 \seealso{
 \code{\link[=D1Node-class]{D1Node}}{ class description.}
 }

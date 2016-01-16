@@ -8,14 +8,14 @@
 \usage{
 createDataPackage(x, dataPackage, ...)
 
-\S4method{createDataPackage}{D1Client,DataPackage}(x, dataPackage)
+\S4method{createDataPackage}{D1Client,DataPackage}(x, dataPackage, ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}
 
 \item{dataPackage}{The DataPackage instance to be submitted to DataONE for creation.}
 
-\item{...}{(not yet used)}
+\item{...}{Additional arguments}
 }
 \description{
 This method has been superceded by \code{\link{uploadDataPackage}}

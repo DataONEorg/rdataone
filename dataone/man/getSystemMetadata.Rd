@@ -39,6 +39,11 @@ present in the default location of the file system, in which case the access wil
 This operation acts as the 'public' anonymous user unless an X.509 certificate is
 present in the default location of the file system, in which case the access will be authenticated.
 }
+\examples{
+cn <- CNode()
+pid <- "aceasdata.3.2"
+sysmeta <- getSystemMetadata(cn, pid)
+}
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }

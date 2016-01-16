@@ -23,6 +23,10 @@ the Member Node as an MNode reference, or NULL if not found
 \description{
 Get a reference to a node based on its identifier
 }
+\examples{
+cn <- CNode()
+mn <- getMNode(cn, "urn:node:KNB")
+}
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
