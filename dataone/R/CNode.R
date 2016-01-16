@@ -223,6 +223,11 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
 
 #' @rdname getChecksum
 #' @export
+#' @examples
+#' pid <- "doi:10.5063/F1QN64NZ"
+#' cn <- CNode()
+#' pid <- "doi:10.5063/F1QN64NZ"
+#' chksum <- getChecksum(cn, pid)
 setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ...) {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
   response <- GET(url, user_agent(get_user_agent()))
@@ -252,6 +257,10 @@ setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ..
 #' @return the list of nodes in the DataONE CN environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
+#' @examples 
+#' cn <- CNode()
+#' nodelist <- listNodes(cn)
+#' nodeid <- nodelist[[2]]@identifier
 setGeneric("listNodes", function(cnode, ...) {
     standardGeneric("listNodes")
 })
@@ -279,7 +288,10 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
 })
 
 #' Reserve a identifier that is unique in the DataONE network.
-#' @description Once a an identifier has been reserved, it and can not be used by any other user.
+#' @description The reserveIdentifier method contains the DataONE CN and reserves the specified
+#' identfier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
+#' @details This method requires a DataONE authentication token or X.509 Certificate. The reservation is made
+#' for the DataONE user identity that created the current authentication token or X.509 certificate.
 #' @rdname reserveIdentifier
 #' @aliases reserveIdentifier
 #' @param x The coordinating node to query for its registered Member Nodes
@@ -287,6 +299,15 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
 #' @param ... Additional parameters.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
+#' @examples
+#' \dontrun{
+#' library(dataone)
+#' library(uuid)
+#' cn <- CNode()
+#' myId <- sprintf("urn:uuid:%s", UUIDgenerate())
+#' newId <- reserveIdentifier(cn, myId)
+#' expect_equal(myId, newId)
+#' }
 setGeneric("reserveIdentifier", function(x, id, ...) {
   standardGeneric("reserveIdentifier")
 })
@@ -313,10 +334,24 @@ setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id) 
 })
 
 #' Checks to determine if the supplied subject is the owner of the reservation of id.
+#' @description The hasReservation method checks the reserveration of an identfier that has
+#' previously been reserved with the \code{reserveIdentifier} method. The identifier must have
+#' been reserved by the specified DataONE user identity (\code{subject}).
+#' @details To determine the DataONE identity that is currently being used for DataONE
+#' authentication, use the \code{echoCredentials} method.
 #' @param cnode A CNode instance.
 #' @param ... Additional parameters.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
+#' @examples
+#' \dontrun{
+#' cn <- CNode("PROD")
+#' creds <- echoCredentials(cn)
+#' subject <- creds$person$subject
+#' # Previously reserved pid, e.g. DOI or uuid
+#' pid <- "urn:node:e27bb4f3-96bb-4af4-8902-f5914def077c"
+#' hasRes <- hasReservation(cn, pid, subject=subject)
+#' }
 setGeneric("hasReservation", function(cnode, ...) {
   standardGeneric("hasReservation")
 })
@@ -415,6 +450,10 @@ setMethod("getObject", signature("CNode", "character"), function(node, pid) {
 #' @import datapackage
 #' @export
 #' @rdname getSystemMetadata
+#' @examples
+#' cn <- CNode()
+#' pid <- "aceasdata.3.2"
+#' sysmeta <- getSystemMetadata(cn, pid)
 setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
@@ -515,6 +554,9 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
 #' @return the Member Node as an MNode reference, or NULL if not found
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
+#' @examples
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
 setGeneric("getMNode", function(cnode, nodeid, ...) {
   standardGeneric("getMNode")
 })
