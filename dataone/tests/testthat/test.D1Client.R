@@ -170,6 +170,7 @@ test_that("D1Client createD1Object works", {
   skip_on_cran()
   library(dataone)
   library(datapackage)
+  library(uuid)
   # Create a csv file for the science object
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
@@ -184,8 +185,15 @@ test_that("D1Client createD1Object works", {
   suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
   if (authValid) {
     if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    sdf <- read.csv(csvfile)
+    # Create DataObject for the science data 
+    stf <- charToRaw(convert.csv(d1c, sdf))
+    sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # Create D1Object for the science data 
-    suppressWarnings(sciObj <- new("D1Object", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile))
+    # Suppress .Deprecated warnings
+    id <- sprintf("urn:uuid:%s", UUIDgenerate())
+    suppressWarnings(stf <- charToRaw(convert.csv(d1c, testdf)))
+    suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
     expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
     sciObj <- setPublicAccess(sciObj)
@@ -324,3 +332,4 @@ test_that("D1Client createDataPackage works", {
     skip("This test requires valid authentication.")
   }
 })
+
