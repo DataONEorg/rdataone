@@ -362,7 +362,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 #' @description This method has been superceded by \code{\link{uploadDataPackage}}
 #' @param x A D1Client instance.
 #' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
-#' @param ... (not yet used)
+#' @param ... Additional arguments
 #' @rdname createDataPackage
 #' @aliases createDataPackage
 #' @return NULL
@@ -375,9 +375,9 @@ setGeneric("createDataPackage", function(x, dataPackage, ...) {
 
 #' @export
 #' @rdname createDataPackage
-setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage ) {
+setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x, dataPackage, ...) {
   # createDataPackage has been superceded by uploadDataPackage
-  uploadDataPackage(x, dataPackage)
+  uploadDataPackage(x, dataPackage, ...)
 })
 
 #########################################################
@@ -758,4 +758,28 @@ setGeneric("encodeUrlPath", function(x, pathSegment, ...) {
 #' @export
 setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), function(x, pathSegment, ...) {
      return(URLencode(pathSegment))
+})
+
+#' Add a D1Object to a DataPackage
+#' @rdname addData
+#' @description The D1Object \code{do} is added to the data package \code{x}.
+#' @details If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
+#' object that describes the science object that is being added. The \code{addData} function will add a relationship
+#' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology
+#' \code{documents} and \code{isDocumentedBy} relationship.
+#' @param mo A DataObject (containing metadata describing \code{"do"} ) to associate with the science object.
+#' @export
+setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
+  x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
+  # If a metadata object identifier is specified on the command line, then add the relationship to this package
+  # that associates this science object with the metadata object.
+  if (!missing(mo)) {
+    # CHeck that the metadata object has already been added to the DataPackage. If it has not
+    # been added, then add it now.
+    if (!containsId(x, getIdentifier(mo@dataObject))) {
+      moId <- addData(x, mo@dataObject)
+    }
+    # Now add the CITO "documents" and "isDocumentedBy" relationships
+    insertRelationship(x, getIdentifier(mo@dataObject), getIdentifier(do@dataObject))
+  }
 })
