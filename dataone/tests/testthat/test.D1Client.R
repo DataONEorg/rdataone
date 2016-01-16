@@ -274,3 +274,53 @@ test_that("D1Client d1IdentifierSearch works", {
     skip("This test requires valid authentication.")
   }
 })
+
+test_that("D1Client createDataPackage works", {
+  skip_on_cran()
+  library(dataone)
+  library(datapackage)
+  library(uuid)
+  
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
+  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  expect_false(is.null(d1c))
+  #preferredNodes <- c("urn:node:mnDemo9")
+  preferredNodes <- NA
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
+  if (authValid) {
+    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    dp <- new("DataPackage")
+    # Create metadata object that describes science data
+    emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+    emlChar <- readLines(emlFile)
+    emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
+    emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
+    suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
+    expect_that(metadataObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    addData(dp, metadataObj)
+    expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
+    
+    sdf <- read.csv(csvfile)
+    # Create DataObject for the science data 
+    stf <- charToRaw(convert.csv(d1c, sdf))
+    sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
+    suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
+    # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
+    expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    addData(dp, sciObj, metadataObj)
+    expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
+   
+    # Upload the data package to DataONE    
+    suppressWarnings(resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE))
+    expect_true(!is.null(resourceMapId))
+
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
