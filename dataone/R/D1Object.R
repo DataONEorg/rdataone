@@ -42,7 +42,6 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @export
 setGeneric("D1Object", function(...) { 
-  .Deprecated("DataObject", package="datapackage")
   standardGeneric("D1Object") 
 })
 
@@ -52,14 +51,27 @@ setGeneric("D1Object", function(...) {
 #' @param data An R object (data or metadata) that this D1Object contains.
 #' @param format The Object format.
 #' @param mnNodeId The DataONE node identifier associated with this object, i.e. "urn:node:KNB"
-#' @param filename A filename that this D1Object contains.
 #' @rdname D1Object-initialize
 #' @aliases D1Object-initialize
-setMethod("initialize", "D1Object", function(.Object, id=as.character(NA), data=NA, 
-                                             format=as.character(NA), mnNodeId=as.character(NA), 
-                                             filename=as.character(NA)) {
-  .Object@dataObject <- new("DataObject", id = id, dataobj = data, format = format,
-                            mnNodeId = mnNodeId, filename = filename)
+setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId=as.character(NA)) {
+  msg <- sprintf("'D1Object' is deprecated.\nUse 'datapackage:DataObject' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  d1oSig <- sprintf("new(\"D1Object\", id, data, format, mnNodeId)")
+  .Deprecated("DataObject", package="datapackage", msg, d1oSig)
+  # Write the incoming data to disk and create the DataObject with this file
+  
+  if(format == "text/csv") {
+    dataChar <- rawToChar(data)
+    theData <- textConnection(dataChar)
+    df <- read.csv(theData, stringsAsFactors=FALSE)
+    tfile <- tempfile()
+    write.csv(df, tfile)
+  } else {
+    dataChar <- rawToChar(data)
+    tfile <- tempfile()
+    writeLines(dataChar, tfile)
+  }
+  
+  .Object@dataObject <- new("DataObject", id = id, format = format, mnNodeId = mnNodeId, filename=tfile)
   return(.Object)
 })
 
