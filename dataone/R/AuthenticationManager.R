@@ -308,7 +308,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(x) {
   
   if(!x@authInfo$init) {
     warning("Please call isAuthValid() before calling this method.")
-    return(as.character(NA))
+    return(as.character(PUBLIC))
   }
   
   # Authentication is either uninitialized or no method present (no cert or token available)
