@@ -4,14 +4,14 @@ test_that("dataone library loads", {
 })
 test_that("MNode constructors", {
 	library(dataone)
-	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
 	mn <- MNode(mn_uri)
 	expect_that(mn@endpoint, matches(mn_uri))
 })
 test_that("MNode getCapabilities()", {
 	library(dataone)
 	library(XML)
-	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
 	mn <- MNode(mn_uri)
     xml <- getCapabilities(mn)
 	val <- xmlName(xmlRoot(xml))
@@ -20,7 +20,7 @@ test_that("MNode getCapabilities()", {
 })
 test_that("MNode getObject(), getChecksum()", {
     library(dataone)
-    mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+    mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
     mn <- MNode(mn_uri)
     pid <- "doi:10.5063/F1QN64NZ"
     bytes <- getObject(mn, pid)
@@ -105,7 +105,7 @@ test_that("MNode generateIdentifier() on API v1 node", {
 
 test_that("MNode describe()", {
   library(dataone)
-  mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
+  mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
   mn <- MNode(mn_uri)
   res <- describe(mn, "knb.473.1")
   expect_is(res, "list")
