@@ -44,18 +44,5 @@
         <description>This is the method description.</description>
       </methodStep>
     </methods>
-    <otherEntity scope="document">
-      <entityName>Endocladia_muricata.csv</entityName>
-      <physical>
-        <objectName>Endocladia_muricata.csv</objectName>
-        <size>8052</size>
-        <dataFormat>
-          <externallyDefinedFormat>
-            <formatName>text/csv</formatName>
-          </externallyDefinedFormat>
-        </dataFormat>
-      </physical>
-      <entityType>text/csv</entityType>
-    </otherEntity>
   </dataset>
 </eml:eml>
