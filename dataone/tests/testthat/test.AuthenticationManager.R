@@ -122,8 +122,8 @@ test_that("getAuthSubject() works", {
   warnLevel <- getOption("warn")
   options(warn = -1)
   authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
   result <- getAuthSubject(am)
+  options(warn = warnLevel)
   if (!authValid) {
     # No valid authentication, so should return "public" user
     expect_that(result, matches("public"))
