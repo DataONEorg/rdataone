@@ -760,14 +760,16 @@ setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), fun
      return(URLencode(pathSegment))
 })
 
-#' Add a D1Object to a DataPackage
+#' Add a D1Object containing a data object to a DataPackage
 #' @rdname addData
 #' @description The D1Object \code{do} is added to the data package \code{x}.
 #' @details If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
-#' object that describes the science object that is being added. The \code{addData} function will add a relationship
-#' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology
-#' \code{documents} and \code{isDocumentedBy} relationship.
-#' @param mo A DataObject (containing metadata describing \code{"do"} ) to associate with the science object.
+#' object that describes the data object that is being added. The \code{addData} function will add a relationship
+#' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
+#' \code{documents} and \code{isDocumentedBy} relationships.
+#' @param x The \code{"DataPackage"} to which the data object should be added.
+#' @param do A DataObject to associate with the science metadata object.
+#' @param mo A DataObject (containing metadata describing \code{"do"} ) to associate with the data object.
 #' @export
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
