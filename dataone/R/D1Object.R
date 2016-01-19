@@ -26,6 +26,17 @@
 #' @aliases D1Object-class
 #' @keywords classes
 #' @import datapackage
+#' @section Methods:
+#' \itemize{
+#'  \item{\code{\link{D1Object-initialize}}}{: Initialize a D1Object}
+#'  \item{\code{\link{getData}}}{: Get the data content of a specified D1Object.}
+#'  \item{\code{\link{getIdentifier}}}{: Get the identifier of the D1Object.}
+#'  \item{\code{\link{getFormatId}}}{: Get the formatId of the D1Object}
+#'  \item{\code{\link{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
+#'  \item{\code{\link{canRead}}}{: Test whether the provided subject can read an object.}
+#'  \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
+#' }
+#' @seealso \code{\link{dataone}}{ package description.}
 #' @export
 setClass("D1Object", slots = c(dataObject="DataObject") )
 
@@ -85,7 +96,7 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 ### Utility methods
 #########################################################
 
-#' Get the data content of a specified data object
+#' Get the data content of a D1Object.
 #' @param x  D1Object the data structure from where to get the data
 #' @param id Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from
 #' @rdname getData
@@ -114,8 +125,9 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
   getFormatId(x@dataObject)
 })
 
-#' Add a Rule to the AccessPolicy to make the object publicly readable.
-#' @description To be called prior to creating the object in DataONE.  When called before 
+#' Make the object publicly readable.
+#' @description This method should be called prior to creating the object in DataONE.  
+#' When called before 
 #' creating the object, adds a rule to the access policy that makes this object
 #' publicly readable.  If called after creation, it will only change the system
 #' metadata locally, and will not have any effect on remotely uploaded copies of
@@ -151,7 +163,8 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
   canRead(x@dataObject, subject)
 })
 
-#' This method uses the provided metadata reference object for instructions on
+#' @title return the D1Object data as a data.frame.
+#' @description This method uses the provided metadata reference object for instructions on
 #' how to parse the data table (which parameters to set)
 #' 'reference' is the metadata D1Object that gives instruction on how to read the data
 #' into the dataFrame

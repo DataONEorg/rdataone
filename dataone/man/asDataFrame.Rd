@@ -6,10 +6,7 @@
 \alias{asDataFrame,D1Object,ANY-method}
 \alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 \alias{asDataFrame,D1Object,D1Object-method}
-\title{This method uses the provided metadata reference object for instructions on
-how to parse the data table (which parameters to set)
-'reference' is the metadata D1Object that gives instruction on how to read the data
-into the dataFrame}
+\title{return the D1Object data as a data.frame.}
 \usage{
 asDataFrame(x, reference, ...)
 

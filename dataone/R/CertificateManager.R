@@ -57,6 +57,18 @@
 #' @author Matthew Jones, Rob Nahf
 #' @rdname CertificateManager-class
 #' @keywords classes
+#' @section Methods:
+#' \itemize{
+#'  \item{\code{\link{CertificateManager}}}{: Create a CertificateManager object.}
+#'  \item{\code{\link{getCertLocation}}}{: Get the file path on disk of the client certificate file.}
+#'  \item{\code{\link{showClientSubject}}}{: Get DataONE Identity as Stored in the CILogon Certificate.}
+#'  \item{\code{\link{isCertExpired}}}{: Determine if an X.509 certificate has expired.}
+#'  \item{\code{\link{getCertExpires}}}{: Show the date and time when an X.509 certificate expires.}
+#'  \item{\code{\link{downloadCert}}}{: Open the CILogon Certificate download page in the default browser.}
+#'  \item{\code{\link{obscureCert}}}{: Obscure the CILogon Client Certificate.}
+#'  \item{\code{\link{restoreCert}}}{: Restore the CILogon client certificate by renaming it to its original location}
+#' }
+#' @seealso \code{\link{dataone}}{ package description.}
 #' @examples
 #' \dontrun{
 #' cm <- suppressWarnings(CertificateManager())
