@@ -53,17 +53,21 @@ it is expected to have field names as attributes and search values as the values
 }
 \examples{
 \dontrun{
+library(dataone)
 cn <- CNode("PROD")
 queryParams <- list(q="id:doi*", rows="5", 
     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
     fl="title,id,abstract,size,dateUploaded,attributeName")
+# Return result as a list.
 result <- query(cn, queryParams, as="list")
 
+# Query and return the result as a data.frame of character values.
 queryParams <- list(q="id:doi*", rows="3", 
     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
     fl="title,id,abstract,size,dateUploaded,attributeName")
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 
+# Return the result as JSON
 queryParams <- "q=id:doi*&rows=2&wt=json"
 result <- query(cn, queryParams, as="json")
 
@@ -74,6 +78,7 @@ queryParamList <- list(q="(attribute:lake) and (attribute:\\"Percent Nitrogen\\"
 result <- query(cn, queryParamList, as="data.frame")
 
 # The following query uses the searchTerms parameter
+cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 mySearchTerms <- list(abstract="kelp", attribute="biomass")
 result <- query(mn, searchTerms=mySearchTerms, as="data.frame")

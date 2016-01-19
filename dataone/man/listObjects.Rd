@@ -44,6 +44,21 @@ Retrieve the list of objects that match the search parameters
 The list of objects that is returned is paged according to the \code{'start'} and
 \code{'count'} values, so that large result sets can be returned over multiple calls.
 }
+\examples{
+\dontrun{
+library(dataone)
+cn <- CNode("STAGING")
+fromDate <- "2013-01-01T01:01:01.000+00:00"
+toDate <- "2015-12-31T01:01:01.000+00:00"
+formatId <- "eml://ecoinformatics.org/eml-2.1.0"
+start <- 0
+count <- 5
+objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, 
+    formatId=formatId, start=start, count=count)
+# Inspect id of first object 
+objects[1]$objectInfo$identifier
+}
+}
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
 }

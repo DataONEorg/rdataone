@@ -24,8 +24,9 @@ list of all entries in the Object Format Vocabulary.
 }
 \examples{
 \dontrun{
+library(dataone)
 cn <- CNode()
-listFormats(cn)
+formats <- listFormats(cn)
 }
 }
 \seealso{

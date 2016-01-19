@@ -30,6 +30,7 @@ determine basic properties of the referenced object.
 }
 \examples{
 \dontrun{
+library(dataone)
 mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 mn <- MNode(mn_uri)
 pid <- "knb.473.1"

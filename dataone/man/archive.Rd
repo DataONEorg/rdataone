@@ -35,6 +35,26 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateMan
 For DataONE Version 2.0, an authentication token can also be used for authentication. 
 Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
 }
+\examples{
+\dontrun{
+library(dataone)
+# First create a new object
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+newid <- generateIdentifier(mn, "UUID")
+testdf <- data.frame(x=1:10,y=11:20)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+format <- "text/csv"
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+sysmeta <- addAccessRule(sysmeta, "public", "read")
+create(mn, newid, csvfile, sysmeta)
+# Now for demonstration purposes, archive the object
+archivedId <- archive(mn, newid)
+}
+}
 \seealso{
 \code{\link[=D1Node-class]{D1Node}}{ class description.}
 }

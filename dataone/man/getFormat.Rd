@@ -25,6 +25,7 @@ Get information for a single DataONE object format
 }
 \examples{
 \dontrun{
+library(dataone)
 cn <- CNode()
 fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
 cat(sprintf("format name: \%s\\n", fmt$name))

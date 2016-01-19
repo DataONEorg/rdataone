@@ -54,12 +54,13 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' cn <- CNode("STAGING2")
-#' mn <- getMNode(cn, "urn:node:mnTestKNB")
-#' mnid <- mn@@identifier
+#' cn <- CNode("STAGING")
+#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+#' mnid <- mn@identifier
 #' newid <- generateIdentifier(mn, "UUID")
-#' cm <- CertificateManager()
-#' u <- showClientSubject(cm)
+#' am <- AuthenticationManager()
+#' authorized <- isAuthValid(am, mn)
+#' u <- getAuthSubject(am)
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- paste(tempfile(), ".csv", sep="")
 #' write.csv(testdf, csvfile, row.names=FALSE)
@@ -88,6 +89,10 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @return the MNode object-
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @export
+#' @examples
+#' \dontrun{
+#' mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
+#' }
 setGeneric("MNode", function(x) {
     standardGeneric("MNode")
 })
@@ -154,10 +159,12 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @import httr
 #' @export
 #' @examples
+#' \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' xml <- getCapabilities(mn)
+#' }
 setGeneric("getCapabilities", function(mnode, ...) {
     standardGeneric("getCapabilities")
 })
@@ -274,6 +281,11 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
 #' @import datapackage
 #' @export
 #' @examples
+#' \dontrun{
+#' # Create an object in the DataONE "STAGING" environment
+#' library(dataone)
+#' cn <- CNode("STAGING")
+#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 #' newid <- generateIdentifier(mn, "UUID")
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- paste(tempfile(), ".csv", sep="")
@@ -281,10 +293,10 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
 #' format <- "text/csv"
 #' size <- file.info(csvfile)$size
 #' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
-               #' originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
 #' sysmeta <- addAccessRule(sysmeta, "public", "read")
 #' create(mn, newid, csvfile, sysmeta)
+#' }
 setGeneric("create", function(mnode, pid, ...) {
     standardGeneric("create")
 })
@@ -474,6 +486,13 @@ setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadat
 #' @return the character string of the generated unique identifier
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
+#' @examples
+#' \dontrun{
+#' library(dataone)
+#' cn <- CNode("STAGING")
+#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+#' newid <- generateIdentifier(mn, "UUID")
+#' }
 setGeneric("generateIdentifier", function(mnode, ...) {
     standardGeneric("generateIdentifier")
 })
@@ -511,6 +530,13 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @import uuid
 #' @export
+#' @examples 
+#' \dontrun{
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")
+#' }
 setGeneric("getPackage", function(node, ...) { 
     standardGeneric("getPackage")
 })

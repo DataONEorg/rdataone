@@ -37,6 +37,24 @@ Alternatively, the version 1.0 approach of using an X.509 certificate in a defau
 system can also be used. This certificate provides authentication credentials from 
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
+\examples{
+\dontrun{
+# Create an object in the DataONE "STAGING" environment
+library(dataone)
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+newid <- generateIdentifier(mn, "UUID")
+testdf <- data.frame(x=1:10,y=11:20)
+csvfile <- paste(tempfile(), ".csv", sep="")
+write.csv(testdf, csvfile, row.names=FALSE)
+format <- "text/csv"
+size <- file.info(csvfile)$size
+sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+sysmeta <- addAccessRule(sysmeta, "public", "read")
+create(mn, newid, csvfile, sysmeta)
+}
+}
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
 }

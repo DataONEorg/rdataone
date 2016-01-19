@@ -32,7 +32,17 @@ Get the bytes associated with an object on this Node.
 This operation acts as the 'public' anonymous user unless an X.509 certificate is
 present in the default location of the file system, in which case the access will be authenticated.
 }
+\examples{
+\dontrun{
+library(dataone)
+cn <- CNode()
+mn <- getMNode(cn, "urn:node:KNB")
+pid <- "solson.5.1"
+obj <- getObject(mn, pid)
+df <- read.csv(text=rawToChar(obj))
+}
+}
 \seealso{
-\code{\link[=D1Node-class]{D1Node}}{ class description.}
+\code{\link{D1Node-class}{D1Node}}{ class description.}
 }
 

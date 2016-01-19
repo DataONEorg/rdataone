@@ -24,8 +24,10 @@ the Member Node as an MNode reference, or NULL if not found
 Get a reference to a node based on its identifier
 }
 \examples{
+\dontrun{
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

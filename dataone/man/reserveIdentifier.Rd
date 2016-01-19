@@ -35,10 +35,9 @@ for the DataONE user identity that created the current authentication token or X
 \dontrun{
 library(dataone)
 library(uuid)
-cn <- CNode()
+cn <- CNode("STAGING")
 myId <- sprintf("urn:uuid:\%s", UUIDgenerate())
 newId <- reserveIdentifier(cn, myId)
-expect_equal(myId, newId)
 }
 }
 \seealso{

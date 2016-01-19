@@ -29,6 +29,11 @@ Member Node at that base URL is attempted.  If \code{'x'} is a Node reference, t
 instance.  This typically is used from the getMNode() function from the CNode class, which is the preferred
 way to retrieve an instance of an MNode.
 }
+\examples{
+\dontrun{
+mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
+}
+}
 \seealso{
 \code{\link[=MNode-class]{MNode}}{ class description.}
 }

@@ -33,10 +33,12 @@ methods that are common between these two child classes.
 
 \item{\code{serviceUrls}}{a data.frame that contains DataONE service Urls}
 
-\item{\code{APIversion}}{The version of the DataONE API for this nod
-#' @section Methods:
+\item{\code{APIversion}}{The version of the DataONE API for this nod}
+}}
+\section{Methods}{
+
 \itemize{
-  \item{\code{\link[=D1Node-initialize]{initialize}}}{: Initialize a D1Node}
+ \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
  \item{\code{\link{archive}}}{: Create an object on a Member Node.}
  \item{\code{\link{get}}}{: Get the bytes associated with an object on a node.}
@@ -46,6 +48,6 @@ methods that are common between these two child classes.
  \item{\code{\link{ping}}}{: Download a data package from a member node.}
  \item{\code{\link{encodeSolr}}}{: Update an object on a Member Node, by creating a new object that replaces an original.}
  \item{\code{\link{query}}}{: Update the system metadata associated with an object.}
-}}
-}}
+}
+}
 

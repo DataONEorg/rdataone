@@ -34,10 +34,11 @@ authentication, use the \code{echoCredentials} method.
 }
 \examples{
 \dontrun{
-cn <- CNode("PROD")
+library(dataone)
+cn <- CNode("STAGING")
 creds <- echoCredentials(cn)
 subject <- creds$person$subject
-# Previously reserved pid, e.g. DOI or uuid
+# Previously reserved pid (using reserveIdentifeir()), e.g. DOI or uuid
 pid <- "urn:node:e27bb4f3-96bb-4af4-8902-f5914def077c"
 hasRes <- hasReservation(cn, pid, subject=subject)
 }

@@ -21,4 +21,10 @@ list The list of query engines.
 \description{
 Query a node for the list of query engines available on the node
 }
+\examples{
+\dontrun{
+cn <- CNode("STAGING")
+engines <- listQueryEngines(cn)
+}
+}
 

@@ -32,6 +32,14 @@ The default data package file format is a Bagit file (\url{https://tools.ietf.or
 The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 file. Other packaging formats can be requested if they have been implemented by the requested member node.
 }
+\examples{
+\dontrun{
+mn <- getMNode(cn, "urn:node:KNB")
+cn <- CNode()
+mn <- getMNode(cn, "urn:node:KNB")
+packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")
+}
+}
 \seealso{
 \code{\link[=MNode-class]{MNode}}{ class description.}
 }

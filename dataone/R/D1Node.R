@@ -36,9 +36,9 @@
 #' @slot services A data.frame containing the service tiers supported by this node.
 #' @slot serviceUrls a data.frame that contains DataONE service Urls
 #' @slot APIversion The version of the DataONE API for this nod
-#' #' @section Methods:
+#' @section Methods:
 #' \itemize{
-#'   \item{\code{\link[=D1Node-initialize]{initialize}}}{: Initialize a D1Node}
+#'  \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
 #'  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
 #'  \item{\code{\link{archive}}}{: Create an object on a Member Node.}
 #'  \item{\code{\link{get}}}{: Get the bytes associated with an object on a node.}
@@ -49,8 +49,6 @@
 #'  \item{\code{\link{encodeSolr}}}{: Update an object on a Member Node, by creating a new object that replaces an original.}
 #'  \item{\code{\link{query}}}{: Update the system metadata associated with an object.}
 #' }
-#' 
-#' 
 #' @import methods
 #' @export
 setClass("D1Node",
@@ -135,6 +133,25 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' @aliases archive
 #' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
 #' @export
+#' @examples
+#' \dontrun{
+#' library(dataone)
+#' # First create a new object
+#' cn <- CNode("STAGING")
+#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+#' newid <- generateIdentifier(mn, "UUID")
+#' testdf <- data.frame(x=1:10,y=11:20)
+#' csvfile <- paste(tempfile(), ".csv", sep="")
+#' write.csv(testdf, csvfile, row.names=FALSE)
+#' format <- "text/csv"
+#' size <- file.info(csvfile)$size
+#' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+#' sysmeta <- addAccessRule(sysmeta, "public", "read")
+#' create(mn, newid, csvfile, sysmeta)
+#' # Now for demonstration purposes, archive the object
+#' archivedId <- archive(mn, newid)
+#' }
 setGeneric("archive", function(node, pid, ...) {
   standardGeneric("archive")
 })
@@ -168,8 +185,17 @@ setMethod("archive", signature("D1Node", "character"), function(node, pid) {
 #' @rdname getObject
 #' @aliases getObject
 #' @return the bytes of the object
-#' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
+#' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
+#' @examples
+#' \dontrun{
+#' library(dataone)
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' pid <- "solson.5.1"
+#' obj <- getObject(mn, pid)
+#' df <- read.csv(text=rawToChar(obj))
+#' }
 setGeneric("getObject", function(node, pid, ...) {
   standardGeneric("getObject")
 })
@@ -185,8 +211,16 @@ setGeneric("getObject", function(node, pid, ...) {
 #' @param pid The identifier of the object
 #' @param ... (Not yet used)
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
-#' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
+#' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
+#' @examples 
+#' \dontrun{
+#' library(dataone)
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' pid <- "doi:10.5063/F1QN64NZ"
+#' chksum <- getChecksum(mn, pid)
+#' }
 setGeneric("getChecksum", function(node, pid, ...) {
   standardGeneric("getChecksum")
 })
@@ -200,7 +234,8 @@ setGeneric("getChecksum", function(node, pid, ...) {
 #' @export
 #' @examples
 #' \dontrun{ 
-#' cn <- CNode("SANDBOX")
+#' library(dataone)
+#' cn <- CNode("STAGING")
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' cat(sprintf("Query engine version: %s\n", engineDesc$queryEngineVersion))
 #' cat(sprintf("Query engine name: %s\n", engineDesc$name))
@@ -266,6 +301,14 @@ setMethod("getQueryEngineDescription", signature("D1Node", "character"), functio
 #' @return SystemMetadata for the object
 #' @import datapackage
 #' @export
+#' @examples 
+#' \dontrun{
+#' library(dataone)
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' pid <- "doi:10.5063/F1QN64NZ"
+#' sysmeta <- getSystemMetadata(mn, pid)
+#' }
 setGeneric("getSystemMetadata", function(node, pid, ...) {
   standardGeneric("getSystemMetadata")
 })
@@ -282,6 +325,7 @@ setGeneric("getSystemMetadata", function(node, pid, ...) {
 #' @return A list of header elements
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
 #' @examples \dontrun{
+#' library(dataone)
 #' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 #' mn <- MNode(mn_uri)
 #' pid <- "knb.473.1"
@@ -302,6 +346,20 @@ setGeneric("describe", function(node, pid, ...) {
 #' @aliases listObjects
 #' @return list Objects that met the search criteria
 #' @export
+#' @examples 
+#' \dontrun{
+#' library(dataone)
+#' cn <- CNode("STAGING")
+#' fromDate <- "2013-01-01T01:01:01.000+00:00"
+#' toDate <- "2015-12-31T01:01:01.000+00:00"
+#' formatId <- "eml://ecoinformatics.org/eml-2.1.0"
+#' start <- 0
+#' count <- 5
+#' objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, 
+#'     formatId=formatId, start=start, count=count)
+#' # Inspect id of first object 
+#' objects[1]$objectInfo$identifier
+#' }
 setGeneric("listObjects", function(node, ...) {
   standardGeneric("listObjects")
 })
@@ -367,6 +425,11 @@ setMethod("listObjects", signature("D1Node"), function(node,
 #' @rdname listQueryEngines
 #' @aliases listQueryEngines
 #' @export
+#' @examples
+#' \dontrun{
+#' cn <- CNode("STAGING")
+#' engines <- listQueryEngines(cn)
+#' }
 setGeneric("listQueryEngines", function(node, ...) {
   standardGeneric("listQueryEngines")
 })
@@ -452,6 +515,12 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
 #' @aliases ping
 #' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @export
+#' @examples 
+#' \dontrun{
+#' cn <- CNode()
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' isAlive <- ping(mn)
+#' }
 setGeneric("ping", function(node) {
   standardGeneric("ping")
 })
@@ -573,17 +642,21 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' @import plyr
 #' @examples
 #' \dontrun{
+#' library(dataone)
 #' cn <- CNode("PROD")
 #' queryParams <- list(q="id:doi*", rows="5", 
 #'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
 #'     fl="title,id,abstract,size,dateUploaded,attributeName")
+#' # Return result as a list.
 #' result <- query(cn, queryParams, as="list")
 #' 
+#' # Query and return the result as a data.frame of character values.
 #' queryParams <- list(q="id:doi*", rows="3", 
 #'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
 #'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- query(cn, queryParams, as="data.frame", parse=FALSE)
 #' 
+#' # Return the result as JSON
 #' queryParams <- "q=id:doi*&rows=2&wt=json"
 #' result <- query(cn, queryParams, as="json")
 #' 
@@ -594,6 +667,7 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' result <- query(cn, queryParamList, as="data.frame")
 #' 
 #' # The following query uses the searchTerms parameter
+#' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' mySearchTerms <- list(abstract="kelp", attribute="biomass")
 #' result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
