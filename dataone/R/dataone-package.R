@@ -30,7 +30,7 @@
 #' \itemize{
 #'  \item{\code{\link[=AuthenticationManager-class]{AuthenticationManager}}}{: AuthenticationManager provides methods to validate DataONE authentication.}
 #'  \item{\code{\link[=CNode-class]{CNode}}}{: A CNode represents a DataONE Coordinating Node and can be used to access its services.}
-#'  \item{\code{\link[=D1Client-class]{D1Client}}}{: The D1Client class contains methods that perform high level DataONE tasks.}
+#'  \item{\code{\link[=D1Client-class]{D1Client}}}{: The D1Client class contains methods that perform high level dataone tasks.}
 #'  \item{\code{\link[=D1Node-class]{D1Node}}}{: A base class for CNode and MNode.}
 #'  \item{\code{\link[=MNode-class]{MNode}}}{: MNode provides functions interacting with the a DataONE Member Node repository.}
 #' }

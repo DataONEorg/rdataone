@@ -3,7 +3,7 @@
 \docType{methods}
 \name{setPublicAccess,D1Object-method}
 \alias{setPublicAccess,D1Object-method}
-\title{Add a Rule to the AccessPolicy to make the object publicly readable.}
+\title{Make the object publicly readable.}
 \usage{
 \S4method{setPublicAccess}{D1Object}(x)
 }
@@ -16,7 +16,8 @@
 D1Object with modified access rules
 }
 \description{
-To be called prior to creating the object in DataONE.  When called before 
+This method should be called prior to creating the object in DataONE.  
+When called before 
 creating the object, adds a rule to the access policy that makes this object
 publicly readable.  If called after creation, it will only change the system
 metadata locally, and will not have any effect on remotely uploaded copies of

@@ -3,7 +3,7 @@
 \docType{methods}
 \name{getData,D1Object,ANY-method}
 \alias{getData,D1Object,ANY-method}
-\title{Get the data content of a specified data object}
+\title{Get the data content of a D1Object.}
 \usage{
 \S4method{getData}{D1Object,ANY}(x, id)
 }
@@ -13,6 +13,6 @@
 \item{id}{Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from}
 }
 \description{
-Get the data content of a specified data object
+Get the data content of a D1Object.
 }
 
