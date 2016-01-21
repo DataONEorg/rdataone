@@ -6,14 +6,14 @@
 \alias{getAuthExpires,AuthenticationManager-method}
 \title{Get the expiration date of the current authentication method.}
 \usage{
-getAuthExpires(x, ...)
+getAuthExpires(.Object, node)
 
-\S4method{getAuthExpires}{AuthenticationManager}(x)
+\S4method{getAuthExpires}{AuthenticationManager}(.Object, node)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
+\item{.Object}{An AuthenticationManager instance}
 
-\item{...}{(Not yet used.)}
+\item{node}{A D1Node instance}
 }
 \value{
 The expiration date for the current authentication mechanism being used.

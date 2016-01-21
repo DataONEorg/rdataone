@@ -24,8 +24,9 @@ the provided query string.
 }
 \examples{
 \dontrun{
+library(dataone)
 client <- new("D1Client")
-result <- d1IdentifierSearch(client,q="species population diversity")
+result <- d1IdentifierSearch(client,solrQuery="species population diversity")
 }
 }
 \seealso{

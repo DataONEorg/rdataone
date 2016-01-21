@@ -3,17 +3,17 @@
 \docType{methods}
 \name{showAuth}
 \alias{showAuth}
-\alias{showAuth,AuthenticationManager-method}
+\alias{showAuth,AuthenticationManager,D1Node-method}
 \title{Display all authentication information}
 \usage{
-showAuth(x, ...)
+showAuth(.Object, node)
 
-\S4method{showAuth}{AuthenticationManager}(x)
+\S4method{showAuth}{AuthenticationManager,D1Node}(.Object, node)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
+\item{.Object}{An AuthenticationManager instance}
 
-\item{...}{(Not yet used.)}
+\item{node}{A D1Node instance}
 }
 \description{
 Display all authentication information

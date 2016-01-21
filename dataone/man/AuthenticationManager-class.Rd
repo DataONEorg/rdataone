@@ -35,14 +35,14 @@ of their existing accounts. For more information about the CILogon service, see
 \section{Slots}{
 
 \describe{
-\item{\code{authInfo}}{value of type \code{"hash"} containing authentication information.}
+\item{\code{obscured}}{Value of type \code{"character"} Is authentication disabled (obscured)?}
 }}
 \section{Methods}{
 
 \itemize{
  \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
  \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
- \item{\code{\link{getAuthToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
+ \item{\code{\link{getToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
  \item{\code{\link{getCert}}}{: Get the DataONE X.509 Certificate location.}
  \item{\code{\link{getAuthMethod}}}{: Get the current valid authentication mechanism.}
  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
@@ -51,6 +51,9 @@ of their existing accounts. For more information about the CILogon service, see
  \item{\code{\link{obscureAuth}}}{: Temporarity disable DataONE authentication.}
  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
  \item{\code{\link{showAuth}}}{: Display all authentication information.}
+ \item{\code{\link{getTokenInfo}}}{: Display all authentication token information.}
+ \item{\code{\link{getCertInfo}}}{: Display all X.509 certificate information.}
+ 
 }
 }
 \seealso{

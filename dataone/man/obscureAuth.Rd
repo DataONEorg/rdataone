@@ -6,14 +6,12 @@
 \alias{obscureAuth,AuthenticationManager-method}
 \title{Temporarity disable DataONE authentication.}
 \usage{
-obscureAuth(x, ...)
+obscureAuth(.Object)
 
-\S4method{obscureAuth}{AuthenticationManager}(x)
+\S4method{obscureAuth}{AuthenticationManager}(.Object)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
-
-\item{...}{(Not yet used.)}
+\item{.Object}{An AuthenticationManager instance}
 }
 \value{
 The expiration date for the current authentication mechanism being used.

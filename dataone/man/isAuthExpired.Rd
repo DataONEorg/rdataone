@@ -6,14 +6,14 @@
 \alias{isAuthExpired,AuthenticationManager-method}
 \title{CHeck if the currently valid authentication method has reached the expiratin time.}
 \usage{
-isAuthExpired(x, ...)
+isAuthExpired(.Object, node)
 
-\S4method{isAuthExpired}{AuthenticationManager}(x)
+\S4method{isAuthExpired}{AuthenticationManager}(.Object, node)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
+\item{.Object}{An AuthenticationManager instance}
 
-\item{...}{(Not yet used.)}
+\item{node}{A D1Node instance}
 }
 \value{
 A logical value: TRUE if authenentication has expired, FALSE if not.

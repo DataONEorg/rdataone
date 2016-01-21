@@ -31,6 +31,15 @@ is accessed until success at downloading the associated SystemMetadata and data 
 finally wrapped in a DataObject and returned. Replaces previous getD1Object() method in the version 1
 dataone library.
 }
+\examples{
+\dontrun{
+library(dataone)
+d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+pid <- "solson.5.1"
+obj <- getDataObject(d1c, pid)
+data <- getData(obj)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

@@ -23,6 +23,12 @@
 \description{
 Initialize a D1Client object
 }
+\examples{
+\dontrun{
+library(dataone)
+d1c <- new("DIClient", env="PROD", mNodeid="urn:node:KNB")
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{dataone}}{ class description.}
 }

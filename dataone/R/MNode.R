@@ -312,12 +312,12 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, file, 
     # if not, then set them to the values contained in their authentication token 
     # or X.509 certificate.
     am <- AuthenticationManager()
-    suppressWarnings(isValid <- isAuthValid(am, mnode))
+    suppressMessages(isValid <- isAuthValid(am, mnode))
     # If authentication isn't valid, then let this call fail in auth_post, so the
     # appropriate messages are printed.
     if (isValid) {
       if(is.na(sysmeta@submitter)) {
-        sysmeta@submitter <- getAuthSubject(am)
+        sysmeta@submitter <- getAuthSubject(am, mnode)
       }
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter
@@ -384,7 +384,7 @@ setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, 
     # appropriate messages are printed.
     if (isValid) {
       if(is.na(sysmeta@submitter)) {
-        sysmeta@submitter <- getAuthSubject(am)
+        sysmeta@submitter <- getAuthSubject(am, mnode)
       }
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter

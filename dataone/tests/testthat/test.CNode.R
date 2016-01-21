@@ -94,16 +94,13 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   # used by reserveIdentifier.  
   am <- AuthenticationManager()
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   # First check if authentication is available and if not, skip this test
   if (authValid) {
     # TODO: remove this check when Mac OS X can be used with certificates
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so this userId can check a reservation that it made
-    subject <- getAuthSubject(am)
+    subject <- dataone:::getAuthSubject(am, cn)
     myId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # researveIdentifier will create the reservation using only the client subject from
     # the current authentication method - either auth token or certificate. 

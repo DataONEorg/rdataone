@@ -6,14 +6,14 @@
 \alias{getAuthMethod,AuthenticationManager-method}
 \title{Get the current valid authentication mechanism.}
 \usage{
-getAuthMethod(x, ...)
+getAuthMethod(.Object, node)
 
-\S4method{getAuthMethod}{AuthenticationManager}(x)
+\S4method{getAuthMethod}{AuthenticationManager}(.Object, node)
 }
 \arguments{
-\item{x}{A AuthenticationManager instance}
+\item{.Object}{An AuthenticationManager instance}
 
-\item{...}{(Not yet used)}
+\item{node}{A D1Node instance}
 }
 \value{
 The current authentication mechanism as a character string, either "token" or "cert".

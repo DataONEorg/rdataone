@@ -83,10 +83,10 @@ test_that("D1Client getDataObject", {
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
     am <- AuthenticationManager()
-    suppressWarnings(authValid <- isAuthValid(am, cli@mn))
+    suppressMessages(authValid <- dataone:::isAuthValid(am, cli@mn))
     if(authValid) {
       # Skip if Mac OS and X.509 Certificate
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      if(dataone:::getAuthMethod(am, cli@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       
       # Try retrieving a known object from the PROD environment
       pid <- "solson.5.1"
@@ -118,13 +118,9 @@ test_that("D1Client uploadDataPackage works", {
   preferredNodes <- NA
   # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, d1c@mn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     dp <- new("DataPackage")
     # Create DataObject for the science data 
     sciObj <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
@@ -182,9 +178,9 @@ test_that("D1Client createD1Object works", {
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
   am <- AuthenticationManager()
-  suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     sdf <- read.csv(csvfile)
     # Create DataObject for the science data 
     stf <- charToRaw(convert.csv(d1c, sdf))
@@ -212,9 +208,9 @@ test_that("D1Client getD1Object works", {
   
   am <- AuthenticationManager()
   d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
-  suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     expect_that(d1c, not(is_null()))
     expect_that(class(d1c), matches("D1Client"))
     expect_that(d1c@cn@baseURL, matches("https://cn.dataone.org/cn"))
@@ -239,9 +235,9 @@ test_that("D1Client d1SolrQuery works", {
   library(dataone)
   d1c <- D1Client("PROD")
   am <- AuthenticationManager()
-  suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
     result <- d1SolrQuery(d1c, queryParams)
     expect_match(class(result)[1], "XMLInternalDocument")
@@ -271,9 +267,9 @@ test_that("D1Client d1IdentifierSearch works", {
   library(dataone)
   am <- AuthenticationManager()
   d1c <- D1Client("PROD")
-  suppressWarnings(authValid <- isAuthValid(am, d1c@cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
     result <- d1IdentifierSearch(d1c, queryParams)
     expect_match(class(result), "character")
@@ -300,9 +296,9 @@ test_that("D1Client createDataPackage works", {
   preferredNodes <- NA
   # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
-  suppressWarnings(authValid <- isAuthValid(am, d1c@mn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     dp <- new("DataPackage")
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
@@ -332,4 +328,3 @@ test_that("D1Client createDataPackage works", {
     skip("This test requires valid authentication.")
   }
 })
-

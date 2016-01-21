@@ -11,7 +11,7 @@ AuthenticationManager(...)
 \S4method{AuthenticationManager}{ANY}()
 }
 \arguments{
-\item{...}{(not yet used)}
+\item{...}{(Not yet used)}
 }
 \value{
 the AuthenticationManager object

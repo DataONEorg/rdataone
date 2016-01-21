@@ -6,16 +6,14 @@
 \alias{isAuthValid,AuthenticationManager,D1Node-method}
 \title{Verify authentication for a member node.}
 \usage{
-isAuthValid(x, node, ...)
+isAuthValid(.Object, node)
 
-\S4method{isAuthValid}{AuthenticationManager,D1Node}(x, node)
+\S4method{isAuthValid}{AuthenticationManager,D1Node}(.Object, node)
 }
 \arguments{
-\item{x}{An AuthenticationManager instance}
+\item{.Object}{An AuthenticationManager instance}
 
 \item{node}{The node object (MNode or CNode) that authentication is being checked for.}
-
-\item{...}{(Not yet used)}
 }
 \value{
 A logical value: TRUE if authentication is valid, false if not.

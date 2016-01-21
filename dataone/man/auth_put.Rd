@@ -4,7 +4,7 @@
 \alias{auth_put}
 \title{PUT a resource with authenticated credentials.}
 \usage{
-auth_put(url, encode = "multipart", body = as.list(NA), node = NULL)
+auth_put(url, encode = "multipart", body = as.list(NA), node)
 }
 \arguments{
 \item{url}{The URL to be accessed via authenticated PUT}

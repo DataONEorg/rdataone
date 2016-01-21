@@ -6,12 +6,12 @@
 \alias{getCert,AuthenticationManager-method}
 \title{Get the DataONE X.509 Certificate location.}
 \usage{
-getCert(x, ...)
+getCert(.Object, ...)
 
-\S4method{getCert}{AuthenticationManager}(x)
+\S4method{getCert}{AuthenticationManager}(.Object)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
+\item{.Object}{an AuthenticationManager instance}
 
 \item{...}{(Not yet used)}
 }

@@ -6,14 +6,12 @@
 \alias{restoreAuth,AuthenticationManager-method}
 \title{Restore authentication (after being disabled with \code{obscureAuth}).}
 \usage{
-restoreAuth(x, ...)
+restoreAuth(.Object)
 
-\S4method{restoreAuth}{AuthenticationManager}(x)
+\S4method{restoreAuth}{AuthenticationManager}(.Object)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
-
-\item{...}{(Not yet used.)}
+\item{.Object}{An AuthenticationManager instance}
 }
 \value{
 The expiration date for the current authentication mechanism being used.

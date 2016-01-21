@@ -23,6 +23,15 @@ A datapackage:DataObject
 \description{
 An objectd is download from the DataONE network for the identifier that is provided.
 }
+\examples{
+\dontrun{
+library(dataone)
+d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+pid <- "solson.5.1"
+dataObj <- getD1Object(d1c, pid)
+data <- getData(dataObj)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

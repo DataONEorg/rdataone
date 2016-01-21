@@ -62,12 +62,9 @@ test_that("MNode generateIdentifier()", {
     mn <- getMNode(cn, "urn:node:mnStageUCSB2")  
     # Suppress PKIplus, cert missing warnings
     am <- AuthenticationManager()
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    authValid <- isAuthValid(am, mn)
-    options(warn = warnLevel)
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if(authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -87,12 +84,9 @@ test_that("MNode generateIdentifier() on API v1 node", {
     mn <- getMNode(cn, "urn:node:mnDemo9")
     # Suppress PKIplus, cert missing warnings
     am <- AuthenticationManager()
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    authValid <- isAuthValid(am, mn)
-    options(warn = warnLevel)
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if(authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -129,13 +123,10 @@ test_that("MNode create(), updateObject(), archive()", {
     mn <- getMNode(cn, mnId)
     am <- AuthenticationManager()
     # Suppress PKIplus, cert missing warnings
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    authValid <- isAuthValid(am, mn)
-    options(warn = warnLevel)
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if (authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      user <- getAuthSubject(am)
+      if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      user <- getAuthSubject(am, mn)
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -201,7 +192,6 @@ test_that("MNode create(), updateObject(), archive()", {
 
 test_that("MNode create() works for large files", {
     skip("Skip large file testing.")
-    skip_on_cran()
     if (grepl("Darwin", Sys.info()['sysname'])) {
         skip("fallocate not available on Mac")
     }
@@ -218,13 +208,10 @@ test_that("MNode create() works for large files", {
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
     am <- AuthenticationManager()
     # Suppress PKIplus, cert missing warnings
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    authValid <- isAuthValid(am, mn)
-    options(warn = warnLevel)
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if (authValid) {
-      if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      user <- getAuthSubject(am)
+      #if(getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+      user <- dataone:::getAuthSubject(am, mn)
       # TODO: Create a large data object using fallocate through a system call (only on linux)
       csvfile <- 'testdata.csv'
       csvsize <- '4G'
@@ -265,12 +252,9 @@ test_that("MNode getPackage() works", {
   resMapPid <- "urn:uuid:62febde3-5e7b-47b8-97a9-a874ffc9a180"
   #resMapPid <- "resourceMap_hpackage-test.1.1"
   am <- AuthenticationManager()
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, mn)
-  options(warn = warnLevel)
+  suppressWarnings(authValid <- dataone:::isAuthValid(am, mn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   
   bagitFile <- getPackage(mn, id=resMapPid)
@@ -293,15 +277,11 @@ test_that("updateSystemMetadata() works",{
   write.csv(testdf, csvfile, row.names=FALSE)
   mnId <- "urn:node:mnStageUCSB2"
   d1c <- D1Client(env="STAGING", mNodeid=mnId)
-  
   am <- AuthenticationManager()
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, d1c@mn)
-  options(warn = warnLevel)
+  suppressWarnings(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
-    if(getAuthMethod(am) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    subject <- getAuthSubject(am)
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    subject <- getAuthSubject(am, d1c@mn)
     do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
     # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
     uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)

@@ -6,14 +6,14 @@
 \alias{getAuthSubject,AuthenticationManager-method}
 \title{Get the authentication subject.}
 \usage{
-getAuthSubject(x, ...)
+getAuthSubject(.Object, node)
 
-\S4method{getAuthSubject}{AuthenticationManager}(x)
+\S4method{getAuthSubject}{AuthenticationManager}(.Object, node)
 }
 \arguments{
-\item{x}{an AuthenticationManager instance}
+\item{.Object}{an AuthenticationManager instance}
 
-\item{...}{(Not yet used)}
+\item{node}{A D1Node instance}
 }
 \value{
 the DataONE Subject that is your client's identity

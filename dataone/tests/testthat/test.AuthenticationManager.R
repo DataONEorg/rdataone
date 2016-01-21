@@ -2,21 +2,19 @@ context("AuthenticationManager tests")
 
 test_that("AuthenticationManager isAuthValid() for v2 node works", {
   skip_on_cran()
+  library(dataone)
   am <- AuthenticationManager()
   expect_false(is.null(am))
   # v2 node
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, mn)
-  options(warn = warnLevel)
+  authValid <- dataone:::isAuthValid(am, mn)
   if(!authValid) {
-    expect_match(getAuthSubject(am), "public")
+    expect_match(dataone:::getAuthSubject(am, mn), "public")
   } else {
-    expect_match(getAuthMethod(am), "cert|token")
-    expect_false(isAuthExpired(am))
+    expect_match(dataone:::getAuthMethod(am, mn), "cert|token")
+    expect_false(dataone:::isAuthExpired(am, mn))
   }
 })
 
@@ -31,19 +29,16 @@ test_that("AuthenticationManager isAuthValid() for v1 node works", {
   cn <- CNode("STAGING")
   # v1 node
   mn <- getMNode(cn, "urn:node:mnStageUNM1")  # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, mn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(!authValid) {
-    expect_match(getAuthSubject(am), "public")
+    expect_match(dataone:::getAuthSubject(am, mn), "public")
   } else {
-    expect_match(getAuthMethod(am), "cert|token")
-    expect_false(isAuthExpired(am))
+    expect_match(dataone:::getAuthMethod(am, mn), "cert|token")
+    expect_false(dataone:::isAuthExpired(am, mn))
   }
 })
 
-test_that("AuthenticationManager getAuthMethod(), getAuthToken(), getCert() work", {
+test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   am <- AuthenticationManager()
   expect_that(is.null(cm), is_false())
   expect_false(is.null(am))
@@ -51,17 +46,14 @@ test_that("AuthenticationManager getAuthMethod(), getAuthToken(), getCert() work
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, mn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(authValid) {
-    expect_false(is.na(getAuthMethod(am)))
-    if(getAuthMethod(am) == "token") {
-      expect_false(is.na(getAuthToken(am)))
+    expect_false(is.na(dataone:::getAuthMethod(am, mn)))
+    if(dataone:::getAuthMethod(am, mn) == "token") {
+      expect_false(is.na(dataone:::getToken(am)))
     } else {
-      expect_false(is.na(getCert(am)))
-      expect_true(file.exists(getCert(am)))
+      expect_false(is.na(dataone:::getCert(am)))
+      expect_true(file.exists(dataone:::getCert(am)))
     }
   }
 })
@@ -74,19 +66,16 @@ test_that("getAuthExpires() works", {
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, mn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(authValid) {
-    expect_false(is.na(getAuthMethod(am)))
+    expect_false(is.na(dataone:::getAuthMethod(am, mn)))
     # TODO: Check auth token expiration when R JWT package is available.
-    if(getAuthMethod(am) == "token") {
-      expect_false(is.na(getAuthToken(am)))
+    if(dataone:::getAuthMethod(am, mn) == "token") {
+      expect_false(is.na(dataone:::getToken(am)))
     } else {
-      expect_false(is.na(getCert(am)))
-      expect_false(isAuthExpired(am))
-      expect_false(is.na(getAuthExpires(am)))
+      expect_false(is.na(dataone:::getCert(am)))
+      expect_false(dataone:::isAuthExpired(am, mn))
+      expect_false(is.na(dataone:::getAuthExpires(am, mn)))
     }
   }
 })
@@ -96,16 +85,14 @@ test_that("isCertExpired() works", {
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   if(authValid) {
-    expDate <- getAuthExpires(am)
+    expDate <- dataone:::getAuthExpires(am, cn)
     # TODO: check token exp date when JWT available.
-    ct <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-    if(!is.na(expDate)) {
-      if(isAuthExpired(am)) {
+    #ct <- format(Sys.time(), format="%F %H:%M:%S GMT", tz="UTC")
+    ct <- as.POSIXct(Sys.time(), tz="GMT") 
+    if(!is.na(expDate) && !is.null(expDate)) {
+      if(dataone:::isAuthExpired(am, cn)) {
         expect_true(expDate > ct) 
       } else {
         expect_false(expDate < ct) 
@@ -119,11 +106,8 @@ test_that("getAuthSubject() works", {
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  result <- getAuthSubject(am)
-  options(warn = warnLevel)
+  authValid <- dataone:::isAuthValid(am, cn)
+  result <- dataone:::getAuthSubject(am, cn)
   if (!authValid) {
     # No valid authentication, so should return "public" user
     expect_that(result, matches("public"))
@@ -139,32 +123,19 @@ test_that("obscureAuth(), restoreAuth() work", {
   cn <- CNode("STAGING")
   # Disable authentication
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
-  obscureAuth(am)
-  
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
-  expect_equal(getAuthSubject(am), "public")
-  expect_equal(getAuthToken(am), as.character(NA))
-  expect_equal(getCert(am), as.character(NA))
-  
-  restoreAuth(am)
+  am <- dataone:::obscureAuth(am)
+  expect_false(dataone:::isAuthValid(am, cn))
+  expect_equal(dataone:::getAuthSubject(am, cn), "public")
+  expect_equal(dataone:::getToken(am), as.character(NA))
+  expect_equal(dataone:::getCert(am), as.character(NA))
+  am <- restoreAuth(am)
   # Suppress PKIplus, cert missing warnings
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  authValid <- isAuthValid(am, cn)
-  options(warn = warnLevel)
+  authValid <- dataone:::isAuthValid(am, cn)
   if(authValid) {
-    if(getAuthMethod(am) == "token") {
-      expect_false(identical(getAuthToken(am), as.character(NA)))
+    if(dataone:::getAuthMethod(am, cn) == "token") {
+      expect_false(identical(getToken(am), as.character(NA)))
     } else {
       expect_false(identical(getCert(am), as.character(NA)))
     }
   }
 })
-

@@ -25,8 +25,13 @@ Create the Object in the DataONE System
 }
 \examples{
 \dontrun{
+library(dataone)
+library(uuid)
 d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-d1o <- new("D1Object", file=system.file("extdata/sample-eml.xml", package="dataone"))
+data <- readLines(system.file("extdata/sample-eml.xml", package="dataone"))
+dataRaw <- charToRaw(paste(data, collapse="\\n"))
+newid <- sprintf("urn:node:\%s", UUIDgenerate())
+d1o <- new("D1Object", id=newid, data=dataRaw, format="text/plain")
 d1o <- setPublicAccess(d1o)
 uploaded <- createD1Object(d1c, d1o)
 }

@@ -20,6 +20,27 @@ createDataPackage(x, dataPackage, ...)
 \description{
 This method has been superceded by \code{\link{uploadDataPackage}}
 }
+\examples{
+\dontrun{
+library(dataone)
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+dp <- new("DataPackage")
+emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+emlChar <- readLines(emlFile)
+emlRaw <- charToRaw(paste(emlChar, collapse="\\n"))
+emlId <- sprintf("urn:uuid:\%s", UUIDgenerate())
+metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, 
+  mnNodeId=getMNodeId(d1c))
+addData(dp, metadataObj)
+sdf <- read.csv(csvfile)
+stf <- charToRaw(convert.csv(d1c, sdf))
+sciId <- sprintf("urn:uuid:\%s", UUIDgenerate())
+sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c))
+addData(dp, sciObj, metadataObj)
+expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
+resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

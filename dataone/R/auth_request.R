@@ -31,13 +31,13 @@
 #' @param node The D1Node object that the request will be made to.
 #' @return the response object from the method
 #' @import httr
-auth_get <- function(url, nconfig=config(), node=NULL) {
+auth_get <- function(url, nconfig=config(), node) {
   response <- NULL
   am <- AuthenticationManager()
-  if(!is.null(node) && isAuthValid(am, node)) {
-    if(getAuthMethod(am) == "token") {
+  if(!missing(node) && isAuthValid(am, node)) {
+    if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
-      authToken <- getAuthToken(am)
+      authToken <- getToken(am)
       response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
     } else {
       # Authenticatin will use a certificate.
@@ -47,14 +47,7 @@ auth_get <- function(url, nconfig=config(), node=NULL) {
     }
   } else {
     # Send request as the public user
-    authWarn <- getOption("auth_warn")
-    if(!is.null(authWarn) && !is.na(authWarn)) {
-      if(authWarn) {
-        warning("Attempting to call as public user without being authenticated.")
-      }
-    } else {
-        warning("Attempting to call as public user without being authenticated.")
-    }
+    message("Attempting to call as public user without being authenticated.")
     response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
   }
   rm(am)
@@ -73,16 +66,16 @@ auth_get <- function(url, nconfig=config(), node=NULL) {
 #' @param node The D1Node object that the request will be made to.
 #' @return the response object from the method
 #' @import httr
-auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node=NULL) {
+auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node) {
   
   am <- AuthenticationManager()
-  if(!is.null(node) && isAuthValid(am, node)) {
+  if(!missing(node) && isAuthValid(am, node)) {
     if (is.na(body[1])) {
       body = FALSE
     }
-    if(getAuthMethod(am) == "token") {
+    if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
-      authToken <- getAuthToken(am)
+      authToken <- getToken(am)
       switch(method,
              post={
                response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
@@ -134,7 +127,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
-auth_post <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+auth_post <- function(url, encode="multipart", body=as.list(NA), node) {
     response <- auth_put_post_delete("post", url, encode, body, node)
     return(response)
 }
@@ -149,7 +142,7 @@ auth_post <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
 #' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
-auth_put <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+auth_put <- function(url, encode="multipart", body=as.list(NA), node) {
     response <- auth_put_post_delete("put", url, encode, body, node)
     return(response)
 }
@@ -164,7 +157,7 @@ auth_put <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
 #' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
-auth_delete <- function(url, encode="multipart", body=as.list(NA), node=NULL) {
+auth_delete <- function(url, encode="multipart", body=as.list(NA), node) {
     response <- auth_put_post_delete("delete", url, encode, body, node)
     return(response)
 }
