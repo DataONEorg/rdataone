@@ -92,6 +92,8 @@ test_that("custom certificate location", {
     if (subject1 == "public") {
       cm <- obscureCert(cm)
       expect_true(is.na(cm@location))
+      cm <- restoreCert(cm)
+      expect_false(is.na(cm@location))
     } else {
         cert <- getCertLocation(cm)
         custom_cert <- paste0(tempfile(), ".x509")
