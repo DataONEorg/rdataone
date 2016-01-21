@@ -94,38 +94,6 @@ Member Nodes that have been upgraded to DataONE Version 2.0 Member Node API now 
 
 See ```help("updateSystemMetadata")``` for more information.
 
-## Configuring DataONE
-### Disabling 'warning' Messages Related To Authentication
-If a *dataone* R client method is called that might require authentication (create, update, etc) then a warning
-message will be printed stating that the service requires authentication. Methods that upload or modify data in
-DataONE always require authentication. Methods that read data, such as MNode.query will use authentication if
-it is present. However, if an authentication method isn't available, then only data that is publicly available
-will be accessed.
-
-The *dataone* R client then, prints R warning messages if authentication is required or just recommended. 
-
-These authentication warning messages can be disabled by either disabling all warning messages for R, or just
-disabling warnings for just the authentication warning messages.
-
-In order to disable warnings for all of R:
-```
-options(warn = -1)
-```
-
-See ```help("warnings")``` for more information about disabling and enabling warnings.
-
-In order to disable warnings for just *dataone* R package authentication warnings:
-
-```
-options(auth_warn=FALSE)
-```
-
-To re-enable the authentication warnings:
-
-```
-options(auth_warn=TRUE)
-```
-
 ## Known Issues with Version 2.0
 ### Error Using X.509 Certificates 
 
