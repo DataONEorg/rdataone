@@ -21,7 +21,7 @@ Datasets and metadata can be uploaded individually or as a data package. Uploadi
 will be described first and a workflow for preparing and uploading a data package using the `uploadDataPackage` method will be shown. 
 A complete script that uses this workflow is shown here: 
 
-```{r, warning=F, eval=F}
+```{r, eval=FALSE}
 library(dataone)
 library(datapackage)
 dp <- new("DataPackage")
@@ -32,10 +32,11 @@ dataObj <- new("DataObject", format="text/csv", file=sampleData)
 dataObj <- setPublicAccess(dataObj)
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- setPublicAccess(metadataObj)
 addData(dp, metadataObj)
-addData(dp, sciDataObj, metadataObj)
+addData(dp, dataObj, metadataObj)
 d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=2, quiet=F)
+packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 ```
 
 The following sections describe each line of this script in detail.
@@ -44,7 +45,7 @@ The following sections describe each line of this script in detail.
 In order to use `uploadDataPackage`, it is necessary to prepare an R *DataPackage* object that will serve as a container for the set
 of files  that will be included in the data package:  
 
-```{r, warning=F, message=F}
+```{r,eval=F}
 library(dataone)
 library(datapackage)
 dp <- new("DataPackage")
@@ -93,7 +94,7 @@ https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetada
 
 The example below creates a *DataObject* for a science dataset:
 
-```{r, warning=F}
+```{r,eval=F}
 sampleData <- system.file("extdata/sample.csv", package="dataone")
 dataObj <- new("DataObject", format="text/csv", file=sampleData)
 ```
@@ -108,7 +109,7 @@ Access rules can be added to each *DataObject* after it has been created. Access
 single user. Access can also be granted to the *public* user, which means any and all users. For example, public read access
 can be set using the `setPublicAccess` method:
 
-```{r}
+```{r,eval=F}
 dataObj <- setPublicAccess(dataObj)
 ```
 
@@ -117,7 +118,7 @@ Individual access rules to be applied to a DataONE user identify can also be add
 Access rules are added to a *DataObject* using the `addAccessRule` method. The following access rule will grant
 user 'collins' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
 
-```{r}
+```{r,eval=F}
 accessRules <- data.frame(subject="uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org", permission="changePermission")
 sciDataObj <- addAccessRule(dataObj, accessRules)
 ```
@@ -128,14 +129,14 @@ identifier has the format "urn:uuid:<a unique string>", for example "urn:uuid:c3
 
 The following command creates the *DataObject* for the science metadata, using an automatically generated identifier:
 
-```{r}
+```{r,eval=F}
 sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```
 
 Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata *DataObject*, using the *generateIdentifier* method:
 
-```{r, eval=F}
+```{r, eval=FALSE}
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 newid <- generateIdentifier(mn, "DOI")
@@ -162,14 +163,14 @@ added.
 
 Now add the metadata object to the DataPackage:
 
-```{r}
+```{r, eval=F}
 addData(dp, metadataObj)
 ```
 
 Then specify the metadat object when each science data object is added, associating the metadata object with the
 science object:
 
-```{r}
+```{r, eval=F}
 addData(dp, sciDataObj, metadataObj)
 ```
 
@@ -178,7 +179,7 @@ addData(dp, sciDataObj, metadataObj)
 When all *DataObjects* have been added to the DataPackage, call the `uploadDataPackage` method to upload the 
 entire DataPackage:
 
-```{r, eval=F}
+```{r, eval=FALSE}
 d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=2)
 message(sprintf("Uploaded data package with identifier: %s", packageId))
@@ -201,7 +202,7 @@ the dataset, how many copies of the dataset should be maintained, has the object
 another object, etc. A system metadata object is created in R using the *datapackage::SystemMetadata*
 class, as shown below:
 
-```{r,warning=F}
+```{r,eval=F}
 library(uuid)
 library(digest)
 # Create a system metadata object for a data file. 
@@ -224,7 +225,7 @@ Alternatively, the system metadata could have been created with a *seriesId*. Th
 *dataone_overview* vignette. The following example shows the creation of a *SystemMetadata* object using the
 optional *seriesId*:
 
-```{r,warning=F}
+```{r,eval=F}
 # Create a system metadata object for a data file. 
 # Just for demonstration purposes, create a temporary data file.
 testdf <- data.frame(x=1:20,y=11:30)
@@ -245,7 +246,7 @@ sysmeta <- addAccessRule(sysmeta, "public", "read")
 A unique identifier must be specified for each system metadata, whether or not a seriesId is used.
 
 The dataset can now be uploaded to DataONE with the associated system metadata:
-```{r,warning=F, eval=F}
+```{r,eval=F}
 response <- create(mn, pid, csvfile, sysmeta)
 ```
 
@@ -274,7 +275,7 @@ status <- updateSystemMetadata(mn, pid, sysmeta)
 
 The *updateObject* updates an existing object by creating a new object identified by a new PID on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of PID and the new PID.
 
-```
+```{r, eval=F}
 # Update the object with a new version
 updateid <- generateIdentifier(mn, "UUID")
 testdf <- data.frame(x=1:20,y=11:30)

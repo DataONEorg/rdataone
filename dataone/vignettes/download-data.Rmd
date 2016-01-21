@@ -54,20 +54,20 @@ In the R example, after inspecting the *result* data, we will use the first matc
 Now that the PID is determined, the MN that holds the data must be located. For this, the *resolve*
 method is used to find an MN that holds the data and that is currently available: 
 
-```{r, warning=FALSE, error=FALSE}
+```{r, warning=FALSE, eval=FALSE}
 locations <- resolve(cn, pid)
 mnId <- locations$data[2, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
 ```
 
 Multiple MNs may hold the data, depending on the replication policy that is in effect for the dataset and which member nodes are currenctly available. In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
-```{r, warning=FALSE}
+```{r, warning=FALSE,eval=FALSE}
 obj <- getObject(mn, pid)
 ```
 
 If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statments:
     
-```{r, warning=FALSE}
+```{r, warning=FALSE, eval=FALSE}
 # Query the data holdings on a member node
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
@@ -84,7 +84,7 @@ This approach uses the *getDataObject* method from the R package.  The *getDataO
 member node in DataONE holds the data item and downloads it into a datapackage::DataObject. The DataObject R object is 
 a wrapper that contains the data bytes for the DataONE dataset requested as well as the DataONE system metadata for the object. 
 
-```{r, warning=FALSE}
+```{r, eval=FALSE}
 d1c <- D1Client("PROD", "urn:node:KNB")
 # Ask for the id, title and abstract
 queryParams <- list(q="abstract:\"biogenic hydrocarbon\"", fq="id:doi*", 
@@ -102,15 +102,14 @@ The following functions are available to extract information from the DataObject
 - getData(obj)
 
 For example, to extract the data byes from the DataObject:
-```{r}
-  
+```{r, eval=FALSE}
 dataBytes <- getData(dataObj)
 ```
 
 In addition to the DataObject functions, the complete set of information from the DataONE system metadata is available from the 
 object's slot:
 
-```{r}
+```{r, eval=FALSE}
 str(dataObj@sysmeta)
 ```
 ### Download a data package
@@ -125,7 +124,7 @@ Note: to use the *getPackage* method, the *id* parameter must be the package ide
 If the pid of the metadata object or science data object is known, then the package identifier can be discovered
 using a query such as:
 
-```{r, warning=FALSE}
+```{r, eval=FALSE}
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 queryParamList <- list(q="id:Blandy.77.1", fl="resourceMap")

@@ -33,7 +33,7 @@ Additional information about the `query` method can be obtained from the R help 
 
 The following example queries DataONE and returns values in an R list, with each value converted from the Solr result to the appropriate R data type: 
 
-```{r,warning=F,message=F}
+```{r,eval=F}
 library(dataone)
 cn <- CNode("PROD")
 queryParamList <- list(q="id:doi*", rows="2", fq="abstract:chlorophyll", fl="id,title,dateUploaded,abstract,datasource,size")
@@ -44,13 +44,13 @@ The `result` object contains all the data values returned from the query. Each e
 for one dataset. Each returned attribute for a dataset can be accessed with the appropriate element name, for example, to 
 access the title information of the first dataset returned, use the R statement:
 
-```{r}
-message(sprintf("Title: %s", result[[1]]$title))
+```{r,eval=F}
+result[[1]]$title)
 ```
 
 To print out selected information for all returned values, use:
 
-```{r}
+```{r,eval=F}
 ids <- lapply(result, function(x) {
   message(sprintf("id: %s", x$id))
   message(sprintf("origin member node: %s", x$datasource))
@@ -66,21 +66,21 @@ the values available for a particular dataset may be a subset of these, dependin
 ### Return values as a data frame
 To return results as a data frame, use the `as` parameter as shown below. In addition all values will be stored as `character`, because `parse=FALSE` is specified:
 
-```{r,warning=F}
+```{r,eval=F}
 cn <- CNode("PROD")
 result <- query(cn, queryParamList, as="data.frame", parse=FALSE)
 ```
 
 The `result` is a data frame with each row containing information for one dataset. To print all returned DataONE identifiers from the result:
   
-```{r}
+```{r, eval=F}
 result[,'id']
 ```
 
 ### Using a Simplified Search.
 A search may be performed by just specifying query fields and values using the *searchTerms* parameter.
 For example, to search for datasets that mention 'kelp' in the abstract and have an attribute discription that contains the word 'biomass', the following query could be used:
-```{r, warning=F}
+```{r, eval=F}
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:mnKNB")
 mySearchTerms <- list(abstract="kelp", attribute="biomass")
@@ -104,7 +104,7 @@ search term in the query send to the CN, or by just sending the query to the MN 
 
 The following query shows how to query the entire DataONE network and locate and download data from 
 any MN that has the desired data.
-```{r,warning=F,autodep=T}
+```{r,eval=F}
 library(dataone)
 cn <- CNode("PROD")
 # Ask for the id, title and abstract
@@ -118,7 +118,7 @@ If it is known which Member Node holds the data of interest, then the search can
 MN by sending the search directly to that MN instead of the CN. For example, if the dataset of interest
 is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statments:
     
-```{r, warning=F}
+```{r, eval=F}
 # Query the data holdings on a member node
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
@@ -132,7 +132,7 @@ pid <- result[1,'id']
 An alternative way to locate datasets on a particular node is to send the query to the CN but limit the returned results to data holdings that originated from the specific member node by using Solr filter query parameter (`&fq`) can be used
 for the `datasource` field:
 
-```{r,warning=F}
+```{r,eval=F}
 cn <- CNode("PROD")
 queryParams <- 'q=id:*&fl=id,title&fq=datasource:"urn:node:KNB"&rows=5'
 result <- query(cn, queryParams, as="data.frame", parse=FALSE)
