@@ -552,7 +552,7 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
       stop("Please set the DataONE Member Node to upload to using setMN()")
     }
   
-    submitter <- as.character(NULL)
+    submitter <- as.character(NA)
     # Upload each object that has been added to the DataPackage
     for (doId in getIdentifiers(dp)) {
         do <- getMember(dp, doId)
