@@ -3,11 +3,7 @@ context("CertificateManager tests")
 test_that("CertificateManager getCertLocation()", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-  warnLevel <- getOption("warn")
-  options(warn = -1)
-  cm <- CertificateManager()
-  options(warn = warnLevel)
-  
+  suppressWarnings(cm <- CertificateManager())
   expect_that(is.null(cm), is_false())
   location <- getCertLocation(cm)
   # No cert found so skip rest of test
@@ -28,10 +24,7 @@ test_that("CertificateManager loads", {
 test_that("getCertExpires", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = warnLevel)
+    suppressWarnings(cm <- CertificateManager())
     expires <- getCertExpires(cm)
     if (is.null(expires)) {
         ## if no certificate is installed, this is the correct answer
@@ -45,10 +38,7 @@ test_that("getCertExpires", {
 test_that("isCertExpired", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = warnLevel)
+    suppressWarnings(cm <- CertificateManager())
     isExpired <- isCertExpired(cm)
     # TODO: determine why getCertExpires doesn't return expiration for expired certs
     # BTW: isCertExpires works correctly for expired certs.
@@ -64,10 +54,7 @@ test_that("isCertExpired", {
 test_that("showClientSubject", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = warnLevel)
+    suppressWarnings(cm <- CertificateManager())
     result <- showClientSubject(cm)
     expires <- getCertExpires(cm)
     if (is.null(expires)) {
@@ -85,10 +72,7 @@ test_that("showClientSubject", {
 test_that("obscureCert and restoreCert", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = warnLevel)
+    suppressWarnings(cm <- CertificateManager())
     subject1 <- showClientSubject(cm)
     if (!subject1 == "public") {
       cm <- obscureCert(cm)
@@ -103,10 +87,7 @@ test_that("obscureCert and restoreCert", {
 test_that("custom certificate location", {
   skip_on_cran()
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    warnLevel <- getOption("warn")
-    options(warn = -1)
-    cm <- CertificateManager()
-    options(warn = warnLevel)
+    suppressWarnings(cm <- CertificateManager())
     subject1 <- showClientSubject(cm)
     if (subject1 == "public") {
       cm <- obscureCert(cm)
