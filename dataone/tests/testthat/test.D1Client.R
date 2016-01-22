@@ -102,6 +102,56 @@ test_that("D1Client getDataObject", {
     }
 })
 
+test_that("D1Client uploadDataObject with raw data works", {
+  skip_on_cran()
+  library(dataone)
+  library(datapackage)
+
+  # Create a DataObject with a raw R object and upload to DataONE
+  data <- charToRaw("1,2,3\n4,5,6\n")
+  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  expect_false(is.null(d1c))
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
+  if (authValid) {
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    # Create DataObject for the science data 
+    do <- new("DataObject", format="text/csv", dataobj=data, mnNodeId=getMNodeId(d1c))
+    expect_that(do@sysmeta@identifier, matches("urn:uuid"))
+    newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA, public=TRUE)
+    expect_true(!is.null(newId))
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
+test_that("D1Client uploadDataObject with filename works", {
+  skip_on_cran()
+  library(dataone)
+  library(datapackage)
+  
+  # Create a csv file for the science object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  expect_false(is.null(d1c))
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
+  if (authValid) {
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    # Create DataObject for the science data 
+    do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
+    expect_that(do@sysmeta@identifier, matches("urn:uuid"))
+    newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
+    expect_true(!is.null(newId))
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
 test_that("D1Client uploadDataPackage works", {
   skip_on_cran()
   library(dataone)
