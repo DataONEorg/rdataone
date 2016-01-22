@@ -324,7 +324,7 @@ setMethod("evaluateAuth", signature("AuthenticationManager", "D1Node"), function
     if(!is.null(authToken) && !is.na(authToken)) {
       tokenInfo <- getTokenInfo(.Object)
       subject <- tokenInfo[1, 'subject']
-      expires <- tokenInfo[1, 'expires']
+      expires <- tokenInfo[1, 'end']
       expired <- tokenInfo[1, 'expired']
       # If the auth token is not valid (e.g. expired) then check for a valid certificate.
       if(subject != 'public' && !expired) {
@@ -347,7 +347,7 @@ setMethod("evaluateAuth", signature("AuthenticationManager", "D1Node"), function
   # available. 
   certInfo <- getCertInfo(.Object)
   subject <- certInfo[1,'subject']
-  expires <- certInfo[1,'expires']
+  expires <- certInfo[1,'end']
   expired <- certInfo[1,'expired']
   cert <- certInfo[1,'file']
   if(is.na(cert)) {
