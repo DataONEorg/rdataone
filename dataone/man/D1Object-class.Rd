@@ -22,7 +22,7 @@ a wrapper for data and associated SystemMetadata.
  \item{\code{\link[dataone]{getFormatId}}}{: Get the formatId of the D1Object}
  \item{\code{\link[dataone]{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
  \item{\code{\link[dataone]{canRead}}}{: Test whether the provided subject can read an object.}
- \item{\code{\link[dataone]{asDataFrame}}}{: Return the D1Object as a data.frame.}
+ \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
 }
 }
 \seealso{
