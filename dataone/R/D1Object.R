@@ -98,30 +98,41 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 
 #' Get the data content of a D1Object.
 #' @param x  D1Object the data structure from where to get the data
-#' @param id Missing or character: if \code{'x'} is DataPackage, the identifier of the package member to get data from
 #' @rdname getData
 #' @export
-setMethod("getData", signature("D1Object"), function(x, id) {
-    data <- getObject(x@mn, id, check=as.logical(FALSE))
+setMethod("getData", signature("D1Object"), function(x) {
+  # We have to include all args for .Deprecated, because we are deprecating just this 
+  # implementation (method) and not the generic. When .Deprecated is called from the method,
+  # it doesn't properly identify the generic/method name (msg says ".local is deprecated)
+  msg <- sprintf("'getData' is deprecated.\nUse 'datapackage:getData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("getData(x)")
+  .Deprecated("getData", package="datapackage", msg, methodSig)
+  data <- rawToChar(getData(x@dataObject))
 })
 
-#' Get the Identifier of the DataObject
+#' Get the Identifier of the D1Object
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @rdname getIdentifier
 #' @return the identifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
+  msg <- sprintf("'getIdentifier' is deprecated.\nUse 'datapackage:getIdentifier' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("getIdentifier(x)")
+  .Deprecated("getIdentifier", package="datapackage", msg, methodSig)
   getIdentifier(x@dataObject)
 })
 
-#' Get the FormatId of the DataObject
+#' Get the FormatId of the D1Object
 #' @param x D1Object
 #' @param ... (not yet used)
 #' @return the formatId
 #' @rdname getFormatId
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
+  msg <- sprintf("'getFormatId' is deprecated.\nUse 'datapackage:getFormatId' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("getFormatId(x)")
+  .Deprecated("getFormatId", package="datapackage", msg, methodSig)
   getFormatId(x@dataObject)
 })
 
@@ -139,6 +150,9 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @rdname setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
+  msg <- sprintf("'setPublicAccess' is deprecated.\nUse 'datapackage:setPublicAccess' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("setPublicAccess(x)")
+  .Deprecated("setPublicAccess", package="datapackage", msg, methodSig) 
   x@dataObject <- setPublicAccess(x@dataObject)
   return(x)
 })
@@ -160,6 +174,9 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @rdname canRead
 #' @export
 setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
+  msg <- sprintf("'canRead' is deprecated.\nUse 'datapackage:canRead' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("canRead(x)")
+  .Deprecated("canRead", package="datapackage", msg, methodSig) 
   canRead(x@dataObject, subject)
 })
 
@@ -175,7 +192,8 @@ setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
 #' @aliases asDataFrame
 #' @export
 setGeneric("asDataFrame", function(x, reference, ...) { 
-            standardGeneric("asDataFrame")
+  .Deprecated("read.csv", "base")
+  standardGeneric("asDataFrame")
 })
 
 #' @rdname asDataFrame
@@ -264,8 +282,8 @@ setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), functi
 #' @export
 setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
     ## Load the data into a dataframe
-    
-    dataBytes <- getData(x)
+    # Prevent .Deprecated warnings (in code called internally)
+    suppressWarnings(dataBytes <- getData(x))
     theData <- textConnection(dataBytes)
     message("theData is ", class(theData))
     ## using read.csv instead of read.table, because it exposes the defaults we want
