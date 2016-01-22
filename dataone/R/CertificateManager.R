@@ -124,6 +124,7 @@ setMethod("CertificateManager", signature=character(), function() {
 #' @return the DataONE Subject that is your client's identity
 #' @export
 setGeneric("showClientSubject", function(x, ...) { 
+    .Deprecated("getCertInfo", "dataone")
     standardGeneric("showClientSubject")
 })
 
@@ -156,6 +157,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
 #' @return TRUE if the certificate is expired
 #' @export
 setGeneric("isCertExpired", function(x, ...) { 
+    .Deprecated("getCertInfo", "dataone")
             standardGeneric("isCertExpired")
         })
 
@@ -184,6 +186,7 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 #' @return POSIXct value
 #' @export
 setGeneric("getCertExpires", function(x, ...) { 
+    .Deprecated("getCertInfo", "dataone")
             standardGeneric("getCertExpires")
         })
 
@@ -236,6 +239,7 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 #' @seealso \code{\link{restoreCert}} is this method's inverse operation   
 #' @export
 setGeneric("obscureCert", function(x, ...) { 
+    .Deprecated("obscureAuth", "dataone")
     standardGeneric("obscureCert")
 })
 
@@ -263,6 +267,7 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 #' @import stringr
 #' @export
 setGeneric("restoreCert", function(x, ...) { 
+    .Deprecated("restoreAuth", "dataone")
     standardGeneric("restoreCert")
 })
 
@@ -303,6 +308,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
 #' @return character the path to the certificate
 #' @export
 setGeneric("getCertLocation", function(x, ...) { 
+    .Deprecated("getCertInfo", "dataone")
     standardGeneric("getCertLocation")
 })
 
