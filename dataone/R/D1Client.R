@@ -208,6 +208,7 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #' uploaded <- createD1Object(d1c, d1o)
 #' }
 setGeneric("createD1Object", function(x, d1Object, ...) {
+  .Deprecated("uploadDataObject", "datapackage")
   standardGeneric("createD1Object")
 })
 
@@ -331,6 +332,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
+  .Deprecated("query", "dataone")
     standardGeneric("d1SolrQuery")
 })
 
