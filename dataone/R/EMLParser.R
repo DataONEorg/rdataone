@@ -36,9 +36,7 @@
 ## @author rnahf
 ## @import XML
 ## @exportClass EMLParser
-setClass("EMLParser", 
-        representation(d1Object = "DataObject", xmlDocRoot = "XMLNode"),
-        contains="AbstractTableDescriber")
+setClass("EMLParser", contains="AbstractTableDescriber")
 ##        contains="AbstractTableDescriber",
 ##        prototype=prototype(new("AbstractTableDescriber")))
 
@@ -61,7 +59,7 @@ tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
 ## generic
 setGeneric("EMLParser", function(d1Object, ...) { standardGeneric("EMLParser")} )
 
-setMethod("EMLParser", signature("DataObject"), function(d1Object) {
+setMethod("EMLParser", signature("D1Object"), function(d1Object) {
             
     xmlDocRoot <- xmlRoot(xmlTreeParse(as.character(getData(d1Object))))  
     result <- new("EMLParser", d1Object=d1Object, xmlDocRoot=xmlDocRoot)
