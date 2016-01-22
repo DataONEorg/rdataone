@@ -692,8 +692,24 @@ setMethod("uploadDataObject", signature("D1Client", "DataObject"),
       return(NULL)
     }
     
-    # Upload the data to the MN using create(), checking for success and a returned identifier
-    createdId <- create(x@mn, doId, do@filename, do@sysmeta)
+    # If the DataObject has both @filename and @data defined, filename takes precedence 
+    if(!is.na(do@filename)) {
+      # Upload the data to the MN using create(), checking for success and a returned identifier
+      createdId <- create(x@mn, doId, do@filename, do@sysmeta)
+    } else {
+      if(length(do@data == 0)) {
+        # Write the DataObject raw data to disk and upload the resulting file.
+        tf <- tempfile()
+        con <- file(tf, "wb")
+        writeBin(do@data, con)
+        close(con)
+        createdId <- create(x@mn, doId, tf, do@sysmeta)
+        file.remove(tf)
+      } else {
+        warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", do@sysmeta@identifier))
+      }
+    }
+    
     #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
     if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
         #warning(paste0("Error on returned identifier: ", createdId))
