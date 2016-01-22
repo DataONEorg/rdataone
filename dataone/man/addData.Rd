@@ -10,9 +10,9 @@
 \arguments{
 \item{x}{The \code{"DataPackage"} to which the data object should be added.}
 
-\item{do}{A DataObject to associate with the science metadata object.}
+\item{do}{A D1Object to associate with the science metadata object.}
 
-\item{mo}{A DataObject (containing metadata describing \code{"do"} ) to associate with the data object.}
+\item{mo}{A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.}
 }
 \description{
 The D1Object \code{do} is added to the data package \code{x}.

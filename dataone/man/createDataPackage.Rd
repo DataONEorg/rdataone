@@ -18,7 +18,7 @@ createDataPackage(x, dataPackage, ...)
 \item{...}{Additional arguments}
 }
 \description{
-This method has been superceded by \code{\link{uploadDataPackage}}
+Upload all members of a DataPackage to DataONE.
 }
 \examples{
 \dontrun{

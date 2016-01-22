@@ -364,6 +364,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("d1IdentifierSearch", function(x, solrQuery) {
+  .Deprecated("query", "dataone")
     standardGeneric("d1IdentifierSearch")    
 })
 
@@ -387,7 +388,7 @@ setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, i
 })
 
 #' Create a DataPackage on a DataONE Member Node
-#' @description This method has been superceded by \code{\link{uploadDataPackage}}
+#' @description Upload all members of a DataPackage to DataONE.
 #' @param x A D1Client instance.
 #' @param dataPackage The DataPackage instance to be submitted to DataONE for creation.
 #' @param ... Additional arguments
@@ -815,10 +816,15 @@ setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), fun
 #' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
 #' \code{documents} and \code{isDocumentedBy} relationships.
 #' @param x The \code{"DataPackage"} to which the data object should be added.
-#' @param do A DataObject to associate with the science metadata object.
-#' @param mo A DataObject (containing metadata describing \code{"do"} ) to associate with the data object.
+#' @param do A D1Object to associate with the science metadata object.
+#' @param mo A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.
 #' @export
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
+  
+  # Add deprecated here instead of in the generic function, as the generic function is the datapackage R package.
+  msg <- sprintf("'addData' is deprecated.\nUse 'datapackage:addData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("addData(x, do, mo)") 
+  .Deprecated("DataObject", package="datapackage", msg, methodSig)
   x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
   # If a metadata object identifier is specified on the command line, then add the relationship to this package
   # that associates this science object with the metadata object.

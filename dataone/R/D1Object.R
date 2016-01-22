@@ -28,13 +28,13 @@
 #' @import datapackage
 #' @section Methods:
 #' \itemize{
-#'  \item{\code{\link{D1Object-initialize}}}{: Initialize a D1Object}
-#'  \item{\code{\link{getData}}}{: Get the data content of a specified D1Object.}
-#'  \item{\code{\link{getIdentifier}}}{: Get the identifier of the D1Object.}
-#'  \item{\code{\link{getFormatId}}}{: Get the formatId of the D1Object}
-#'  \item{\code{\link{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
-#'  \item{\code{\link{canRead}}}{: Test whether the provided subject can read an object.}
-#'  \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
+#'  \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}
+#'  \item{\code{\link[dataone]{getData}}}{: Get the data content of a specified D1Object.}
+#'  \item{\code{\link[dataone]{getIdentifier}}}{: Get the identifier of the D1Object.}
+#'  \item{\code{\link[dataone]{getFormatId}}}{: Get the formatId of the D1Object}
+#'  \item{\code{\link[dataone]{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
+#'  \item{\code{\link[dataone]{canRead}}}{: Test whether the provided subject can read an object.}
+#'  \item{\code{\link[asDataFrame}}}{: Return the D1Object as a data.frame.}
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
@@ -62,7 +62,8 @@ setGeneric("D1Object", function(...) {
 #' @param data An R object (data or metadata) that this D1Object contains.
 #' @param format The Object format.
 #' @param mnNodeId The DataONE node identifier associated with this object, i.e. "urn:node:KNB"
-#' @rdname D1Object-initialize
+#' @rdname D1Object-initializean object.
+#' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @aliases D1Object-initialize
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId=as.character(NA)) {
   msg <- sprintf("'D1Object' is deprecated.\nUse 'datapackage:DataObject' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")

@@ -3,7 +3,7 @@
 \docType{methods}
 \name{getFormatId,D1Object-method}
 \alias{getFormatId,D1Object-method}
-\title{Get the FormatId of the DataObject}
+\title{Get the FormatId of the D1Object}
 \usage{
 \S4method{getFormatId}{D1Object}(x)
 }
@@ -16,6 +16,6 @@
 the formatId
 }
 \description{
-Get the FormatId of the DataObject
+Get the FormatId of the D1Object
 }
 

@@ -3,7 +3,7 @@
 \docType{methods}
 \name{getIdentifier,D1Object-method}
 \alias{getIdentifier,D1Object-method}
-\title{Get the Identifier of the DataObject}
+\title{Get the Identifier of the D1Object}
 \usage{
 \S4method{getIdentifier}{D1Object}(x)
 }
@@ -16,6 +16,6 @@
 the identifier
 }
 \description{
-Get the Identifier of the DataObject
+Get the Identifier of the D1Object
 }
 
