@@ -183,7 +183,7 @@ test_that("D1Client createD1Object works", {
     if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     sdf <- read.csv(csvfile)
     # Create DataObject for the science data 
-    stf <- charToRaw(convert.csv(d1c, sdf))
+    suppressWarnings(stf <- charToRaw(convert.csv(d1c, sdf)))
     sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # Create D1Object for the science data 
     # Suppress .Deprecated warnings
@@ -192,9 +192,9 @@ test_that("D1Client createD1Object works", {
     suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
     expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
-    sciObj <- setPublicAccess(sciObj)
+    suppressWarnings(sciObj <- setPublicAccess(sciObj))
     # Upload the data object to DataONE
-    success <- createD1Object(d1c, sciObj)
+    suppressWarnings(success <- createD1Object(d1c, sciObj))
     expect_true(success)
     # Now see if we can download the object from DataONE
   } else {
@@ -239,7 +239,7 @@ test_that("D1Client d1SolrQuery works", {
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
-    result <- d1SolrQuery(d1c, queryParams)
+    suppressWarnings(result <- d1SolrQuery(d1c, queryParams))
     expect_match(class(result)[1], "XMLInternalDocument")
     resList <- xmlToList(result)
     expect_true(length(resList) > 0)
@@ -271,7 +271,7 @@ test_that("D1Client d1IdentifierSearch works", {
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
-    result <- d1IdentifierSearch(d1c, queryParams)
+    suppressWarnings(result <- d1IdentifierSearch(d1c, queryParams))
     expect_match(class(result), "character")
     expect_equal(length(result), 2)
   } else {
@@ -307,17 +307,17 @@ test_that("D1Client createDataPackage works", {
     emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
     suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
     expect_that(metadataObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
-    addData(dp, metadataObj)
+    suppressWarnings(addData(dp, metadataObj))
     expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
     
     sdf <- read.csv(csvfile)
     # Create DataObject for the science data 
-    stf <- charToRaw(convert.csv(d1c, sdf))
+    suppressWarnings(stf <- charToRaw(convert.csv(d1c, sdf)))
     sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
     suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
     expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
-    addData(dp, sciObj, metadataObj)
+    suppressWarnings(addData(dp, sciObj, metadataObj))
     expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
    
     # Upload the data package to DataONE    
