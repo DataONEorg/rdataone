@@ -190,7 +190,7 @@ test_that("D1Node archive() works",{
   if (authValid) {
     if(getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
-    subject <- getAuthSubject(am)
+    subject <- getAuthSubject(am, d1c@mn)
     # If subject isn't available from the current authentication method, then get from DataONE
     if (is.na(subject) || subject == "public") {
       creds <- echoCredentials(d1c@cn)
