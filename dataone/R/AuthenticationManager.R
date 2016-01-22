@@ -444,15 +444,15 @@ setMethod("getCertInfo", signature("AuthenticationManager"), function(.Object) {
   if (check4PKI()) {
     # Suppress "deprecated" warning
     suppressWarnings(cm <- CertificateManager())
-    cert <- getCertLocation(cm)
+    suppressWarnings(cert <- getCertLocation(cm))
     # Does cert exist and is it readable?
     if (!is.null(cert) && (file.access(c(cert),4) == 0)) {
-      if(isCertExpired(cm)) {
+      if(suppressWarnings(isCertExpired(cm))) {
         message("Your login certificate is expired. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
       }
-      expires <- getCertExpires(cm)
-      expired <- isCertExpired(cm)
-      subject <- showClientSubject(cm)
+      suppressWarnings(expires <- getCertExpires(cm))
+      suppressWarnings(expired <- isCertExpired(cm))
+      suppressWarnings(subject <- showClientSubject(cm))
     } else {
       message("Your login certificate is missing or unreadable. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
       cert <- as.character(NA)
