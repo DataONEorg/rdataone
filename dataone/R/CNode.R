@@ -55,13 +55,16 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #########################
 
 #' Create a CNode object.
-#' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
+#' @param env The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
 #' @param ... (not yet used)
 #' @rdname CNode
 #' @aliases CNode
 #' @return the CNode object representing the DataONE environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cn <- CNode("PROD")
+#' }
 setGeneric("CNode", function(env, ...) {
   standardGeneric("CNode")
 })
