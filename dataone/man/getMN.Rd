@@ -26,6 +26,12 @@ Get a member node client based on its node identifier.
 \note{
 This method has been superceded by \code{\link{getMNodeId}}
 }
+\examples{
+\dontrun{
+cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+testMN <- getMN(cli)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

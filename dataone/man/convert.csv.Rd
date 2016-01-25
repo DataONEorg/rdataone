@@ -23,6 +23,13 @@ the dataframe serialized as a .csv
 \description{
 Convert a DataFrame to Standard CSV.
 }
+\examples{
+\dontrun{
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+testdf <- data.frame(x=1:10,y=11:20)
+sdf <- convert.csv(d1c, testdf)  
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

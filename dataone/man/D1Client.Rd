@@ -29,6 +29,11 @@ the D1Client object representing the DataONE environment
 \description{
 The DataONE client class used to downlaod, update and search for data in the DataONE network.
 }
+\examples{
+\dontrun{
+cli <- D1Client("PROD", "urn:node:KNB")
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

@@ -17,6 +17,12 @@ listMemberNodes(x)
 A D1Client object is associated with a DataONE Coordinating Node. The
 \code{listMemberNodes} method lists all member nodes associated with a CN.
 }
+\examples{
+{
+d1c <- D1Client("PROD")
+nodelist <- listMemberNodes(d1c)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

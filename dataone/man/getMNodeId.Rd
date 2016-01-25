@@ -20,6 +20,12 @@ The Member Node identifier  as a character vector
 One Member Node can be associated with the client as the default to which
 data and metadata are written.
 }
+\examples{
+\dontrun{
+cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+mn <- getMNodeId(cli)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

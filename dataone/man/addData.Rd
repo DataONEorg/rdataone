@@ -23,4 +23,21 @@ object that describes the data object that is being added. The \code{addData} fu
 to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
 \code{documents} and \code{isDocumentedBy} relationships.
 }
+\examples{
+\dontrun{
+library(dataone)
+library(datapackage)
+library(uuid)
+dp <- new("DataPackage")
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+# Create metadata object that describes science data
+emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+emlChar <- readLines(emlFile)
+emlRaw <- charToRaw(paste(emlChar, collapse="\\n"))
+emlId <- sprintf("urn:uuid:\%s", UUIDgenerate())
+metadataObj <- new("D1Object", id=emlId, 
+  format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c))
+addData(dp, metadataObj)
+}
+}
 

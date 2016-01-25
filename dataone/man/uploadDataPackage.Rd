@@ -54,6 +54,25 @@ Member objects are created serially, and most errors in creating one object will
 interrupt the create process for the whole, with the result that some members will 
 be created, and the remainder not.
 }
+\examples{
+\dontrun{
+library(dataone)
+library(datapackage)
+dp <- new("DataPackage")
+sampleData <- system.file("extdata/sample.csv", package="dataone")
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+dataObj <- new("DataObject", format="text/csv", file=sampleData)
+dataObj <- setPublicAccess(dataObj)
+sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
+metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+metadataObj <- setPublicAccess(metadataObj)
+addData(dp, metadataObj)
+addData(dp, dataObj, metadataObj)
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

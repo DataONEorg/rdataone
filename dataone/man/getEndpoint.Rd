@@ -24,6 +24,12 @@ CN is either the production CN (from the "PROD" environment, the default), or a 
 of the development environments ("STAGING", "SANDBOX", "DEV"). The base URL for the CN
 is returned.
 }
+\examples{
+\dontrun{
+cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+cnUrl <- getEndpoint(cli)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }

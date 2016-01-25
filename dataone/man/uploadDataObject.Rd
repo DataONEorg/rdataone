@@ -35,6 +35,18 @@ id The id of the DataObject that was uploaded
 \description{
 Upload a DataObject to a DataONE member node.
 }
+\examples{
+\dontrun{
+library(dataone)
+library(datapackage)
+testdf <- data.frame(x=1:10,y=11:20)
+csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+write.csv(testdf, csvfile, row.names=FALSE)
+d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
+newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
+}
+}
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
