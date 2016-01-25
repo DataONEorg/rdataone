@@ -14,7 +14,7 @@ CNode(env, ...)
 \S4method{CNode}{character}(env)
 }
 \arguments{
-\item{env}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')}
+\item{env}{The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')}
 
 \item{...}{(not yet used)}
 }
@@ -23,6 +23,11 @@ the CNode object representing the DataONE environment
 }
 \description{
 Create a CNode object.
+}
+\examples{
+\dontrun{
+cn <- CNode("PROD")
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
