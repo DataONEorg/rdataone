@@ -65,6 +65,9 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' @return the D1Client object representing the DataONE environment
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cli <- D1Client("PROD", "urn:node:KNB")
+#' }
 setGeneric("D1Client", function(env, mNodeid, ...) {
     standardGeneric("D1Client")
 })
@@ -382,6 +385,10 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @aliases getEndpoint
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+#' cnUrl <- getEndpoint(cli)
+#' }
 setGeneric("getEndpoint", function(x, ...) { standardGeneric("getEndpoint")} )
 
 #' @rdname getEndpoint
@@ -400,6 +407,10 @@ setMethod("getEndpoint", "D1Client", function(x) {
 #' @aliases getMNodeId
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+#' mn <- getMNodeId(cli)
+#' }
 setGeneric("getMNodeId", function(x) { 
     standardGeneric("getMNodeId")
 })
@@ -454,6 +465,10 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 #' @note This method has been superceded by \code{\link{getMNodeId}}
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+#' testMN <- getMN(cli)
+#' }
 setGeneric("getMN", function(x, nodeid, ...) { 
     .Deprecated("getMNodeId", "dataone", "getMN(x, nodeid) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, nodeid")
     standardGeneric("getMN")
@@ -485,6 +500,10 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 #' @note The method getCN has been deprecated.
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+#' testCN <- getCN(cli)
+#' }
 setGeneric("getCN", function(x) { 
     .Deprecated("getCN(x)", "dataone", "The getCN(x) function no longer returns a Java object. This new function returns a CNode object", "getMN(x, ...)")
     standardGeneric("getCN")
@@ -517,6 +536,23 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @import datapackage
 #' @import uuid
 #' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' library(datapackage)
+#' dp <- new("DataPackage")
+#' sampleData <- system.file("extdata/sample.csv", package="dataone")
+#' cn <- CNode("STAGING")
+#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+#' dataObj <- new("DataObject", format="text/csv", file=sampleData)
+#' dataObj <- setPublicAccess(dataObj)
+#' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
+#' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+#' metadataObj <- setPublicAccess(metadataObj)
+#' addData(dp, metadataObj)
+#' addData(dp, dataObj, metadataObj)
+#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
+#' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 setGeneric("uploadDataPackage", function(x, dp, ...) {
   standardGeneric("uploadDataPackage")
@@ -582,6 +618,16 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @import datapackage
 #' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' library(datapackage)
+#' testdf <- data.frame(x=1:10,y=11:20)
+#' csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+#' write.csv(testdf, csvfile, row.names=FALSE)
+#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
+#' newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
+#' }
 setGeneric("uploadDataObject", function(x, do, ...) {
     standardGeneric("uploadDataObject")
 })
@@ -665,6 +711,10 @@ setMethod("uploadDataObject", signature("D1Client", "DataObject"),
 #' @aliases listMemberNodes
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples {
+#' d1c <- D1Client("PROD")
+#' nodelist <- listMemberNodes(d1c)
+#' }
 setGeneric("listMemberNodes", function(x) {
     standardGeneric("listMemberNodes")
 })
@@ -688,6 +738,11 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @return the dataframe serialized as a .csv
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @examples \dontrun{
+#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' testdf <- data.frame(x=1:10,y=11:20)
+#' sdf <- convert.csv(d1c, testdf)  
+#' }
 setGeneric("convert.csv", function(x, ...) {
     .Deprecated("write.csv", "utils")
     standardGeneric("convert.csv")
@@ -773,6 +828,21 @@ setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), fun
 #' @param do A D1Object to associate with the science metadata object.
 #' @param mo A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.
 #' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' library(datapackage)
+#' library(uuid)
+#' dp <- new("DataPackage")
+#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' # Create metadata object that describes science data
+#' emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+#' emlChar <- readLines(emlFile)
+#' emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
+#' emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
+#' metadataObj <- new("D1Object", id=emlId, 
+#'   format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c))
+#' addData(dp, metadataObj)
+#' }
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   
   # Add deprecated here instead of in the generic function, as the generic function is the datapackage R package.
