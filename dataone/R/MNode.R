@@ -363,6 +363,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, file, 
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
 #' @import datapackage
 #' @export
+#' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
 setGeneric("updateObject", function(mnode, pid, ...) {
     standardGeneric("updateObject")
 })
@@ -427,6 +428,7 @@ setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, 
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 #' @import datapackage
 #' @export
+#' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
 setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
     standardGeneric("updateSystemMetadata")
 })

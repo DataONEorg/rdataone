@@ -41,6 +41,9 @@ Alternatively, the version 1.0 approach of using an X.509 certificate in a defau
 system can also be used. This certificate provides authentication credentials from 
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
+\note{
+Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
+}
 \seealso{
 \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
 }
