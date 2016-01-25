@@ -419,6 +419,7 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 setGeneric("setObsoletedBy", function(cnode, pid, obsoletedByPid, ...) {
+  .Defunct("updateObject", "dataone")
   standardGeneric("setObsoletedBy")
 })
 
