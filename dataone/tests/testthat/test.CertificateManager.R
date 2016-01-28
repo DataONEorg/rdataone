@@ -6,7 +6,7 @@ test_that("CertificateManager getCertLocation()", {
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   suppressWarnings(cm <- CertificateManager())
   expect_that(is.null(cm), is_false())
-  location <- getCertLocation(cm)
+  suppressWarnings(location <- getCertLocation(cm))
   # No cert found so skip rest of test
   if(!is.null(location)) {
     cname <- class(location)
@@ -19,7 +19,7 @@ test_that("CertificateManager loads", {
   skip_on_cran()
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-  cm <- CertificateManager()
+  suppressWarnings(cm <- CertificateManager())
   expect_that(is.null(cm), is_false())
 })
 
@@ -28,7 +28,7 @@ test_that("getCertExpires", {
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
-    expires <- getCertExpires(cm)
+    suppressWarnings(expires <- getCertExpires(cm))
     if (is.null(expires)) {
         ## if no certificate is installed, this is the correct answer
         expect_that(expires, equals(NULL))
@@ -43,7 +43,7 @@ test_that("isCertExpired", {
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
-    isExpired <- isCertExpired(cm)
+    suppressWarnings(isExpired <- isCertExpired(cm))
     # TODO: determine why getCertExpires doesn't return expiration for expired certs
     # BTW: isCertExpires works correctly for expired certs.
     #if (is.null(getCertExpires(cm))) {
@@ -60,12 +60,12 @@ test_that("showClientSubject", {
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
-    result <- showClientSubject(cm)
-    expires <- getCertExpires(cm)
+    suppressWarnings(result <- showClientSubject(cm))
+    suppressWarnings(expires <- getCertExpires(cm))
     if (is.null(expires)) {
         # Testing no certificate case
         expect_that(result, matches("public"))
-    } else if (isCertExpired(cm)) {
+    } else if (suppressWarnings(isCertExpired(cm))) {
         # Testing expired certificate case
         expect_that(result, matches("public"))
     } else {
@@ -79,13 +79,13 @@ test_that("obscureCert and restoreCert", {
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
-    subject1 <- showClientSubject(cm)
+    suppressWarnings(subject1 <- showClientSubject(cm))
     if (!subject1 == "public") {
-      cm <- obscureCert(cm)
-      subject2 <- showClientSubject(cm)
+      suppressWarnings(cm <- obscureCert(cm))
+      suppressWarnings(subject2 <- showClientSubject(cm))
       expect_that(subject2, matches("public"))
-      restoreCert(cm)
-      subject3 <- showClientSubject(cm)
+      suppressWarnings(restoreCert(cm))
+      suppressWarnings(subject3 <- showClientSubject(cm))
       expect_that(subject3, matches(subject1))
     }
 })
@@ -95,18 +95,18 @@ test_that("custom certificate location", {
   if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
-    subject1 <- showClientSubject(cm)
+    suppressWarnings(subject1 <- showClientSubject(cm))
     if (subject1 == "public") {
-      cm <- obscureCert(cm)
+      suppressWarnings(cm <- obscureCert(cm))
       expect_true(is.na(cm@location))
-      cm <- restoreCert(cm)
+      suppressWarnings(cm <- restoreCert(cm))
     } else {
-        cert <- getCertLocation(cm)
+        suppressWarnings(cert <- getCertLocation(cm))
         custom_cert <- paste0(tempfile(), ".x509")
         file.copy(cert, custom_cert)
         cm@location <- custom_cert
-        subject2 <- showClientSubject(cm)
+        suppressWarnings(subject2 <- showClientSubject(cm))
         expect_that(subject2, matches(subject1))
-        expect_that(custom_cert, matches(getCertLocation(cm)))
+        expect_that(custom_cert, suppressWarnings(matches(getCertLocation(cm))))
     }
 })
