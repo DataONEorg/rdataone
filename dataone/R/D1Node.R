@@ -572,17 +572,19 @@ d1_errors <- function(x){
 getErrorDescription <- function(response) {
   # Return NA if no error message found
   errorMsg <- as.character(NA)
-  responseContent <- content(response, as="parsed")
+  #responseContent <- content(response, as="parsed")
+  responseContent <- content(response, as="text")
   # DataONE services return XML
-  if (class(responseContent)[1] == "XMLInternalDocument") {
-     msgNode <- getNodeSet(responseContent, "/error/description")
+  headers(response)[['content-type']]
+  if (grepl(headers(response)[['content-type']], "text/xml")) {
+     msgNode <- getNodeSet(xmlParse(responseContent), "/error/description")
      if (length(msgNode) > 0) {
        errorMsg <- xmlValue(msgNode[[1]])
      } else {
        # Don't know how to get error, so return generic error
        errorMsg <- http_status(response)$message
      }
-  } else if (class(responseContent)[1] == "HTMLInternalDocument") {
+  } else if (grepl(headers(response)[['content-type']], "text/html")) {
     # To complex to try to get an error message from HTML, so
     # just get info from the response object. This will be a
     # generic message, so not as informative as specific msg from DataONE

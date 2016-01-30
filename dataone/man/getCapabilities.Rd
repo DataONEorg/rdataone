@@ -16,7 +16,7 @@ getCapabilities(mnode, ...)
 \item{...}{(Not yet used.)}
 }
 \value{
-the MNode object representing the DataONE environment
+an XMLInternalDocument object representing the DataONE environment
 }
 \description{
 Access the DataONE getCapabilities() service for the Member Node, which returns an XML

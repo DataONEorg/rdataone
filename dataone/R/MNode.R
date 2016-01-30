@@ -153,7 +153,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @aliases getCapabilities
 #' @param mnode The node identifier with which this node is registered in DataONE
 #' @param ... (Not yet used.)
-#' @return the MNode object representing the DataONE environment
+#' @return an XMLInternalDocument object representing the DataONE environment
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
 #' @import XML
 #' @import httr
@@ -178,7 +178,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
     if(response$status != "200") {
         stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
     }
-    xml <- content(response)
+    xml <- xmlParse(content(response, as="text"))
     return(xml)
 })
 
@@ -225,7 +225,7 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     }
     
     # Convert the response into a SystemMetadata object
-    sysmeta <- SystemMetadata(xmlRoot(content(response)))
+    sysmeta <- SystemMetadata(xmlRoot(xmlParse(content(response, as="text"))))
     return(sysmeta)
 })
 
@@ -338,7 +338,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, file, 
         #d1_errors(response)
         stop(sprintf("Error creating %s: %s\n", pid, getErrorDescription(response)))
     } else {
-        return(content(response))
+        return(xmlParse(content(response, as="text")))
     }
 })
 
@@ -406,7 +406,7 @@ setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, 
         #d1_errors(response)
         stop(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
     } else {
-        return(content(response))
+        return(xmlParse(content(response, as="text")))
     }
 })
 
@@ -515,7 +515,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     }
     
     # extract the identifier as a character string from the XML response
-    xml <- content(response)
+    xml <- xmlParse(content(response, as="text"))
     new_identifier <- xmlValue(xmlRoot(xml))
     return(new_identifier)
 })

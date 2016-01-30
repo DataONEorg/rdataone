@@ -115,8 +115,8 @@ setMethod("CNode", signature("character"), function(env) {
   }
   # Search for the 'node' element. Have to search for local name in xpath, as DataONE v1 and v2 use different namespaces
   # and one xpath expression with namespaces can't find both (that I know of).
-  xml <- getNodeSet(content(response, as="parsed"), "/*[local-name() = 'node']")
-  result <- parseCapabilities(result, xml[[1]])
+  xml <- getNodeSet(xmlParse(content(response, as="text")), "/*[local-name() = 'node']")
+  result <- dataone:::parseCapabilities(result, xml[[1]])
   result@baseURL <- CN_URI
   result@endpoint <- paste(result@baseURL, result@APIversion, sep="/")
   # Set the service URL fragment for the solr query engine
@@ -156,7 +156,7 @@ setGeneric("listFormats", function(cnode, ...) {
 setMethod("listFormats", signature("CNode"), function(cnode) {
   url <- paste(cnode@endpoint,"formats",sep="/")
   out <- GET(url, user_agent(get_user_agent()))
-  out <- xmlToList(content(out,as="parsed"))
+  out <- xmlToList(xmlParse(content(out,as="text")))
   ## Below could be done with plyr functionality, but I want to reduce
   ## dependencies in the package
   #df <- data.frame(matrix(NA,ncol=length(out[[1]]),nrow=(length(out)-1)))
@@ -217,7 +217,7 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
     return(NULL)
   }
   
-  result <- xmlToList(content(response,as="parsed"))
+  result <- xmlToList(xmlParse(content(response,as="text")))
   fmt <- list(name=result$formatName, type=result$formatType, id=result$formatId)
   # Add DataONE v2 types if present
   if(is.element("mediaType", names(result))) fmt["mediaType"] <- result[["mediaType"]]
@@ -289,7 +289,7 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
         return(NULL)
     }
     
-    xml <- content(response)
+    xml <- xmlParse(content(response, as="text"))
     #node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
     nodes <- getNodeSet(xml, "//node")
     nodelist <- sapply(nodes, D1Node)
@@ -478,7 +478,7 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
     }
     
     # Convert the response into a SystemMetadata object
-    sysmeta <- SystemMetadata(xmlRoot(content(response)))
+    sysmeta <- SystemMetadata(xmlRoot(xmlParse(content(response, as="text"))))
     
     return(sysmeta)
 })
@@ -541,7 +541,7 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
   #    <url>https://mn-demo-2.test.dataone.org/metacat/d1/mn/v2/object/urn:uuid:c4c610c9-460a-45a0-8039-6a50e149f8d6</url>
   #  </objectLocation>
   # </d1:objectLocationList>
-  out <- xmlToList(content(res,as="parsed"))
+  out <- xmlToList(xmlParse(content(res,as="text")))
   # For the parsed XML:
   #   Index 1 is the identifier we are resolving
   #   Index 2-n are the objectLocations
