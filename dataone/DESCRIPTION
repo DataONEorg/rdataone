@@ -49,5 +49,6 @@ Collate:
     'D1Client.R'
     'EMLParser.R'
     'dataone-package.R'
+    'yyy.R'
     'zzz.R'
 RoxygenNote: 5.0.1
