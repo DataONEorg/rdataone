@@ -24,20 +24,15 @@
 ##############################
 
 
-## Handler for Parsing Table Format Details from Metadata
-## 
-## @description
-## Implements methods to provide parsing instructions for asDataFrame.  
-## @details 
-## handles eml formats 2.0.0 through 2.1.1
-## 
-## @slot d1Object the metadata object 
-## @slot xmlDocRoot the xml representation of the metadata
-## @author rnahf
-## @import XML
-## @exportClass EMLParser
-setClass("EMLParser", contains="AbstractTableDescriber")
-##        contains="AbstractTableDescriber",
+#' @title Handler for Parsing Table Format Details from Metadata
+#' @description #' Implements methods to provide parsing instructions for asDataFrame.  
+#' @details  #' handles eml formats 2.0.0 through 2.1.1
+#' @slot d1Object the metadata object 
+#' @slot xmlDocRoot the xml representation of the metadata
+#' @author rnahf
+#' @import XML
+#' @export
+setClass("EMLParser", slots = c(d1Object = "D1Object", xmlDocRoot="XMLNode"), contains="AbstractTableDescriber")
 ##        prototype=prototype(new("AbstractTableDescriber")))
 
 
@@ -50,18 +45,23 @@ tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
 tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser" 
 tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser" 
 
-
-
 ##########################
 ## EMLParser constructors
 ##########################
 
-## generic
-setGeneric("EMLParser", function(d1Object, ...) { standardGeneric("EMLParser")} )
+#' Construct an EML parser object.
+#' @rdname EMLParser
+#' @param d1Object The D1Object to obtain data from.
+#' @param ... Additional parameters
+#' @export
+setGeneric("EMLParser", function(d1Object, ...) { 
+  .Deprecated("eml_read", "EML")
+  standardGeneric("EMLParser")} )
 
+#' @rdname EMLParser
+#' @export
 setMethod("EMLParser", signature("D1Object"), function(d1Object) {
-            
-    xmlDocRoot <- xmlRoot(xmlTreeParse(as.character(getData(d1Object))))  
+    xmlDocRoot <- xmlRoot(xmlTreeParse(as.character(getData(d1Object))))
     result <- new("EMLParser", d1Object=d1Object, xmlDocRoot=xmlDocRoot)
     return(result)
 })
@@ -71,19 +71,16 @@ setMethod("EMLParser", signature("D1Object"), function(d1Object) {
 ### Interface methods (that follow the generics)
 #########################################################
 
-
- 
-## @name documented.entityNames
-## @aliases documented.entityNames,-method
+#' @rdname documented.entityNames
+#' @aliases documented.entityNames
+#' @export
 setMethod("documented.entityNames", signature("EMLParser"), function(x) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			return(sapply(aList, function(x) xmlValue(x[["entityName"]])))
 		})
 
-
-
-## @name documented.d1Identifiers
-## @aliases documented.d1Identifiers,-method
+#' @rdname documented.d1Identifiers
+#' @aliases documented.d1Identifiers
 setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
    aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/distribution/online")
    return(sapply(aList, function(x) { 
@@ -91,20 +88,15 @@ setMethod("documented.d1Identifiers", signature("EMLParser"), function(x) {
 		}))
 })
 
-
-
-## @name documented.sizes
-## @aliases documented.sizes,-method
+#' @rdname documented.sizes
+#' @aliases documented.sizes
 setMethod("documented.sizes", signature("EMLParser"), function(x) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
     return(sapply(aList, function(x) xmlValue(x[["size"]])))
 })
 
-
-
-
-## @name data.formatFamily
-## @aliases data.formatFamily,-method
+#' @rdname data.formatFamily
+#' @aliases data.formatFamily
 setMethod("data.formatFamily", signature("EMLParser", "numeric"), function(x, index) {
     aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
     bList <- getNodeSet(aList[[index]], "//dataTable/physical/dataFormat/textFormat/simpleDelimited")
@@ -126,35 +118,37 @@ setMethod("data.formatFamily", signature("EMLParser", "numeric"), function(x, in
     return(format)
 })
 
+#' @rdname data.tableFieldDelimiter
+#' @aliases data.tableFieldDelimiter
 setMethod("data.tableFieldDelimiter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["fieldDelimiter"]])))
         })
 
-
-
+#' @rdname data.tableQuoteCharacter
+#' @aliases data.tableQuoteCharacter
 setMethod("data.tableQuoteCharacter", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat/simpleDelimited")
             return(sapply(aList, function(x) xmlValue(x[["quoteCharacter"]])))
         })
 
-
-
-
+#' @rdname data.characterEncoding
+#' @aliases data.characterEncoding
 setMethod("data.characterEncoding", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical")
             return(sapply(aList, function(x) xmlValue(x[["characterEncoding"]])))
         })
 
-
- 
+#' @rdname data.tableAttributeOrientation 
+#' @aliases data.tableAttributeOrientation
 setMethod("data.tableAttributeOrientation", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
 			return( sapply(aList, function(x) xmlValue(x[["attributeOrientation"]]))[index])
 		})
 
 
- 
+#' @rdname data.tableSkipLinesHeader 
+#' @aliases data.tableSkipLinesHeader
 setMethod("data.tableSkipLinesHeader", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable/physical/dataFormat/textFormat")
 			result <- sapply(aList, function(x) { 
@@ -163,9 +157,10 @@ setMethod("data.tableSkipLinesHeader", signature("EMLParser", "numeric"), functi
 					})
 		})
 
-
 #########  EML-attribute items
 ##
+#' @rdname data.tableMissingValueCodes
+#' @aliases data.tableMissingValueCodes
 setMethod("data.tableMissingValueCodes", signature("EMLParser", "numeric"), function(x, index) {
             aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
             bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -173,7 +168,8 @@ setMethod("data.tableMissingValueCodes", signature("EMLParser", "numeric"), func
             return(sapply(bList, function(x) xmlValue(x[["missingValueCode"]]$code)))
         })
 
-##
+#' @rdname data.tableAttributeNames
+#' @aliases data.tableAttributeNames
 setMethod("data.tableAttributeNames", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -181,7 +177,8 @@ setMethod("data.tableAttributeNames", signature("EMLParser", "numeric"), functio
 			return(sapply(bList, function(x) xmlValue(x[["attributeName"]])))
 		})
 
-##
+#' @rdname data.tableAttributeTypes
+#' @aliases data.tableAttributeTypes
 setMethod("data.tableAttributeTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")
@@ -189,8 +186,8 @@ setMethod("data.tableAttributeTypes", signature("EMLParser", "numeric"), functio
 			return(sapply(bList, function(x) xmlName(xmlChildren(x[["measurementScale"]])[[1]])))
 		})
 
-
-##
+#' @rdname data.tableAttributeStorageTypes
+#' @aliases data.tableAttributeStorageTypes
 setMethod("data.tableAttributeStorageTypes", signature("EMLParser", "numeric"), function(x, index) {
 			aList <- getNodeSet(x@xmlDocRoot,"//dataset/dataTable")
 			bList <- getNodeSet(aList[[index]],"//attributeList/attribute")

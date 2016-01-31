@@ -66,9 +66,6 @@ setGeneric("D1Object", function(...) {
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @aliases D1Object-initialize
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId=as.character(NA)) {
-  msg <- sprintf("'D1Object' is deprecated.\nUse 'datapackage:DataObject' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  d1oSig <- sprintf("new(\"D1Object\", id, data, format, mnNodeId)")
-  .Deprecated("DataObject", package="datapackage", msg, d1oSig)
   # Write the incoming data to disk and create the DataObject with this file
   
   if(format == "text/csv") {
