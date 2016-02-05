@@ -36,7 +36,7 @@ The following example queries DataONE and returns values in an R list, with each
 ```{r,eval=F}
 library(dataone)
 cn <- CNode("PROD")
-queryParamList <- list(q="id:doi*", rows="2", fq="abstract:chlorophyll", fl="id,title,dateUploaded,abstract,datasource,size")
+queryParamList <- list(q="id:doi*", rows="5", fq="abstract:carbon", fl="id,title,dateUploaded,abstract,datasource,size")
 result <- query(cn, solrQuery=queryParamList, as="list")
 ```
 
@@ -45,7 +45,7 @@ for one dataset. Each returned attribute for a dataset can be accessed with the 
 access the title information of the first dataset returned, use the R statement:
 
 ```{r,eval=F}
-result[[1]]$title)
+result[[1]]$title
 ```
 
 To print out selected information for all returned values, use:
@@ -60,8 +60,11 @@ ids <- lapply(result, function(x) {
 })
 ```
   
-The complete list of possible values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v1/query/solr). However,
+The complete list of possible searchable values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v1/query/solr). However,
 the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
+
+The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
+As the above example shows, sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
 
 ### Return values as a data frame
 To return results as a data frame, use the `as` parameter as shown below. In addition all values will be stored as `character`, because `parse=FALSE` is specified:
@@ -95,26 +98,8 @@ being used. These names can be determined using the *queryEngineDescription* met
 navigating a web browser to the appropriate link. For the example above, the query engine
 description can be found at https://knb.ecoinformatics.org/knb/d1/mn/v1/query/solr.
 
-## Search the entire DataONE network
-
-The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
-Sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
-The search may be limited to the data holdings of a particular MN by either specifying the "datasource"
-search term in the query send to the CN, or by just sending the query to the MN of interest.
-
-The following query shows how to query the entire DataONE network and locate and download data from 
-any MN that has the desired data.
-```{r,eval=F}
-library(dataone)
-cn <- CNode("PROD")
-# Ask for the id, title and abstract
-queryParams <- list(q="abstract:kelp", fq="attribute:abundance", fq="formatType:DATA", fl="id,title,abstract") 
-result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
-```
-
-
 ## Search just a member node
-If it is known which Member Node holds the data of interest, then the search can be limited to just that
+If it is known which Member Node holds the data of interest, then a search can be limited to just that
 MN by sending the search directly to that MN instead of the CN. For example, if the dataset of interest
 is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statments:
     

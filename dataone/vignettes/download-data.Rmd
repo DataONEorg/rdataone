@@ -97,9 +97,9 @@ metadataXML <- rawToChar(bytes)
 ```
 The following functions are available to extract information from the DataObject:
 
-- getIdentifier(obj)
-- getFormatId(obj)
-- getData(obj)
+- getIdentifier(obj) : Get the identifier (PID) of a DataObject
+- getFormatId(obj) : Get the format type of a DataObject, e.g. "text/csv"
+- getData(obj) : Get the data contents of the DataObject
 
 For example, to extract the data byes from the DataObject:
 ```{r, eval=FALSE}
