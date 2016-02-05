@@ -1,4 +1,4 @@
-## dataone
+## dataone: R interface to the DataONE REST API
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/web/packages/dataone)
 
 - **Author**: Matthew B. Jones and Peter Slaughter ([NCEAS](http://www.nceas.ucsb.edu))
