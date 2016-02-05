@@ -2,16 +2,16 @@ Package: dataone
 Version: 1.1.0.9006
 Date: 2015-12-15
 Title: R interface to the DataONE REST API
-Authors@R: c( person("Matthew", "Jones", role = c("aut", "cre"), email =
-    "jones@nceas.ucsb.edu"), person("Rob", "Nahf", role = "aut", email =
-    "rnahf@unm.edu"), person("Chris", "Jones", role = "aut", email =
-    "cjones@nceas.ucsb.edu"), person("Carl", "Boettiger", role = "aut", email =
-    "cboettig@gmail.com"), person("Lauren", "Walker", role = "aut", email =
-    "walker@nceas.ucsb.edu"), person("Scott", "Chamberlain", role = "aut",
-    email = "myrmecocystus@gmail.com"), person("Edmund", "Hart", role = "aut",
-    email = "edmund.m.hart@gmail.com"), person("Jordan", "Read", role = "aut",
-    email = "jread@usgs.gov"), person("Peter", "Slaughter", role = "aut",
-    email = "slaughter@nceas.ucsb.edu"))
+Authors@R: c( 
+  person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
+  person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
+  person("Rob", "Nahf", role = "aut", email = "rnahf@unm.edu"), 
+  person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com"), 
+  person("Chris", "Jones", role = "aut", email = "cjones@nceas.ucsb.edu"), 
+  person("Jordan", "Read", role = "aut", email = "jread@usgs.gov"),
+  person("Lauren", "Walker", role = "aut", email = "walker@nceas.ucsb.edu"), 
+  person("Edmund", "Hart", role = "aut", email = "edmund.m.hart@gmail.com"), 
+  person("Scott", "Chamberlain", role = "aut", email = "myrmecocystus@gmail.com")) 
 VignetteBuilder: knitr
 Description: A package that provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
