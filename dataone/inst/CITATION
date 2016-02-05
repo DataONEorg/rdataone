@@ -1,0 +1,21 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+title <- meta$Title
+authors <-  c( 
+  person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
+  person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
+  person("Rob", "Nahf", role = "aut", email = "rnahf@unm.edu"), 
+  person("Chris", "Jones", role = "aut", email = "cjones@nceas.ucsb.edu"), 
+  person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com"), 
+  person("Lauren", "Walker", role = "aut", email = "walker@nceas.ucsb.edu"), 
+  person("Lauren", "Hallett", role = "aut", email="lauren.m.hallett@gmail.com"),
+  person("Scott", "Chamberlain", role = "aut", email = "myrmecocystus@gmail.com"), 
+  person("Edmund", "Hart", role = "aut", email = "edmund.m.hart@gmail.com"), 
+  person("Jordan", "Read", role = "aut", email = "jread@usgs.gov")) 
+bibentry(bibtype = "Manual",
+         title = paste0("{redland}: ", title),
+         author = authors,
+         year = year,
+         note = note,
+         url = "http://github.com/DataONEorg/rdataone",
+         doi = "10.5063/F1M61H5X")
