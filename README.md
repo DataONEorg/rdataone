@@ -2,6 +2,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/web/packages/dataone)
 
 - **Author**: Matthew B. Jones and Peter Slaughter ([NCEAS](http://www.nceas.ucsb.edu))
+- [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
 - **License**: [Apache 2](http://opensource.org/licenses/Apache-2.0)
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
@@ -133,5 +134,13 @@ uploadDataObject(d1c, d1Object, public=TRUE)
 ```
 
 Note that this example uploads a data file to the DataONE test environment "STAGING" and not the production environment ("PROD").
+
+## Acknowledgements
+Work on this package was supported by:
+
+- NSF-ABI grant #1262458 to C. Gries, M. Jones, and S. Collins.
+- NSF-DATANET grants #0830944 and #1430508 to W. Michener, M. Jones, D. Vieglais, S. Allard and P. Cruse
+
+Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
 [![nceas_footer](https://www.nceas.ucsb.edu/files/newLogo_0.png)](http://www.nceas.ucsb.edu)
