@@ -193,7 +193,7 @@ test_that("D1Client uploadDataPackage works", {
     insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
     
     # Upload the data package to DataONE    
-    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
+    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules, quiet=F)
     expect_true(!is.null(resourceMapId))
     
     # Now test if the package members can be uploaded a second time. uploadDataObject should test the sysmeta@dataUploaded of each object
