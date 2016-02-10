@@ -253,16 +253,23 @@ setMethod("getQueryEngineDescription", signature("D1Node", "character"), functio
   url <- paste(node@endpoint, "query", queryEngineName, sep="/")
   # Send the request
   response<-GET(url)
+  if(response$status != "200") {
+    warning(sprintf("Error getting query engine description %s\n", getErrorDescription(response)))
+    return(list())
+  }
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
   } else {
-    resultText <- content(response, as="text")
-  }
-  
-  if(response$status != "200") {
-      warning(sprintf("Error getting query engine description %s\n", getErrorDescription(response)))
-      return(list())
+    # Use charset 'utf-8' if not specified in response headers
+    charset <- "utf-8"
+    if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+    } 
+    resultText <- content(response, as="text", encoding=charset)
   }
   
   xml <- xmlParse(resultText)
@@ -410,7 +417,14 @@ setMethod("listObjects", signature("D1Node"), function(node,
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
   } else {
-    resultText <- content(response, as="text")
+    charset <- "utf-8"
+    if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+    }  
+    resultText <- content(response, as="text", encoding=charset)
   }
   
   # Parse the returned XML into a list
@@ -445,7 +459,14 @@ setMethod("listQueryEngines", signature("D1Node"), function(node) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
   } else {
-    resultText <- content(response, as="text")
+    charset <- "utf-8"
+    if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+    }  
+    resultText <- content(response, as="text", encoding=charset)
   }
   
   # Parse the returned XML into a list
@@ -572,10 +593,16 @@ d1_errors <- function(x){
 getErrorDescription <- function(response) {
   # Return NA if no error message found
   errorMsg <- as.character(NA)
-  #responseContent <- content(response, as="parsed")
-  responseContent <- content(response, as="text")
+  charset <- "utf-8"
+  if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+  }
+  
+  responseContent <- content(response, as="text", encoding=charset)
   # DataONE services return XML
-  headers(response)[['content-type']]
   if (grepl(headers(response)[['content-type']], "text/xml")) {
      msgNode <- getNodeSet(xmlParse(responseContent), "/error/description")
      if (length(msgNode) > 0) {

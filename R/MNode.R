@@ -171,15 +171,25 @@ setGeneric("getCapabilities", function(mnode, ...) {
 
 #' @rdname getCapabilities
 setMethod("getCapabilities", signature("MNode"), function(mnode) {
-    url <- paste(mnode@endpoint, "node", sep="/")
-    # Don't need privileged access, so call GET directly vs auth_get
-    
-    response <- GET(url, user_agent(get_user_agent()))
-    if(response$status != "200") {
-        stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
-    }
-    xml <- xmlParse(content(response, as="text"))
-    return(xml)
+  url <- paste(mnode@endpoint, "node", sep="/")
+  # Don't need privileged access, so call GET directly vs auth_get
+  
+  response <- GET(url, user_agent(get_user_agent()))
+  # Use charset 'utf-8' if not specified in response headers
+  charset <- "utf-8"
+  if(response$status != "200") {
+    stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
+  } else {
+    if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+    } 
+  }
+  
+  xml <- xmlParse(content(response, as="text", encoding=charset))
+  return(xml)
 })
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
@@ -218,14 +228,23 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
     url <- paste(node@endpoint, "meta", pid, sep="/")
 
     response <- auth_get(url, node=node)
-
+    
+    # Use charset 'utf-8' if not specified in response headers
+    charset <- "utf-8"
     if(response$status != "200") {
       warning(sprintf("Error getting SystemMetadata: %s\n", getErrorDescription(response)))
         return(NULL)
+    } else {
+      if("content-type" %in% names(response$headers)) {
+        media <- parse_media(response$headers[['content-type']])
+        if("params" %in% names(media) && "charset" %in% names(media$params)) {
+          charset <- media$params$charset
+        }
+      } 
     }
     
     # Convert the response into a SystemMetadata object
-    sysmeta <- SystemMetadata(xmlRoot(xmlParse(content(response, as="text"))))
+    sysmeta <- SystemMetadata(xmlRoot(xmlParse(content(response, as="text", encoding=charset))))
     return(sysmeta)
 })
 
@@ -251,7 +270,15 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
   } else {
-    resultText <- content(response, as="text")
+    # Use charset 'utf-8' if not specified in response headers
+    charset <- "utf-8"
+    if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+        charset <- media$params$charset
+      }
+    } 
+    resultText <- content(response, as="text", encoding=charset)
   }
   
   checksum<-(xmlToList(xmlParse(resultText)))
@@ -334,11 +361,19 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, file, 
                 body=list(pid=pid, object=upload_file(file),
                 sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
     
+    # Use charset 'utf-8' if not specified in response headers
+    charset <- "utf-8"
     if(response$status != "200") {
         #d1_errors(response)
         stop(sprintf("Error creating %s: %s\n", pid, getErrorDescription(response)))
     } else {
-        return(xmlParse(content(response, as="text")))
+      if("content-type" %in% names(response$headers)) {
+        media <- parse_media(response$headers[['content-type']])
+        if("params" %in% names(media) && "charset" %in% names(media$params)) {
+          charset <- media$params$charset
+        }
+      } 
+      return(xmlParse(content(response, as="text", encoding=charset)))
     }
 })
 
@@ -406,7 +441,15 @@ setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, 
         #d1_errors(response)
         stop(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
     } else {
-        return(xmlParse(content(response, as="text")))
+        # Use charset 'utf-8' if not specified in response headers
+        charset <- "utf-8"
+        if("content-type" %in% names(response$headers)) {
+          media <- parse_media(response$headers[['content-type']])
+          if("params" %in% names(media) && "charset" %in% names(media$params)) {
+            charset <- media$params$charset
+          }
+        } 
+        return(xmlParse(content(response, as="text", encoding=charset)))
     }
 })
 
@@ -509,13 +552,21 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
+    
     response <- auth_post(url=url,  encode="multipart", body=body, node=mnode)
+    charset <- "utf-8"
     if(response$status != "200") {
         stop(sprintf("Error generating ID of type %s: %s\n", scheme, getErrorDescription(response)))
+    } else {
+      if("content-type" %in% names(response$headers)) {
+        media <- parse_media(response$headers[['content-type']])
+        if("params" %in% names(media) && "charset" %in% names(media$params)) {
+          charset <- media$params$charset
+        }
+      } 
     }
-    
     # extract the identifier as a character string from the XML response
-    xml <- xmlParse(content(response, as="text"))
+    xml <- xmlParse(content(response, as="text", encoding=charset))
     new_identifier <- xmlValue(xmlRoot(xml))
     return(new_identifier)
 })
