@@ -126,7 +126,7 @@ test_that("MNode create(), updateObject(), archive()", {
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if (authValid) {
       if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      user <- getAuthSubject(am, mn)
+      user <- dataone:::getAuthSubject(am, mn)
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
       expect_that(cname, matches("character"))
@@ -281,14 +281,14 @@ test_that("updateSystemMetadata() works",{
   suppressWarnings(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    subject <- getAuthSubject(am, d1c@mn)
+    subject <- dataone:::getAuthSubject(am, d1c@mn)
     do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
     # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
     uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
     id1 <- getIdentifier(do1)
     md1 <- getSystemMetadata(d1c@mn, id1)
     expect_false(is.null(md1))
-    id <- "uid=slaughter,o=NCEAS,dc=ecoinformatics,dc=org"
+    id <- "uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org"
     md1 <- addAccessRule(md1, id, "read")
     expect_true(updateSystemMetadata(d1c@mn, md1@identifier, md1))
     md1New  <- getSystemMetadata(d1c@mn, id1)
