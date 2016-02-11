@@ -589,8 +589,11 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
         } else {
           fn <- as.character(NA)
         }
-        if(!quiet) cat(sprintf("Uploading data object to %s with id: %s, filename: %s, size: %s bytes\n", 
+        if(!quiet) {
+          cat(sprintf("Uploading data object to %s with id: %s, filename: %s, size: %s bytes\n", 
                                x@mn@endpoint, doId, fn, format(do@sysmeta@size, scientific=FALSE)))
+          flush.console()
+        }
         returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
         if(!is.null(returnId)) {
           if(!quiet) cat(sprintf("Uploaded identifier: %s\n", returnId))
