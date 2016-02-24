@@ -14,7 +14,7 @@ test_that("CNode object index query works with query list param", {
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
-  cn <- CNode("STAGING2")  
+  cn <- CNode("STAGING")  
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, cn))
   if (authValid) {
@@ -34,7 +34,7 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
   expect_is(result[[1]]$size, "numeric")
-  expect_match(result[[1]]$abstract, "chlorophyll")
+  expect_match(result[[1]]$abstract, "Chlorophyll")
   
   # Test a query that contains embedded quotes
   queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
@@ -122,7 +122,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
 test_that("CNode object index query works with query string param", {
   library(dataone)
   
-  cn <- CNode("STAGING2")
+  cn <- CNode("STAGING")
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, cn))
   if (authValid) {
