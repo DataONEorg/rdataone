@@ -171,7 +171,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @return boolean TRUE if the subject has read permission, or FALSE otherwise
 #' @rdname canRead
 #' @export
-setMethod("canRead", signature("D1Object", "character"), function(x, subject) {
+setMethod("canRead", signature("D1Object"), function(x, subject) {
   msg <- sprintf("'canRead' is deprecated.\nUse 'datapackage:canRead' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("canRead(x)")
   .Deprecated("canRead", package="datapackage", msg, methodSig) 
