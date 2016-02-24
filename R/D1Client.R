@@ -304,14 +304,14 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-setGeneric("d1IdentifierSearch", function(x, solrQuery) {
+setGeneric("d1IdentifierSearch", function(x) {
   .Deprecated("query", "dataone")
     standardGeneric("d1IdentifierSearch")    
 })
 
 #' @rdname d1IdentifierSearch
 #' @export
-setMethod("d1IdentifierSearch", signature("D1Client", "character"), function(x, solrQuery) {
+setMethod("d1IdentifierSearch", signature("D1Client"), function(x, solrQuery) {
   # TODO: Check if this is still true: Empirical testing shows that prepending the 'fl' and 'wt' fields effectively 
   # negates any other fl or wr values that might be part of the passed in solrQuery
   # (need to do this for parsing the reponse)
