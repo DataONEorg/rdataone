@@ -329,7 +329,7 @@ test_that("D1Client d1IdentifierSearch works", {
   }
 })
 
-test_that("D1Client createDataPackage works", {
+test_that("D1Client uploadDeataPackage works", {
   skip_on_cran()
   library(dataone)
   library(datapackage)
@@ -355,20 +355,20 @@ test_that("D1Client createDataPackage works", {
     emlChar <- readLines(emlFile)
     emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
     emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
-    suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
-    expect_that(metadataObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    suppressWarnings(metadataObj <- new("DataObject", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
+    expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
     suppressWarnings(addData(dp, metadataObj))
-    expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
+    expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
     sdf <- read.csv(csvfile)
     # Create DataObject for the science data 
     suppressWarnings(stf <- charToRaw(convert.csv(d1c, sdf)))
     sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
-    suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
+    suppressWarnings(sciObj <- new("DataObject", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
     suppressWarnings(addData(dp, sciObj, metadataObj))
-    expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
+    expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
    
     # Upload the data package to DataONE    
     suppressWarnings(resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE))
