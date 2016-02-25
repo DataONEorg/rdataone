@@ -152,12 +152,12 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' # Now for demonstration purposes, archive the object
 #' archivedId <- archive(mn, newid)
 #' }
-setGeneric("archive", function(node, pid, ...) {
+setGeneric("archive", function(node, ...) {
   standardGeneric("archive")
 })
 
 #' @rdname archive
-setMethod("archive", signature("D1Node", "character"), function(node, pid) {
+setMethod("archive", signature("D1Node"), function(node, pid) {
     url <- paste(node@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
     response <- auth_put(url, node=node)
     if(response$status != "200") {
@@ -196,7 +196,7 @@ setMethod("archive", signature("D1Node", "character"), function(node, pid) {
 #' obj <- getObject(mn, pid)
 #' df <- read.csv(text=rawToChar(obj))
 #' }
-setGeneric("getObject", function(node, pid, ...) {
+setGeneric("getObject", function(node, ...) {
   standardGeneric("getObject")
 })
 
@@ -221,7 +221,7 @@ setGeneric("getObject", function(node, pid, ...) {
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(mn, pid)
 #' }
-setGeneric("getChecksum", function(node, pid, ...) {
+setGeneric("getChecksum", function(node, ...) {
   standardGeneric("getChecksum")
 })
 
@@ -242,13 +242,13 @@ setGeneric("getChecksum", function(node, pid, ...) {
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' head(engineDesc$queryFields, n=3L)
 #' }
-setGeneric("getQueryEngineDescription", function(node, queryEngineName) {
+setGeneric("getQueryEngineDescription", function(node, ...) {
   standardGeneric("getQueryEngineDescription")
 })
 
 #' @rdname getQueryEngineDescription
 #' @export
-setMethod("getQueryEngineDescription", signature("D1Node", "character"), function(node, queryEngineName) {
+setMethod("getQueryEngineDescription", signature("D1Node"), function(node, queryEngineName) {
   
   url <- paste(node@endpoint, "query", queryEngineName, sep="/")
   # Send the request
@@ -316,7 +316,7 @@ setMethod("getQueryEngineDescription", signature("D1Node", "character"), functio
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' sysmeta <- getSystemMetadata(mn, pid)
 #' }
-setGeneric("getSystemMetadata", function(node, pid, ...) {
+setGeneric("getSystemMetadata", function(node, ...) {
   standardGeneric("getSystemMetadata")
 })
 
@@ -340,7 +340,7 @@ setGeneric("getSystemMetadata", function(node, pid, ...) {
 #' describe(mn, "adfadf") # warning message when wrong pid
 #' }
 #' @export
-setGeneric("describe", function(node, pid, ...) {
+setGeneric("describe", function(node, ...) {
   standardGeneric("describe")
 })
 
@@ -487,14 +487,15 @@ setMethod("listQueryEngines", signature("D1Node"), function(node) {
 #' @param ... (not yet used)
 #' @return The Node object with modified capabilities properties from the XML
 ## @export
-setGeneric("parseCapabilities", function(node, xml, ...) {
+setGeneric("parseCapabilities", function(node, ...) {
   standardGeneric("parseCapabilities")
 })
 
 #' @rdname parseCapabilities
 ## @export
-setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), function(node, xml) {
+setMethod("parseCapabilities", signature("D1Node"), function(node, xml) {
   
+  stopifnot(is.element("XMLInternalElementNode", class(xml)))
   # Parse the rest of the node information
   node@identifier <- xmlValue(xml[["identifier"]])
   node@name <- xmlValue(xml[["name"]])
@@ -531,6 +532,7 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
 
 #' Test if a node is online and accepting DataONE requests
 #' @param node The CNode or MNode to check
+#' @param ... (Not yet used)
 #' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @rdname ping
 #' @aliases ping
@@ -542,7 +544,7 @@ setMethod("parseCapabilities", signature("D1Node", "XMLInternalElementNode"), fu
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' isAlive <- ping(mn)
 #' }
-setGeneric("ping", function(node) {
+setGeneric("ping", function(node, ...) {
   standardGeneric("ping")
 })
 
