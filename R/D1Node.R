@@ -125,7 +125,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 #' For DataONE Version 2.0, an authentication token can also be used for authentication. 
 #' Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
-#' @param node The MNode or CNode instance on which the object will be created
+#' @param x The MNode or CNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used)
 #' @return The pid that was archived if successful, otherwise NULL
@@ -152,14 +152,14 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' # Now for demonstration purposes, archive the object
 #' archivedId <- archive(mn, newid)
 #' }
-setGeneric("archive", function(node, ...) {
+setGeneric("archive", function(x, ...) {
   standardGeneric("archive")
 })
 
 #' @rdname archive
-setMethod("archive", signature("D1Node"), function(node, pid) {
-    url <- paste(node@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
-    response <- auth_put(url, node=node)
+setMethod("archive", signature("D1Node"), function(x, pid) {
+    url <- paste(x@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
+    response <- auth_put(url, node=x)
     if(response$status != "200") {
         warning(sprintf("Error archiving %s\n", pid))
         return(NULL)
@@ -179,7 +179,7 @@ setMethod("archive", signature("D1Node"), function(node, pid) {
 #' Get the bytes associated with an object on this Node.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
 #' present in the default location of the file system, in which case the access will be authenticated.
-#' @param node The Node instance from which the pid will be downloaded
+#' @param x The Node instance from which the pid will be downloaded
 #' @param pid The identifier of the object to be downloaded
 #' @param ... (Not yet used).
 #' @rdname getObject
@@ -196,7 +196,7 @@ setMethod("archive", signature("D1Node"), function(node, pid) {
 #' obj <- getObject(mn, pid)
 #' df <- read.csv(text=rawToChar(obj))
 #' }
-setGeneric("getObject", function(node, ...) {
+setGeneric("getObject", function(x, ...) {
   standardGeneric("getObject")
 })
 
@@ -207,7 +207,7 @@ setGeneric("getObject", function(node, ...) {
 #' the checksum from the specified coordinating node
 #' @rdname getChecksum
 #' @aliases getChecksum
-#' @param node The CNode instance from which the checksum will be retrieved
+#' @param x The CNode instance from which the checksum will be retrieved
 #' @param pid The identifier of the object
 #' @param ... (Not yet used)
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
@@ -221,12 +221,13 @@ setGeneric("getObject", function(node, ...) {
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(mn, pid)
 #' }
-setGeneric("getChecksum", function(node, ...) {
+setGeneric("getChecksum", function(x, ...) {
   standardGeneric("getChecksum")
 })
 
 #' Query a node for the list of query engines available on the node
-#' @param node The CNode or MNode to query
+#' @param x The CNode or MNode to query
+#' @param ... (Additional arguments - not yet used.)
 #' @param queryEngineName The query engine name to get a description for.
 #' @return list The query engine description
 #' @rdname getQueryEngineDescription
@@ -242,15 +243,15 @@ setGeneric("getChecksum", function(node, ...) {
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' head(engineDesc$queryFields, n=3L)
 #' }
-setGeneric("getQueryEngineDescription", function(node, ...) {
+setGeneric("getQueryEngineDescription", function(x, ...) {
   standardGeneric("getQueryEngineDescription")
 })
 
 #' @rdname getQueryEngineDescription
 #' @export
-setMethod("getQueryEngineDescription", signature("D1Node"), function(node, queryEngineName) {
+setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEngineName) {
   
-  url <- paste(node@endpoint, "query", queryEngineName, sep="/")
+  url <- paste(x@endpoint, "query", queryEngineName, sep="/")
   # Send the request
   response<-GET(url)
   if(response$status != "200") {
@@ -302,7 +303,7 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(node, query
 #' level details about the object.
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
 #' present in the default location of the file system, in which case the access will be authenticated.
-#' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @param x The Node instance from which the SystemMetadata will be downloaded
 #' @param pid The identifier of the object
 #' @param ... (Not yet used.)
 #' @return SystemMetadata for the object
@@ -316,14 +317,14 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(node, query
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' sysmeta <- getSystemMetadata(mn, pid)
 #' }
-setGeneric("getSystemMetadata", function(node, ...) {
+setGeneric("getSystemMetadata", function(x, ...) {
   standardGeneric("getSystemMetadata")
 })
 
 #' Efficiently get systemmetadat for an object.
 #' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
 #' determine basic properties of the referenced object.
-#' @param node The MNode instance from which the identifier will be generated
+#' @param x The MNode instance from which the identifier will be generated
 #' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
 #' part of the URL path and must be escaped accordingly.
 #' @param ... (Not yet used)
@@ -340,14 +341,14 @@ setGeneric("getSystemMetadata", function(node, ...) {
 #' describe(mn, "adfadf") # warning message when wrong pid
 #' }
 #' @export
-setGeneric("describe", function(node, ...) {
+setGeneric("describe", function(x, ...) {
   standardGeneric("describe")
 })
 
 #' Retrieve the list of objects that match the search parameters
 #' @details The list of objects that is returned is paged according to the \code{'start'} and
 #' \code{'count'} values, so that large result sets can be returned over multiple calls.
-#' @param node The Node instance from which the SystemMetadata will be downloaded
+#' @param x The Node instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @rdname listObjects
 #' @aliases listObjects
@@ -367,7 +368,7 @@ setGeneric("describe", function(node, ...) {
 #' # Inspect id of first object 
 #' objects[1]$objectInfo$identifier
 #' }
-setGeneric("listObjects", function(node, ...) {
+setGeneric("listObjects", function(x, ...) {
   standardGeneric("listObjects")
 })
 
@@ -384,7 +385,7 @@ setGeneric("listObjects", function(node, ...) {
 #' @import parsedate
 #' @export
 #' @rdname listObjects
-setMethod("listObjects", signature("D1Node"), function(node, 
+setMethod("listObjects", signature("D1Node"), function(x, 
                                                       fromDate=as.character(NA), toDate=as.character(NA),
                                                       formatId=as.character(NA), replicaStatus=as.logical(TRUE), 
                                                       start=as.integer(0), count=as.integer(1000)) {
@@ -410,7 +411,7 @@ setMethod("listObjects", signature("D1Node"), function(node,
   params <- c(params, start=as.character(start))
   params <- c(params, count=as.character(count))
   
-  url <- paste(node@endpoint, "object", sep="/")
+  url <- paste(x@endpoint, "object", sep="/")
   # Send the request
   response<-GET(url, query=params)
   if (is.raw(response$content)) {
@@ -433,7 +434,7 @@ setMethod("listObjects", signature("D1Node"), function(node,
 })
 
 #' Query a node for the list of query engines available on the node
-#' @param node The CNode or MNode to list the query engines for.
+#' @param x The CNode or MNode to list the query engines for.
 #' @param ... (Not yet used.)
 #' @return list The list of query engines.
 #' @rdname listQueryEngines
@@ -444,15 +445,15 @@ setMethod("listObjects", signature("D1Node"), function(node,
 #' cn <- CNode("STAGING")
 #' engines <- listQueryEngines(cn)
 #' }
-setGeneric("listQueryEngines", function(node, ...) {
+setGeneric("listQueryEngines", function(x, ...) {
   standardGeneric("listQueryEngines")
 })
 
 #' @rdname listQueryEngines
 #' @export
-setMethod("listQueryEngines", signature("D1Node"), function(node) {
+setMethod("listQueryEngines", signature("D1Node"), function(x) {
   
-  url <- paste(node@endpoint, "query", sep="/")
+  url <- paste(x@endpoint, "query", sep="/")
   # Send the request
   response<-GET(url)
   if (is.raw(response$content)) {
@@ -482,31 +483,31 @@ setMethod("listQueryEngines", signature("D1Node"), function(node) {
 })
 
 #' Construct a Node, using a passed in capabilities XML
-#' @param node The node to which capabilities should be applied.
+#' @param x The node to which capabilities should be applied.
 #' @param xml The XML capabilities representing the node to be created
 #' @param ... (not yet used)
 #' @return The Node object with modified capabilities properties from the XML
 ## @export
-setGeneric("parseCapabilities", function(node, ...) {
+setGeneric("parseCapabilities", function(x, ...) {
   standardGeneric("parseCapabilities")
 })
 
 #' @rdname parseCapabilities
 ## @export
-setMethod("parseCapabilities", signature("D1Node"), function(node, xml) {
+setMethod("parseCapabilities", signature("D1Node"), function(x, xml) {
   
   stopifnot(is.element("XMLInternalElementNode", class(xml)))
   # Parse the rest of the node information
-  node@identifier <- xmlValue(xml[["identifier"]])
-  node@name <- xmlValue(xml[["name"]])
-  node@description <- xmlValue(xml[["description"]])
-  node@baseURL <- xmlValue(xml[["baseURL"]])
-  node@subject <- xmlValue(xml[["subject"]])
-  node@contactSubject <- xmlValue(xml[["contactSubject"]])
+  x@identifier <- xmlValue(xml[["identifier"]])
+  x@name <- xmlValue(xml[["name"]])
+  x@description <- xmlValue(xml[["description"]])
+  x@baseURL <- xmlValue(xml[["baseURL"]])
+  x@subject <- xmlValue(xml[["subject"]])
+  x@contactSubject <- xmlValue(xml[["contactSubject"]])
   attrs <- xmlAttrs(xml)
-  node@replicate <- attrs[["replicate"]]
-  node@type <- attrs[["type"]]
-  node@state <- attrs[["state"]]
+  x@replicate <- attrs[["replicate"]]
+  x@type <- attrs[["type"]]
+  x@state <- attrs[["state"]]
   # Store the available services for this node in a data.frame
   services <- data.frame(name=character(), version=character(), available=character(), row.names=NULL, stringsAsFactors=FALSE)
   hasServices <- xmlToList(xml[['services']])
@@ -515,9 +516,9 @@ setMethod("parseCapabilities", signature("D1Node"), function(node, xml) {
     services <- rbind(services, data.frame(name=thisService[['name']], version=thisService[['version']], 
                                            available=thisService[['available']], row.names=NULL, stringsAsFactors=FALSE))
   }
-  node@services <- services
+  x@services <- services
   # Set the node API version based on MNCore (tier 1)
-  coreServices <- node@services[grepl("NCore", node@services$name) & node@services$version > "v1" & node@services$available=="true",]
+  coreServices <- x@services[grepl("NCore", x@services$name) & x@services$version > "v1" & x@services$available=="true",]
   serviceVersion <- "v1"
   if(nrow(coreServices) > 0) {
     for (i in 1:nrow(coreServices)) {
@@ -526,12 +527,12 @@ setMethod("parseCapabilities", signature("D1Node"), function(node, xml) {
       if (thisVersion > serviceVersion) serviceVersion <- thisVersion
     }
   }
-  node@APIversion <- serviceVersion
-  return(node)
+  x@APIversion <- serviceVersion
+  return(x)
 })
 
 #' Test if a node is online and accepting DataONE requests
-#' @param node The CNode or MNode to check
+#' @param x The CNode or MNode to check
 #' @param ... (Not yet used)
 #' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @rdname ping
@@ -544,15 +545,15 @@ setMethod("parseCapabilities", signature("D1Node"), function(node, xml) {
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' isAlive <- ping(mn)
 #' }
-setGeneric("ping", function(node, ...) {
+setGeneric("ping", function(x, ...) {
   standardGeneric("ping")
 })
 
 #' @rdname ping
 #' @export
-setMethod("ping", signature("D1Node"), function(node) {
+setMethod("ping", signature("D1Node"), function(x) {
   
-  url <- paste(node@endpoint, "monitor/ping", sep="/")
+  url <- paste(x@endpoint, "monitor/ping", sep="/")
   # Send the request
   response<-GET(url)
 
@@ -626,19 +627,19 @@ getErrorDescription <- function(response) {
 #' Encode the input for Solr Queries
 #' @description Treating all special characters and spaces as literals, backslash escape special
 #' characters, and double-quote if necessary.
-#' @param segment : a string to encode
+#' @param x : a string to encode
 #' @param ... (not yet used.)
 #' @return the encoded form of the input
 #' @examples encodeSolr("this & that")
 #' @export
-setGeneric("encodeSolr", function(segment, ... ) {
+setGeneric("encodeSolr", function(x, ... ) {
     standardGeneric("encodeSolr")
 })
 
 #' @rdname encodeSolr
 #' @export
-setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
-    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",segment, perl=TRUE) 
+setMethod("encodeSolr", signature(x="character"), function(x, ...) {
+    inter <- gsub("([-+:?*~&^!|\"\\(\\)\\{\\}\\[\\]])","\\\\\\1",x, perl=TRUE) 
     if (grepl(" ",inter)) {
         return(paste0("\"",inter,"\""))
     }
@@ -664,7 +665,7 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' \code{'q=id'} is not escaped, as this is needed by Solr to parse the query.
 #' If solrQuery is a list, 
 #' it is expected to have field names as attributes and search values as the values in the list.
-#' @param d1node The CNode or MNode instance to send the query to.
+#' @param x The CNode or MNode instance to send the query to.
 #' @param ... (Not yet used.)
 #' @return search results
 #' @rdname query
@@ -704,7 +705,7 @@ setMethod("encodeSolr", signature(segment="character"), function(segment, ...) {
 #' result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
 #' }
 #' @export
-setGeneric("query", function(d1node, ...) {
+setGeneric("query", function(x, ...) {
   standardGeneric("query")
 })
 
@@ -716,7 +717,7 @@ setGeneric("query", function(d1node, ...) {
 #' @param searchTerms A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.
 #' 
 #' @export
-setMethod("query", signature("D1Node"), function(d1node, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, searchTerms=as.character(NA), ...) {
+setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, searchTerms=as.character(NA), ...) {
   
   returnTypes <- c("json", "xml", "list", "data.frame")
   if (!is.element(as, returnTypes)) {
@@ -733,7 +734,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery=as.character(
   
   # The CN API has a slightly different format for the solr query engine than the MN API,
   # so the appropriate URL is set in the CNode or MNode class.
-  serviceUrl <- d1node@serviceUrls[d1node@serviceUrls$service=="query.solr", "Url"]
+  serviceUrl <- x@serviceUrls[x@serviceUrls$service=="query.solr", "Url"]
   
   if (!all(is.na(solrQuery))) {
     # The 'solrQuery' parameter can be specified as either a character string or a named list
@@ -772,7 +773,7 @@ setMethod("query", signature("D1Node"), function(d1node, solrQuery=as.character(
   queryUrl <- paste(serviceUrl, queryParams, sep="")
 
   # Send the query to the Node
-  response <- auth_get(queryUrl, node=d1node)
+  response <- auth_get(queryUrl, node=x)
   if(response$status != "200") {
     message(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)
