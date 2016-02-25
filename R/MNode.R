@@ -194,8 +194,9 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
 #' @rdname getObject
-setMethod("getObject", signature("MNode", "character"), function(node, pid, check=as.logical(FALSE)) {
+setMethod("getObject", signature("MNode"), function(node, pid, check=as.logical(FALSE)) {
   
+  stopifnot(is.character(pid))
     if(!class(check) == "logical") {
       stop("Invalid argument: 'check' must be specified as a logical.")
     }
@@ -223,7 +224,8 @@ setMethod("getObject", signature("MNode", "character"), function(node, pid, chec
 #' @import datapackage
 #' @export
 #' @rdname getSystemMetadata
-setMethod("getSystemMetadata", signature("MNode", "character"), function(node, pid) {
+setMethod("getSystemMetadata", signature("MNode"), function(node, pid) {
+  stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
 
@@ -250,7 +252,8 @@ setMethod("getSystemMetadata", signature("MNode", "character"), function(node, p
 
 #' @rdname describe
 #' @export
-setMethod("describe", signature("MNode", "character"), function(node, pid) {
+setMethod("describe", signature("MNode"), function(node, pid) {
+  stopifnot(is.character(pid))
     url <- file.path(node@endpoint, "object", pid)
     response <- HEAD(url)
     if(response$status != "200") {
@@ -263,7 +266,8 @@ setMethod("describe", signature("MNode", "character"), function(node, pid) {
 #' @rdname getChecksum
 #' @param checksumAlgorithm The algorithm used to calculate the checksum. Default="SHA-1"
 #' @export
-setMethod("getChecksum", signature("MNode", "character"), function(node, pid, checksumAlgorithm="SHA-1") {
+setMethod("getChecksum", signature("MNode"), function(node, pid, checksumAlgorithm="SHA-1") {
+  stopifnot(is.character(pid))
   url <- paste(node@endpoint, "checksum", pid, sep="/")
   response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agent(get_user_agent()))
   if (is.raw(response$content)) {
@@ -324,14 +328,15 @@ setMethod("getChecksum", signature("MNode", "character"), function(node, pid, ch
 #' sysmeta <- addAccessRule(sysmeta, "public", "read")
 #' create(mn, newid, csvfile, sysmeta)
 #' }
-setGeneric("create", function(mnode, pid, ...) {
+setGeneric("create", function(mnode, ...) {
     standardGeneric("create")
 })
 
 #' @rdname create
 #' @param file the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-setMethod("create", signature("MNode", "character"), function(mnode, pid, file, sysmeta) {
+setMethod("create", signature("MNode"), function(mnode, pid, file, sysmeta) {
+  stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
     
@@ -399,7 +404,7 @@ setMethod("create", signature("MNode", "character"), function(mnode, pid, file, 
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
-setGeneric("updateObject", function(mnode, pid, ...) {
+setGeneric("updateObject", function(mnode, ...) {
     standardGeneric("updateObject")
 })
 
@@ -407,7 +412,8 @@ setGeneric("updateObject", function(mnode, pid, ...) {
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @rdname updateObject
-setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, file, newpid, sysmeta) {
+setMethod("updateObject", signature("MNode"), function(mnode, pid, file, newpid, sysmeta) {
+  stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(mnode@endpoint, "object", sep="/")
     
@@ -472,7 +478,7 @@ setMethod("updateObject", signature("MNode", "character"), function(mnode, pid, 
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
-setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
+setGeneric("updateSystemMetadata", function(node, ...) {
     standardGeneric("updateSystemMetadata")
 })
 
@@ -480,7 +486,9 @@ setGeneric("updateSystemMetadata", function(node, pid, sysmeta, ...) {
 #' @param pid The identifier of the object
 #' @param sysmeta a SystemMetadata instance with updated information.
 #' @export
-setMethod("updateSystemMetadata", signature("MNode", "character", "SystemMetadata"), function(node, pid, sysmeta) {
+setMethod("updateSystemMetadata", signature("MNode"), function(node, pid, sysmeta) {
+  stopifnot(is.character(pid))
+  stopifnot(class(sysmeta) == "SystemMetadata")
     url <- paste(node@endpoint, "meta", pid, sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
