@@ -45,13 +45,6 @@
 #' in the generic.
 #' @rdname AbstractTableDescriber-class
 #' @aliases AbstractTableDescriber-class
-#' @examples
-#' \dontrun{
-#'    ## asDataFrame(D1Object,D1Object) implementation uses the following:
-#'    dtdClassName <- tableDescriber.registry[[ metadataFormatId ]]
-#'    dtd <- do.call(dtdClassName, list(metadata.d1Object))
-#' }
-#'  
 #' @author rnahf
 #' @export
 ##setClass("AbstractTableDescriber", representation=representation(dataoneFormatIds = "character"))
