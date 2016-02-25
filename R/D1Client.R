@@ -304,7 +304,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-setGeneric("d1IdentifierSearch", function(x) {
+setGeneric("d1IdentifierSearch", function(x, ...) {
   .Deprecated("query", "dataone")
     standardGeneric("d1IdentifierSearch")    
 })
@@ -323,7 +323,7 @@ setMethod("d1IdentifierSearch", signature("D1Client"), function(x, solrQuery) {
 
 #' @rdname reserveIdentifier
 #' @export
-setMethod("reserveIdentifier", signature("D1Client", "character"), function(x, id) {
+setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
   reserveIdentifier(x@cn, id)
   return(TRUE)
 })
@@ -528,7 +528,6 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' interrupt the create process for the whole, with the result that some members will 
 #' be created, and the remainder not.
 #' @param x A D1Client instance.
-#' @param dp The DataPackage instance to be submitted to DataONE for creation.
 #' @param ... (Not yet used.)
 #' @return id The identifier of the resource map for this data package
 #' @rdname uploadDataPackage
@@ -554,11 +553,12 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-setGeneric("uploadDataPackage", function(x, dp, ...) {
+setGeneric("uploadDataPackage", function(x, ...) {
   standardGeneric("uploadDataPackage")
 })
 
-#' @rdname uploadDataPackage
+#' @rdname upload, DataPackage
+#' @param dp The DataPackage instance to be submitted to DataONE for creation.
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
@@ -567,9 +567,10 @@ setGeneric("uploadDataPackage", function(x, dp, ...) {
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapackage]{serializePackage}
 #' @export
-setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
+setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
                                                                            resolveURI=as.character(NA), ...) {
+  stopifnot(class(dp) == "DataPackage")
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMN()")
     }
@@ -619,7 +620,6 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
 
 #' Upload a DataObject to a DataONE member node.
 #' @param x A D1Client instance. 
-#' @param do The DataObject instance to be uploaded to DataONE.
 #' @param ... (Not yet used.) 
 #' @return id The id of the DataObject that was uploaded
 #' @rdname uploadDataObject
@@ -637,11 +637,12 @@ setMethod("uploadDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
 #' newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
 #' }
-setGeneric("uploadDataObject", function(x, do, ...) {
+setGeneric("uploadDataObject", function(x, ...) {
     standardGeneric("uploadDataObject")
 })
 
 #' @rdname uploadDataObject
+#' @param do The DataObject instance to be uploaded to DataONE.
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
@@ -649,9 +650,10 @@ setGeneric("uploadDataObject", function(x, do, ...) {
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #
 #' @export
-setMethod("uploadDataObject", signature("D1Client", "DataObject"), 
+setMethod("uploadDataObject", signature("D1Client"), 
     function(x, do, replicate=as.logical(FALSE), numberReplicas=NA, 
              preferredNodes=NA, public=as.logical(FALSE), accessRules=NA, ...)  {
+      stopifnot(class(do) == "DataObject")
       
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMN()")
@@ -771,7 +773,6 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param x A D1Client object.
-#' @param querySegment : a string to encode
 #' @param ... (Not yet used.)
 #' @rdname encodeUrlQuery
 #' @aliases encodeUrlQuery
@@ -782,15 +783,17 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #'     encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 #' }
 #' @export
-setGeneric("encodeUrlQuery", function(x, querySegment, ...) {
+setGeneric("encodeUrlQuery", function(x, ...) {
   standardGeneric("encodeUrlQuery")
 })
 
 #' @rdname encodeUrlQuery
+#' @param querySegment : a string to encode
 #' @export
-setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), function(x, querySegment, ...) {
+setMethod("encodeUrlQuery", signature(x="D1Client"), function(x, querySegment, ...) {
     #luceneExample <- "+pool +ABQ\\:Bernalillo \\[NM\\] -sharks \"kids & adults = fun day\"" 
     #luceneReservedCharExample <- "example__\\+_\\-_\\&_\\|_\\!_\\^_\\~_\\*_\\?_\\:_\\\"_\\(_\\)_\\{_\\}_\\[_\\]____"
+  stopifnot(is.character(querySegment))
     
     # This only works for ASCII characters. 
     # (may need to check the behavior of {,},[,] - they may need to be hidden also)
@@ -805,7 +808,6 @@ setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), f
 #' @description Encodes the characters of the input so they are not interpretted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param x A D1Client object
-#' @param pathSegment : a string to encode
 #' @param ... (Not yet used.)
 #' @return the encoded form of the input
 #' @rdname encodeUrlPath
@@ -816,13 +818,14 @@ setMethod("encodeUrlQuery", signature(x="D1Client", querySegment="character"), f
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-setGeneric("encodeUrlPath", function(x, pathSegment, ...) {
+setGeneric("encodeUrlPath", function(x, ...) {
     standardGeneric("encodeUrlPath")
 })
 
 #' @rdname encodeUrlPath
+#' @param pathSegment : a string to encode
 #' @export
-setMethod("encodeUrlPath", signature(x="D1Client", pathSegment="character"), function(x, pathSegment, ...) {
+setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...) {
      return(URLencode(pathSegment))
 })
 
