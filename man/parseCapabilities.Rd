@@ -6,12 +6,12 @@
 \alias{parseCapabilities,D1Node-method}
 \title{Construct a Node, using a passed in capabilities XML}
 \usage{
-parseCapabilities(node, ...)
+parseCapabilities(x, ...)
 
-\S4method{parseCapabilities}{D1Node}(node, xml)
+\S4method{parseCapabilities}{D1Node}(x, xml)
 }
 \arguments{
-\item{node}{The node to which capabilities should be applied.}
+\item{x}{The node to which capabilities should be applied.}
 
 \item{...}{(not yet used)}
 

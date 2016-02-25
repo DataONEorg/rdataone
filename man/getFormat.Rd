@@ -6,12 +6,12 @@
 \alias{getFormat,CNode-method}
 \title{Get information for a single DataONE object format}
 \usage{
-getFormat(cnode, ...)
+getFormat(x, ...)
 
-\S4method{getFormat}{CNode}(cnode, formatId)
+\S4method{getFormat}{CNode}(x, formatId)
 }
 \arguments{
-\item{cnode}{A CNode object instance}
+\item{x}{A CNode object instance}
 
 \item{...}{(Not yet used)}
 

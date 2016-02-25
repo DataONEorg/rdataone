@@ -6,14 +6,13 @@
 \alias{query,D1Node-method}
 \title{Search DataONE for data and metadata objects}
 \usage{
-query(d1node, ...)
+query(x, ...)
 
-\S4method{query}{D1Node}(d1node, solrQuery = as.character(NA),
-  encode = TRUE, as = "list", parse = TRUE,
-  searchTerms = as.character(NA), ...)
+\S4method{query}{D1Node}(x, solrQuery = as.character(NA), encode = TRUE,
+  as = "list", parse = TRUE, searchTerms = as.character(NA), ...)
 }
 \arguments{
-\item{d1node}{The CNode or MNode instance to send the query to.}
+\item{x}{The CNode or MNode instance to send the query to.}
 
 \item{...}{(Not yet used.)}
 

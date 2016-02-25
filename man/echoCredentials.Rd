@@ -6,12 +6,12 @@
 \alias{echoCredentials,CNode-method}
 \title{Echo the credentials used to make the call.}
 \usage{
-echoCredentials(cnode, ...)
+echoCredentials(x, ...)
 
-\S4method{echoCredentials}{CNode}(cnode)
+\S4method{echoCredentials}{CNode}(x)
 }
 \arguments{
-\item{cnode}{The coordinating node to send the request to.}
+\item{x}{The coordinating node to send the request to.}
 
 \item{...}{(Not yet used)}
 }

@@ -6,12 +6,12 @@
 \alias{isAuthorized,CNode-method}
 \title{Check if an action is authorized for the specified identifier}
 \usage{
-isAuthorized(cnode, ...)
+isAuthorized(x, ...)
 
-\S4method{isAuthorized}{CNode}(cnode, id, action)
+\S4method{isAuthorized}{CNode}(x, id, action)
 }
 \arguments{
-\item{cnode}{The node to send the request to.}
+\item{x}{The node to send the request to.}
 
 \item{...}{(Not yet used)}
 

@@ -6,12 +6,12 @@
 \alias{listQueryEngines,D1Node-method}
 \title{Query a node for the list of query engines available on the node}
 \usage{
-listQueryEngines(node, ...)
+listQueryEngines(x, ...)
 
-\S4method{listQueryEngines}{D1Node}(node)
+\S4method{listQueryEngines}{D1Node}(x)
 }
 \arguments{
-\item{node}{The CNode or MNode to list the query engines for.}
+\item{x}{The CNode or MNode to list the query engines for.}
 
 \item{...}{(Not yet used.)}
 }

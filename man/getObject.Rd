@@ -7,14 +7,14 @@
 \alias{getObject,MNode-method}
 \title{Get the bytes associated with an object on this Node.}
 \usage{
-getObject(node, ...)
+getObject(x, ...)
 
-\S4method{getObject}{CNode}(node, pid)
+\S4method{getObject}{CNode}(x, pid)
 
-\S4method{getObject}{MNode}(node, pid, check = as.logical(FALSE))
+\S4method{getObject}{MNode}(x, pid, check = as.logical(FALSE))
 }
 \arguments{
-\item{node}{The Node instance from which the pid will be downloaded}
+\item{x}{The Node instance from which the pid will be downloaded}
 
 \item{...}{(Not yet used).}
 

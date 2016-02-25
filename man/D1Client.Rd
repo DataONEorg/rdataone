@@ -8,18 +8,18 @@
 \alias{D1Client,character,character-method}
 \title{The DataONE client class used to downlaod, update and search for data in the DataONE network.}
 \usage{
-D1Client(env, mNodeid, ...)
+D1Client(x, y, ...)
 
 \S4method{D1Client}{ANY,ANY}()
 
-\S4method{D1Client}{character,ANY}(env, mNodeid, ...)
+\S4method{D1Client}{character,ANY}(x, y, ...)
 
-\S4method{D1Client}{character,character}(env, mNodeid)
+\S4method{D1Client}{character,character}(x, y)
 }
 \arguments{
-\item{env}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')}
+\item{x}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')}
 
-\item{mNodeid}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'}
+\item{y}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'}
 
 \item{...}{(not yet used)}
 }

@@ -6,12 +6,12 @@
 \alias{getCapabilities,MNode-method}
 \title{Get the node capabilities description, and store the information in the MNode.}
 \usage{
-getCapabilities(mnode, ...)
+getCapabilities(x, ...)
 
-\S4method{getCapabilities}{MNode}(mnode)
+\S4method{getCapabilities}{MNode}(x)
 }
 \arguments{
-\item{mnode}{The node identifier with which this node is registered in DataONE}
+\item{x}{The node identifier with which this node is registered in DataONE}
 
 \item{...}{(Not yet used.)}
 }

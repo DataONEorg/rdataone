@@ -7,14 +7,14 @@
 \alias{getSystemMetadata,MNode-method}
 \title{Get the metadata describing system properties associated with an object on this Node.}
 \usage{
-getSystemMetadata(node, ...)
+getSystemMetadata(x, ...)
 
-\S4method{getSystemMetadata}{CNode}(node, pid)
+\S4method{getSystemMetadata}{CNode}(x, pid)
 
-\S4method{getSystemMetadata}{MNode}(node, pid)
+\S4method{getSystemMetadata}{MNode}(x, pid)
 }
 \arguments{
-\item{node}{The Node instance from which the SystemMetadata will be downloaded}
+\item{x}{The Node instance from which the SystemMetadata will be downloaded}
 
 \item{...}{(Not yet used.)}
 

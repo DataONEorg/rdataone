@@ -7,14 +7,14 @@
 \alias{describe,MNode-method}
 \title{Efficiently get systemmetadat for an object.}
 \usage{
-describe(node, ...)
+describe(x, ...)
 
-\S4method{describe}{CNode}(node, pid)
+\S4method{describe}{CNode}(x, pid)
 
-\S4method{describe}{MNode}(node, pid)
+\S4method{describe}{MNode}(x, pid)
 }
 \arguments{
-\item{node}{The MNode instance from which the identifier will be generated}
+\item{x}{The MNode instance from which the identifier will be generated}
 
 \item{...}{(Not yet used)}
 

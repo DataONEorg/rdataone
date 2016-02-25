@@ -6,13 +6,13 @@
 \alias{setObsoletedBy,CNode,character-method}
 \title{Set a pid as being obsoleted by another pid}
 \usage{
-setObsoletedBy(cnode, pid, obsoletedByPid, ...)
+setObsoletedBy(x, pid, obsoletedByPid, ...)
 
-\S4method{setObsoletedBy}{CNode,character}(cnode, pid, obsoletedByPid,
+\S4method{setObsoletedBy}{CNode,character}(x, pid, obsoletedByPid,
   serialVersion)
 }
 \arguments{
-\item{cnode}{The CNode instance on which the object will be created}
+\item{x}{The CNode instance on which the object will be created}
 
 \item{pid}{The identifier of the object to be obsoleted}
 

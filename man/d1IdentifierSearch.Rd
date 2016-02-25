@@ -13,6 +13,8 @@ d1IdentifierSearch(x, ...)
 \arguments{
 \item{x}{D1Client: representing the DataONE environment being queried}
 
+\item{...}{Additional parameters}
+
 \item{solrQuery}{character: a query string}
 }
 \value{

@@ -7,14 +7,14 @@
 \alias{CNode,character-method}
 \title{Create a CNode object.}
 \usage{
-CNode(env, ...)
+CNode(x, ...)
 
 \S4method{CNode}{ANY}()
 
-\S4method{CNode}{character}(env)
+\S4method{CNode}{character}(x)
 }
 \arguments{
-\item{env}{The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')}
+\item{x}{The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')}
 
 \item{...}{(not yet used)}
 }

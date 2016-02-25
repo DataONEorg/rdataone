@@ -6,15 +6,15 @@
 \alias{listObjects,D1Node-method}
 \title{Retrieve the list of objects that match the search parameters}
 \usage{
-listObjects(node, ...)
+listObjects(x, ...)
 
-\S4method{listObjects}{D1Node}(node, fromDate = as.character(NA),
+\S4method{listObjects}{D1Node}(x, fromDate = as.character(NA),
   toDate = as.character(NA), formatId = as.character(NA),
   replicaStatus = as.logical(TRUE), start = as.integer(0),
   count = as.integer(1000))
 }
 \arguments{
-\item{node}{The Node instance from which the SystemMetadata will be downloaded}
+\item{x}{The Node instance from which the SystemMetadata will be downloaded}
 
 \item{...}{(Not yet used.)}
 

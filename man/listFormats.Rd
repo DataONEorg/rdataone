@@ -6,12 +6,12 @@
 \alias{listFormats,CNode-method}
 \title{List all object formats registered in DataONE.}
 \usage{
-listFormats(cnode, ...)
+listFormats(x, ...)
 
-\S4method{listFormats}{CNode}(cnode)
+\S4method{listFormats}{CNode}(x)
 }
 \arguments{
-\item{cnode}{a valid CNode object}
+\item{x}{a valid CNode object}
 
 \item{...}{(Not yet used)}
 }

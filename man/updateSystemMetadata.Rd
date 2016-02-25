@@ -6,12 +6,12 @@
 \alias{updateSystemMetadata,MNode-method}
 \title{Update the system metadata associated with an object.}
 \usage{
-updateSystemMetadata(node, ...)
+updateSystemMetadata(x, ...)
 
-\S4method{updateSystemMetadata}{MNode}(node, pid, sysmeta)
+\S4method{updateSystemMetadata}{MNode}(x, pid, sysmeta)
 }
 \arguments{
-\item{node}{The MNode instance from which the SystemMetadata will be downloaded}
+\item{x}{The MNode instance from which the SystemMetadata will be downloaded}
 
 \item{...}{(Not yet used.)}
 

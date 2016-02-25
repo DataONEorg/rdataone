@@ -6,12 +6,12 @@
 \alias{getMNode,CNode-method}
 \title{Get a reference to a node based on its identifier}
 \usage{
-getMNode(cnode, ...)
+getMNode(x, ...)
 
-\S4method{getMNode}{CNode}(cnode, nodeid)
+\S4method{getMNode}{CNode}(x, nodeid)
 }
 \arguments{
-\item{cnode}{The coordinating node to query for its registered Member Nodes}
+\item{x}{The coordinating node to query for its registered Member Nodes}
 
 \item{...}{(Not yet used)}
 

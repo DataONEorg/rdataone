@@ -6,13 +6,12 @@
 \alias{getPackage,MNode-method}
 \title{Download a data package from a member node.}
 \usage{
-getPackage(node, ...)
+getPackage(x, ...)
 
-\S4method{getPackage}{MNode}(node, identifier,
-  format = "application/bagit-097")
+\S4method{getPackage}{MNode}(x, identifier, format = "application/bagit-097")
 }
 \arguments{
-\item{node}{A MNode instance representing a DataONE Member Node repository.}
+\item{x}{A MNode instance representing a DataONE Member Node repository.}
 
 \item{...}{(not yet used)}
 

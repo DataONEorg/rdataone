@@ -6,12 +6,12 @@
 \alias{ping,D1Node-method}
 \title{Test if a node is online and accepting DataONE requests}
 \usage{
-ping(node, ...)
+ping(x, ...)
 
-\S4method{ping}{D1Node}(node)
+\S4method{ping}{D1Node}(x)
 }
 \arguments{
-\item{node}{The CNode or MNode to check}
+\item{x}{The CNode or MNode to check}
 
 \item{...}{(Not yet used)}
 }

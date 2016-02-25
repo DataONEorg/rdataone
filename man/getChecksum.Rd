@@ -7,14 +7,14 @@
 \alias{getChecksum,MNode-method}
 \title{Get the checksum for the data object associated with the specified pid.}
 \usage{
-getChecksum(node, ...)
+getChecksum(x, ...)
 
-\S4method{getChecksum}{CNode}(node, pid, ...)
+\S4method{getChecksum}{CNode}(x, pid, ...)
 
-\S4method{getChecksum}{MNode}(node, pid, checksumAlgorithm = "SHA-1")
+\S4method{getChecksum}{MNode}(x, pid, checksumAlgorithm = "SHA-1")
 }
 \arguments{
-\item{node}{The CNode instance from which the checksum will be retrieved}
+\item{x}{The CNode instance from which the checksum will be retrieved}
 
 \item{...}{(Not yet used)}
 

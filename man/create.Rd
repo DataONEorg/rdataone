@@ -6,12 +6,12 @@
 \alias{create,MNode-method}
 \title{Create an object on a Member Node.}
 \usage{
-create(mnode, ...)
+create(x, ...)
 
-\S4method{create}{MNode}(mnode, pid, file, sysmeta)
+\S4method{create}{MNode}(x, pid, file, sysmeta)
 }
 \arguments{
-\item{mnode}{The MNode instance on which the object will be created}
+\item{x}{The MNode instance on which the object will be created}
 
 \item{...}{(Not yet used.)}
 

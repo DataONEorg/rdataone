@@ -6,12 +6,14 @@
 \alias{resolve,CNode-method}
 \title{Get a list of coordinating nodes holding a given pid.}
 \usage{
-resolve(cnode, ...)
+resolve(x, ...)
 
-\S4method{resolve}{CNode}(cnode, pid)
+\S4method{resolve}{CNode}(x, pid)
 }
 \arguments{
-\item{cnode}{a valid CNode object}
+\item{x}{a valid CNode object}
+
+\item{...}{Additional arguments (not yet used).}
 
 \item{pid}{the id of the identified object}
 }

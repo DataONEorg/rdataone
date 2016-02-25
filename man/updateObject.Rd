@@ -6,12 +6,12 @@
 \alias{updateObject,MNode-method}
 \title{Update an object on a Member Node, by creating a new object that replaces an original.}
 \usage{
-updateObject(mnode, ...)
+updateObject(x, ...)
 
-\S4method{updateObject}{MNode}(mnode, pid, file, newpid, sysmeta)
+\S4method{updateObject}{MNode}(x, pid, file, newpid, sysmeta)
 }
 \arguments{
-\item{mnode}{The MNode instance on which the object will be created}
+\item{x}{The MNode instance on which the object will be created}
 
 \item{...}{(Not yet used.)}
 
@@ -28,7 +28,7 @@ XML describing the result of the operation, including the identifier if successf
 }
 \description{
 This method provides the ability to update a data or metadata object to the Member Node
-provided in the \code{'mnode'} parameter.  In DataONE, both the original object and the new object are
+provided in the \code{'x'} parameter.  In DataONE, both the original object and the new object are
 maintained, each with its own persistent identifier, and the 'obsoletes' field in the SystemMetadata is
 used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
 }

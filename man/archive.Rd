@@ -6,12 +6,12 @@
 \alias{archive,D1Node-method}
 \title{Archive an object on a Member Node or Coordinating Node, which hides it from casual searches.}
 \usage{
-archive(node, ...)
+archive(x, ...)
 
-\S4method{archive}{D1Node}(node, pid)
+\S4method{archive}{D1Node}(x, pid)
 }
 \arguments{
-\item{node}{The MNode or CNode instance on which the object will be created}
+\item{x}{The MNode or CNode instance on which the object will be created}
 
 \item{...}{(Not yet used)}
 

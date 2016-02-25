@@ -6,12 +6,12 @@
 \alias{listNodes,CNode-method}
 \title{Get the list of nodes associated with a CN}
 \usage{
-listNodes(cnode, ...)
+listNodes(x, ...)
 
-\S4method{listNodes}{CNode}(cnode, url = as.character(NA), ...)
+\S4method{listNodes}{CNode}(x, url = as.character(NA), ...)
 }
 \arguments{
-\item{cnode}{The coordinating node to query for its registered Member Nodes}
+\item{x}{The coordinating node to query for its registered Member Nodes}
 
 \item{...}{(Not yet used)}
 

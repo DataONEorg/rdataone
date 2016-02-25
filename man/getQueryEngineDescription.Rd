@@ -6,12 +6,14 @@
 \alias{getQueryEngineDescription,D1Node-method}
 \title{Query a node for the list of query engines available on the node}
 \usage{
-getQueryEngineDescription(node, ...)
+getQueryEngineDescription(x, ...)
 
-\S4method{getQueryEngineDescription}{D1Node}(node, queryEngineName)
+\S4method{getQueryEngineDescription}{D1Node}(x, queryEngineName)
 }
 \arguments{
-\item{node}{The CNode or MNode to query}
+\item{x}{The CNode or MNode to query}
+
+\item{...}{(Additional arguments - not yet used.)}
 
 \item{queryEngineName}{The query engine name to get a description for.}
 }

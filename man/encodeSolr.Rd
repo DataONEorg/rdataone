@@ -6,12 +6,12 @@
 \alias{encodeSolr,character-method}
 \title{Encode the input for Solr Queries}
 \usage{
-encodeSolr(segment, ...)
+encodeSolr(x, ...)
 
-\S4method{encodeSolr}{character}(segment, ...)
+\S4method{encodeSolr}{character}(x, ...)
 }
 \arguments{
-\item{segment}{: a string to encode}
+\item{x}{: a string to encode}
 
 \item{...}{(not yet used.)}
 }

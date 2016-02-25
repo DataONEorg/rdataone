@@ -6,12 +6,12 @@
 \alias{hasReservation,CNode-method}
 \title{Checks to determine if the supplied subject is the owner of the reservation of id.}
 \usage{
-hasReservation(cnode, ...)
+hasReservation(x, ...)
 
-\S4method{hasReservation}{CNode}(cnode, pid, subject = as.character(NA))
+\S4method{hasReservation}{CNode}(x, pid, subject = as.character(NA))
 }
 \arguments{
-\item{cnode}{A CNode instance.}
+\item{x}{A CNode instance.}
 
 \item{...}{Additional parameters.}
 
