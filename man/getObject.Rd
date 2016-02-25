@@ -3,22 +3,22 @@
 \docType{methods}
 \name{getObject}
 \alias{getObject}
-\alias{getObject,CNode,character-method}
-\alias{getObject,MNode,character-method}
+\alias{getObject,CNode-method}
+\alias{getObject,MNode-method}
 \title{Get the bytes associated with an object on this Node.}
 \usage{
-getObject(node, pid, ...)
+getObject(node, ...)
 
-\S4method{getObject}{CNode,character}(node, pid)
+\S4method{getObject}{CNode}(node, pid)
 
-\S4method{getObject}{MNode,character}(node, pid, check = as.logical(FALSE))
+\S4method{getObject}{MNode}(node, pid, check = as.logical(FALSE))
 }
 \arguments{
 \item{node}{The Node instance from which the pid will be downloaded}
 
-\item{pid}{The identifier of the object to be downloaded}
-
 \item{...}{(Not yet used).}
+
+\item{pid}{The identifier of the object to be downloaded}
 
 \item{check}{A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.}
 }

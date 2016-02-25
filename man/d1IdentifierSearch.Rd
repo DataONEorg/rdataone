@@ -3,12 +3,12 @@
 \docType{methods}
 \name{d1IdentifierSearch}
 \alias{d1IdentifierSearch}
-\alias{d1IdentifierSearch,D1Client,character-method}
+\alias{d1IdentifierSearch,D1Client-method}
 \title{Query the DataONE Solr endpoint of the Coordinating Node.}
 \usage{
-d1IdentifierSearch(x, solrQuery)
+d1IdentifierSearch(x, ...)
 
-\S4method{d1IdentifierSearch}{D1Client,character}(x, solrQuery)
+\S4method{d1IdentifierSearch}{D1Client}(x, solrQuery)
 }
 \arguments{
 \item{x}{D1Client: representing the DataONE environment being queried}

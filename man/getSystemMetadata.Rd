@@ -3,22 +3,22 @@
 \docType{methods}
 \name{getSystemMetadata}
 \alias{getSystemMetadata}
-\alias{getSystemMetadata,CNode,character-method}
-\alias{getSystemMetadata,MNode,character-method}
+\alias{getSystemMetadata,CNode-method}
+\alias{getSystemMetadata,MNode-method}
 \title{Get the metadata describing system properties associated with an object on this Node.}
 \usage{
-getSystemMetadata(node, pid, ...)
+getSystemMetadata(node, ...)
 
-\S4method{getSystemMetadata}{CNode,character}(node, pid)
+\S4method{getSystemMetadata}{CNode}(node, pid)
 
-\S4method{getSystemMetadata}{MNode,character}(node, pid)
+\S4method{getSystemMetadata}{MNode}(node, pid)
 }
 \arguments{
 \item{node}{The Node instance from which the SystemMetadata will be downloaded}
 
-\item{pid}{The identifier of the object}
-
 \item{...}{(Not yet used.)}
+
+\item{pid}{The identifier of the object}
 }
 \value{
 SystemMetadata for the object

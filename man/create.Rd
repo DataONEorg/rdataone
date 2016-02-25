@@ -3,19 +3,19 @@
 \docType{methods}
 \name{create}
 \alias{create}
-\alias{create,MNode,character-method}
+\alias{create,MNode-method}
 \title{Create an object on a Member Node.}
 \usage{
-create(mnode, pid, ...)
+create(mnode, ...)
 
-\S4method{create}{MNode,character}(mnode, pid, file, sysmeta)
+\S4method{create}{MNode}(mnode, pid, file, sysmeta)
 }
 \arguments{
 \item{mnode}{The MNode instance on which the object will be created}
 
-\item{pid}{The identifier of the object to be created}
-
 \item{...}{(Not yet used.)}
+
+\item{pid}{The identifier of the object to be created}
 
 \item{file}{the absolute file location of the object to be uploaded}
 

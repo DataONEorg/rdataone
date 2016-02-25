@@ -3,21 +3,21 @@
 \docType{methods}
 \name{uploadDataObject}
 \alias{uploadDataObject}
-\alias{uploadDataObject,D1Client,DataObject-method}
+\alias{uploadDataObject,D1Client-method}
 \title{Upload a DataObject to a DataONE member node.}
 \usage{
-uploadDataObject(x, do, ...)
+uploadDataObject(x, ...)
 
-\S4method{uploadDataObject}{D1Client,DataObject}(x, do,
-  replicate = as.logical(FALSE), numberReplicas = NA, preferredNodes = NA,
-  public = as.logical(FALSE), accessRules = NA, ...)
+\S4method{uploadDataObject}{D1Client}(x, do, replicate = as.logical(FALSE),
+  numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
+  accessRules = NA, ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}
 
-\item{do}{The DataObject instance to be uploaded to DataONE.}
-
 \item{...}{(Not yet used.)}
+
+\item{do}{The DataObject instance to be uploaded to DataONE.}
 
 \item{replicate}{A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes}
 

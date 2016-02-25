@@ -3,19 +3,19 @@
 \docType{methods}
 \name{updateObject}
 \alias{updateObject}
-\alias{updateObject,MNode,character-method}
+\alias{updateObject,MNode-method}
 \title{Update an object on a Member Node, by creating a new object that replaces an original.}
 \usage{
-updateObject(mnode, pid, ...)
+updateObject(mnode, ...)
 
-\S4method{updateObject}{MNode,character}(mnode, pid, file, newpid, sysmeta)
+\S4method{updateObject}{MNode}(mnode, pid, file, newpid, sysmeta)
 }
 \arguments{
 \item{mnode}{The MNode instance on which the object will be created}
 
-\item{pid}{The identifier of the object to be updated}
-
 \item{...}{(Not yet used.)}
+
+\item{pid}{The identifier of the object to be updated}
 
 \item{file}{the absolute file location of the object to be uploaded}
 

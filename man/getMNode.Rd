@@ -3,19 +3,19 @@
 \docType{methods}
 \name{getMNode}
 \alias{getMNode}
-\alias{getMNode,CNode,character-method}
+\alias{getMNode,CNode-method}
 \title{Get a reference to a node based on its identifier}
 \usage{
-getMNode(cnode, nodeid, ...)
+getMNode(cnode, ...)
 
-\S4method{getMNode}{CNode,character}(cnode, nodeid)
+\S4method{getMNode}{CNode}(cnode, nodeid)
 }
 \arguments{
 \item{cnode}{The coordinating node to query for its registered Member Nodes}
 
-\item{nodeid}{The standard identifier string for this node}
-
 \item{...}{(Not yet used)}
+
+\item{nodeid}{The standard identifier string for this node}
 }
 \value{
 the Member Node as an MNode reference, or NULL if not found

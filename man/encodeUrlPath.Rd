@@ -3,19 +3,19 @@
 \docType{methods}
 \name{encodeUrlPath}
 \alias{encodeUrlPath}
-\alias{encodeUrlPath,D1Client,character-method}
+\alias{encodeUrlPath,D1Client-method}
 \title{Encode the Input for a URL Path Segment.}
 \usage{
-encodeUrlPath(x, pathSegment, ...)
+encodeUrlPath(x, ...)
 
-\S4method{encodeUrlPath}{D1Client,character}(x, pathSegment, ...)
+\S4method{encodeUrlPath}{D1Client}(x, pathSegment, ...)
 }
 \arguments{
 \item{x}{A D1Client object}
 
-\item{pathSegment}{: a string to encode}
-
 \item{...}{(Not yet used.)}
+
+\item{pathSegment}{: a string to encode}
 }
 \value{
 the encoded form of the input

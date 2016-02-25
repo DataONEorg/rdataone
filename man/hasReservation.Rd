@@ -18,7 +18,7 @@ hasReservation(cnode, ...)
 \item{pid}{The identifier that is being checked for existing as a reserved identifier or is in use as 
 an identifier for an existing object}
 
-\item{subject}{The subject of the principal (user) that made the reservation. If not specified, then}
+\item{subject}{The subject of the principal (user) that made the reservation.}
 }
 \value{
 A logical value where TRUE means a reservation exists for the specified pid by the subject.

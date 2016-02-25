@@ -3,22 +3,21 @@
 \docType{methods}
 \name{updateSystemMetadata}
 \alias{updateSystemMetadata}
-\alias{updateSystemMetadata,MNode,character,SystemMetadata-method}
+\alias{updateSystemMetadata,MNode-method}
 \title{Update the system metadata associated with an object.}
 \usage{
-updateSystemMetadata(node, pid, sysmeta, ...)
+updateSystemMetadata(node, ...)
 
-\S4method{updateSystemMetadata}{MNode,character,SystemMetadata}(node, pid,
-  sysmeta)
+\S4method{updateSystemMetadata}{MNode}(node, pid, sysmeta)
 }
 \arguments{
 \item{node}{The MNode instance from which the SystemMetadata will be downloaded}
 
+\item{...}{(Not yet used.)}
+
 \item{pid}{The identifier of the object}
 
 \item{sysmeta}{a SystemMetadata instance with updated information.}
-
-\item{...}{(Not yet used.)}
 }
 \value{
 A logical value, TRUE if the operation was sucessful, FALSE if there was an error.

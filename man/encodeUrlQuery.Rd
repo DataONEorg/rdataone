@@ -3,19 +3,19 @@
 \docType{methods}
 \name{encodeUrlQuery}
 \alias{encodeUrlQuery}
-\alias{encodeUrlQuery,D1Client,character-method}
+\alias{encodeUrlQuery,D1Client-method}
 \title{Encode the Input for a URL Query Segment.}
 \usage{
-encodeUrlQuery(x, querySegment, ...)
+encodeUrlQuery(x, ...)
 
-\S4method{encodeUrlQuery}{D1Client,character}(x, querySegment, ...)
+\S4method{encodeUrlQuery}{D1Client}(x, querySegment, ...)
 }
 \arguments{
 \item{x}{A D1Client object.}
 
-\item{querySegment}{: a string to encode}
-
 \item{...}{(Not yet used.)}
+
+\item{querySegment}{: a string to encode}
 }
 \value{
 the encoded form of the input

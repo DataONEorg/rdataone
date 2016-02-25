@@ -3,23 +3,22 @@
 \docType{methods}
 \name{getChecksum}
 \alias{getChecksum}
-\alias{getChecksum,CNode,character-method}
-\alias{getChecksum,MNode,character-method}
+\alias{getChecksum,CNode-method}
+\alias{getChecksum,MNode-method}
 \title{Get the checksum for the data object associated with the specified pid.}
 \usage{
-getChecksum(node, pid, ...)
+getChecksum(node, ...)
 
-\S4method{getChecksum}{CNode,character}(node, pid, ...)
+\S4method{getChecksum}{CNode}(node, pid, ...)
 
-\S4method{getChecksum}{MNode,character}(node, pid,
-  checksumAlgorithm = "SHA-1")
+\S4method{getChecksum}{MNode}(node, pid, checksumAlgorithm = "SHA-1")
 }
 \arguments{
 \item{node}{The CNode instance from which the checksum will be retrieved}
 
-\item{pid}{The identifier of the object}
-
 \item{...}{(Not yet used)}
+
+\item{pid}{The identifier of the object}
 
 \item{checksumAlgorithm}{The algorithm used to calculate the checksum. Default="SHA-1"}
 }

@@ -3,23 +3,23 @@
 \docType{methods}
 \name{describe}
 \alias{describe}
-\alias{describe,CNode,character-method}
-\alias{describe,MNode,character-method}
+\alias{describe,CNode-method}
+\alias{describe,MNode-method}
 \title{Efficiently get systemmetadat for an object.}
 \usage{
-describe(node, pid, ...)
+describe(node, ...)
 
-\S4method{describe}{CNode,character}(node, pid)
+\S4method{describe}{CNode}(node, pid)
 
-\S4method{describe}{MNode,character}(node, pid)
+\S4method{describe}{MNode}(node, pid)
 }
 \arguments{
 \item{node}{The MNode instance from which the identifier will be generated}
 
+\item{...}{(Not yet used)}
+
 \item{pid}{Identifier for the object in question. May be either a PID or a SID. Transmitted as
 part of the URL path and must be escaped accordingly.}
-
-\item{...}{(Not yet used)}
 }
 \value{
 A list of header elements

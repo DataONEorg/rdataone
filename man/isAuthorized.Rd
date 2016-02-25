@@ -3,21 +3,21 @@
 \docType{methods}
 \name{isAuthorized}
 \alias{isAuthorized}
-\alias{isAuthorized,CNode,character,character-method}
+\alias{isAuthorized,CNode-method}
 \title{Check if an action is authorized for the specified identifier}
 \usage{
-isAuthorized(cnode, id, action, ...)
+isAuthorized(cnode, ...)
 
-\S4method{isAuthorized}{CNode,character,character}(cnode, id, action)
+\S4method{isAuthorized}{CNode}(cnode, id, action)
 }
 \arguments{
 \item{cnode}{The node to send the request to.}
 
+\item{...}{(Not yet used)}
+
 \item{id}{The DataONE identifier (pid or sid) to check access for.}
 
 \item{action}{The DataONE action to check, possible values: "read", "write", "changePermission"}
-
-\item{...}{(Not yet used)}
 }
 \value{
 a logical, TRUE if the action is authorized, false if not.

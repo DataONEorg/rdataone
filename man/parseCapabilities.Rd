@@ -3,19 +3,19 @@
 \docType{methods}
 \name{parseCapabilities}
 \alias{parseCapabilities}
-\alias{parseCapabilities,D1Node,XMLInternalElementNode-method}
+\alias{parseCapabilities,D1Node-method}
 \title{Construct a Node, using a passed in capabilities XML}
 \usage{
-parseCapabilities(node, xml, ...)
+parseCapabilities(node, ...)
 
-\S4method{parseCapabilities}{D1Node,XMLInternalElementNode}(node, xml)
+\S4method{parseCapabilities}{D1Node}(node, xml)
 }
 \arguments{
 \item{node}{The node to which capabilities should be applied.}
 
-\item{xml}{The XML capabilities representing the node to be created}
-
 \item{...}{(not yet used)}
+
+\item{xml}{The XML capabilities representing the node to be created}
 }
 \value{
 The Node object with modified capabilities properties from the XML

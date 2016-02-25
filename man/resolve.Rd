@@ -3,12 +3,12 @@
 \docType{methods}
 \name{resolve}
 \alias{resolve}
-\alias{resolve,CNode,character-method}
+\alias{resolve,CNode-method}
 \title{Get a list of coordinating nodes holding a given pid.}
 \usage{
-resolve(cnode, pid)
+resolve(cnode, ...)
 
-\S4method{resolve}{CNode,character}(cnode, pid)
+\S4method{resolve}{CNode}(cnode, pid)
 }
 \arguments{
 \item{cnode}{a valid CNode object}

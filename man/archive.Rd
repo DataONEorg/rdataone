@@ -3,19 +3,19 @@
 \docType{methods}
 \name{archive}
 \alias{archive}
-\alias{archive,D1Node,character-method}
+\alias{archive,D1Node-method}
 \title{Archive an object on a Member Node or Coordinating Node, which hides it from casual searches.}
 \usage{
-archive(node, pid, ...)
+archive(node, ...)
 
-\S4method{archive}{D1Node,character}(node, pid)
+\S4method{archive}{D1Node}(node, pid)
 }
 \arguments{
 \item{node}{The MNode or CNode instance on which the object will be created}
 
-\item{pid}{The identifier of the object to be created}
-
 \item{...}{(Not yet used)}
+
+\item{pid}{The identifier of the object to be created}
 }
 \value{
 The pid that was archived if successful, otherwise NULL

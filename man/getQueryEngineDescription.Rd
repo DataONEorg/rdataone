@@ -3,12 +3,12 @@
 \docType{methods}
 \name{getQueryEngineDescription}
 \alias{getQueryEngineDescription}
-\alias{getQueryEngineDescription,D1Node,character-method}
+\alias{getQueryEngineDescription,D1Node-method}
 \title{Query a node for the list of query engines available on the node}
 \usage{
-getQueryEngineDescription(node, queryEngineName)
+getQueryEngineDescription(node, ...)
 
-\S4method{getQueryEngineDescription}{D1Node,character}(node, queryEngineName)
+\S4method{getQueryEngineDescription}{D1Node}(node, queryEngineName)
 }
 \arguments{
 \item{node}{The CNode or MNode to query}

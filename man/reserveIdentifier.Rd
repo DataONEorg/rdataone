@@ -3,22 +3,22 @@
 \docType{methods}
 \name{reserveIdentifier}
 \alias{reserveIdentifier}
-\alias{reserveIdentifier,CNode,character-method}
-\alias{reserveIdentifier,D1Client,character-method}
+\alias{reserveIdentifier,CNode-method}
+\alias{reserveIdentifier,D1Client-method}
 \title{Reserve a identifier that is unique in the DataONE network.}
 \usage{
-reserveIdentifier(x, id, ...)
+reserveIdentifier(x, ...)
 
-\S4method{reserveIdentifier}{CNode,character}(x, id)
+\S4method{reserveIdentifier}{CNode}(x, id)
 
-\S4method{reserveIdentifier}{D1Client,character}(x, id)
+\S4method{reserveIdentifier}{D1Client}(x, id)
 }
 \arguments{
 \item{x}{The coordinating node to query for its registered Member Nodes}
 
-\item{id}{The identifier that is to be reserved.}
-
 \item{...}{Additional parameters.}
+
+\item{id}{The identifier that is to be reserved.}
 }
 \value{
 The reserved pid if it was sucessfully reserved, otherwise NULL
