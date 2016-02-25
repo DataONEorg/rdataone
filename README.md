@@ -80,13 +80,27 @@ sudo apt-get update
 sudo apt-get install librdf0 librdf0-dev
 ```
 
-Then install the R packages from the R console:
+Then install the R package from the R console:
 
 ```
 install.packages("dataone")
 library(dataone)
 ```
   
+The *dataone* R package should be available for use at this point.
+
+## Installing on Windows
+
+For windows, the redland R package is distributed as a binary release, and it is not necessary to install any 
+additional system libraries.
+
+To install the R package from the R console:
+
+```
+install.packages("dataone")
+library(dataone)
+```
+
 The *dataone* R package should be available for use at this point.
 
 ## Quick Start
