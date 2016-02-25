@@ -276,7 +276,7 @@ test_that("updateSystemMetadata() works",{
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
   mnId <- "urn:node:mnStageUCSB2"
-  d1c <- D1Client(env="STAGING", mNodeid=mnId)
+  d1c <- D1Client("STAGING", mnId)
   am <- AuthenticationManager()
   suppressWarnings(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {

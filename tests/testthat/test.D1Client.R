@@ -109,7 +109,7 @@ test_that("D1Client uploadDataObject with raw data works", {
 
   # Create a DataObject with a raw R object and upload to DataONE
   data <- charToRaw("1,2,3\n4,5,6\n")
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
   expect_false(is.null(d1c))
   # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
@@ -135,7 +135,7 @@ test_that("D1Client uploadDataObject with filename works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
   expect_false(is.null(d1c))
   # Set 'subject' to authentication subject, if available, so we will have permission to change this object
   am <- AuthenticationManager()
@@ -160,9 +160,9 @@ test_that("D1Client uploadDataPackage works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
-  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
+  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
@@ -221,9 +221,9 @@ test_that("D1Client createD1Object works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
-  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
+  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
@@ -257,7 +257,7 @@ test_that("D1Client getD1Object works", {
   library(digest)
   
   am <- AuthenticationManager()
-  d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+  d1c <- D1Client("PROD", "urn:node:KNB")
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
@@ -338,9 +338,9 @@ test_that("D1Client uploadDeataPackage works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
-  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
+  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
@@ -388,9 +388,9 @@ test_that("D1Client createDataPackage works", {
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
-  #d1c <- D1Client(env="SANDBOX2", mNodeid="urn:node:mnDemo2")
-  #d1c <- D1Client(env="DEV2", mNodeid="urn:node:mnDevUCSB2")
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
+  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
   expect_false(is.null(d1c))
   #preferredNodes <- c("urn:node:mnDemo9")
   preferredNodes <- NA
