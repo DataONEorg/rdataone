@@ -235,7 +235,7 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(cn, pid)
 #' }
-setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ...) {
+setMethod("getChecksum", signature("CNode"), function(node, pid, ...) {
   url <- paste(node@endpoint, "checksum", pid, sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   if (is.raw(response$content)) {
@@ -259,7 +259,6 @@ setMethod("getChecksum", signature("CNode", "character"), function(node, pid, ..
 #' @rdname listNodes
 #' @aliases listNodes
 #' @param cnode The coordinating node to query for its registered Member Nodes
-#' @param url Optianal - the url of the CN.
 #' @param ... (Not yet used)
 #' @return the list of nodes in the DataONE CN environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -275,6 +274,7 @@ setGeneric("listNodes", function(cnode, ...) {
 })
 
 #' @rdname listNodes
+#' @param url Optianal - the url of the CN.
 #' @export
 setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA), ...) {
     # If an optional url argument is specified, use that. This might be used if
@@ -304,7 +304,6 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
 #' @rdname reserveIdentifier
 #' @aliases reserveIdentifier
 #' @param x The coordinating node to query for its registered Member Nodes
-#' @param id The identifier that is to be reserved.
 #' @param ... Additional parameters.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
@@ -316,13 +315,14 @@ setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA),
 #' myId <- sprintf("urn:uuid:%s", UUIDgenerate())
 #' newId <- reserveIdentifier(cn, myId)
 #' }
-setGeneric("reserveIdentifier", function(x, id, ...) {
+setGeneric("reserveIdentifier", function(x, ...) {
   standardGeneric("reserveIdentifier")
 })
 
 #' @rdname reserveIdentifier
+#' @param id The identifier that is to be reserved.
 #' @return The reserved pid if it was sucessfully reserved, otherwise NULL
-setMethod("reserveIdentifier", signature("CNode", "character"), function(x, id) {
+setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
   url <- paste(x@endpoint, "reserve", sep="/")
   response <- auth_post(url, encode="multipart", body=list(pid=id), node=x)
   # Note: the DataONE reserveIdentifier service uses the subject from the client certificate
@@ -368,9 +368,10 @@ setGeneric("hasReservation", function(cnode, ...) {
 #' @rdname hasReservation
 #' @param pid The identifier that is being checked for existing as a reserved identifier or is in use as 
 #' an identifier for an existing object
-#' @param subject The subject of the principal (user) that made the reservation. If not specified, then
+#' @param subject The subject of the principal (user) that made the reservation.
 #' @return A logical value where TRUE means a reservation exists for the specified pid by the subject.
 setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.character(NA)) {
+  stopifnot(is.character(pid))
   url <- paste(cnode@endpoint, "reserve", pid, sep="/")
   # Obtain the subject from the client certificate if it has not been specified
   if(is.na(subject)) {
@@ -438,7 +439,7 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
 })
 
 #' @rdname getObject
-setMethod("getObject", signature("CNode", "character"), function(node, pid) {
+setMethod("getObject", signature("CNode"), function(node, pid) {
     url <- paste(node@endpoint, "object", pid, sep="/")
     response <- auth_get(url, node=node)
     
@@ -467,7 +468,8 @@ setMethod("getObject", signature("CNode", "character"), function(node, pid) {
 #' pid <- "aceasdata.3.2"
 #' sysmeta <- getSystemMetadata(cn, pid)
 #' }
-setMethod("getSystemMetadata", signature("CNode", "character"), function(node, pid) {
+setMethod("getSystemMetadata", signature("CNode"), function(node, pid) {
+  stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(node@endpoint, "meta", pid, sep="/")
     response <- auth_get(url, node=node)
@@ -485,7 +487,8 @@ setMethod("getSystemMetadata", signature("CNode", "character"), function(node, p
 
 #' @rdname describe
 #' @export
-setMethod("describe", signature("CNode", "character"), function(node, pid) {
+setMethod("describe", signature("CNode"), function(node, pid) {
+  stopifnot(is.character(pid))
   url <- file.path(node@endpoint, "object", pid)
   response <- HEAD(url)
   if(response$status != "200") {
@@ -508,13 +511,14 @@ setMethod("describe", signature("CNode", "character"), function(node, pid) {
 #' locations <- resolve(cn,id)
 #' }
 #' @export
-setGeneric("resolve", function(cnode,pid) {
+setGeneric("resolve", function(cnode, ...) {
   standardGeneric("resolve")
 })
 
 #' @rdname resolve
 #' @export
-setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
+setMethod("resolve", signature("CNode"), function(cnode, pid){
+  stopifnot(is.character(pid))
   url <- paste(cnode@endpoint,"resolve",pid,sep="/")
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
   res <- auth_get(url, nconfig=config, node=cnode)
@@ -573,12 +577,13 @@ setMethod("resolve", signature("CNode" ,"character"), function(cnode,pid){
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' }
-setGeneric("getMNode", function(cnode, nodeid, ...) {
+setGeneric("getMNode", function(cnode, ...) {
   standardGeneric("getMNode")
 })
 
 #' @rdname getMNode
-setMethod("getMNode", signature(cnode = "CNode", nodeid = "character"), function(cnode, nodeid) {
+setMethod("getMNode", signature(cnode = "CNode"), function(cnode, nodeid) {
+  stopifnot(is.character(nodeid))
   nodelist <- listNodes(cnode)
   match <- sapply(nodelist, function(node) { 
     node@identifier == nodeid && node@type == "mn"
@@ -633,8 +638,6 @@ setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
 #' @rdname isAuthorized
 #' @aliases isAuthorized
 #' @param cnode The node to send the request to.
-#' @param id The DataONE identifier (pid or sid) to check access for.
-#' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
 #' @param ... (Not yet used)
 #' @return a logical, TRUE if the action is authorized, false if not.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -645,13 +648,15 @@ setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
 #' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "write")
 #' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "changePermission")
 #' }
-setGeneric("isAuthorized", function(cnode, id, action, ...) {
+setGeneric("isAuthorized", function(cnode, ...) {
   standardGeneric("isAuthorized")
 })
 
 #' @rdname isAuthorized
+#' @param id The DataONE identifier (pid or sid) to check access for.
+#' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
 #' @export
-setMethod("isAuthorized", signature("CNode", "character", "character"), function(cnode, id, action) {
+setMethod("isAuthorized", signature("CNode"), function(cnode, id, action) {
   url <- sprintf("%s/isAuthorized/%s?action=%s", cnode@endpoint,id,action)
   response <- auth_get(url, node=cnode)
   # Status = 200 means that the action is authorized for the id.
