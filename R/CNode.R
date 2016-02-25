@@ -376,7 +376,7 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   if(is.na(subject)) {
     am <- AuthenticationManager()
     if(isAuthValid(am, cnode)) {
-      subject <- (am)
+      subject <- getAuthSubject(am, cnode)
     }
     if(is.na(subject)) {
       warning("Unable to determine subject for hasReservation(), please specify \"subject\" parameter")
