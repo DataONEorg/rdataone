@@ -151,7 +151,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' decription of the repository and the services it offers.
 #' @rdname getCapabilities
 #' @aliases getCapabilities
-#' @param mnode The node identifier with which this node is registered in DataONE
+#' @param x The node identifier with which this node is registered in DataONE
 #' @param ... (Not yet used.)
 #' @return an XMLInternalDocument object representing the DataONE environment
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
@@ -165,20 +165,20 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' xml <- getCapabilities(mn)
 #' }
-setGeneric("getCapabilities", function(mnode, ...) {
+setGeneric("getCapabilities", function(x, ...) {
     standardGeneric("getCapabilities")
 })
 
 #' @rdname getCapabilities
-setMethod("getCapabilities", signature("MNode"), function(mnode) {
-  url <- paste(mnode@endpoint, "node", sep="/")
+setMethod("getCapabilities", signature("MNode"), function(x) {
+  url <- paste(x@endpoint, "node", sep="/")
   # Don't need privileged access, so call GET directly vs auth_get
   
   response <- GET(url, user_agent(get_user_agent()))
   # Use charset 'utf-8' if not specified in response headers
   charset <- "utf-8"
   if(response$status != "200") {
-    stop(sprintf("Error accessing %s: %s\n", mnode@endpoint, getErrorDescription(response)))
+    stop(sprintf("Error accessing %s: %s\n", x@endpoint, getErrorDescription(response)))
   } else {
     if("content-type" %in% names(response$headers)) {
       media <- parse_media(response$headers[['content-type']])
@@ -194,7 +194,7 @@ setMethod("getCapabilities", signature("MNode"), function(mnode) {
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
 #' @rdname getObject
-setMethod("getObject", signature("MNode"), function(node, pid, check=as.logical(FALSE)) {
+setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE)) {
   
   stopifnot(is.character(pid))
     if(!class(check) == "logical") {
@@ -202,18 +202,18 @@ setMethod("getObject", signature("MNode"), function(node, pid, check=as.logical(
     }
 
     # TODO: need to properly URL-escape the PID
-    url <- paste(node@endpoint, "object", pid, sep="/")
+    url <- paste(x@endpoint, "object", pid, sep="/")
     
     # Check if the requested pid has been obsoleted by a newer version
     # and print a warning
     if (check) {
-        sysmeta <- getSystemMetadata(node, pid)
+        sysmeta <- getSystemMetadata(x, pid)
         if (!is.na(sysmeta@obsoletedBy)) {
             message(sprintf('Warning: pid "%s" is obsoleted by pid "%s"', pid, sysmeta@obsoletedBy))
         }
     }
     
-    response <- auth_get(url, node=node)
+    response <- auth_get(url, node=x)
     
     if (response$status != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
@@ -224,12 +224,12 @@ setMethod("getObject", signature("MNode"), function(node, pid, check=as.logical(
 #' @import datapackage
 #' @export
 #' @rdname getSystemMetadata
-setMethod("getSystemMetadata", signature("MNode"), function(node, pid) {
+setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
-    url <- paste(node@endpoint, "meta", pid, sep="/")
+    url <- paste(x@endpoint, "meta", pid, sep="/")
 
-    response <- auth_get(url, node=node)
+    response <- auth_get(url, node=x)
     
     # Use charset 'utf-8' if not specified in response headers
     charset <- "utf-8"
@@ -252,9 +252,9 @@ setMethod("getSystemMetadata", signature("MNode"), function(node, pid) {
 
 #' @rdname describe
 #' @export
-setMethod("describe", signature("MNode"), function(node, pid) {
+setMethod("describe", signature("MNode"), function(x, pid) {
   stopifnot(is.character(pid))
-    url <- file.path(node@endpoint, "object", pid)
+    url <- file.path(x@endpoint, "object", pid)
     response <- HEAD(url)
     if(response$status != "200") {
         d1_errors(response)
@@ -266,9 +266,9 @@ setMethod("describe", signature("MNode"), function(node, pid) {
 #' @rdname getChecksum
 #' @param checksumAlgorithm The algorithm used to calculate the checksum. Default="SHA-1"
 #' @export
-setMethod("getChecksum", signature("MNode"), function(node, pid, checksumAlgorithm="SHA-1") {
+setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm="SHA-1") {
   stopifnot(is.character(pid))
-  url <- paste(node@endpoint, "checksum", pid, sep="/")
+  url <- paste(x@endpoint, "checksum", pid, sep="/")
   response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
@@ -304,7 +304,7 @@ setMethod("getChecksum", signature("MNode"), function(node, pid, checksumAlgorit
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @rdname create
 #' @aliases create
-#' @param mnode The MNode instance on which the object will be created
+#' @param x The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
@@ -328,43 +328,43 @@ setMethod("getChecksum", signature("MNode"), function(node, pid, checksumAlgorit
 #' sysmeta <- addAccessRule(sysmeta, "public", "read")
 #' create(mn, newid, csvfile, sysmeta)
 #' }
-setGeneric("create", function(mnode, ...) {
+setGeneric("create", function(x, ...) {
     standardGeneric("create")
 })
 
 #' @rdname create
 #' @param file the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-setMethod("create", signature("MNode"), function(mnode, pid, file, sysmeta) {
+setMethod("create", signature("MNode"), function(x, pid, file, sysmeta) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
-    url <- paste(mnode@endpoint, "object", sep="/")
+    url <- paste(x@endpoint, "object", sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
     # if not, then set them to the values contained in their authentication token 
     # or X.509 certificate.
     am <- AuthenticationManager()
-    suppressMessages(isValid <- isAuthValid(am, mnode))
+    suppressMessages(isValid <- isAuthValid(am, x))
     # If authentication isn't valid, then let this call fail in auth_post, so the
     # appropriate messages are printed.
     if (isValid) {
       if(is.na(sysmeta@submitter)) {
-        sysmeta@submitter <- getAuthSubject(am, mnode)
+        sysmeta@submitter <- getAuthSubject(am, x)
       }
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter
       }
       if(is.na(sysmeta@authoritativeMemberNode)) {
-        sysmeta@authoritativeMemberNode <- mnode@identifier
+        sysmeta@authoritativeMemberNode <- x@identifier
       }
     }
     
-    sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=x@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_post(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file),
-                sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
+                sysmeta=upload_file(sm_file, type='text/xml')), node=x)
     
     # Use charset 'utf-8' if not specified in response headers
     charset <- "utf-8"
@@ -386,7 +386,7 @@ setMethod("create", signature("MNode"), function(mnode, pid, file, sysmeta) {
 #' @rdname updateObject
 #' @aliases updateObject
 #' @description This method provides the ability to update a data or metadata object to the Member Node
-#' provided in the \code{'mnode'} parameter.  In DataONE, both the original object and the new object are
+#' provided in the \code{'x'} parameter.  In DataONE, both the original object and the new object are
 #' maintained, each with its own persistent identifier, and the 'obsoletes' field in the SystemMetadata is
 #' used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
 #' @details In the version 2.0 library and higher, this operation can utilize an 
@@ -396,7 +396,7 @@ setMethod("create", signature("MNode"), function(mnode, pid, file, sysmeta) {
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
 #' system can also be used. This certificate provides authentication credentials from 
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
-#' @param mnode The MNode instance on which the object will be created
+#' @param x The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be updated
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
@@ -404,7 +404,7 @@ setMethod("create", signature("MNode"), function(mnode, pid, file, sysmeta) {
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
-setGeneric("updateObject", function(mnode, ...) {
+setGeneric("updateObject", function(x, ...) {
     standardGeneric("updateObject")
 })
 
@@ -412,36 +412,36 @@ setGeneric("updateObject", function(mnode, ...) {
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
 #' @rdname updateObject
-setMethod("updateObject", signature("MNode"), function(mnode, pid, file, newpid, sysmeta) {
+setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sysmeta) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
-    url <- paste(mnode@endpoint, "object", sep="/")
+    url <- paste(x@endpoint, "object", sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
     # if not, then set them to the values contained in their authentication token 
     # or X.509 certificate.
     am <- AuthenticationManager()
-    suppressWarnings(isValid <- isAuthValid(am, mnode))
+    suppressWarnings(isValid <- isAuthValid(am, x))
     # If authentication isn't valid, then let this call fail in auth_put, so the
     # appropriate messages are printed.
     if (isValid) {
       if(is.na(sysmeta@submitter)) {
-        sysmeta@submitter <- getAuthSubject(am, mnode)
+        sysmeta@submitter <- getAuthSubject(am, x)
       }
       if(is.na(sysmeta@rightsHolder)) {
         sysmeta@rightsHolder <- sysmeta@submitter
       }
       if(is.na(sysmeta@authoritativeMemberNode)) {
-        sysmeta@authoritativeMemberNode <- mnode@identifier
+        sysmeta@authoritativeMemberNode <- x@identifier
       }
     }
     
-    sysmetaxml <- serializeSystemMetadata(sysmeta, version=mnode@APIversion)
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=x@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_put(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file), 
-                newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=mnode)
+                newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=x)
     
     if(response$status != "200") {
         #d1_errors(response)
@@ -471,14 +471,14 @@ setMethod("updateObject", signature("MNode"), function(mnode, pid, file, newpid,
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
 #' system can also be used. This certificate provides authentication credentials from 
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
-#' @param node The MNode instance from which the SystemMetadata will be downloaded
+#' @param x The MNode instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
-setGeneric("updateSystemMetadata", function(node, ...) {
+setGeneric("updateSystemMetadata", function(x, ...) {
     standardGeneric("updateSystemMetadata")
 })
 
@@ -486,16 +486,16 @@ setGeneric("updateSystemMetadata", function(node, ...) {
 #' @param pid The identifier of the object
 #' @param sysmeta a SystemMetadata instance with updated information.
 #' @export
-setMethod("updateSystemMetadata", signature("MNode"), function(node, pid, sysmeta) {
+setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) {
   stopifnot(is.character(pid))
   stopifnot(class(sysmeta) == "SystemMetadata")
-    url <- paste(node@endpoint, "meta", pid, sep="/")
+    url <- paste(x@endpoint, "meta", pid, sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
     # if not, then set them to the values contained in their authentication token 
     # or X.509 certificate.
     am <- AuthenticationManager()
-    suppressWarnings(isValid <- isAuthValid(am, node))
+    suppressWarnings(isValid <- isAuthValid(am, x))
     # If authentication isn't valid, then let this call fail in auth_put, so the
     # appropriate messages are printed.
     if (isValid) {
@@ -507,10 +507,10 @@ setMethod("updateSystemMetadata", signature("MNode"), function(node, pid, sysmet
       }
     } 
     
-    sysmetaxml <- serializeSystemMetadata(sysmeta, version=node@APIversion)
+    sysmetaxml <- serializeSystemMetadata(sysmeta, version=x@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
-    response <- auth_put(url, encode="multipart", body=list(pid=pid, sysmeta=upload_file(sm_file, type='text/xml')), node=node)
+    response <- auth_put(url, encode="multipart", body=list(pid=pid, sysmeta=upload_file(sm_file, type='text/xml')), node=x)
     if(response$status != "200") {
       warning(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
       return(FALSE)
@@ -532,7 +532,7 @@ setMethod("updateSystemMetadata", signature("MNode"), function(node, pid, sysmet
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
 #' system can also be used. This certificate provides authentication credentials from 
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
-#' @param mnode The MNode instance on which the object will be created
+#' @param x The MNode instance on which the object will be created
 #' @param ... (Not yet used.)
 #' @rdname generateIdentifier
 #' @aliases enerateIdentifier
@@ -546,22 +546,22 @@ setMethod("updateSystemMetadata", signature("MNode"), function(node, pid, sysmet
 #' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 #' newid <- generateIdentifier(mn, "UUID")
 #' }
-setGeneric("generateIdentifier", function(mnode, ...) {
+setGeneric("generateIdentifier", function(x, ...) {
     standardGeneric("generateIdentifier")
 })
 
 #' @rdname generateIdentifier
 #' @param scheme The identifier scheme to be used, such as DOI, UUID, etc.
 #' @param fragment An optional fragment to be prepended to the identifier for schemes that support it (not all do).
-setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID", fragment=NULL) {
+setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", fragment=NULL) {
     # TODO: need to properly URL-escape the PID
-    url <- paste(mnode@endpoint, "generate", sep="/")
+    url <- paste(x@endpoint, "generate", sep="/")
     body = list(scheme = scheme, fragment = fragment)
     if (is.null(fragment)) {
         body = list(scheme = scheme)
     }
     
-    response <- auth_post(url=url,  encode="multipart", body=body, node=mnode)
+    response <- auth_post(url=url,  encode="multipart", body=body, node=x)
     charset <- "utf-8"
     if(response$status != "200") {
         stop(sprintf("Error generating ID of type %s: %s\n", scheme, getErrorDescription(response)))
@@ -585,7 +585,7 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' @details The default data package file format is a Bagit file (\url{https://tools.ietf.org/html/draft-kunze-bagit-09}).
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
-#' @param node A MNode instance representing a DataONE Member Node repository.
+#' @param x A MNode instance representing a DataONE Member Node repository.
 #' @param ... (not yet used)
 #' @return The location of the package file downloaded from the member node.
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
@@ -598,18 +598,18 @@ setMethod("generateIdentifier", signature("MNode"), function(mnode, scheme="UUID
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")
 #' }
-setGeneric("getPackage", function(node, ...) { 
+setGeneric("getPackage", function(x, ...) { 
     standardGeneric("getPackage")
 })
 
 #' @rdname getPackage
 #' @param identifier The identifier of the package to retrieve.
 #' @param format The format to send the package in.
-setMethod("getPackage", signature("MNode"), function(node, identifier, format="application/bagit-097") {
+setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097") {
     
     # getPackage was implemented in API v1.2
-    url <- sprintf("%s/packages/%s/%s", node@endpoint, URLencode(format, reserved=T), identifier)
-    response <- auth_get(url, node=node)
+    url <- sprintf("%s/packages/%s/%s", x@endpoint, URLencode(format, reserved=T), identifier)
+    response <- auth_get(url, node=x)
     
     if (response$status == "200") {
         packageFile <- tempfile(pattern=sprintf("%s-", UUIDgenerate()), fileext=".zip")
