@@ -55,7 +55,7 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #########################
 
 #' Create a CNode object.
-#' @param env The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
+#' @param x The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
 #' @param ... (not yet used)
 #' @rdname CNode
 #' @aliases CNode
@@ -65,7 +65,7 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @examples \dontrun{
 #' cn <- CNode("PROD")
 #' }
-setGeneric("CNode", function(env, ...) {
+setGeneric("CNode", function(x, ...) {
   standardGeneric("CNode")
 })
 
@@ -78,7 +78,7 @@ setMethod("CNode", signature=character(), function() {
 
 #' @rdname CNode
 #' @export
-setMethod("CNode", signature("character"), function(env) {
+setMethod("CNode", signature("character"), function(x) {
 
   ## Define the default CNs for each environment.
   PROD <- "https://cn.dataone.org/cn"
@@ -95,14 +95,14 @@ setMethod("CNode", signature("character"), function(env) {
   if(cn.url != "") {
     CN_URI <- cn.url
   } else {
-    if (env == "DEV") CN_URI <- DEV
-    else if (env == "DEV2") CN_URI <- DEV2
-    else if (env == "STAGING") CN_URI <- STAGING
-    else if (env == "STAGING2") CN_URI <- STAGING2
-    else if (env == "SANDBOX") CN_URI <- SANDBOX
-    else if (env == "SANDBOX2") CN_URI <- SANDBOX2
-    else if (env == "PROD") CN_URI <- PROD
-    else stop(sprintf("Unknown DataONE environment: %s", env))
+    if (x == "DEV") CN_URI <- DEV
+    else if (x == "DEV2") CN_URI <- DEV2
+    else if (x == "STAGING") CN_URI <- STAGING
+    else if (x == "STAGING2") CN_URI <- STAGING2
+    else if (x == "SANDBOX") CN_URI <- SANDBOX
+    else if (x == "SANDBOX2") CN_URI <- SANDBOX2
+    else if (x == "PROD") CN_URI <- PROD
+    else stop(sprintf("Unknown DataONE environment: %s", x))
   }
 
   ## create new D1Client object and insert uri endpoint
@@ -132,7 +132,7 @@ setMethod("CNode", signature("character"), function(env) {
 #' List all object formats registered in DataONE.
 #' @description The \link{listFormats} method queries a DataONE Coordinating Node for a 
 #' list of all entries in the Object Format Vocabulary.
-#' @param cnode a valid CNode object
+#' @param x a valid CNode object
 #' @param ... (Not yet used)
 #' @import httr
 #' @rdname listFormats
@@ -146,15 +146,15 @@ setMethod("CNode", signature("character"), function(env) {
 #' formats <- listFormats(cn)
 #' }
 #' @export
-setGeneric("listFormats", function(cnode, ...) {
+setGeneric("listFormats", function(x, ...) {
   standardGeneric("listFormats")
 })
 
 #' @rdname listFormats
 #' @import plyr
 #' @export
-setMethod("listFormats", signature("CNode"), function(cnode) {
-  url <- paste(cnode@endpoint,"formats",sep="/")
+setMethod("listFormats", signature("CNode"), function(x) {
+  url <- paste(x@endpoint,"formats",sep="/")
   out <- GET(url, user_agent(get_user_agent()))
   out <- xmlToList(xmlParse(content(out,as="text")))
   ## Below could be done with plyr functionality, but I want to reduce
@@ -188,7 +188,7 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 #' Get information for a single DataONE object format
 #' @rdname getFormat
 #' @aliases getFormat
-#' @param cnode A CNode object instance
+#' @param x A CNode object instance
 #' @param ... (Not yet used)
 #' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -202,15 +202,15 @@ setMethod("listFormats", signature("CNode"), function(cnode) {
 #' cat(sprintf("format Id: %s\n", fmt$id))
 #' }
 #' @export
-setGeneric("getFormat", function(cnode, ...) {
+setGeneric("getFormat", function(x, ...) {
   standardGeneric("getFormat")
 })
 
 #' @rdname getFormat
 #' @param formatId The formatId to retrieve.
 #' @export
-setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
-  url <- paste(cnode@endpoint,"formats", URLencode(formatId), sep="/")
+setMethod("getFormat", signature("CNode"), function(x, formatId) {
+  url <- paste(x@endpoint,"formats", URLencode(formatId), sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   
   if(response$status != "200") {
@@ -235,8 +235,8 @@ setMethod("getFormat", signature("CNode"), function(cnode, formatId) {
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(cn, pid)
 #' }
-setMethod("getChecksum", signature("CNode"), function(node, pid, ...) {
-  url <- paste(node@endpoint, "checksum", pid, sep="/")
+setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
+  url <- paste(x@endpoint, "checksum", pid, sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
@@ -258,7 +258,7 @@ setMethod("getChecksum", signature("CNode"), function(node, pid, ...) {
 #' Get the list of nodes associated with a CN
 #' @rdname listNodes
 #' @aliases listNodes
-#' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param x The coordinating node to query for its registered Member Nodes
 #' @param ... (Not yet used)
 #' @return the list of nodes in the DataONE CN environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -269,19 +269,19 @@ setMethod("getChecksum", signature("CNode"), function(node, pid, ...) {
 #' nodelist <- listNodes(cn)
 #' nodeid <- nodelist[[2]]@identifier
 #' }
-setGeneric("listNodes", function(cnode, ...) {
+setGeneric("listNodes", function(x, ...) {
     standardGeneric("listNodes")
 })
 
 #' @rdname listNodes
 #' @param url Optianal - the url of the CN.
 #' @export
-setMethod("listNodes", signature("CNode"), function(cnode, url=as.character(NA), ...) {
+setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...) {
     # If an optional url argument is specified, use that. This might be used if
     # we are listing just the CN itself, and don't know the version number, i.e.
     # "https://cn-dev.test.dataone.org/cn" gvies a listing for just the CN
     if(is.na(url)) {
-      url <- paste(cnode@endpoint, "node", sep="/")
+      url <- paste(x@endpoint, "node", sep="/")
     }
     # Don't need authorized access, so call GET directly vs auth_get
     response <- GET(url)
@@ -347,7 +347,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
 #' been reserved by the specified DataONE user identity (\code{subject}).
 #' @details To determine the DataONE identity that is currently being used for DataONE
 #' authentication, use the \code{echoCredentials} method.
-#' @param cnode A CNode instance.
+#' @param x A CNode instance.
 #' @param ... Additional parameters.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
@@ -361,7 +361,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
 #' pid <- "urn:node:e27bb4f3-96bb-4af4-8902-f5914def077c"
 #' hasRes <- hasReservation(cn, pid, subject=subject)
 #' }
-setGeneric("hasReservation", function(cnode, ...) {
+setGeneric("hasReservation", function(x, ...) {
   standardGeneric("hasReservation")
 })
 
@@ -370,14 +370,14 @@ setGeneric("hasReservation", function(cnode, ...) {
 #' an identifier for an existing object
 #' @param subject The subject of the principal (user) that made the reservation.
 #' @return A logical value where TRUE means a reservation exists for the specified pid by the subject.
-setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.character(NA)) {
+setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.character(NA)) {
   stopifnot(is.character(pid))
-  url <- paste(cnode@endpoint, "reserve", pid, sep="/")
+  url <- paste(x@endpoint, "reserve", pid, sep="/")
   # Obtain the subject from the client certificate if it has not been specified
   if(is.na(subject)) {
     am <- AuthenticationManager()
-    if(isAuthValid(am, cnode)) {
-      subject <- getAuthSubject(am, cnode)
+    if(isAuthValid(am, x)) {
+      subject <- getAuthSubject(am, x)
     }
     if(is.na(subject)) {
       warning("Unable to determine subject for hasReservation(), please specify \"subject\" parameter")
@@ -385,7 +385,7 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
   }
   # The subject might contain '=', so encode reserved chars also.
   url <- sprintf("%s?%s", url, sprintf("subject=%s", URLencode(subject, reserved=TRUE)))
-  response <- auth_get(url, node=cnode)
+  response <- auth_get(url, node=x)
   # The DataONE 'hasReservation' service uses the HTTP status code to communicate the
   # existence of a reservation for the pid and subject combination. The following HTTP status
   # codes and their meaning are shown below:
@@ -412,24 +412,24 @@ setMethod("hasReservation", signature("CNode"), function(cnode, pid, subject=as.
 #' In DataONE version 2.0, authentication tokens can also be used.
 #' @rdname setObsoletedBy
 #' @aliases setObsoletedBy
-#' @param cnode The CNode instance on which the object will be created
+#' @param x The CNode instance on which the object will be created
 #' @param pid The identifier of the object to be obsoleted
 #' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
 #' @param serialVersion The serial version of the system metadata of the pid being obsoleted. 
 #' @param ... (Not yet used)
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-setGeneric("setObsoletedBy", function(cnode, pid, obsoletedByPid, ...) {
+setGeneric("setObsoletedBy", function(x, pid, obsoletedByPid, ...) {
   .Defunct("updateObject", "dataone")
   standardGeneric("setObsoletedBy")
 })
 
 #' @rdname setObsoletedBy
 #' @return TRUE if the pid was obsoleted, otherwise FALSE is returned
-setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid, obsoletedByPid, serialVersion) {
-  url <- paste(cnode@endpoint, "obsoletedBy", URLencode(pid, reserved=TRUE), sep="/")
+setMethod("setObsoletedBy", signature("CNode", "character"), function(x, pid, obsoletedByPid, serialVersion) {
+  url <- paste(x@endpoint, "obsoletedBy", URLencode(pid, reserved=TRUE), sep="/")
   body=list(obsoletedByPid=URLencode(obsoletedByPid), serialVersion=serialVersion)
-  response <- auth_put(url=url, body=body, node=cnode)
+  response <- auth_put(url=url, body=body, node=x)
   if(response$status != "200") {
       warning(sprintf("Error obsoleting %s: %s\n", pid, getErrorDescription(response)))
     return(FALSE)
@@ -439,9 +439,9 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(cnode, pid
 })
 
 #' @rdname getObject
-setMethod("getObject", signature("CNode"), function(node, pid) {
-    url <- paste(node@endpoint, "object", pid, sep="/")
-    response <- auth_get(url, node=node)
+setMethod("getObject", signature("CNode"), function(x, pid) {
+    url <- paste(x@endpoint, "object", pid, sep="/")
+    response <- auth_get(url, node=x)
     
     if(response$status != "200") {
         warning(sprintf("Error getting pid: %s\n", getErrorDescription(response)))
@@ -468,11 +468,11 @@ setMethod("getObject", signature("CNode"), function(node, pid) {
 #' pid <- "aceasdata.3.2"
 #' sysmeta <- getSystemMetadata(cn, pid)
 #' }
-setMethod("getSystemMetadata", signature("CNode"), function(node, pid) {
+setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
-    url <- paste(node@endpoint, "meta", pid, sep="/")
-    response <- auth_get(url, node=node)
+    url <- paste(x@endpoint, "meta", pid, sep="/")
+    response <- auth_get(url, node=x)
     
     if(response$status != "200") {
       warning(sprintf("Error getting SystemMetadata: %s\n", getErrorDescription(response)))
@@ -487,9 +487,9 @@ setMethod("getSystemMetadata", signature("CNode"), function(node, pid) {
 
 #' @rdname describe
 #' @export
-setMethod("describe", signature("CNode"), function(node, pid) {
+setMethod("describe", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
-  url <- file.path(node@endpoint, "object", pid)
+  url <- file.path(x@endpoint, "object", pid)
   response <- HEAD(url)
   if(response$status != "200") {
     d1_errors(response)
@@ -498,7 +498,8 @@ setMethod("describe", signature("CNode"), function(node, pid) {
 
 #' Get a list of coordinating nodes holding a given pid.
 #' @description Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
-#' @param cnode a valid CNode object
+#' @param x a valid CNode object
+#' @param ... Additional arguments (not yet used).
 #' @param pid the id of the identified object
 #' @rdname resolve
 #' @aliases resolve
@@ -511,17 +512,17 @@ setMethod("describe", signature("CNode"), function(node, pid) {
 #' locations <- resolve(cn,id)
 #' }
 #' @export
-setGeneric("resolve", function(cnode, ...) {
+setGeneric("resolve", function(x, ...) {
   standardGeneric("resolve")
 })
 
 #' @rdname resolve
 #' @export
-setMethod("resolve", signature("CNode"), function(cnode, pid){
+setMethod("resolve", signature("CNode"), function(x, pid){
   stopifnot(is.character(pid))
-  url <- paste(cnode@endpoint,"resolve",pid,sep="/")
+  url <- paste(x@endpoint,"resolve",pid,sep="/")
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
-  res <- auth_get(url, nconfig=config, node=cnode)
+  res <- auth_get(url, nconfig=config, node=x)
   # Check if there was an error downloading the object
   # The DataONE resolve service returns HTTP status 303, which essentially
   # means the response contains a URI to the object that was requested and
@@ -566,7 +567,7 @@ setMethod("resolve", signature("CNode"), function(cnode, pid){
 #' Get a reference to a node based on its identifier
 #' @rdname getMNode
 #' @aliases getMNode
-#' @param cnode The coordinating node to query for its registered Member Nodes
+#' @param x The coordinating node to query for its registered Member Nodes
 #' @param nodeid The standard identifier string for this node
 #' @param ... (Not yet used)
 #' @return the Member Node as an MNode reference, or NULL if not found
@@ -577,16 +578,16 @@ setMethod("resolve", signature("CNode"), function(cnode, pid){
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' }
-setGeneric("getMNode", function(cnode, ...) {
+setGeneric("getMNode", function(x, ...) {
   standardGeneric("getMNode")
 })
 
 #' @rdname getMNode
-setMethod("getMNode", signature(cnode = "CNode"), function(cnode, nodeid) {
+setMethod("getMNode", signature(x = "CNode"), function(x, nodeid) {
   stopifnot(is.character(nodeid))
-  nodelist <- listNodes(cnode)
-  match <- sapply(nodelist, function(node) { 
-    node@identifier == nodeid && node@type == "mn"
+  nodelist <- listNodes(x)
+  match <- sapply(nodelist, function(x) { 
+    x@identifier == nodeid && x@type == "mn"
   })
   output.list <- nodelist[match]
   if (length(output.list) == 1) {
@@ -605,7 +606,7 @@ setMethod("getMNode", signature(cnode = "CNode"), function(cnode, nodeid) {
 #' authentication token are send with the request.
 #' @rdname echoCredentials
 #' @aliases echoCredentials
-#' @param cnode The coordinating node to send the request to.
+#' @param x The coordinating node to send the request to.
 #' @param ... (Not yet used)
 #' @return A list containing authentication info.
 #' @export
@@ -614,14 +615,14 @@ setMethod("getMNode", signature(cnode = "CNode"), function(cnode, nodeid) {
 #' creds <- echoCredentials(cn)
 #' print(creds$person$subject)
 #' }
-setGeneric("echoCredentials", function(cnode, ...) {
+setGeneric("echoCredentials", function(x, ...) {
   standardGeneric("echoCredentials")
 })
 
 #' @rdname echoCredentials
-setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
-  url <- sprintf("%s/diag/subject", cnode@endpoint)
-  response <- auth_get(url, node=cnode)
+setMethod("echoCredentials", signature(x = "CNode"), function(x) {
+  url <- sprintf("%s/diag/subject", x@endpoint)
+  response <- auth_get(url, node=x)
   if(response$status != "200") {
     warning(sprintf("Error checking credentails %s", getErrorDescription(response)))
     return(as.character(NA))
@@ -637,7 +638,7 @@ setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
 #' or series identifier (sid).
 #' @rdname isAuthorized
 #' @aliases isAuthorized
-#' @param cnode The node to send the request to.
+#' @param x The node to send the request to.
 #' @param ... (Not yet used)
 #' @return a logical, TRUE if the action is authorized, false if not.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -648,7 +649,7 @@ setMethod("echoCredentials", signature(cnode = "CNode"), function(cnode) {
 #' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "write")
 #' isAuthorized(cn, "doi:10.5072/FK2/LTER/sbclter.842.1", "changePermission")
 #' }
-setGeneric("isAuthorized", function(cnode, ...) {
+setGeneric("isAuthorized", function(x, ...) {
   standardGeneric("isAuthorized")
 })
 
@@ -656,9 +657,9 @@ setGeneric("isAuthorized", function(cnode, ...) {
 #' @param id The DataONE identifier (pid or sid) to check access for.
 #' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
 #' @export
-setMethod("isAuthorized", signature("CNode"), function(cnode, id, action) {
-  url <- sprintf("%s/isAuthorized/%s?action=%s", cnode@endpoint,id,action)
-  response <- auth_get(url, node=cnode)
+setMethod("isAuthorized", signature("CNode"), function(x, id, action) {
+  url <- sprintf("%s/isAuthorized/%s?action=%s", x@endpoint,id,action)
+  response <- auth_get(url, node=x)
   # Status = 200 means that the action is authorized for the id.
   # Status = 401 means that the subject is not authorized for the action, not an error.
   if(response$status == "401") {
