@@ -59,8 +59,8 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
 #' The DataONE client class used to downlaod, update and search for data in the DataONE network.
 #' @rdname D1Client
-#' @param env The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
-#' @param mNodeid The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
+#' @param x The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
+#' @param y The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
 #' @param ... (not yet used)
 #' @return the D1Client object representing the DataONE environment
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
@@ -68,7 +68,7 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' @examples \dontrun{
 #' cli <- D1Client("PROD", "urn:node:KNB")
 #' }
-setGeneric("D1Client", function(env, mNodeid, ...) {
+setGeneric("D1Client", function(x, y, ...) {
     standardGeneric("D1Client")
 })
 
@@ -81,16 +81,16 @@ setMethod("D1Client", signature=character(), function() {
 
 #' @rdname D1Client
 #' @export
-setMethod("D1Client", signature("character"), function(env, ...) {
+setMethod("D1Client", signature("character"), function(x, ...) {
     #message("Instantiating D1Client without a default Member Node.")
-    result <- D1Client(env, "")
+    result <- D1Client(x, "")
     return(result)
 })
 
 #' @rdname D1Client
 #' @export
-setMethod("D1Client", signature("character", "character"), function(env, mNodeid) {
-    result <- new("D1Client", env=env, mNodeid=mNodeid)
+setMethod("D1Client", signature("character", "character"), function(x, y) {
+    result <- new("D1Client", env=x, mNodeid=y)
     return(result)
 })
 
@@ -293,6 +293,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' @description The DataONE CN Solr query engine is searched using
 #' the provided query string. 
 #' @param x  D1Client: representing the DataONE environment being queried
+#' @param ... Additional parameters
 #' @param solrQuery  character: a query string 
 #' @return a vector of identifiers found
 #' @rdname d1IdentifierSearch
@@ -557,7 +558,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
   standardGeneric("uploadDataPackage")
 })
 
-#' @rdname upload, DataPackage
+#' @rdname uploadDataPackage
 #' @param dp The DataPackage instance to be submitted to DataONE for creation.
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
