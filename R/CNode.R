@@ -627,7 +627,7 @@ setMethod("echoCredentials", signature(x = "CNode"), function(x) {
     warning(sprintf("Error checking credentails %s", getErrorDescription(response)))
     return(as.character(NA))
   }
-  result <- xmlToList(content(response,as="parsed"))
+  result <- xmlToList(xmlParse(content(response,as="text")))
   return(result)
 })
 
