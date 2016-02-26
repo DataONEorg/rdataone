@@ -53,22 +53,28 @@
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
 #' @examples
-#' \dontrun{
+#' library(dataone)
+#' library(uuid)
+#' library(digest)
 #' cn <- CNode("STAGING")
 #' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 #' mnid <- mn@identifier
+#' # Have Dataone create an identifier for you (requires authentication)
+#' \dontrun{
 #' newid <- generateIdentifier(mn, "UUID")
-#' am <- AuthenticationManager()
-#' authorized <- isAuthValid(am, mn)
-#' u <- getAuthSubject(am)
+#' }
+#' # Create an identifier manually
+#' newid <- paste("urn:uuid:", UUIDgenerate(), sep="")
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- paste(tempfile(), ".csv", sep="")
 #' write.csv(testdf, csvfile, row.names=FALSE)
 #' f <- "text/csv"
 #' size <- file.info(csvfile)$size
 #' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size, submitter=u, 
-#'     rightsHolder=u, checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+#' sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size,
+#'     checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+#' # Upload data to DataONE (requires authentication)
+#' \dontrun{
 #' response <- create(mn, newid, csvfile, sysmeta)
 #' }
 setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
@@ -90,9 +96,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @export
 #' @examples
-#' \dontrun{
 #' mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
-#' }
 setGeneric("MNode", function(x) {
     standardGeneric("MNode")
 })
@@ -159,12 +163,10 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @import httr
 #' @export
 #' @examples
-#' \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' xml <- getCapabilities(mn)
-#' }
 setGeneric("getCapabilities", function(x, ...) {
     standardGeneric("getCapabilities")
 })
@@ -312,12 +314,19 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @import datapackage
 #' @export
 #' @examples
-#' \dontrun{
 #' # Create an object in the DataONE "STAGING" environment
 #' library(dataone)
+#' library(uuid)
+#' library(digest)
+#' library(datapackage)
 #' cn <- CNode("STAGING")
 #' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+#' # Have Dataone create an identifier for you (requires authentication)
+#' \dontrun{
 #' newid <- generateIdentifier(mn, "UUID")
+#' }
+#' # Create an identifier manually
+#' newid <- paste("urn:uuid:", UUIDgenerate(), sep="") 
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- paste(tempfile(), ".csv", sep="")
 #' write.csv(testdf, csvfile, row.names=FALSE)
@@ -326,6 +335,8 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 #' sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
 #' sysmeta <- addAccessRule(sysmeta, "public", "read")
+#' # Upload the data to DataONE (requires authentication)
+#' \dontrun{
 #' create(mn, newid, csvfile, sysmeta)
 #' }
 setGeneric("create", function(x, ...) {
