@@ -65,9 +65,8 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' @return the D1Client object representing the DataONE environment
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples 
 #' cli <- D1Client("PROD", "urn:node:KNB")
-#' }
 setGeneric("D1Client", function(x, y, ...) {
     standardGeneric("D1Client")
 })
@@ -103,10 +102,9 @@ setMethod("D1Client", signature("character", "character"), function(x, y) {
 #' @rdname D1Client-initialize
 #' @aliases D1Client-initialize
 #' @export
-#' @examples \dontrun{
+#' @examples 
 #' library(dataone)
-#' d1c <- new("DIClient", env="PROD", mNodeid="urn:node:KNB")
-#' }
+#' d1c <- D1Client("PROD", "urn:node:KNB")
 #' @seealso \code{\link[=D1Client-class]{dataone}}{ class description.}
 setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
     # defaults here
@@ -136,16 +134,16 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #' @aliases createD1Object
 #' @return TRUE if the object was successfully uploaded, FALSE if not.
 #' @export
-#' @examples
-#' \dontrun{
+#' @examples \dontrun{
 #' library(dataone)
 #' library(uuid)
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' data <- readLines(system.file("extdata/sample-eml.xml", package="dataone"))
 #' dataRaw <- charToRaw(paste(data, collapse="\n"))
 #' newid <- sprintf("urn:node:%s", UUIDgenerate())
 #' d1o <- new("D1Object", id=newid, data=dataRaw, format="text/plain")
 #' d1o <- setPublicAccess(d1o)
+#' # Upload the object to DataONE (requires authentication)
 #' uploaded <- createD1Object(d1c, d1o)
 #' }
 setGeneric("createD1Object", function(x, d1Object, ...) {
@@ -174,9 +172,9 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @return A datapackage:DataObject
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \dontrun{ 
 #' library(dataone)
-#' d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+#' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"
 #' dataObj <- getD1Object(d1c, pid)
 #' data <- getData(dataObj)
@@ -208,13 +206,12 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @return A DataObject or NULL if the object was not found in DataONE
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples 
 #' library(dataone)
-#' d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+#' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"
 #' obj <- getDataObject(d1c, pid)
 #' data <- getData(obj)
-#' }
 setGeneric("getDataObject", function(x, identifier, ...) { 
     standardGeneric("getDataObject")
 })
@@ -263,9 +260,9 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
 #' @rdname d1SolrQuery
 #' @aliases d1SolrQuery
 #' @export
-#' @examples \dontrun{
+#' @examples \dontrun{ 
 #' library(dataone)
-#' d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+#' d1c <- D1Client("PROD", "urn:node:KNB")
 #' queryParams <- list(q="id:doi*", rows="5", 
 #'     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
 #'     fl="title,id,abstract,size,dateUploaded,attributeName")
@@ -341,7 +338,10 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' testdf <- data.frame(x=1:10,y=11:20)
+#' csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+#' write.csv(testdf, csvfile, row.names=FALSE)
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' dp <- new("DataPackage")
 #' emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
 #' emlChar <- readLines(emlFile)
@@ -550,7 +550,8 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' metadataObj <- setPublicAccess(metadataObj)
 #' addData(dp, metadataObj)
 #' addData(dp, dataObj, metadataObj)
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+#' # Upload all members of the DataPackage to DataONE (requires authentication)
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
@@ -628,14 +629,16 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @import datapackage
 #' @export
-#' @examples \dontrun{
+#' @examples
 #' library(dataone)
 #' library(datapackage)
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
 #' write.csv(testdf, csvfile, row.names=FALSE)
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
+#' # Upload a single DataObject to DataONE (requires authentication)
+#' \dontrun{
 #' newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
 #' }
 setGeneric("uploadDataObject", function(x, ...) {
@@ -750,8 +753,8 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @return the dataframe serialized as a .csv
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' @examples \dontrun{ 
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' sdf <- convert.csv(d1c, testdf)  
 #' }
@@ -780,8 +783,9 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' @return the encoded form of the input
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @examples \dontrun{
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' fullyEncodedQuery <- paste0("q=id:",
-#'     encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
+#'     encodeUrlQuery(d1c, encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 #' }
 #' @export
 setGeneric("encodeUrlQuery", function(x, ...) {
@@ -814,8 +818,9 @@ setMethod("encodeUrlQuery", signature(x="D1Client"), function(x, querySegment, .
 #' @rdname encodeUrlPath
 #' @aliases encodeUrlPath
 #' @examples \dontrun{
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' fullyEncodedPath <- paste0("cn/v1/object/", 
-#'     encodeUrlPath("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
+#'     encodeUrlPath(d1c, "doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
@@ -846,7 +851,7 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 #' library(datapackage)
 #' library(uuid)
 #' dp <- new("DataPackage")
-#' d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' # Create metadata object that describes science data
 #' emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
 #' emlChar <- readLines(emlFile)
@@ -875,4 +880,3 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as
     insertRelationship(x, getIdentifier(mo@dataObject), getIdentifier(do@dataObject))
   }
 })
-
