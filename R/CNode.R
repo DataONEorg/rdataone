@@ -62,9 +62,8 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @return the CNode object representing the DataONE environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples
 #' cn <- CNode("PROD")
-#' }
 setGeneric("CNode", function(x, ...) {
   standardGeneric("CNode")
 })
@@ -140,11 +139,9 @@ setMethod("CNode", signature("character"), function(x) {
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples
-#' \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' formats <- listFormats(cn)
-#' }
 #' @export
 setGeneric("listFormats", function(x, ...) {
   standardGeneric("listFormats")
@@ -193,14 +190,12 @@ setMethod("listFormats", signature("CNode"), function(x) {
 #' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @examples
-#' \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
 #' cat(sprintf("format name: %s\n", fmt$name))
 #' cat(sprintf("format type: %s\n", fmt$type))
 #' cat(sprintf("format Id: %s\n", fmt$id))
-#' }
 #' @export
 setGeneric("getFormat", function(x, ...) {
   standardGeneric("getFormat")
@@ -229,12 +224,10 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
 #' @rdname getChecksum
 #' @export
 #' @examples
-#' \dontrun{
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' cn <- CNode()
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(cn, pid)
-#' }
 setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
   url <- paste(x@endpoint, "checksum", pid, sep="/")
   response <- GET(url, user_agent(get_user_agent()))
@@ -462,12 +455,10 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 #' @export
 #' @rdname getSystemMetadata
 #' @examples
-#' \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' pid <- "aceasdata.3.2"
 #' sysmeta <- getSystemMetadata(cn, pid)
-#' }
 setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
@@ -506,7 +497,7 @@ setMethod("describe", signature("CNode"), function(x, pid) {
 #' @return A list of URLs that the object can be downloaded from, or NULL if the object is not found.
 #' @examples
 #' \dontrun{
-#' library(dataon)
+#' library(dataone)
 #' cn <- CNode("STAGING")
 #' id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"
 #' locations <- resolve(cn,id)
@@ -574,10 +565,8 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
 #' @examples
-#' \dontrun{
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
-#' }
 setGeneric("getMNode", function(x, ...) {
   standardGeneric("getMNode")
 })
