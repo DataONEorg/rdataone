@@ -1,7 +1,7 @@
 Package: dataone
 Version: 2.0.0
 Date: 2016-02-25
-Title: R interface to the DataONE REST API
+Title: R Interface to the DataONE REST API
 Authors@R: c( 
   person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
   person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
@@ -14,7 +14,7 @@ Authors@R: c(
   person("Scott", "Chamberlain", role = "aut", email = "myrmecocystus@gmail.com"),
   person("Regents of the University of California", role = c("cph"))) 
 VignetteBuilder: knitr
-Description: A package that provides read/write access to data and metadata from
+Description: This package provides read/write access to data and metadata from
     the DataONE network of Member Node data repositories.
 Depends:
     R (>= 3.1.1),
