@@ -33,14 +33,6 @@ found at \url{https://cn.dataone.org/cn/v2/formats}
 Subclass implementers should conform their methods to the behavior defined 
 in the generic.
 }
-\examples{
-\dontrun{
-   ## asDataFrame(D1Object,D1Object) implementation uses the following:
-   dtdClassName <- tableDescriber.registry[[ metadataFormatId ]]
-   dtd <- do.call(dtdClassName, list(metadata.d1Object))
-}
- 
-}
 \author{
 rnahf
 }
