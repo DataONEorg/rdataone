@@ -252,9 +252,9 @@ setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
     return(sysmeta)
 })
 
-#' @rdname describe
+#' @rdname describeObject
 #' @export
-setMethod("describe", signature("MNode"), function(x, pid) {
+setMethod("describeObject", signature("MNode"), function(x, pid) {
   stopifnot(is.character(pid))
     url <- file.path(x@endpoint, "object", pid)
     response <- HEAD(url)

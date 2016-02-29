@@ -39,7 +39,7 @@
 #'  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
 #'  \item{\code{\link{getObject}}}{: Get the bytes associated with an object on this Coordinating Node.} 
 #'  \item{\code{\link{getSystemMetadata}}}{: Get the bytes associated with an object on this Coordinating Node.}
-#'  \item{\code{\link{describe}}}{: Get a list of coordinating nodes holding a given pid.} 
+#'  \item{\code{\link{describeObject}}}{: Get a list of coordinating nodes holding a given pid.} 
 #'  \item{\code{\link{resolve}}}{: Get a list of coordinating nodes holding a given pid.}
 #'  \item{\code{\link{getMNode}}}{: Get a reference to a node based on its identifier.} 
 #'  \item{\code{\link{echoCredentials}}}{: Echo the credentials used to make the call.} 
@@ -476,9 +476,9 @@ setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
     return(sysmeta)
 })
 
-#' @rdname describe
+#' @rdname describeObject
 #' @export
-setMethod("describe", signature("CNode"), function(x, pid) {
+setMethod("describeObject", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
   url <- file.path(x@endpoint, "object", pid)
   response <- HEAD(url)

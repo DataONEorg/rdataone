@@ -330,8 +330,8 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
 #' part of the URL path and must be escaped accordingly.
 #' @param ... (Not yet used)
-#' @rdname describe
-#' @aliases describe
+#' @rdname describeObject
+#' @aliases describeObject
 #' @return A list of header elements
 #' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
 #' @examples
@@ -339,11 +339,11 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 #' mn <- MNode(mn_uri)
 #' pid <- "knb.473.1"
-#' describe(mn, pid)
-#' describe(mn, "adfadf") # warning message when wrong pid
+#' describeObject(mn, pid)
+#' describeObject(mn, "adfadf") # warning message when wrong pid
 #' @export
-setGeneric("describe", function(x, ...) {
-  standardGeneric("describe")
+setGeneric("describeObject", function(x, ...) {
+  standardGeneric("describeObject")
 })
 
 #' Retrieve the list of objects that match the search parameters
