@@ -151,4 +151,4 @@ downloaded Bagit file can be quiet large and may take a significant amount of ti
 depending on the package contents. 
 
 Technical information about DataONE data package design and contents is available at
-[DataONE data packages](https://purl.dataone.org/architecturev2/design/DataPackage.html)
+[DataONE data packages](https://purl.dataone.org/architecture/design/DataPackage.html)

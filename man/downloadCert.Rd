@@ -17,7 +17,7 @@ downloadCert(x, ...)
 }
 \description{
 A convenience method to take you to the CILogon download page:  
-\url{'https://cilogon.org/?skin=DataONE'}. Logging into CILogon will allow
+"https://cilogon.org/?skin=DataONE. Logging into CILogon will allow
 you to download your X.509 certificate to your local computer.  Typically,
 the certificate is saved in the default Globus location for certificates 
 (\code{\link{getCertLocation}}) and once it is there, the \code{'dataone'} 

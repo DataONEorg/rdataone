@@ -12,15 +12,14 @@ The primary method to locate data in the DataONE network is to use the web based
 
 Data can also be discovered programatically from R using the *dataone* R client method `query`. Both the web page and the R method
 access the same
-underlying search mechanism, the Apache Foundation Solr search engine that runs on the DataONE Coordinating Node (CN) located at
-(https://cn.dataone.org/cn). The DataONE Solr index (similar to a catalog or database) contains infrormation for every dataset that is available from 
-the DataONE network. 
+underlying search mechanism, the Apache Foundation Solr search engine that runs on the 
+[DataONE Coordinating Node](https://www.dataone.org/coordinating-nodes). The DataONE Solr index, similar to a catalog or database, contains 
+infrormation for every dataset that is available from the DataONE network. 
 
 Information about the Solr search engine can be obtained at [Solr Resources](http://lucene.apache.org/solr/resources.html) and 
 [Solr Tutorial](http://www.solrtutorial.com)
 
-Additional information about searching DataONE can be viewed at [Content Discovery](https://mule1.dataone.org/ArchitectureDocs-current/design/SearchMetadata.html).
-
+Additional information about searching DataONE can be viewed at [Content Discovery](https://purl.dataone.org/architecture/design/SearchMetadata.html). 
 ## Using The `query` Method
 
 Some familiarity with Solr is helpful to use the `query` method
@@ -60,7 +59,7 @@ ids <- lapply(result, function(x) {
 })
 ```
   
-The complete list of possible searchable values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v1/query/solr). However,
+The complete list of possible searchable values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v2/query/solr). However,
 the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
 
 The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
@@ -85,7 +84,7 @@ A search may be performed by just specifying query fields and values using the *
 For example, to search for datasets that mention 'kelp' in the abstract and have an attribute discription that contains the word 'biomass', the following query could be used:
 ```{r, eval=F}
 cn <- CNode("PROD")
-mn <- getMNode(cn, "urn:node:mnKNB")
+mn <- getMNode(cn, "urn:node:KNB")
 mySearchTerms <- list(abstract="kelp", attribute="biomass")
 result <- query(cn, searchTerms=mySearchTerms, as="data.frame")
 ```
@@ -95,8 +94,7 @@ based on the list, that is passed on to the DataONE node specified.
 
 The names in the *searchTerm* list are the query field names available from the Solr query engine
 being used. These names can be determined using the *queryEngineDescription* method, or simply
-navigating a web browser to the appropriate link. For the example above, the query engine
-description can be found at https://knb.ecoinformatics.org/knb/d1/mn/v1/query/solr.
+using a web browser to view https://cn.dataone.org/cn/v2/query/solr.
 
 ## Search just a member node
 If it is known which Member Node holds the data of interest, then a search can be limited to just that

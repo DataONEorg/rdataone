@@ -43,7 +43,7 @@
 #' CILogon recognizes many identity providers, including many universities as well as
 #' Google, so most times users new to DataONE can get certificates using one
 #' of their existing accounts. For more information about the CILogon service, see 
-#' \url{https://cilogon.org/?skin=DataONE} .
+#' "https://cilogon.org/?skin=DataONE" .
 #' 
 #' X509 Certificates differ from typical username-password login schemes in that
 #' certificates can be used by more than one application, which is very useful when
@@ -204,7 +204,7 @@ setMethod("getCertExpires", signature("CertificateManager"), function(x) {
 
 #' Open the CILogon Certificate download page in the default browser.
 #' @description A convenience method to take you to the CILogon download page:  
-#' \url{'https://cilogon.org/?skin=DataONE'}. Logging into CILogon will allow
+#' "https://cilogon.org/?skin=DataONE. Logging into CILogon will allow
 #' you to download your X.509 certificate to your local computer.  Typically,
 #' the certificate is saved in the default Globus location for certificates 
 #' (\code{\link{getCertLocation}}) and once it is there, the \code{'dataone'} 

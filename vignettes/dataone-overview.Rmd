@@ -26,12 +26,12 @@ dataset.
 
 If more detailed information is required than is provided by the *dataone* R package help, then in-depth documentation for the DataONE web services can be found at:
 
-- Detailed overview [DataONE CN API](https://purl.dataone.org/architecturev2/apis/CN_APIs.html)
-- Detailed overview [DataONE MN API](https://purl.dataone.org/architecturev2/apis/MN_APIs.html)
+- Detailed overview [DataONE CN API](https://purl.dataone.org/architecture/apis/CN_APIs.html)
+- Detailed overview [DataONE MN API](https://purl.dataone.org/architecture/apis/MN_APIs.html)
 
 Note: In this R package documentation, *dataone* refers to the R package and *DataONE* refers to the Federation of Member Nodes and the computer infrastructure comprising these data repositories.
 
-Please see the [DataONE Glossary](https://purl.dataone.org/architecturev2/glossary.html) for definitions of some terms used in this document
+Please see the [DataONE Glossary](https://purl.dataone.org/architecture/glossary.html) for definitions of some terms used in this document
 that are used to describe DataONE services and architecture.
 
 For additional information about the DataONE Federation, please https://www.dataone.org.
@@ -90,7 +90,7 @@ from the *dataone* R client.
 
 Detailed, technical information about user identities and authentication in DataONE can be viewed at 
 
-[DataONE Authentication](https://purl.dataone.org/architecturev2/design/Authentication.html)
+[DataONE Authentication](https://purl.dataone.org/architecture/design/Authentication.html)
 
 You can check your token by entering the following R commands:
 ```{r, eval=F}

@@ -1,5 +1,5 @@
 ## dataone: R interface to the DataONE REST API
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/web/packages/dataone)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/package=dataone)
 
 - **Author**: Matthew B. Jones and Peter Slaughter ([NCEAS](http://www.nceas.ucsb.edu))
 - [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
@@ -14,7 +14,7 @@ Member Nodes](https://www.dataone.org/current-member-nodes) data repositories. M
 
 The version 2.0 release of the *dataone* R package is now available. This version removes the dependency on rJava  
 and significantly changes the base API to correspond to the published 
-[DataONE API](https://purl.dataone.org/architecturev2/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods will be added.
+[DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods will be added.
 
 The *dataone* R package has not been released to CRAN yet, nor have its dependencies, so you need to install
 the dependencies manually before installing the package itself.  A main dependencies is the `redland` C

@@ -29,7 +29,7 @@ that allows DataONE users to use existing trusted institutional and public accou
 CILogon recognizes many identity providers, including many universities as well as
 Google, so most times users new to DataONE can get certificates using one
 of their existing accounts. For more information about the CILogon service, see 
-\url{https://cilogon.org/?skin=DataONE} .
+"https://cilogon.org/?skin=DataONE" .
 
 X509 Certificates differ from typical username-password login schemes in that
 certificates can be used by more than one application, which is very useful when

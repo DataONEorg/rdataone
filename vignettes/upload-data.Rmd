@@ -14,7 +14,7 @@ This document describes how to use the *dataone* R package to upload data to Dat
 maintenance operations on the data after it has been uploaded.
 
 The *dataone* package provides methods to allow R scripts to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN). The *dataone* R package takes care of the details of calling the 
-corresponding DataONE web service on a DataONE node. For example, the *dataone* `create` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecturev2/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
+corresponding DataONE web service on a DataONE node. For example, the *dataone* `create` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
 
 ## Uploading a data package using `uploadDataPackage`
 Datasets and metadata can be uploaded individually or as a data package. Uploading a data package
@@ -58,7 +58,7 @@ dp <- new("DataPackage")
 ```
 When using the `uploadDataPackage` method, data structures that are required by DataONE are created, 
 configured and uploaded automatically with the data package. These data structures include a 
-[ResourceMap](https://purl.dataone.org/architecturev2/design/DataPackage.html#generating-resource-maps)
+[ResourceMap](https://purl.dataone.org/architecture/design/DataPackage.html#generating-resource-maps)
 that describes the data package, and SystemMetadata objects that contain DataONE system information for each 
 of the science datasets and associated science metadata. 
 
@@ -95,8 +95,6 @@ The *DataObject* maintains information about an object that will be needed by Da
 A *SystemMetadata* object will be created automatically and stored in each DataObject. The *SystemMetadata* object will
 be used by DataONE to maintain low level information about the dataset, such as the access policy, the user identity
 of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. 
-More information about DataONE  SystemMetdata is availalbe at
-https://releases.dataone.org/online/api-documentation-v2.0.0/design/SystemMetadata.html.
 
 The example below creates a *DataObject* for a science dataset:
 
@@ -163,8 +161,8 @@ The DataPackage object serves as a container for a set of data objects that will
 
 Relationships between the objects in a DataPackage are stored in the ResourceMap which is stored in and maintained by the DataPackage.
 One type of relationship that is stored is between the science metadata and the science datasets that are described by
-it. In the [DataONE data package](https://purl.dataone.org/architecturev2/design/DataPackage.html) implementation, this
-relationship is the [CITO](htts://http://vocab.ox.ac.uk/cito) *documents* relationship that links the metadata object
+it. In the [DataONE data package](https://purl.dataone.org/architecture/design/DataPackage.html) implementation, this
+relationship is the [CITO](http://vocab.ox.ac.uk/cito) *documents* relationship that links the metadata object
 to the science object.
 
 This relationship between the science metadata and science data objects will be made automatically for each science 
