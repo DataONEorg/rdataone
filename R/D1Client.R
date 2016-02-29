@@ -206,12 +206,13 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @return A DataObject or NULL if the object was not found in DataONE
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"
 #' obj <- getDataObject(d1c, pid)
 #' data <- getData(obj)
+#' }
 setGeneric("getDataObject", function(x, identifier, ...) { 
     standardGeneric("getDataObject")
 })

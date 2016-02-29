@@ -27,9 +27,9 @@ solrQuery is a list, it is expected to have field names as attributes and search
 values as the values in the list.
 }
 \examples{
-\dontrun{
+\dontrun{ 
 library(dataone)
-d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+d1c <- D1Client("PROD", "urn:node:KNB")
 queryParams <- list(q="id:doi*", rows="5", 
     fq="(abstract:chlorophyll AND dateUploaded:[2000-01-01T00:00:00Z TO NOW])", 
     fl="title,id,abstract,size,dateUploaded,attributeName")

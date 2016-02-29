@@ -24,8 +24,8 @@ the dataframe serialized as a .csv
 Convert a DataFrame to Standard CSV.
 }
 \examples{
-\dontrun{
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+\dontrun{ 
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 testdf <- data.frame(x=1:10,y=11:20)
 sdf <- convert.csv(d1c, testdf)  
 }

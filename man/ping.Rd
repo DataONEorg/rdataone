@@ -24,10 +24,8 @@ logical A logical value set to TRUE if the node is up and FALSE if it is not
 Test if a node is online and accepting DataONE requests
 }
 \examples{
-\dontrun{
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 isAlive <- ping(mn)
-}
 }
 

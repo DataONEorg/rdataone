@@ -197,17 +197,17 @@ setMethod("archive", signature("D1Node"), function(x, pid) {
 #' @return the bytes of the object
 #' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' pid <- "solson.5.1"
 #' obj <- getObject(mn, pid)
 #' df <- read.csv(text=rawToChar(obj))
+#' }
 setGeneric("getObject", function(x, ...) {
   standardGeneric("getObject")
 })
-
 
 #' Get the checksum for the data object associated with the specified pid.
 #' @description A checksum is calculated for an object when it is uploaded to DataONE and
@@ -667,7 +667,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' @aliases query
 # Need plyr for rbind.fill in query()
 #' @import plyr
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode("PROD")
 #' queryParams <- list(q="id:doi*", rows="5", 
@@ -697,6 +697,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' mySearchTerms <- list(abstract="kelp", attribute="biomass")
 #' result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
+#' }
 #' @export
 setGeneric("query", function(x, ...) {
   standardGeneric("query")

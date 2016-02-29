@@ -29,7 +29,7 @@ library(dataone)
 library(datapackage)
 library(uuid)
 dp <- new("DataPackage")
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 # Create metadata object that describes science data
 emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
 emlChar <- readLines(emlFile)

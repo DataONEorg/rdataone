@@ -36,22 +36,31 @@ For DataONE Version 2.0, an authentication token can also be used for authentica
 Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
 }
 \examples{
-\dontrun{
 library(dataone)
+library(uuid)
+library(digest)
+library(datapackage)
 # First create a new object
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-newid <- generateIdentifier(mn, "UUID")
 testdf <- data.frame(x=1:10,y=11:20)
 csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
+\dontrun{
+newid <- generateIdentifier(mn, "UUID")
+}
+# Create an identifier manually
+newid <- paste("urn:uuid:", UUIDgenerate(), sep="") 
 format <- "text/csv"
 size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
+# Create (upload) the object to DataONE (requires authentication)
+\dontrun{
 create(mn, newid, csvfile, sysmeta)
 # Now for demonstration purposes, archive the object
+# Archive the object (requires authentication)
 archivedId <- archive(mn, newid)
 }
 }

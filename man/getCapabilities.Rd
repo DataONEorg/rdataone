@@ -23,14 +23,12 @@ Access the DataONE getCapabilities() service for the Member Node, which returns 
 decription of the repository and the services it offers.
 }
 \examples{
-\dontrun{
 library(dataone)
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 xml <- getCapabilities(mn)
 }
-}
 \seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
+\url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_core.getCapabilities}
 }
 

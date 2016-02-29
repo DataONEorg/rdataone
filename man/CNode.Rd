@@ -25,9 +25,7 @@ the CNode object representing the DataONE environment
 Create a CNode object.
 }
 \examples{
-\dontrun{
 cn <- CNode("PROD")
-}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
