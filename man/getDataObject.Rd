@@ -34,7 +34,7 @@ dataone library.
 \examples{
 \dontrun{
 library(dataone)
-d1c <- D1Client(env="PROD", mNodeid="urn:node:KNB")
+d1c <- D1Client("PROD", "urn:node:KNB")
 pid <- "solson.5.1"
 obj <- getDataObject(d1c, pid)
 data <- getData(obj)

@@ -69,7 +69,8 @@ metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", fi
 metadataObj <- setPublicAccess(metadataObj)
 addData(dp, metadataObj)
 addData(dp, dataObj, metadataObj)
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+# Upload all members of the DataPackage to DataONE (requires authentication)
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 }
 }

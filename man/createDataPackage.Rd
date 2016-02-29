@@ -23,7 +23,10 @@ Upload all members of a DataPackage to DataONE.
 \examples{
 \dontrun{
 library(dataone)
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+testdf <- data.frame(x=1:10,y=11:20)
+csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+write.csv(testdf, csvfile, row.names=FALSE)
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 dp <- new("DataPackage")
 emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
 emlChar <- readLines(emlFile)

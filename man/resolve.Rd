@@ -25,7 +25,7 @@ Returns a list of nodes (MNs or CNs) known to hold copies of the object identifi
 }
 \examples{
 \dontrun{
-library(dataon)
+library(dataone)
 cn <- CNode("STAGING")
 id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"
 locations <- resolve(cn,id)

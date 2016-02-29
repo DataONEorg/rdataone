@@ -26,8 +26,9 @@ characters in url strings.  Will also encode non-ASCII unicode characters.
 }
 \examples{
 \dontrun{
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 fullyEncodedQuery <- paste0("q=id:",
-    encodeUrlQuery(client,encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
+    encodeUrlQuery(d1c, encodeSolr("doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5")))
 }
 }
 \seealso{
