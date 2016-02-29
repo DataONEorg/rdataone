@@ -694,7 +694,7 @@ setMethod("uploadDataObject", signature("D1Client"),
     # If the DataObject has both @filename and @data defined, filename takes precedence 
     if(!is.na(do@filename)) {
       # Upload the data to the MN using create(), checking for success and a returned identifier
-      createdId <- create(x@mn, doId, do@filename, do@sysmeta)
+      createdId <- createObject(x@mn, doId, do@filename, do@sysmeta)
     } else {
       if(length(do@data == 0)) {
         # Write the DataObject raw data to disk and upload the resulting file.
@@ -702,7 +702,7 @@ setMethod("uploadDataObject", signature("D1Client"),
         con <- file(tf, "wb")
         writeBin(do@data, con)
         close(con)
-        createdId <- create(x@mn, doId, tf, do@sysmeta)
+        createdId <- createObject(x@mn, doId, tf, do@sysmeta)
         file.remove(tf)
       } else {
         warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", do@sysmeta@identifier))

@@ -150,8 +150,8 @@ test_that("MNode create(), updateObject(), archive()", {
       expect_that(sysmeta@originMemberNode, equals(mn@identifier))
       expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
       
-      # Upload the data to the MN using create(), checking for success and a returned identifier
-      response <- create(mn, newid, csvfile, sysmeta)
+      # Upload the data to the MN using createObject(), checking for success and a returned identifier
+      response <- createObject(mn, newid, csvfile, sysmeta)
       expect_that(response, not(is_null()))
       expect_that(xmlValue(xmlRoot(response)), matches(newid))
       
@@ -190,7 +190,7 @@ test_that("MNode create(), updateObject(), archive()", {
     }
 })
 
-test_that("MNode create() works for large files", {
+test_that("MNode createObject() works for large files", {
     skip("Skip large file testing.")
     if (grepl("Darwin", Sys.info()['sysname'])) {
         skip("fallocate not available on Mac")
@@ -231,13 +231,13 @@ test_that("MNode create() works for large files", {
       expect_that(sysmeta@originMemberNode, equals(mn@identifier))
       expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
       
-      # Upload the data to the MN using create(), checking for success and a returned identifier
-      # Note: create() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
-      response <- create(mn, newid, csvfile, sysmeta)
+      # Upload the data to the MN using createObject(), checking for success and a returned identifier
+      # Note: createObject() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
+      response <- createObject(mn, newid, csvfile, sysmeta)
       expect_that(response, not(is_null()))
       expect_that(xmlValue(xmlRoot(response)), matches(newid)) 
       
-      # Remove the big data file we created locally
+      # Remove the big data file we createObjectd locally
       unlink(csvfile)
     } else {
       skip("This test requires valid authentication.")
