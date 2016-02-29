@@ -158,7 +158,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @param x The node identifier with which this node is registered in DataONE
 #' @param ... (Not yet used.)
 #' @return an XMLInternalDocument object representing the DataONE environment
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_core.getCapabilities}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_core.getCapabilities}
 #' @import XML
 #' @import httr
 #' @export
@@ -310,7 +310,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.create}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
 #' @import datapackage
 #' @export
 #' @examples
@@ -411,7 +411,7 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
 #' @param pid The identifier of the object to be updated
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.update}
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
@@ -485,7 +485,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sys
 #' @param x The MNode instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 #' @import datapackage
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
@@ -548,7 +548,7 @@ setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) 
 #' @rdname generateIdentifier
 #' @aliases enerateIdentifier
 #' @return the character string of the generated unique identifier
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.generateIdentifier}
 #' @export
 #' @examples
 #' \dontrun{

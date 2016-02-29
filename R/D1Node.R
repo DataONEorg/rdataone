@@ -108,7 +108,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 ## Methods
 ##########################
 
-# The MN and CN APIs have several services with the same name, i.e. "get', 'getSystemMetadata', 'describe', etc.,
+# The MN and CN APIs have several services with the same name, i.e. "get', 'getSystemMetadata', etc.,
 # so MNode.R and CNode.R have several methods that also share the same name. The generic functions for these 
 # methods are defined here in the parent class, so that the generic is defined for all child classes (MNode.R, CNode.R), where
 # the corresponding methods are defined.
@@ -333,7 +333,7 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' @rdname describeObject
 #' @aliases describeObject
 #' @return A list of header elements
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNRead.describe}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe}
 #' @examples
 #' library(dataone)
 #' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
@@ -380,7 +380,7 @@ setGeneric("listObjects", function(x, ...) {
 #' @param start An integer that specifies the first element of the result set that will be returned
 #' @param count An integer that specifies how many results will be returned
 #' @return list Objects that met the search criteria
-#' @seealso \url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
+#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_read.listObjects}
 #' @import parsedate
 #' @export
 #' @rdname listObjects

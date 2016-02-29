@@ -245,7 +245,7 @@ setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
   return(returnVal)
 })
 
-# @see http://mule1.dataone.org/ArchitectureDocs-current/apis/CN_APIs.html#CNCore.getLogRecords
+# @see https://purl.dataone.org/architecture/apis/CN_APIs.html#CNCore.getLogRecords
 # public Log getLogRecords(Date fromDate, Date toDate, Event event, String pidFilter, Integer start, Integer count) 
 
 #' Get the list of nodes associated with a CN

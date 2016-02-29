@@ -45,7 +45,6 @@ The list of objects that is returned is paged according to the \code{'start'} an
 \code{'count'} values, so that large result sets can be returned over multiple calls.
 }
 \examples{
-\dontrun{
 library(dataone)
 cn <- CNode("STAGING")
 fromDate <- "2013-01-01T01:01:01.000+00:00"
@@ -58,8 +57,7 @@ objects <- listObjects(cn, fromDate=fromDate, toDate=toDate,
 # Inspect id of first object 
 objects[1]$objectInfo$identifier
 }
-}
 \seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MN_read.listObjects}
+\url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_read.listObjects}
 }
 

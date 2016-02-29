@@ -48,6 +48,6 @@ newid <- generateIdentifier(mn, "UUID")
 }
 }
 \seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/MN_APIs.html#MNStorage.generateIdentifier}
+\url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.generateIdentifier}
 }
 

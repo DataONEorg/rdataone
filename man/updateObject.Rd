@@ -45,6 +45,6 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-ov
 Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
 }
 \seealso{
-\url{http://mule1.dataone.org/ArchitectureDocs-current/apis/.html#MNStorage.update}
+\url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.update}
 }
 
