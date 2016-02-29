@@ -28,7 +28,7 @@ tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
 }
 
 Note that the key in the list is the DataONE formatIdentifier that can be 
-found at \url{https://cn.dataone.org/cn/v1/formats}
+found at \url{https://cn.dataone.org/cn/v2/formats}
 
 Subclass implementers should conform their methods to the behavior defined 
 in the generic.
