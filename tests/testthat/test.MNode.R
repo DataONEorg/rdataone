@@ -97,15 +97,15 @@ test_that("MNode generateIdentifier() on API v1 node", {
 })
 
 
-test_that("MNode describe()", {
+test_that("MNode describeObject()", {
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
   mn <- MNode(mn_uri)
-  res <- describe(mn, "knb.473.1")
+  res <- describeObject(mn, "knb.473.1")
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
-test_that("MNode create(), updateObject(), archive()", {
+test_that("MNode createObject(), updateObject(), archive()", {
     skip_on_cran()
     library(dataone)
     library(digest)

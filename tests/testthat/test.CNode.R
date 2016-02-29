@@ -50,11 +50,11 @@ test_that("CNode getSystemMetadata()", {
   expect_that(sysmeta@identifier, matches(pid))
 })
 
-test_that("CNode describe()", {
+test_that("CNode describeObject()", {
   library(dataone)
   cn <- CNode("STAGING2")
   pid <- "aceasdata.3.2"
-  res <- dataone::describe(cn, pid)
+  res <- dataone::describeObject(cn, pid)
   expect_is(res, "list")
   expect_that(res$`content-type`, matches("text/xml"))
 })
