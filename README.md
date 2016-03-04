@@ -26,10 +26,10 @@ before the released version is available from CRAN. The NCEAS repository is main
 R package *drat*.
 
 The R package *drat* allows an R package provider to easily make repositories available that are searched with the standard R 
-commands such as 'available.packages()', 'install.packages()', 'update.packages()', etc.
+commands such as `available.packages()`, `install.packages()`, `update.packages()`, etc.
 
 In order to obtain development versions of the *dataone* package, the the NCEAS drat repository can be included 
-in the repository seasrch list by entering these commands at the R console:
+in the repository search list by entering these commands at the R console:
 
 ```
 install.packages("drat")
