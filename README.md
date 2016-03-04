@@ -1,4 +1,5 @@
-## dataone: R interface to the DataONE REST API
+#
+# dataone: R interface to the DataONE REST API
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/package=dataone)
 
 - **Author**: Matthew B. Jones and Peter Slaughter ([NCEAS](http://www.nceas.ucsb.edu))
@@ -12,14 +13,37 @@ Member Nodes](https://www.dataone.org/current-member-nodes) data repositories. M
 
 ## Installation Notes 
 
-The version 2.0 release of the *dataone* R package is now available. This version removes the dependency on rJava  
-and significantly changes the base API to correspond to the published 
-[DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods will be added.
+The current version of the *dataone* R package removes the dependency on rJava and significantly changes the base 
+API to correspond to the published  [DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods will be added.
 
-The *dataone* R package has not been released to CRAN yet, nor have its dependencies, so you need to install
-the dependencies manually before installing the package itself.  A main dependencies is the `redland` C
-libraries, which must be installed on your OS prior to installing the R code. Once these libraries are installed,
-the R packages can be installed using the NCEAS *drat* repository.
+The *dataone* R package has not been released to CRAN yet, but a development version is available.
+
+In addition, the `redland` C library must be installed on your OS prior to installing the R package. 
+
+## Installing development versions of the package
+Development builds of the *dataone* R package are made available from the NCEAS repository, 
+before the released version is available from CRAN. The NCEAS repository is maintained and accessed using the 
+R package *drat*.
+
+The R package *drat* allows an R package provider to easily make repositories available that are searched with the standard R 
+commands such as 'available.packages()', 'install.packages()', 'update.packages()', etc.
+
+In order to obtain development versions of the *dataone* package, the the NCEAS drat repository can be included 
+in the repository seasrch list by entering these commands at the R console:
+
+```
+install.packages("drat")
+library(drat)
+addRepo("NCEAS")
+```
+
+Once the NCEAS drat repository has been added, then the *dataone* package can be installed using the installation
+instructions for one of the target platforms: Mac OS X, Ubuntu, Windows.
+
+To disable installation of *dataone* development builds from the drat repository:
+```
+detach("package:drat", unload=TRUE)
+```
 
 ### Installing on Mac OS X
 
@@ -41,11 +65,16 @@ the *dataone* R package with MacPorts, enter this command at a terminal window:
 ```
 sudo port install redland
 ```
+
 Then enter these commands in the R console:
+
 ```
+install.packages("redland", type="source")
 install.packages("dataone")
-library(dataone)
 ```
+
+Please note that the *install.packages* command specifies a "source" installation. Installing from
+source is only necessary if Macports is being used, and is not a requirement if Homebrew is used.
 
 The *dataone* R package should be available for use at this point
 
@@ -63,7 +92,8 @@ Once HomeBrew has been installed, you can then enter the following command to in
 brew install redland
 ```
 
-Next, install the *datapackage* R package with these commands typed at the R console window:
+Next, install the *dataone* R package with these commands typed at the R console window:
+
 ```
 install.packages("dataone")
 library(dataone)
@@ -97,7 +127,7 @@ additional system libraries.
 To install the R package from the R console:
 
 ```
-install.packages("dataone")
+install.packages("dataone", type="source")
 library(dataone)
 ```
 
