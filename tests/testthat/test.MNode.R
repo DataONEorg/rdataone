@@ -110,6 +110,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
     library(dataone)
     library(digest)
     library(datapackage)
+    library(uuid)
     library(XML)
     #cn <- CNode("SANDBOX")
     #cn <- CNode("DEV2")
