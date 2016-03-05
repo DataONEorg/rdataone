@@ -78,7 +78,8 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
       authToken <- getToken(am)
       switch(method,
              post={
-               response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken), Connection = "keep-alive"), user_agent(get_user_agent()))
+               #response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken), Connection = "keep-alive"), user_agent(get_user_agent()))
+               response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
                return(response)
              },
              put={
@@ -176,22 +177,22 @@ check4PKI <- function() {
 #' with other request details.
 get_user_agent <- function() {
     info <- sessionInfo()
-    if (is.element("httr", names(info$otherPkgs))) {
-      httrVersion <- info$otherPkgs$httr$Version
-    } else if (is.element("httr", names(info$loadedOnly))) {
-      httrVersion <- info$loadedOnly$httr$Version
+    
+    # Get the version number of httr
+    # First check if the package is installed
+    if ("httr" %in% installed.packages()[,'Package']) {
+      httrDesc <- packageDescription("httr")
+      if(!all(is.na(httrDesc))) {
+        httrVersion <- httrDesc$Version
+      }
     } else {
-      httrVersion <- as.character(NA)
+      stop("Package httr is not installed and is required by the dataone package.")
     }
-    if (!is.na(httrVersion)) {
-      local_agent <- sprintf("dataone/%s R/%s httr/%s", 
-                             info$otherPkgs$dataone$Version, 
+    
+    dataoneVersion <- packageDescription("dataone")$Version
+    local_agent <- sprintf("dataone/%s R/%s httr/%s", 
+                             dataoneVersion,
                              paste(info$R.version$major, info$R.version$minor, sep="."),
                              httrVersion)
-    } else {
-      local_agent <- sprintf("dataone/%s R/%s", 
-                             info$otherPkgs$dataone$Version, 
-                             paste(info$R.version$major, info$R.version$minor, sep="."))
-    }
     return(local_agent)
 }
