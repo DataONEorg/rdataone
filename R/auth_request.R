@@ -78,8 +78,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
       authToken <- getToken(am)
       switch(method,
              post={
-               #response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken), Connection = "keep-alive"), user_agent(get_user_agent()))
-               response=POST(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               response=POST(url, encode=encode, body=body, config(tcp_keepalive = as.numeric(1)), add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
                return(response)
              },
              put={
