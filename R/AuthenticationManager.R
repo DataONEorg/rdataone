@@ -419,7 +419,7 @@ setMethod("getTokenInfo", signature("AuthenticationManager"), function(.Object) 
     tdf <- data.frame(subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
   } else {
     subject <- 'public'
-    end <- as.POSIXct("1970-01-01 01:01:01", "UTC")
+    expiresDT <- as.POSIXct("1970-01-01 01:01:01", tz="UTC")
     expired <- TRUE
     tdf <- data.frame(subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
   }
