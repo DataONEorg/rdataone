@@ -1,6 +1,6 @@
 ## Test environments
 
-* OS X 10.10.3, R 3.2.3
+* OS X 10.10.3, R 3.2.3, R 3.2.4
 
 ## R CMD check results
 
