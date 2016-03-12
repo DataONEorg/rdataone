@@ -1,15 +1,21 @@
 #
-# dataone: R interface to the DataONE REST API
+# dataone: R interface to the DataONE network of data repositories
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/package=dataone)
 
-- **Author**: Matthew B. Jones and Peter Slaughter ([NCEAS](http://www.nceas.ucsb.edu))
+- **Authors**: Matthew B. Jones ([NCEAS](http://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, and Scott Chamberlain
 - [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
 - **License**: [Apache 2](http://opensource.org/licenses/Apache-2.0)
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
 
-An R package that provides read/write access to data and metadata from the [DataONE](https://www.dataone.org) [network of 
-Member Nodes](https://www.dataone.org/current-member-nodes) data repositories. Member Nodes in DataONE are independent data repositories that have adopted the DataONE services for interoperability, making each of the repositories accessible to client tools such as the *dataone* R Client using a standard interface.  The *dataone* R Client can be used to access data files and to write new data and metadata files to nodes in the DataONE network.  
+Provides read and write access to data and metadata from the [DataONE network 
+    of data repositories](https://www.dataone.org/current-member-nodes).  
+    Each DataONE repository implements a consistent repository application 
+    programming interface. Users call methods in R to access these remote 
+    repository functions, such as methods to query the metadata catalog, get 
+    access to metadata for particular data packages, and read the data objects 
+    from the data repository. Users can also insert and update data objects on 
+    repositories that support these methods.
 
 ## Installation Notes 
 
@@ -177,7 +183,8 @@ d1Object <- new("DataObject", id, format="text/csv", filename=csvfile)
 uploadDataObject(d1c, d1Object, public=TRUE)
 ```
 
-Note that this example uploads a data file to the DataONE test environment "STAGING" and not the production environment ("PROD").
+Note that this example uploads a data file to the DataONE test environment "STAGING" and not the production environment ("PROD"), in order to avoid inserting a bunch of test data into the production
+network. Users should use "STAGING" for testing, and "PROD" for real data submissions.
 
 ## Acknowledgements
 Work on this package was supported by:
