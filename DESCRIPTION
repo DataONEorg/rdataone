@@ -41,6 +41,7 @@ Imports:
     uuid,
     base64enc,
     jsonlite
+Additional_repositories: http://NCEAS.github.io/drat/
 License: Apache License 2.0
 URL: http://github.com/DataONEorg/rdataone
 BugReports: https://github.com/DataONEorg/rdataone/issues
