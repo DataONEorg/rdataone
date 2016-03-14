@@ -27,8 +27,8 @@ The *dataone* R package has not been released to CRAN yet, but a development ver
 In addition, the `redland` C library must be installed on your OS prior to installing the R package. 
 
 ## Installing development versions of the package
-Development builds of the *dataone* R package are made available from the NCEAS repository, 
-before the released version is available from CRAN. The NCEAS repository is maintained and accessed using the 
+To obtain builds of the *dataone* R package before they are available from CRAN, development builds
+can be obtained using the NCEAS repository.  The NCEAS repository is maintained and accessed using the 
 R package *drat*.
 
 The R package *drat* allows an R package provider to easily make repositories available that are searched with the standard R 
@@ -46,12 +46,12 @@ addRepo("NCEAS")
 Once the NCEAS drat repository has been added, then the *dataone* package can be installed using the installation
 instructions for one of the target platforms: Mac OS X, Ubuntu, Windows.
 
-To disable installation of *dataone* development builds from the drat repository:
+To disable installation of *dataone* development builds from the NCEAS drat repository:
 ```
 detach("package:drat", unload=TRUE)
 ```
 
-### Installing on Mac OS X
+## Installing on Mac OS X
 
 On Mac OS X, the required Redland C libraries can be installed with either [Mac Ports](https://www.macports.org) package manager
 or the [HomeBrew](http://brew.sh) package manager. The HomeBrew package manager can be significantly faster to install
@@ -63,7 +63,7 @@ You can check if you have MacPorts installed by entering the following command i
 port version
 ```
 
-### Installing with Macports
+### Mac OS X install option 1: install using Macports
 If you are already using the MacPorts package manager, you can install *dataone* with the following commands, 
 otherwise, it is recommended that you skip to the next section *Installing with HomeBrew*. To install
 the *dataone* R package with MacPorts, enter this command at a terminal window:
@@ -84,7 +84,7 @@ source is only necessary if Macports is being used, and is not a requirement if 
 
 The *dataone* R package should be available for use at this point
 
-### Installing with HomeBrew
+### Mac OS X install option 2: install using HomeBrew
 On Mac OS X you can use the package management system [HomeBrew](http://brew.sh) to install the 
 necessary libraries. The HomeBrew software can be installed with the following command entered at a terminal window:
 
