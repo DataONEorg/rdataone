@@ -107,6 +107,7 @@ test_that("custom certificate location", {
         cm@location <- custom_cert
         suppressWarnings(subject2 <- showClientSubject(cm))
         expect_that(subject2, matches(subject1))
-        expect_that(custom_cert, suppressWarnings(matches(getCertLocation(cm))))
+        suppressWarnings(newCertLoc <- getCertLocation(cm))
+        expect_equal(custom_cert, newCertLoc)
     }
 })
