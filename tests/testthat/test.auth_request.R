@@ -6,7 +6,9 @@ test_that("dataone library loads", {
 test_that("auth_get", {
   library(dataone)
   library(httr)
-  format_list <- xmlParse(content(dataone:::auth_get(uri)))
+  library(XML)
+  uri <- "https://cn.dataone.org/cn/v2/formats"
+  format_list <- xmlParse(content(dataone:::auth_get(uri), as="text"))
   cname <- class(format_list)[1]
   expect_that(cname, matches("XML"))
   xml <- XML::saveXML(format_list)
