@@ -323,28 +323,35 @@ setMethod("getCertLocation", signature("CertificateManager"), function(x) {
     }
     
     # Temp directory locations to check
-    loclist <- list(c('/tmp', Sys.getenv('TMPDIR', names=FALSE), Sys.getenv('TEMP', names=FALSE)))
+    loclist <- list('/tmp', Sys.getenv('TMPDIR', names=FALSE), Sys.getenv('TEMP', names=FALSE))
     
-    # Find the user's UID
-    uid <- as.numeric(system('id -u', intern=TRUE)) # TODO: this only works on *nix, not Windows!
-        
+    # Find the user's UID 
+    
+    # On windows, construct the same certificate filename as the GridShib-CA Logon Client 
+    # that created/downloaded the certificate.
+    if(Sys.info()[['sysname']] == "Windows") {
+      uid <- Sys.info()['user']
+      certFnBase <- "\\x509up_u_"
+    } else {
+      uid <- as.numeric(system('id -u', intern=TRUE))
+      certFnBase <- "/x509up_u"
+    }
+    
     # If UID is null or not a number, try the username
     if (is.null(uid)) {
-        uid <- Sys.info()['user']
+      uid <- Sys.info()['user']
     }
     
     # Our default is to return NULL if a cert file is not found
-    location=NULL
-    
-    counter = 0
+    location <- NULL
+    counter <- 0
     # Check each file path in order to see if the cert file exists, and if so, return it
-    for(dir in loclist) {
-        counter = counter+1
+    for(counter in 1:length(loclist)) {
         # Construct the default path to the filename
-        certpath <- paste(dir[[counter]], "/x509up_u", uid, sep="")
+        certpath <- paste(loclist[[counter]], certFnBase, uid, sep="")
         # Check if the file exists
         if (file.exists(certpath)) {
-            location=certpath
+            location <- certpath
             break
         }
     }
