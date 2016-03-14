@@ -153,7 +153,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
       
       # Upload the data to the MN using createObject(), checking for success and a returned identifier
       response <- createObject(mn, newid, csvfile, sysmeta)
-      expect_that(response, not(is_null()))
+      expect_false(is.null(response))
       expect_that(xmlValue(xmlRoot(response)), matches(newid))
       
       # Update the object with a new version
@@ -235,7 +235,7 @@ test_that("MNode createObject() works for large files", {
       # Upload the data to the MN using createObject(), checking for success and a returned identifier
       # Note: createObject() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
       response <- createObject(mn, newid, csvfile, sysmeta)
-      expect_that(response, not(is_null()))
+      expect_false(is.null(response))
       expect_that(xmlValue(xmlRoot(response)), matches(newid)) 
       
       # Remove the big data file we createObjectd locally

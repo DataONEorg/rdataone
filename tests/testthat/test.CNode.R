@@ -119,7 +119,7 @@ test_that("CNode listFormats, getFormat",{
   cn <- CNode()
   fmts <- listFormats(cn)
   expect_that(is.data.frame(fmts),is_true())
-  expect_that(length(grep("eml", fmts$ID)), is_more_than(0))
+  expect_gt(length(grep("eml", fmts$ID)), 0)
   # CHeck that the name returned by getFormat matches the name
   # requested, and in the data.frame from listFormats
   for (i in 1:length(fmts)) {

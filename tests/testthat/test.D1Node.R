@@ -99,10 +99,10 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   # Get list of query engines for a CN, and get description for each engine
   cn <- CNode("STAGING")
   engines <- listQueryEngines(cn)
-  expect_more_than(length(engines), 0)
+  expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
     engineDesc <- getQueryEngineDescription(cn, engines[[i]])
-    expect_more_than(length(engineDesc), 0)
+    expect_gt(length(engineDesc), 0)
     expect_match(engineDesc$name, engines[[i]])
     expect_true(class(engineDesc$queryFields) == "data.frame")
   }
@@ -110,10 +110,10 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   # Get list of query engines for an MN, and get description for each engine
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   engines <- listQueryEngines(mn)
-  expect_more_than(length(engines), 0)
+  expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
     engineDesc <- getQueryEngineDescription(mn, engines[[i]])
-    expect_more_than(length(engineDesc), 0)
+    expect_gt(length(engineDesc), 0)
     expect_match(engineDesc$name, engines[[i]])
     expect_true(class(engineDesc$queryFields) == "data.frame")
   }

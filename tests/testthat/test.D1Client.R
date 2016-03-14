@@ -5,40 +5,40 @@ test_that("dataone library loads", {
 test_that("D1Client constructors", {
         library(dataone)
         cli <- new("D1Client")
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
         
         cli <- new("D1Client", env="PROD", mNodeid="urn:node:KNB")
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
         expect_that(cli@mn@baseURL, matches ("https://knb.ecoinformatics.org/knb/d1/mn"))
         
         cn <- CNode("STAGING2")
         cli <- new("D1Client", cn=cn, mn=getMNode(cn, "urn:node:mnTestKNB"))
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn.stage-2.test.dataone.org/cn"))
         expect_that(cli@mn@baseURL, matches ("https://dev.nceas.ucsb.edu/knb/d1/mn"))
         
         cli <- D1Client()
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
         
         cli <- D1Client("STAGING")
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn-stage.test.dataone.org/cn"))
         
         cli <- D1Client("SANDBOX")
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn-sandbox.test.dataone.org/cn"))
         
         cli <- D1Client("DEV")
-        expect_that(cli, not(is_null()))
+        expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches("https://cn-dev.test.dataone.org/cn"))
 })
@@ -70,7 +70,7 @@ test_that("D1Client methods", {
   # Test listMemberNodes
   cli <- D1Client("PROD")
   nodes <- listMemberNodes(cli)
-  expect_more_than(length(nodes), 0)
+  expect_gt(length(nodes), 0)
   expect_identical(class(nodes), "list")
   
 })
@@ -79,7 +79,7 @@ test_that("D1Client getDataObject", {
     library(dataone)
     library(digest)
     cli <- D1Client("PROD", "urn:node:KNB")
-    expect_that(cli, not(is_null()))
+    expect_false(is.null(cli))
     expect_that(class(cli), matches("D1Client"))
     expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
     am <- AuthenticationManager()
@@ -261,7 +261,7 @@ test_that("D1Client getD1Object works", {
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    expect_that(d1c, not(is_null()))
+    expect_false(is.null(d1c))
     expect_that(class(d1c), matches("D1Client"))
     expect_that(d1c@cn@baseURL, matches("https://cn.dataone.org/cn"))
     
