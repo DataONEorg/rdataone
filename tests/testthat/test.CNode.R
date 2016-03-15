@@ -105,7 +105,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
     # researveIdentifier will create the reservation using only the client subject from
     # the current authentication method - either auth token or certificate. 
     newId <- reserveIdentifier(cn, myId)
-    expect_equal(myId, newId)
+    expect_match(myId, newId)
     # Have to specify the subject for hasReservation
     hasRes <- hasReservation(cn, newId, subject=subject)
     expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
