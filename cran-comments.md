@@ -3,8 +3,8 @@
 * OS X 10.10.3, R 3.2.3, R 3.2.4
 * OS X 10.11.3, R 3.2.3
 * Ubuntu 14.04, R 3.2.3
-* Windows 7, R 3.1.3
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R 3.2.3, and R-devel
+* Windows 7, R 3.1.3, R 3.2.4, R-devel (2016-03-14 r70331)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R 3.2.4
 
 ## R CMD check results
 
