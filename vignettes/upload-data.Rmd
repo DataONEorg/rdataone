@@ -41,7 +41,7 @@ metadataObj <- new("DataObject", id=metadataId, format="eml://ecoinformatics.org
 metadataObj <- setPublicAccess(metadataObj)
 addData(dp, metadataObj)
 addData(dp, dataObj, metadataObj)
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 ```
 
@@ -188,7 +188,7 @@ When all *DataObjects* have been added to the DataPackage, call the `uploadDataP
 entire DataPackage:
 
 ```{r, eval=FALSE}
-d1c <- D1Client(env="STAGING", mNodeid="urn:node:mnStageUCSB2")
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=2)
 message(sprintf("Uploaded data package with identifier: %s", packageId))
 ```
