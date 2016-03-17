@@ -27,9 +27,7 @@ library(datapackage)
 library(uuid)
 dp <- new("DataPackage")
 sampleData <- system.file("extdata/sample.csv", package="dataone")
-cn <- CNode("STAGING")
-mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-# Create a unique id string for the data object in a standard format
+# Create a unique identifier string for the data object in a standard format.
 dataId  <- paste("urn:uuid:", UUIDgenerate(), sep="")
 dataObj <- new("DataObject", id=dataId, format="text/csv", file=sampleData)
 dataObj <- setPublicAccess(dataObj)
@@ -49,11 +47,13 @@ The following sections describe each line of this script in detail.
 
 ### 1. Create a DataPackage object.
 In order to use `uploadDataPackage`, it is necessary to prepare an R *DataPackage* object that will serve as a container for the set
-of files  that will be included in the data package:  
+of files  that will be included in the data package. The following commands load the required libraries and creates 
+an empty *DataPackage* object that will be added to later:
 
 ```{r,eval=F}
 library(dataone)
 library(datapackage)
+library(uuid)
 dp <- new("DataPackage")
 ```
 When using the `uploadDataPackage` method, data structures that are required by DataONE are created, 
@@ -99,7 +99,6 @@ of the *rightsholder* (the user identity that controls the dataset), which Membe
 The example below creates a *DataObject* for a science dataset:
 
 ```{r,eval=F}
-library(uuid)
 sampleData <- system.file("extdata/sample.csv", package="dataone")
 dataId <- paste("urn:uuid:", UUIDgenerate(), sep="")
 dataObj <- new("DataObject", id=dataId, format="text/csv", file=sampleData)
@@ -124,7 +123,7 @@ dataObj <- setPublicAccess(dataObj)
 Individual access rules to be applied to a DataONE user identify can also be added to the access policy. 
 
 Access rules are added to a *DataObject* using the `addAccessRule` method. The following access rule will grant
-user 'collins' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
+user 'jsmith' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
 
 ```{r,eval=F}
 accessRules <- data.frame(subject="uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org", permission="changePermission")
@@ -147,11 +146,13 @@ Alternatively, a Digital Object Identfier (DOI) may be assigned to the metadata 
 ```{r, eval=FALSE}
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-newid <- generateIdentifier(mn, "DOI")
-metadataObj <- new("DataObject", id=newid, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+doi <- generateIdentifier(mn, "DOI")
+metadataObj <- new("DataObject", id=doi, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 ```    
 
-(Note that the example uses a DataONE test environment *STAGING*, and not the production environment.)
+(Note that the example uses a DataONE test environment *STAGING*, and not the production environment. In 
+order to create an valid DOI, a production DataONE Member Node that supports creating DOIs must be
+used.)
 
 The `generateIdentifier` method requests that the DataONE MN generate a properly formatted DOI. 
 
@@ -254,7 +255,7 @@ A unique identifier must be specified for each system metadata, whether or not a
 
 The dataset can now be uploaded to DataONE with the associated system metadata:
 ```{r,eval=F}
-response <- create(mn, pid, csvfile, sysmeta)
+response <- createObject(mn, pid, csvfile, sysmeta)
 ```
 
 Note that for this example, the DataONE test environment *STAGING* is used, and not the production environment.
@@ -273,29 +274,43 @@ will be applied to the object and uploads the new system metadata to DataONE so 
 ```{r, eval=F}
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-pid <- "urn:uuid:2fb13ee6-fb8a-4eea-b9ee-f52e85b35a7a"
-sysmeta <- getSystemMetadata(mn, pid )
+examplePid <- "urn:uuid:17d61d5a-061a-4778-9cdf-4e14751aaddc"
+sysmeta <- getSystemMetadata(mn, examplePid)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
-status <- updateSystemMetadata(mn, pid, sysmeta)
+status <- updateSystemMetadata(mn, examplePid, sysmeta)
 ```
+Note that updating an object in DataONE requires the proper access. For example, for the identifier
+shown above (urn:uuid:17d61d5a-061a-4778-9cdf-4e14751aaddc), only the DataONE user identity that 
+is the *rightsholder*, or another user identity that has been granted write access by the rightsholder
+will be able to update the object on the DataONE member node. Running the previous example without
+the proper authentication will produce an error.
+
 ### Replace an object with a newer version (MNode: updateObject)
 
-The *updateObject* updates an existing object by creating a new object identified by a new PID on the Member Node which explicitly obsoletes the object identified by pid through appropriate changes to the SystemMetadata of PID and the new PID.
+The *updateObject* updates an existing object by creating a new object identified by a new PID on the Member Node. The new object replaces and *obsoletes* the old object. An obsoleted object in DataONE does not appear
+in search results, however it is still available for download if the identifier is known.
 
 ```{r, eval=F}
-# Update the object with a new version
-updateid <- generateIdentifier(mn, "UUID")
+# Update object from previous example with a new version
+updateid <- sprintf("urn:uuid:%s", UUIDgenerate())
 testdf <- data.frame(x=1:20,y=11:30)
 csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
 size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+# Start with the old object's sysmeta, then modify it to match
+# the new object. We could have also created a sysmeta from scratch.
+sysmeta <- getSystemMetadata(mn, pid)
 sysmeta@identifier <- updateid
 sysmeta@size <- size
 sysmeta@checksum <- sha1
-sysmeta@obsoletes <- newid
-response <- updateObject(mn, newid, csvfile, updateid, sysmeta)
+sysmeta@obsoletes <- pid
+# Now update the object on the member node.
+response <- updateObject(mn, pid, csvfile, updateid, sysmeta)
+# Get the new, updated sysmeta and check it to ensure that the update
+# worked, i.e. "obsoletes" is the old pid that was replaced by the update.
 updsysmeta <- getSystemMetadata(mn, updateid)
+updsysjeta@obsoletes
 ```
 
 The Member Node will mark the object as being *obsolete* by setting a property in the system metadata on the object 
@@ -309,17 +324,17 @@ method with the PID of the object. This operation does not delete the object byt
 the system metadata for the object to set the *archived* flag to true. The object can still be 
 referenced with its PID and downloaded, but it will not appear in any search results.
 
-Objects that are archived can not be updated using the *updatei* method.  Once an object is archived it cannot be un-archived. 
+Objects that are archived can not be updated using the *updateObject* method.  Once an object is archived it cannot be un-archived. 
+
+The following statement archives the object that was just created in the previous example with 
+the *updateObject* method.
 
 ```{r, eval=FALSE}
-# Obtain a PID with query() or by using the member node GUI, i.e. metacatui
-response <- archive(mn, pid)
-newsysmeta <- getSystemMetadata(mn, pid)
-response <- archive(mn, newid)
+response <- archive(mn, updateid)
 ```
 
 The following commands can be used to verify that the object was archived.
 ```{r, eval=FALSE}
-sysmeta <- getSystemMetadata(mn, newid)
-str(sysmeta)
+sysmeta <- getSystemMetadata(mn, updateid)
+sysmeta@archived
 ```
