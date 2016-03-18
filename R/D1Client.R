@@ -578,6 +578,11 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
       stop("Please set the DataONE Member Node to upload to using setMN()")
     }
   
+    # Ensure that the resmap has the same permissions as the package members, so
+    # create an access policy for the resmap that will have the same APs as the
+    # package members.
+    resMapAP <- data.frame(subject=as.character(), permission=as.character())
+    
     submitter <- as.character(NA)
     # Upload each object that has been added to the DataPackage
     for (doId in getIdentifiers(dp)) {
@@ -605,16 +610,20 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
           do@sysmeta@dateUploaded <- datapackage:::defaultUTCDate()
           removeMember(dp, doId)
           addData(dp, do)
+          
+          # Add this package member's access policy to the resmap AP
+          resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
+          
         } else {
           warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
         }
     }
     
-    # Create a resource map for this DataPackage and upload it
     tf <- tempfile()
     serializationId <- paste0("urn:uuid:", UUIDgenerate())
     status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
     resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
+    resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
     if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
     returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
     if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
