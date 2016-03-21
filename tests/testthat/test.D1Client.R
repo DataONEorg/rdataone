@@ -105,7 +105,7 @@ test_that("D1Client getDataObject", {
 test_that("D1Client uploadDataObject with raw data works", {
   skip_on_cran()
   library(dataone)
-  library(datapackage)
+  library(datapack)
 
   # Create a DataObject with a raw R object and upload to DataONE
   data <- charToRaw("1,2,3\n4,5,6\n")
@@ -129,7 +129,7 @@ test_that("D1Client uploadDataObject with raw data works", {
 test_that("D1Client uploadDataObject with filename works", {
   skip_on_cran()
   library(dataone)
-  library(datapackage)
+  library(datapack)
   
   # Create a csv file for the science object
   testdf <- data.frame(x=1:10,y=11:20)
@@ -155,7 +155,7 @@ test_that("D1Client uploadDataObject with filename works", {
 test_that("D1Client uploadDataPackage works", {
   skip_on_cran()
   library(dataone)
-  library(datapackage)
+  library(datapack)
   # Create a csv file for the science object
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
@@ -215,7 +215,7 @@ test_that("D1Client uploadDataPackage works", {
 test_that("D1Client createD1Object works", {
   skip_on_cran()
   library(dataone)
-  library(datapackage)
+  library(datapack)
   library(uuid)
   # Create a csv file for the science object
   testdf <- data.frame(x=1:10,y=11:20)
@@ -332,7 +332,7 @@ test_that("D1Client d1IdentifierSearch works", {
 test_that("D1Client createDataPackage works", {
   skip_on_cran()
   library(dataone)
-  library(datapackage)
+  library(datapack)
   library(uuid)
   
   testdf <- data.frame(x=1:10,y=11:20)

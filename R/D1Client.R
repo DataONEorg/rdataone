@@ -28,7 +28,7 @@
 #' @aliases D1Client-class
 #' @slot cn The Coordinating Node associated with the D1Client object
 #' @slot mn The Member Node associated with this D1Client object
-#' @import datapackage
+#' @import datapack
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
@@ -50,7 +50,7 @@
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
-#' @import datapackage
+#' @import datapack
 setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
 #########################
@@ -147,7 +147,7 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #' uploaded <- createD1Object(d1c, d1o)
 #' }
 setGeneric("createD1Object", function(x, d1Object, ...) {
-  .Deprecated("uploadDataObject", "datapackage")
+  .Deprecated("uploadDataObject", "datapack")
   standardGeneric("createD1Object")
 })
 
@@ -169,7 +169,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @param ... (not yet used)
 #' @rdname getD1Object
 #' @aliases getD1Object
-#' @return A datapackage:DataObject
+#' @return A datapack:DataObject
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 #' @examples \dontrun{ 
@@ -534,12 +534,12 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @return id The identifier of the resource map for this data package
 #' @rdname uploadDataPackage
 #' @aliases uploadDataPackage
-#' @import datapackage
+#' @import datapack
 #' @import uuid
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
-#' library(datapackage)
+#' library(datapack)
 #' dp <- new("DataPackage")
 #' sampleData <- system.file("extdata/sample.csv", package="dataone")
 #' cn <- CNode("STAGING")
@@ -568,7 +568,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapackage]{serializePackage}
+#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
@@ -607,7 +607,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         if(!is.null(returnId)) {
           if(!quiet) cat(sprintf("Uploaded identifier: %s\n", returnId))
           # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
-          do@sysmeta@dateUploaded <- datapackage:::defaultUTCDate()
+          do@sysmeta@dateUploaded <- datapack:::defaultUTCDate()
           removeMember(dp, doId)
           addData(dp, do)
           
@@ -637,11 +637,11 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' @rdname uploadDataObject
 #' @aliases uploadDataObject
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @examples
 #' library(dataone)
-#' library(datapackage)
+#' library(datapack)
 #' testdf <- data.frame(x=1:10,y=11:20)
 #' csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
 #' write.csv(testdf, csvfile, row.names=FALSE)
@@ -858,7 +858,7 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
-#' library(datapackage)
+#' library(datapack)
 #' library(uuid)
 #' dp <- new("DataPackage")
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
@@ -873,10 +873,10 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 #' }
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   
-  # Add deprecated here instead of in the generic function, as the generic function is the datapackage R package.
-  msg <- sprintf("'addData' is deprecated.\nUse 'datapackage:addData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  # Add deprecated here instead of in the generic function, as the generic function is the datapack R package.
+  msg <- sprintf("'addData' is deprecated.\nUse 'datapack:addData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("addData(x, do, mo)")
-  .Deprecated("DataObject", package="datapackage", msg, methodSig)
+  .Deprecated("DataObject", package="datapack", msg, methodSig)
   x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
   # If a metadata object identifier is specified on the command line, then add the relationship to this package
   # that associates this science object with the metadata object.

@@ -223,7 +223,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     return(content(response, as = "raw"))
 })
 
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @rdname getSystemMetadata
 setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
@@ -311,14 +311,14 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @examples
 #' # Create an object in the DataONE "STAGING" environment
 #' library(dataone)
 #' library(uuid)
 #' library(digest)
-#' library(datapackage)
+#' library(datapack)
 #' cn <- CNode("STAGING")
 #' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 #' # Have Dataone create an identifier for you (requires authentication)
@@ -412,7 +412,7 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
 #' @param ... (Not yet used.)
 #' @return XML describing the result of the operation, including the identifier if successful
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.update}
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
 setGeneric("updateObject", function(x, ...) {
@@ -486,7 +486,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sys
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @note Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
 setGeneric("updateSystemMetadata", function(x, ...) {

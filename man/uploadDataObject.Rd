@@ -37,7 +37,7 @@ Upload a DataObject to a DataONE member node.
 }
 \examples{
 library(dataone)
-library(datapackage)
+library(datapack)
 testdf <- data.frame(x=1:10,y=11:20)
 csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
 write.csv(testdf, csvfile, row.names=FALSE)

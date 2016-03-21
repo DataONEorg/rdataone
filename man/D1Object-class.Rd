@@ -5,7 +5,7 @@
 \alias{D1Object-class}
 \title{D1Object (Deprecated) is a representation of a DataObject.}
 \description{
-D1Object has been deprecated in favor of datapackage::DataObject, which provides
+D1Object has been deprecated in favor of datapack::DataObject, which provides
 a wrapper for data and associated SystemMetadata.
 }
 \section{Slots}{

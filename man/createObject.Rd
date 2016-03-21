@@ -42,7 +42,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-ov
 library(dataone)
 library(uuid)
 library(digest)
-library(datapackage)
+library(datapack)
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 # Have Dataone create an identifier for you (requires authentication)

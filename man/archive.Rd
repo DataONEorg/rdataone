@@ -39,7 +39,7 @@ Also, administrator priviledge is required to run archive() on a DataONE Coordin
 library(dataone)
 library(uuid)
 library(digest)
-library(datapackage)
+library(datapack)
 # First create a new object
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")

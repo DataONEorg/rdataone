@@ -451,7 +451,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @return SystemMetadata for the object
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @rdname getSystemMetadata
 #' @examples

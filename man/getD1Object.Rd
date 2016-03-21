@@ -18,7 +18,7 @@ getD1Object(x, identifier, ...)
 \item{...}{(not yet used)}
 }
 \value{
-A datapackage:DataObject
+A datapack:DataObject
 }
 \description{
 An objectd is download from the DataONE network for the identifier that is provided.

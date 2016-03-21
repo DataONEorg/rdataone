@@ -26,7 +26,7 @@ to the resource map that indicates that the metadata object describes the scienc
 \examples{
 \dontrun{
 library(dataone)
-library(datapackage)
+library(datapack)
 library(uuid)
 dp <- new("DataPackage")
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")

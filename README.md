@@ -171,7 +171,7 @@ df <- read.csv(theData, stringsAsFactors=FALSE)
 Uploading a CSV file to a DataONE Member Node requires authentication via CILogon, but is similarly simple::
 
 ```
-library(datapackage)
+library(datapack)
 library(uuid)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 id <- paste("urn:uuid:", UUIDgenerate(), sep="")

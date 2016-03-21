@@ -23,7 +23,7 @@ A complete script that uses this workflow is shown here:
 
 ```{r, eval=FALSE}
 library(dataone)
-library(datapackage)
+library(datapack)
 library(uuid)
 dp <- new("DataPackage")
 sampleData <- system.file("extdata/sample.csv", package="dataone")
@@ -52,7 +52,7 @@ an empty *DataPackage* object that will be added to later:
 
 ```{r,eval=F}
 library(dataone)
-library(datapackage)
+library(datapack)
 library(uuid)
 dp <- new("DataPackage")
 ```
@@ -208,7 +208,7 @@ When uploading a single dataset using this method, additional information must b
 controls how DataONE interacts with the uploaded dataset. This additional information is stored
 in DataONE as a *system metadata* object and contains information such as who can access or update
 the dataset, how many copies of the dataset should be maintained, whether the object has been superceded by
-another object, etc. A system metadata object is created in R using the *datapackage::SystemMetadata*
+another object, etc. A system metadata object is created in R using the *datapack::SystemMetadata*
 class, as shown below:
 
 ```{r,eval=F}

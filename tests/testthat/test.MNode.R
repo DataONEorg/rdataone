@@ -109,7 +109,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
     skip_on_cran()
     library(dataone)
     library(digest)
-    library(datapackage)
+    library(datapack)
     library(uuid)
     library(XML)
     #cn <- CNode("SANDBOX")

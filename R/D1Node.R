@@ -137,7 +137,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' library(dataone)
 #' library(uuid)
 #' library(digest)
-#' library(datapackage)
+#' library(datapack)
 #' # First create a new object
 #' cn <- CNode("STAGING")
 #' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
@@ -311,7 +311,7 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEng
 #' @param pid The identifier of the object
 #' @param ... (Not yet used.)
 #' @return SystemMetadata for the object
-#' @import datapackage
+#' @import datapack
 #' @export
 #' @examples 
 #' library(dataone)

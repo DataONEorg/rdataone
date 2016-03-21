@@ -32,7 +32,7 @@ uploadDataPackage(x, ...)
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapackage]{serializePackage}}
+\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}}
 }
 \value{
 id The identifier of the resource map for this data package
@@ -57,7 +57,7 @@ be created, and the remainder not.
 \examples{
 \dontrun{
 library(dataone)
-library(datapackage)
+library(datapack)
 dp <- new("DataPackage")
 sampleData <- system.file("extdata/sample.csv", package="dataone")
 cn <- CNode("STAGING")

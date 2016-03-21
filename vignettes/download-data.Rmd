@@ -81,7 +81,7 @@ obj <- getObject(mn, pid)
 ### Alternate Approach for DataONE-wide search and download
 
 This approach uses the *getDataObject* method from the R package.  The *getDataObject* method determines which 
-member node in DataONE holds the data item and downloads it into a datapackage::DataObject. The DataObject R object is 
+member node in DataONE holds the data item and downloads it into a datapack::DataObject. The DataObject R object is 
 a wrapper that contains the data bytes for the DataONE dataset requested as well as the DataONE system metadata for the object. 
 
 ```{r, eval=FALSE}

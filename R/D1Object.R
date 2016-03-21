@@ -19,13 +19,13 @@
 #
 
 #' D1Object (Deprecated) is a representation of a DataObject.
-#' @description D1Object has been deprecated in favor of datapackage::DataObject, which provides
+#' @description D1Object has been deprecated in favor of datapack::DataObject, which provides
 #' a wrapper for data and associated SystemMetadata. 
 #' @slot dataObject A backing instance of a DataObject, to which all methods and state are proxied
 #' @rdname D1Object-class
 #' @aliases D1Object-class
 #' @keywords classes
-#' @import datapackage
+#' @import datapack
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}
@@ -102,9 +102,9 @@ setMethod("getData", signature("D1Object"), function(x) {
   # We have to include all args for .Deprecated, because we are deprecating just this 
   # implementation (method) and not the generic. When .Deprecated is called from the method,
   # it doesn't properly identify the generic/method name (msg says ".local is deprecated)
-  msg <- sprintf("'getData' is deprecated.\nUse 'datapackage:getData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  msg <- sprintf("'getData' is deprecated.\nUse 'datapack:getData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("getData(x)")
-  .Deprecated("getData", package="datapackage", msg, methodSig)
+  .Deprecated("getData", package="datapack", msg, methodSig)
   data <- rawToChar(getData(x@dataObject))
 })
 
@@ -115,9 +115,9 @@ setMethod("getData", signature("D1Object"), function(x) {
 #' @return the identifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
-  msg <- sprintf("'getIdentifier' is deprecated.\nUse 'datapackage:getIdentifier' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  msg <- sprintf("'getIdentifier' is deprecated.\nUse 'datapack:getIdentifier' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("getIdentifier(x)")
-  .Deprecated("getIdentifier", package="datapackage", msg, methodSig)
+  .Deprecated("getIdentifier", package="datapack", msg, methodSig)
   getIdentifier(x@dataObject)
 })
 
@@ -128,9 +128,9 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @rdname getFormatId
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
-  msg <- sprintf("'getFormatId' is deprecated.\nUse 'datapackage:getFormatId' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  msg <- sprintf("'getFormatId' is deprecated.\nUse 'datapack:getFormatId' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("getFormatId(x)")
-  .Deprecated("getFormatId", package="datapackage", msg, methodSig)
+  .Deprecated("getFormatId", package="datapack", msg, methodSig)
   getFormatId(x@dataObject)
 })
 
@@ -148,9 +148,9 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @rdname setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
-  msg <- sprintf("'setPublicAccess' is deprecated.\nUse 'datapackage:setPublicAccess' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  msg <- sprintf("'setPublicAccess' is deprecated.\nUse 'datapack:setPublicAccess' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("setPublicAccess(x)")
-  .Deprecated("setPublicAccess", package="datapackage", msg, methodSig) 
+  .Deprecated("setPublicAccess", package="datapack", msg, methodSig) 
   x@dataObject <- setPublicAccess(x@dataObject)
   return(x)
 })
@@ -172,9 +172,9 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @rdname canRead
 #' @export
 setMethod("canRead", signature("D1Object"), function(x, subject) {
-  msg <- sprintf("'canRead' is deprecated.\nUse 'datapackage:canRead' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  msg <- sprintf("'canRead' is deprecated.\nUse 'datapack:canRead' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
   methodSig <- sprintf("canRead(x)")
-  .Deprecated("canRead", package="datapackage", msg, methodSig) 
+  .Deprecated("canRead", package="datapack", msg, methodSig) 
   canRead(x@dataObject, subject)
 })
 
