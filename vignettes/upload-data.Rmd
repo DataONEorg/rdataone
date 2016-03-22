@@ -37,8 +37,7 @@ sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 metadataId <- paste("urn:uuid:", UUIDgenerate(), sep="")
 metadataObj <- new("DataObject", id=metadataId, format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 metadataObj <- setPublicAccess(metadataObj)
-addData(dp, metadataObj)
-addData(dp, dataObj, metadataObj)
+dp <- addData(dp, dataObj, metadataObj)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 ```
@@ -127,7 +126,7 @@ user 'jsmith' changePermission access to the dataset after it is uploaded and av
 
 ```{r,eval=F}
 accessRules <- data.frame(subject="uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org", permission="changePermission")
-sciDataObj <- addAccessRule(dataObj, accessRules)
+dataObj <- addAccessRule(dataObj, accessRules)
 ```
 
 ### 5. Create a DataObject for the metadata file
@@ -173,14 +172,14 @@ added.
 Now add the metadata object to the DataPackage:
 
 ```{r, eval=F}
-addData(dp, metadataObj)
+dp <- addData(dp, metadataObj)
 ```
 
 Then specify the metadata object when each science data object is added, associating the metadata object with the
 science object:
 
 ```{r, eval=F}
-addData(dp, sciDataObj, metadataObj)
+dp <- addData(dp, dataObj, metadataObj)
 ```
 
 ### 7. Upload the DataPackage
