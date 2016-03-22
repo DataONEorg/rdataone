@@ -6,12 +6,14 @@
 \alias{getAuthSubject,AuthenticationManager-method}
 \title{Get the authentication subject.}
 \usage{
-getAuthSubject(.Object, node)
+getAuthSubject(.Object, ...)
 
 \S4method{getAuthSubject}{AuthenticationManager}(.Object, node)
 }
 \arguments{
 \item{.Object}{an AuthenticationManager instance}
+
+\item{...}{(Not yet used)}
 
 \item{node}{A D1Node instance}
 }

@@ -3,15 +3,17 @@
 \docType{methods}
 \name{evaluateAuth}
 \alias{evaluateAuth}
-\alias{evaluateAuth,AuthenticationManager,D1Node-method}
+\alias{evaluateAuth,AuthenticationManager-method}
 \title{Evaluate DataONE authentication.}
 \usage{
-evaluateAuth(.Object, node)
+evaluateAuth(.Object, ...)
 
-\S4method{evaluateAuth}{AuthenticationManager,D1Node}(.Object, node)
+\S4method{evaluateAuth}{AuthenticationManager}(.Object, node)
 }
 \arguments{
 \item{.Object}{an Authentication Object.}
+
+\item{...}{additional parameters}
 
 \item{node}{A D1Node object.}
 }

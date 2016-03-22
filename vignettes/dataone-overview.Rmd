@@ -55,7 +55,7 @@ If the SID is specified when the object is downloaded, the most recent version o
 Uploading data to DataONE required that a DataONE user identity be provided. In DataONE Version 1.x, the 
 identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
 adds an additional method to provide identity information - an *authentication token*, also refered to as
-an identity code. Authentication tokens can be used with Member Nodes that have been upgrade to the DataONE Version 2.0 Member Node API.
+an identity code. Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API.
 
 The process of providing user identity information either via an X.509 certificate or via an authentication token
 is refered to as *authentication*.
@@ -73,10 +73,13 @@ can be found by:
 - Click on the "Copy" button below the text window.
 - Note the identity string and expiration date of the token.
 - Click on the *Copy* button to copy the token. The authentication string has been copied to your paste buffer.
-- In the R console, paste the string which has the form:
+- In the R console, paste the string which is similiar to this example:
 ```
-  options(authentication_token = "<paste token string here>")
+  options(dataone_token = "eyJhbGciOiJSUzI1NiJ9...")
 ```
+(For this example, the typically very long token value has been truncated for brevity, however the entire string
+must be used for the token to be valid.)
+
 - Note that this command can be entered in a user's ~/.Rprofile file so that this command is entered
 when R is started.
 - Remember that the console command must be re-entered with a new token value when the token expires
@@ -87,6 +90,19 @@ from the *dataone* R client.
 <span style="color:red">
 *The authentication token must be safegaurded like a password. Anyone with access to it can access content in DataONE as the user identity contained in the token. Care should be taken to not add this code to any published scripts or documents. This code will expire after a certain time period after which it will be necessary to obtain a new one.*
 </span>
+
+Note that the token shown above is for use in the DataONE production environment. If it is necessary to use authentication in 
+a DataONE test environment, then the steps shown above should be followed but navigating to the following web page to generate
+the token: https://search.test.dataone.org. If you generate a token from this web page, then the R option name
+used should be "dataone_test_token", not "dataone_token", for example:
+
+```
+options(dataone_test_token = "eyJhbGciOiJSUzI1NiJ9...")
+```
+(For this example, the typically very long token value has been truncated for brevity, however the entire string
+must be used for the token to be valid.)
+
+For an explanation of DataONE environments, please see [DataONE environments](#environments).
 
 Detailed, technical information about user identities and authentication in DataONE can be viewed at 
 

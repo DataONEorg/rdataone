@@ -50,7 +50,7 @@ test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   if(authValid) {
     expect_false(is.na(dataone:::getAuthMethod(am, mn)))
     if(dataone:::getAuthMethod(am, mn) == "token") {
-      expect_false(is.na(dataone:::getToken(am)))
+      expect_false(is.na(dataone:::getToken(am, mn)))
     } else {
       expect_false(is.na(dataone:::getCert(am)))
       expect_true(file.exists(dataone:::getCert(am)))
@@ -71,7 +71,7 @@ test_that("getAuthExpires() works", {
     expect_false(is.na(dataone:::getAuthMethod(am, mn)))
     # TODO: Check auth token expiration when R JWT package is available.
     if(dataone:::getAuthMethod(am, mn) == "token") {
-      expect_false(is.na(dataone:::getToken(am)))
+      expect_false(is.na(dataone:::getToken(am, mn)))
     } else {
       expect_false(is.na(dataone:::getCert(am)))
       expect_false(dataone:::isAuthExpired(am, mn))
@@ -126,14 +126,14 @@ test_that("obscureAuth(), restoreAuth() work", {
   am <- dataone:::obscureAuth(am)
   expect_false(dataone:::isAuthValid(am, cn))
   expect_equal(dataone:::getAuthSubject(am, cn), "public")
-  expect_equal(dataone:::getToken(am), as.character(NA))
+  expect_equal(dataone:::getToken(am, cn), as.character(NA))
   expect_equal(dataone:::getCert(am), as.character(NA))
   am <- restoreAuth(am)
   # Suppress PKIplus, cert missing warnings
   authValid <- dataone:::isAuthValid(am, cn)
   if(authValid) {
     if(dataone:::getAuthMethod(am, cn) == "token") {
-      expect_false(identical(getToken(am), as.character(NA)))
+      expect_false(identical(getToken(am, cn), as.character(NA)))
     } else {
       expect_false(identical(getCert(am), as.character(NA)))
     }

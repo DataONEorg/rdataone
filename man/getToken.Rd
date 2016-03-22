@@ -6,17 +6,25 @@
 \alias{getToken,AuthenticationManager-method}
 \title{Get the value of the DataONE Authentication Token, if one exists.}
 \usage{
-getToken(.Object)
+getToken(.Object, ...)
 
-\S4method{getToken}{AuthenticationManager}(.Object)
+\S4method{getToken}{AuthenticationManager}(.Object, node = as.character(NA))
 }
 \arguments{
 \item{.Object}{an AuthenticationManager instance}
+
+\item{...}{additional parameters}
+
+\item{node}{either a CNode or MNode object to get the appropriate token for.}
 }
 \value{
 The current authentication token.
 }
 \description{
 Get the value of the DataONE Authentication Token, if one exists.
+}
+\details{
+A token value is retrieved based on the DataONE environment that the specified node is
+located in, either the production environment or a test environment.
 }
 

@@ -3,15 +3,17 @@
 \docType{methods}
 \name{isAuthValid}
 \alias{isAuthValid}
-\alias{isAuthValid,AuthenticationManager,D1Node-method}
+\alias{isAuthValid,AuthenticationManager-method}
 \title{Verify authentication for a member node.}
 \usage{
-isAuthValid(.Object, node)
+isAuthValid(.Object, ...)
 
-\S4method{isAuthValid}{AuthenticationManager,D1Node}(.Object, node)
+\S4method{isAuthValid}{AuthenticationManager}(.Object, node)
 }
 \arguments{
 \item{.Object}{An AuthenticationManager instance}
+
+\item{...}{additional parameters}
 
 \item{node}{The node object (MNode or CNode) that authentication is being checked for.}
 }

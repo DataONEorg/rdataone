@@ -37,7 +37,7 @@ auth_get <- function(url, nconfig=config(), node) {
   if(!missing(node) && isAuthValid(am, node)) {
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
-      authToken <- getToken(am)
+      authToken <- getToken(am, node)
       response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
     } else {
       # Authenticatin will use a certificate.
@@ -75,7 +75,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
     }
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
-      authToken <- getToken(am)
+      authToken <- getToken(am, node)
       switch(method,
              post={
                response=POST(url, encode=encode, body=body, config(tcp_keepalive = as.numeric(1)), add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
