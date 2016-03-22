@@ -55,6 +55,8 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #########################
 
 #' Create a CNode object.
+#' @details For an explaination of DataONE Coordinatine Nodes, see the 
+#' section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("dataone-overview")}.
 #' @param x The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
 #' @param ... (not yet used)
 #' @rdname CNode
@@ -558,6 +560,9 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' Get a reference to a node based on its identifier
 #' @rdname getMNode
 #' @aliases getMNode
+#' @details For an explainatin of DataONE Coordinatine Nodes and Member Node
+#' identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
+#' by entering the R command: \code{vignette("dataone-overview")}.
 #' @param x The coordinating node to query for its registered Member Nodes
 #' @param nodeid The standard identifier string for this node
 #' @param ... (Not yet used)
