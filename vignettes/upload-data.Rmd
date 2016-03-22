@@ -222,8 +222,6 @@ size <- file.info(csvfile)$size
 sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 # Generate a unique identifier for the dataset
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
-cn <- CNode("STAGING")
-mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
@@ -245,8 +243,6 @@ sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
 # The seriesId can be any unique character string.
 seriesId <- sprintf("urn:uuid:%s", UUIDgenerate())
-cn <- CNode("STAGING")
-mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1,  seriesId=seriesId)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
@@ -254,6 +250,8 @@ A unique identifier must be specified for each system metadata, whether or not a
 
 The dataset can now be uploaded to DataONE with the associated system metadata:
 ```{r,eval=F}
+cn <- CNode("STAGING")
+mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 response <- createObject(mn, pid, csvfile, sysmeta)
 ```
 
