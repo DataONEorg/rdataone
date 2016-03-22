@@ -52,7 +52,7 @@ Using SIDs the most current version of an object can be obtained, without the ne
 If the SID is specified when the object is downloaded, the most recent version of that object will be downloaded.
 
 ### 2. New Authentication Mechanism
-Uploading data to DataONE required that a DataONE user identity be provided. In DataONE Version 1.x, the 
+Uploading data to DataONE requires that a DataONE user identity be provided. In DataONE Version 1.x, the 
 identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
 adds an additional method to provide identity information - an *authentication token*, also refered to as
 an identity code. Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API.
@@ -60,8 +60,8 @@ an identity code. Authentication tokens can be used with Member Nodes that have 
 The process of providing user identity information either via an X.509 certificate or via an authentication token
 is refered to as *authentication*.
 
-Authentication tokens can be obtained from a user's DataONE account settings web page. This page
-can be found by:
+Authentication tokens can be obtained from a user's DataONE account settings web page. To create an
+authentication token:
 
 - Navigate to https://search.dataone.org
 - Click *Sign in*, or *Sign up* if necessary
@@ -70,9 +70,8 @@ can be found by:
 - Click the "Apps" menu item.
 - Click on the "Token for DataONE R" tab.
 - Click "Renew authentication token" if the token you have been using has expired.
-- Click on the "Copy" button below the text window.
+- Click on the "Copy" button below the text window to copy the authentication string to the paste buffer.
 - Note the identity string and expiration date of the token.
-- Click on the *Copy* button to copy the token. The authentication string has been copied to your paste buffer.
 - In the R console, paste the string which is similiar to this example:
 ```
   options(dataone_token = "eyJhbGciOiJSUzI1NiJ9...")
@@ -92,7 +91,7 @@ from the *dataone* R client.
 </span>
 
 Note that the token shown above is for use in the DataONE production environment. If it is necessary to use authentication in 
-a DataONE test environment, then the steps shown above should be followed but navigating to the following web page to generate
+a DataONE test environment, then the steps shown above should be followed by navigating to the following web page to generate
 the token: https://search.test.dataone.org. If you generate a token from this web page, then the R option name
 used should be "dataone_test_token", not "dataone_token", for example:
 
@@ -114,6 +113,10 @@ libary(dataone)
 am <- AuthenticationManager()
 getTokenInfo(am)
 ```
+
+The most important column of the information returned by `getTokenInfo()` is the `expired` column. If a token
+is expired, then it will not provide authentication and must be re-created from the user's profile page as
+shown above.
 
 ### 3. Ability To Update System Metadata
 Metadata is maintained by DataONE for each object that has been uploaded to it. This SystemMetadata for an object contains
@@ -200,6 +203,69 @@ Sys.setenv(LIB_DIR="")
 Sys.setenv(INCLUDE_DIR="")
 ```
 At this point you should be able to use X.509 Certificates.
+
+## <a name="environments"/> DataONE Environments
+
+DataONE nodes are separated into several networks or *environments*. Each environment provides an isolated installations of the
+DataONE services, such that nodes in one environment do not communicate with nodes in another. 
+
+Currently DataONE uses the following environments: *production*, *staging*, *staging2*, *sandbox*, *sandbox2*, *dev* and *dev2*.
+All environments except production are *test* environments that may have different version of software than the
+released version of the DataONE infrastructure, and may experience service outages as required by the DataONE development team.
+
+Most users will only need to use the production and staging2 environments. 
+
+The production environment is the current working release of the DataONE infrastructure and is the environment that supports the operations necessary to fully implement the DataONE system. There is only one production environment.
+
+The staging environment provides an installation of DataONE infrastructure that is a copy of the production environment. It 
+is used to prepare for a new release of the infrastructure by testing the upgrade and software replacement procedures. 
+
+The staging2 is a copy of the production environment and can be used by DataONE Member Nodes that are preparing 
+to join the production environment. Staging2 usually has the released version of the DataONE infrastructure, and is more
+stable that the other test environments.
+
+The sandbox and sandbox2 environments offer more stable environments than the dev environments, and is intended to provide a more stable system where new features or alternative implementations may be evaluated within an environment that is close to a particular release of the DataONE infrastructure.
+
+The dev and dev2 environments are intended for use by DataONE developers and are unstable, with software upgrades and 
+service outages occurring as needed by the development staff.
+
+The *dataone* R package uses the following abbreviations for the DataONE environments:
+
+DataONE environment | *dataone* R package abbreviation | CN URL
+------------------- | -------------------------------- | --------------------------
+production          | PROD                             | https://cn.dataone.org/cn
+stage               | STAGING                          | https://cn-stage.test.dataone.org/cn
+stage 2             | STAGING2                         | https://cn-stage-2.test.dataone.org/cn
+sandbox             | SANDBOX                          | https://cn-sandbox.test.dataone.org/cn
+sandbox2            | SANDBOX2                         | https://cn-sandbox-2.test.dataone.org/cn
+dev                 | DEV                              | https://cn-dev.test.dataone.org/cn
+dev2                | DEV2                             | https://cn-dev.test.dataone.org/cn
+
+Each DataONE environment has a CN that maintains a registry of all MNs in that network. The CN can be queried for a list of 
+all MNs in a network, for example, to see the MNs that are currently in the production environmemt:
+```{r, eval=F}
+cn <- CNode("PROD")
+unlist(lapply(listNodes(cn), function(x) x@identifier))
+```
+
+Note: this same information can be obtained by navigating a web browser to https://cn.dataone.org/cn/v2/node.
+
+To see the member nodes that are currenly in the STAGE2 environment:
+```{r, eval=F}
+cn <- CNode("STAGING2")
+unlist(lapply(listNodes(cn), function(x) x@identifier))
+```
+
+Using the node identifiers retrieved from these commands, the CN can be used to create a *MNode* object that
+can be used to interact with a DataONE MN. This example obtains an MNode object for the Knowledge Network
+for Biocomplexity Member Node and queries the node's data holdings for datasets that mention "hydrocarbon"
+in the abstract and "aquaculture" in the keywords:
+
+```{r, eval=F}
+cn <- CNode("PROD")
+mn <- getMNode(cn, "urn:node:KNB")
+result <- query(mn, searchTerms=list(abstract="hydrocarbon", keywords="aquaculture"), as="data.frame")
+```
 
 ## Acknowledgements
 Work on this package was supported by:
