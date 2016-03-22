@@ -6,6 +6,10 @@
 
 * Support for the DataONE v2 API, as well as the existing v1 API
 
+* DataONE authentication tokens are supported for any DataONE node
+  that has implemented the DataONE v2 API. Tokens are supported in
+  both the production and test environments.
+
 ## NEW S4 CLASSES
 
 * Class CNode - provides methods to search, get and send data to a DataONE Coordinating Node
