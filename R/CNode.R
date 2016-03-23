@@ -122,6 +122,11 @@ setMethod("CNode", signature("character"), function(x) {
   result@endpoint <- paste(result@baseURL, result@APIversion, sep="/")
   # Set the service URL fragment for the solr query engine
   result@serviceUrls <- data.frame(service="query.solr", Url=paste(result@endpoint, "query", "solr", "?", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+  if(x == "PROD") {
+    result@env <- "prod"
+  } else {
+    result@env <- "test"
+  }
 
   return(result)
 })
@@ -585,7 +590,16 @@ setMethod("getMNode", signature(x = "CNode"), function(x, nodeid) {
   })
   output.list <- nodelist[match]
   if (length(output.list) == 1) {
-    mn <- MNode(output.list[[1]])
+    thisNode <- output.list[[1]]
+    # See if this cn is the production cn. If yes
+    # then mark this node as being in the production
+    # environment.
+    if (grepl("cn.dataone.org", x@endpoint)) {
+      thisNode@env <- "prod"
+    } else {
+      thisNode@env <- "test"
+    }
+    mn <- MNode(thisNode)
     return(mn)  
   } else {
     warning(sprintf("Member node %s not found.", nodeid))

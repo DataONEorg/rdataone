@@ -35,7 +35,8 @@
 #' @slot state an indication of whether the node is accessible, either 'up' or 'down'
 #' @slot services A data.frame containing the service tiers supported by this node.
 #' @slot serviceUrls a data.frame that contains DataONE service Urls
-#' @slot APIversion The version of the DataONE API for this nod
+#' @slot APIversion The version of the DataONE API for this node
+#' @slot env a character string, either 'prod' if this node is in the production environment, otherwise 'test'
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
@@ -67,7 +68,8 @@ setClass("D1Node",
 					state = "character",
 					services = "data.frame",
           serviceUrls = "data.frame",
-					APIversion = "character"
+					APIversion = "character",
+					env = "character"
 					)
 )
 

@@ -133,7 +133,7 @@ setMethod("getToken", signature("AuthenticationManager"), function(.Object, node
     return(as.character(NA))
   } else {
     stopifnot(is(node, "CNode") || is(node, "MNode"))
-    if (grepl("test.dataone.org", node@endpoint)) {
+    if (node@env == "test") {
       token <- getOption("dataone_test_token")
       if(!is.null(token) && !is.na(token)) {
         attr(token, "name") <- "dataone_test_token"

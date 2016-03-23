@@ -116,6 +116,30 @@ setMethod("MNode", signature("character"), function(x) {
     mnode <- parseCapabilities(mnode, xmlRoot(xml))
     # Set the service URL fragment for the solr query engine
     mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
+    # Determine if this node is in the production or a test environment.
+    # If it is is a test domain, then mark as a test node.
+    if(length(mnode@env) == 0) {
+      if (grepl("test.dataone.org", mnode@endpoint)) {
+        mnode@env <- "test"
+      } else {
+        # Only call the cn if there is no other way to determine
+        # the network that this node is in.
+        # List nodes in the production environment, if the node
+        # is not in the production enviroment, then it must be in
+        # a test environment.
+        cn <- CNode("PROD")
+        nodelist <- listNodes(cn)
+        match <- sapply(nodelist, function(x) { 
+          x@identifier == mnode@identifier && x@type == "mn"
+        })
+        output.list <- nodelist[match]
+        if (length(output.list) == 1) {
+          mnode@env <- "prod"
+        } else {
+          mnode@env <- "test"
+        }
+      }
+    }
     return(mnode)
 })
 
@@ -140,6 +164,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
         # Set the service URL fragment for the solr query engine
         mnode@serviceUrls <- data.frame(service="query.solr", Url=paste(mnode@endpoint, "query", "solr/", sep="/"), row.names = NULL, stringsAsFactors = FALSE)
         mnode@APIversion <- x@APIversion
+        mnode@env <- x@env
         return(mnode)
     } else {
         stop("Error: Node is not of type 'mn'.")
