@@ -16,6 +16,11 @@ maintenance operations on the data after it has been uploaded.
 The *dataone* package provides methods to allow R scripts to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN). The *dataone* R package takes care of the details of calling the 
 corresponding DataONE web service on a DataONE node. For example, the *dataone* `create` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
 
+Before uploading any data to a DataONE MN, it is necessary to obtain a DataONE user identity, and the means to provide that user 
+identity when data is uploaded. The method that DataONE uses to achieve this is known as *user identity authentication*, and 
+requires that an *authentication token*, which is a character string, is provided during upload. The process to obtain this
+token is described in the *dataone-overview* vignette, in the section **New Authentication Mechanism**, which is viewable with the R command `vignette("dataone-overview")`. (Note: DataONE originally used X.509 certificates for authentication, which are still supported.)
+
 ## Uploading a data package using `uploadDataPackage`
 Datasets and metadata can be uploaded individually or as a data package. Uploading a data package
 will be described first and a workflow for preparing and uploading a data package using the `uploadDataPackage` method will be shown. 
