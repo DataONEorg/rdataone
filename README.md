@@ -20,11 +20,9 @@ Provides read and write access to data and metadata from the [DataONE network
 ## Installation Notes 
 
 The current version of the *dataone* R package removes the dependency on rJava and significantly changes the base 
-API to correspond to the published  [DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods will be added.
+API to correspond to the published  [DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods have been added. 
 
-The *dataone* R package has not been released to CRAN yet, but a development version is available.
-
-In addition, the `redland` C library must be installed on your OS prior to installing the R package. 
+The `redland` C library must be installed on your OS prior to installing the R package. 
 
 ## Installing development versions of the package
 To obtain builds of the *dataone* R package before they are available from CRAN, development builds
@@ -66,7 +64,7 @@ port version
 ### Mac OS X install option 1: install using Macports
 If you are already using the MacPorts package manager, you can install *dataone* with the following commands, 
 otherwise, it is recommended that you skip to the next section *Installing with HomeBrew*. To install
-the *dataone* R package with MacPorts, enter this command at a terminal window:
+the *dataone* R package with MacPorts, first enter this command at a terminal window:
 
 ```
 sudo port install redland
@@ -82,7 +80,7 @@ install.packages("dataone")
 Please note that the *install.packages* command specifies a "source" installation. Installing from
 source is only necessary if Macports is being used, and is not a requirement if Homebrew is used.
 
-The *dataone* R package should be available for use at this point
+The *dataone* R package should be available for use at this point.
 
 ### Mac OS X install option 2: install using HomeBrew
 On Mac OS X you can use the package management system [HomeBrew](http://brew.sh) to install the 
@@ -98,14 +96,14 @@ Once HomeBrew has been installed, you can then enter the following command to in
 brew install redland
 ```
 
-Next, install the *dataone* R package with these commands typed at the R console window:
+Next, install the *dataone* R package with these commands typed at the R console:
 
 ```
 install.packages("dataone")
 library(dataone)
 ```
   
-The *dataone* R package should be available for use at this point
+The *dataone* R package should be available for use at this point.
 
 ## Installing on Ubuntu
 
@@ -133,7 +131,7 @@ additional system libraries.
 To install the R package from the R console:
 
 ```
-install.packages("dataone", type="source")
+install.packages("dataone")
 library(dataone)
 ```
 
