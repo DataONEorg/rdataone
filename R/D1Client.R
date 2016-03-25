@@ -889,4 +889,5 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as
     # Now add the CITO "documents" and "isDocumentedBy" relationships
     insertRelationship(x, getIdentifier(mo@dataObject), getIdentifier(do@dataObject))
   }
+  return(x)
 })
