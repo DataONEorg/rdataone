@@ -49,7 +49,7 @@ to download the new version, the new PID must be discovered and specified when t
 
 With *dataone* Version 2.0, an additional, optional identifier can be associated with an object, the Series Identifier (SID).
 Using SIDs the most current version of an object can be obtained, without the need to determine the PID of the latest version.
-If the SID is specified when the object is downloaded, the most recent version of that object will be downloaded.
+For example, if the SID is specified when the object is downloaded, the most recent version of that object will be downloaded.
 
 ### 2. New Authentication Mechanism
 Uploading data to DataONE requires that a DataONE user identity be provided. In DataONE Version 1.x, the 
