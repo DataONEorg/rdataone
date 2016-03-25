@@ -33,7 +33,9 @@ methods that are common between these two child classes.
 
 \item{\code{serviceUrls}}{a data.frame that contains DataONE service Urls}
 
-\item{\code{APIversion}}{The version of the DataONE API for this nod}
+\item{\code{APIversion}}{The version of the DataONE API for this node}
+
+\item{\code{env}}{a character string, either 'prod' if this node is in the production environment, otherwise 'test'}
 }}
 \section{Methods}{
 
