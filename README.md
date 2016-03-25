@@ -1,6 +1,6 @@
 #
 # dataone: R interface to the DataONE network of data repositories
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](http://cran.r-project.org/package=dataone)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
 
 - **Authors**: Matthew B. Jones ([NCEAS](http://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, and Scott Chamberlain
 - [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
