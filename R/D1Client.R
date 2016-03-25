@@ -542,15 +542,12 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' library(datapack)
 #' dp <- new("DataPackage")
 #' sampleData <- system.file("extdata/sample.csv", package="dataone")
-#' cn <- CNode("STAGING")
-#' mn <- getMNode(cn, "urn:node:mnStageUCSB2")
 #' dataObj <- new("DataObject", format="text/csv", file=sampleData)
 #' dataObj <- setPublicAccess(dataObj)
 #' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 #' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 #' metadataObj <- setPublicAccess(metadataObj)
-#' addData(dp, metadataObj)
-#' addData(dp, dataObj, metadataObj)
+#' dp <- addData(dp, do = dataObj, mo = metadataObj)
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' # Upload all members of the DataPackage to DataONE (requires authentication)
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
@@ -849,11 +846,12 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 #' @rdname addData
 #' @description The D1Object \code{do} is added to the data package \code{x}.
 #' @details If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
-#' object that describes the data object that is being added. The \code{addData} function will add a relationship
+#' object that describes the data object that is being added. The DataObject specified in the \code{mo} parameter will
+#' also be added to the DataPackage, if it has not already been added. Then the \code{addData} function will add a relationship
 #' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
 #' \code{documents} and \code{isDocumentedBy} relationships.
 #' @param x The \code{"DataPackage"} to which the data object should be added.
-#' @param do A D1Object to associate with the science metadata object.
+#' @param do A D1Object to add to the DataPackage
 #' @param mo A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.
 #' @export
 #' @examples \dontrun{
@@ -863,13 +861,10 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 #' dp <- new("DataPackage")
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' # Create metadata object that describes science data
-#' emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
-#' emlChar <- readLines(emlFile)
-#' emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
-#' emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
-#' metadataObj <- new("D1Object", id=emlId, 
-#'   format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c))
-#' addData(dp, metadataObj)
+#' newId <- sprintf("urn:uuid:%s", UUIDgenerate())
+#' csvfile <- system.file("extdata/sample.csv", package="dataone")
+#' sciObj <- new("DataObject", id=newId, format="text/csv",filename=csvfile)
+#' dp <- addData(dp, do = sciObj)
 #' }
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   

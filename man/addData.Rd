@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{The \code{"DataPackage"} to which the data object should be added.}
 
-\item{do}{A D1Object to associate with the science metadata object.}
+\item{do}{A D1Object to add to the DataPackage}
 
 \item{mo}{A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.}
 }
@@ -19,7 +19,8 @@ The D1Object \code{do} is added to the data package \code{x}.
 }
 \details{
 If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
-object that describes the data object that is being added. The \code{addData} function will add a relationship
+object that describes the data object that is being added. The DataObject specified in the \code{mo} parameter will
+also be added to the DataPackage, if it has not already been added. Then the \code{addData} function will add a relationship
 to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
 \code{documents} and \code{isDocumentedBy} relationships.
 }
@@ -31,13 +32,10 @@ library(uuid)
 dp <- new("DataPackage")
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 # Create metadata object that describes science data
-emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
-emlChar <- readLines(emlFile)
-emlRaw <- charToRaw(paste(emlChar, collapse="\\n"))
-emlId <- sprintf("urn:uuid:\%s", UUIDgenerate())
-metadataObj <- new("D1Object", id=emlId, 
-  format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c))
-addData(dp, metadataObj)
+newId <- sprintf("urn:uuid:\%s", UUIDgenerate())
+csvfile <- system.file("extdata/sample.csv", package="dataone")
+sciObj <- new("DataObject", id=newId, format="text/csv",filename=csvfile)
+dp <- addData(dp, do = sciObj)
 }
 }
 
