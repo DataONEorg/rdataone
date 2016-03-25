@@ -350,12 +350,11 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
 #' metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, 
 #'   mnNodeId=getMNodeId(d1c))
-#' addData(dp, metadataObj)
 #' sdf <- read.csv(csvfile)
 #' stf <- charToRaw(convert.csv(d1c, sdf))
 #' sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
 #' sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c))
-#' addData(dp, sciObj, metadataObj)
+#' dp <- addData(dp, do=sciObj, mo=metadataObj)
 #' expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
 #' resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE)
 #' }
