@@ -98,7 +98,8 @@ The *DataObject* maintains information about an object that will be needed by Da
 
 A *SystemMetadata* object will be created automatically and stored in each DataObject. The *SystemMetadata* object will
 be used by DataONE to maintain low level information about the dataset, such as the access policy, the user identity
-of the *rightsholder* (the user identity that controls the dataset), which Member Nodes it can be replicated to, etc. 
+of the *rightsholder* (the user identity that can modify access the dataset), which Member 
+Nodes it can be replicated to, etc. 
 
 The example below creates a *DataObject* for a science dataset:
 
@@ -108,11 +109,10 @@ dataId <- paste("urn:uuid:", UUIDgenerate(), sep="")
 dataObj <- new("DataObject", id=dataId, format="text/csv", file=sampleData)
 ```
 
-An optional *user* argument can be specified when creating a *DataObject*, which will be used to set the DataONE *submitter* and *rightsholder* of the dataset when it is uploaded. The *rightsholder* is the
-DataONE user that has full priviledge to the object.
+An optional *user* argument can be specified when creating a *DataObject*, which will be used to set the DataONE *submitter* and *rightsholder* of the dataset when it is uploaded. The rightsholder is granted all access priviledges 
+to the object.
 
-If a *user* is not specified for a *DataObject*, then it will automatically be set to the DataONE user 
-that created the authentication token or X.509 certificate. 
+If *user* is not specified for a *DataObject*, then the submitter and rightsholder for an object will automatically be set, when the object is uploaded to DataONE, to the DataONE user that created the authentication token or X.509 certificate. 
 
 Note that if the *id* argument is not specified, a unique identifier will automatically be created and assigned to the DataObject.
 
@@ -124,15 +124,18 @@ can be set using the `setPublicAccess` method:
 dataObj <- setPublicAccess(dataObj)
 ```
 
-Individual access rules to be applied to a DataONE user identify can also be added to the access policy. 
+Individual access rules to be added for a DataONE user identity can also be added to the access policy. 
 
 Access rules are added to a *DataObject* using the `addAccessRule` method. The following access rule will grant
-user 'jsmith' changePermission access to the dataset after it is uploaded and available on a DataONE MN:
+user 'Peter Smith' changePermission access to the dataset, which will take effect after it is uploaded and 
+available on a DataONE MN:
 
 ```{r,eval=F}
-accessRules <- data.frame(subject="uid=jsmith,o=NCEAS,dc=ecoinformatics,dc=org", permission="changePermission")
-dataObj <- addAccessRule(dataObj, accessRules)
+accessRules <- data.frame(subject="CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org", permission="changePermission") dataObj <- addAccessRule(dataObj, accessRules)
 ```
+The value of the *subject* argument in the above example ("CN=Peter Smith A10499,O=Google,C=US,DC=cilogon,DC=org") is the string value of a typical DataONE user identity. DataONE
+user identities and user authentication are described in section *A New Authentication Mechanism* 
+in the vignette *dataone-overview* (to view this vignette, type this command in the R console: `vignette("dataone-overview")`)
 
 ### 5. Create a DataObject for the metadata file
 When a *DataObject* is created, a unique identifier is generated if one is not specified. This automatically generated
@@ -168,7 +171,7 @@ Relationships between the objects in a DataPackage are stored in the ResourceMap
 One type of relationship that is stored is between the science metadata and the science datasets that are described by
 it. In the [DataONE data package](https://purl.dataone.org/architecture/design/DataPackage.html) implementation, this
 relationship is the [CITO](http://vocab.ox.ac.uk/cito) *documents* relationship that links the metadata object
-to the science object.
+to science objects.
 
 This relationship between the science metadata and science data objects will be made automatically for each science 
 data object as it is added to the DataPackage, if the metadata object is included when the science data object is
@@ -184,9 +187,17 @@ Then specify the metadata object when each science data object is added, associa
 science object:
 
 ```{r, eval=F}
-dp <- addData(dp, dataObj, metadataObj)
+dp <- addData(dp, do = dataObj, mo = metadataObj)
 ```
 
+If there were additional DataObjects to add to the package, they would be added to the DataPackage and 
+associated with the metadata object as follows:
+
+```
+dp <- addData(dp, do = dataObj2, mo = metadataObj)
+dp <- addData(dp, do = dataObj3, mo = metadataObj)
+dp <- addData(dp, do = dataObj4, mo = metadataObj)
+```
 ### 7. Upload the DataPackage
 
 When all *DataObjects* have been added to the DataPackage, call the `uploadDataPackage` method to upload the 
