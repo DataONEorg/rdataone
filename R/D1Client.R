@@ -562,7 +562,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
 #' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
+#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
 #' @export
