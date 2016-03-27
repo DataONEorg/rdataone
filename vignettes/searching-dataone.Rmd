@@ -17,7 +17,8 @@ underlying search mechanism, the Apache Foundation Solr search engine that runs 
 information for every dataset that is available from the DataONE network. 
 
 The same search mechanism is available on [DataONE Member Nodes](https://www.dataone.org/current-member-nodes). However, the search
-index on a member node only contains dataset information for datasets on that member node.
+index on a member node only contains dataset information for datasets that are contained 
+on that member node.
 
 Information about the Solr search engine can be obtained at [Solr Resources](http://lucene.apache.org/solr/resources.html) and 
 [Solr Tutorial](http://www.solrtutorial.com)
