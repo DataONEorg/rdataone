@@ -218,13 +218,13 @@ viewable or discoverable via the search facility for that user.
 
 ## Uploading Individual Datasets And Metadata
 
-A single dataset or metadata file can be uploaded to a DataONE MN using the *create* method.
+A single dataset or metadata file can be uploaded to a DataONE MN using the *createObject* method.
 When uploading a single dataset using this method, additional information must be supplied to DataONE that
 controls how DataONE interacts with the uploaded dataset. This additional information is stored
 in DataONE as a *system metadata* object and contains information such as who can access or update
 the dataset, how many copies of the dataset should be maintained, whether the object has been superceded by
-another object, etc. A system metadata object is created in R using the *datapack::SystemMetadata*
-class, as shown below:
+another object, etc. The system metadata information that will be uploaded to DataONE is collected and stored
+in an R object type *datapack::SystemMetadata*, as shown below:
 
 ```{r,eval=F}
 library(digest)
@@ -260,7 +260,6 @@ pid <- sprintf("urn:uuid:%s", UUIDgenerate())
 # The seriesId can be any unique character string.
 seriesId <- sprintf("urn:uuid:%s", UUIDgenerate())
 sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1,  seriesId=seriesId)
-sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
 A unique identifier must be specified for each system metadata, whether or not a seriesId is used.
 
@@ -274,23 +273,22 @@ response <- createObject(mn, pid, csvfile, sysmeta)
 Note that for this example, the DataONE test environment *STAGING* is used, and not the production environment.
 
 ## Maintaining Uploaded Datasets
-After date has been uploaded to DataONE, maintenance operations can be performed on these objects using the methods described in the following sections.
+After data has been uploaded to DataONE, maintenance operations can be performed on these objects using the methods described in the following sections.
 
 ### Update the DataONE system metadata for an object (MNode: updateSystemMetadata)
 The system metadata can be updated for an object in DataONE without updating the data bytes of the object itself. For
 example, if an object was only readable by the data submitter, the access policy for an object can be updated to enable 
 public access. System metadata is updated for an object using the *updateSystemMetadata* method:
 
-The following exmaple first downloads the current system metadata for an object, then updates the access policy that
-will be applied to the object and uploads the new system metadata to DataONE so that the changes will be applied: 
+The following exmaple first downloads the current system metadata for the pid from the previous example, then updates 
+the access policy that will be applied to the object and uploads the new system metadata to DataONE so that the changes will be applied: 
 
 ```{r, eval=F}
 cn <- CNode("STAGING")
 mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-examplePid <- "urn:uuid:17d61d5a-061a-4778-9cdf-4e14751aaddc"
-sysmeta <- getSystemMetadata(mn, examplePid)
+sysmeta <- getSystemMetadata(mn, pid)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
-status <- updateSystemMetadata(mn, examplePid, sysmeta)
+status <- updateSystemMetadata(mn, pid, sysmeta)
 ```
 Note that updating an object in DataONE requires the proper access. For example, for the identifier
 shown above (urn:uuid:17d61d5a-061a-4778-9cdf-4e14751aaddc), only the DataONE user identity that 
@@ -323,7 +321,7 @@ response <- updateObject(mn, pid, csvfile, updateid, sysmeta)
 # Get the new, updated sysmeta and check it to ensure that the update
 # worked, i.e. "obsoletes" is the old pid that was replaced by the update.
 updsysmeta <- getSystemMetadata(mn, updateid)
-updsysjeta@obsoletes
+updsysmeta@obsoletes
 ```
 
 The Member Node will mark the object as being *obsolete* by setting a property in the system metadata on the object 
