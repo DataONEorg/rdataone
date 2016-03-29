@@ -233,16 +233,21 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
     # Process them in order, until we get non-NULL responses from a node
     sysmeta <- NA
     bytes <- NA
-    for (i in 1:length(mntable)) { 
+    if(nrow(mntable) > 0) {
+      for (i in 1:nrow(mntable)) { 
         suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
         if (!is.null(currentMN)) {
-            sysmeta <- getSystemMetadata(currentMN, identifier)
-            bytes <- getObject(currentMN, identifier)
-            if (!is.null(sysmeta) & !is.null(bytes)) {
-                success=TRUE
-                break
-            }
+          sysmeta <- getSystemMetadata(currentMN, identifier)
+          bytes <- getObject(currentMN, identifier)
+          if (!is.null(sysmeta) & !is.null(bytes)) {
+            success=TRUE
+            break
+          }
         }
+      }
+    } else {
+      message("Unable to download object with identifier: %s\n", identifier)
+      return(NULL)
     }
     
     # Construct and return a DataObject
