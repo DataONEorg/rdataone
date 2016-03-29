@@ -18,8 +18,12 @@ knitr::opts_chunk$set(cache=TRUE)
 
 This document describes how to download data from the DataONE Federation of Member Nodes.
 Before data can be downloaded from DataONE it is necessary to find the identifiers that
-are associated with the data. The DataONE search facility is used to find these identifiers, and 
-is described in the "searching-dataone" vignette.
+are associated with the data. The DataONE search facility is used to find these identifiers that
+are used to download any metadata file or dataset.
+
+The *dataone::query* method is used to send data searches from R to the DataONE search facility, and 
+is shown in the examples in the next section. A more complete description of using the query method to
+search DataONE is available in the *searching-dataone* vignette (`vignette("searching-dataone"`)).
 
 ### Search all of DataONE For Datasets of Interest
 
@@ -40,7 +44,7 @@ result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
 result[1,c("id", "title")]
 ```
 
-The *result* object, a data.frame, can be inspected to determine which matching dataset to download, as
+The *result* object, a data.frame, can be inspe cted to determine which matching dataset to download, as
 multiple matching dataset identifiers may be returned from the query.
 Each object in DataONE is uniquely identified by a Persistent Identifier (PID) that can be used to refer to the object and perform operations on it, such as downloading it to a local machine. 
 
@@ -60,14 +64,15 @@ mnId <- locations$data[2, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
 ```
 
-Multiple MNs may hold the data, depending on the replication policy that is in effect for the dataset and which member nodes are currenctly available. In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
+Multiple MNs may hold the data, depending on the DataONE replication policy that is in effect for the dataset and which member nodes are currenctly available. (DataONE copies or 'replicates' datasets from one MN to other MNs, depending on what was requested by the user
+when a dataset was first uploaded to DatqONE). In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
 ```{r, warning=FALSE,eval=FALSE}
 obj <- getObject(mn, pid)
 ```
 
-If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statments:
+If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statements:
     
-```{r, warning=FALSE, eval=FALSE}
+```{r, warning=FALSE, eval=FALSE, message=FALSE}
 # Query the data holdings on a member node
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
