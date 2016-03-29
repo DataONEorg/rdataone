@@ -758,7 +758,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     # Process 'searchTerms'
     encodedKVs <- character()
     for(key in attributes(searchTerms)$names) {
-      value <- searchTerms[[key]]
+      value <- sprintf('"%s"', searchTerms[[key]])
       if (encode) {
         kv <- sprintf("&fq=%s:%s", URLencode(key, reserved=encodeReserved), URLencode(value, reserved=encodeReserved))
       } else {
