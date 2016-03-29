@@ -28,7 +28,7 @@ uploadDataPackage(x, ...)
 
 \item{public}{A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user}
 
-\item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
+\item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
