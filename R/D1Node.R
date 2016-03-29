@@ -711,9 +711,11 @@ setGeneric("query", function(x, ...) {
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
 #' @param parse A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.
 #' @param searchTerms A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.
-#' 
+#' @param encodeReserved logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{'URLencode'} for details.
 #' @export
-setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, searchTerms=as.character(NA), ...) {
+setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, 
+                                                 searchTerms=as.character(NA), 
+                                                 encodeReserved=FALSE, ...) {
   
   returnTypes <- c("json", "xml", "list", "data.frame")
   if (!is.element(as, returnTypes)) {
@@ -738,7 +740,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
       encodedKVs <- character()
       for(key in attributes(solrQuery)$names) {
         if (encode) {
-          kv <- paste0(key, "=", URLencode(solrQuery[[key]]))
+          kv <- paste0(key, "=", URLencode(solrQuery[[key]], reserved=encodeReserved))
         } else {
           kv <- paste0(key, "=", solrQuery[[key]])
         }
@@ -747,7 +749,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
       queryParams <- paste(encodedKVs,collapse="&")
     } else {
       if (encode) {
-        queryParams <- URLencode(solrQuery)
+        queryParams <- URLencode(solrQuery, reserved=encodeReserved)
       } else {
         queryParams <- solrQuery
       }
@@ -756,10 +758,11 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     # Process 'searchTerms'
     encodedKVs <- character()
     for(key in attributes(searchTerms)$names) {
+      value <- searchTerms[[key]]
       if (encode) {
-        kv <- sprintf("&fq=%s:%s", URLencode(key), URLencode(searchTerms[[key]]))
+        kv <- sprintf("&fq=%s:%s", URLencode(key, reserved=encodeReserved), URLencode(value, reserved=encodeReserved))
       } else {
-        kv <- sprintf("&fq=%:%s", URLencode(key), URLencode(searchTerms[[key]]))
+        kv <- sprintf("&fq=%s:%s", key, value) 
       }
       encodedKVs[length(encodedKVs)+1] <- kv
     }
