@@ -9,7 +9,8 @@
 query(x, ...)
 
 \S4method{query}{D1Node}(x, solrQuery = as.character(NA), encode = TRUE,
-  as = "list", parse = TRUE, searchTerms = as.character(NA), ...)
+  as = "list", parse = TRUE, searchTerms = as.character(NA),
+  encodeReserved = FALSE, ...)
 }
 \arguments{
 \item{x}{The CNode or MNode instance to send the query to.}
@@ -25,6 +26,8 @@ query(x, ...)
 \item{parse}{A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.}
 
 \item{searchTerms}{A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.}
+
+\item{encodeReserved}{logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{'URLencode'} for details.}
 }
 \value{
 search results
