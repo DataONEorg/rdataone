@@ -644,30 +644,34 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 })
 
 #' Search DataONE for data and metadata objects
-#' @description Use SOLR syntax to search the DataONE federation of data repositories for matching data.
-#' @details
-#' Several different return types can be specified with the \code{"as"} parameter: "json", xml", "list", "data.frame".
-#' If "xml" is specified and \code{'parsed=TRUE'} then the query result is returned as an R XMLInternalDocument. If \code{'parsed'} is
-#' false then a character variable with the XML string is returned. Specify 'list' to have 
-#' the result parseed to an R list, with each list element containing one Solr result as a list of values, for example.
-#' As an alternative to specifying the Solr query terms using the \code{'solrquery'} parameter, the \code{'searchTerms'} parameter
-#' can be specified. This parameter is a list with query field / value pairs, i.e. searchTerms=list(abstract=kelp, attribute=biomass).
-#' The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}} 
-#' \code{'result[[1]]$id'} would be the DataONE identifier value of the first result (if the query parameters specified that
-#' the id field shoudl be returned from the query). If \code{'json'} is specified, then the Solr response writer argument
-#' \code{'&wt=json'} must be included in the \code{'solQuery'} parameter. Currently for a json return type the \code{'parse'} parameter
-#' is ignored and unparsed text will always be returned.
-#' Any lucene reserved characters in query parameters must be escaped with backslash, for example, 
-#' \code{'queryParams <- "q=id:doi\\:10.6073/AA/knb-lter-and.4341.13"'}. Notice that the colon after
-#' \code{'q=id'} is not escaped, as this is needed by Solr to parse the query.
-#' If solrQuery is a list, 
-#' it is expected to have field names as attributes and search values as the values in the list.
+#' @description The DataONE search index is searched for data that matches the specified query parameters. 
+#' @details The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search 
+#' engine \url{http://lucene.apache.org/solr/}. This same Solr search engine is the underlying mechanism used by the
+#' DataONE online search tool available at \url{https://search.dataone.org/}.
+#' 
+#' The \code{"solrQuery"} argument is used to specify search terms that data of interest must match. This parameter uses
+#' Solr query terms, so some familiarity with Solr is helpful, however, fairly simple queries can be effective. This
+#' argument can be created as either a single character string containing the Solr query, for example: \code{solrQuery = "q=id:doi*&rows=2&wt=json"},
+#' or as a list of key value pairs: \code{solrQuery = list(q = "id:doi*", rows = "2", wt = "json")}. These two queries produce the same result.
+#' 
+#' As an alternative to specifying the Solr query terms using the \code{"solrquery"} argument, the \code{"searchTerms"} argument
+#' can be specified, which does not require any Solr syntax. This parameter is a list with query field / value pairs, i.e. 
+#' \code{searchTerms=list(abstract=kelp, attribute=biomass)}.
+#' The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}}.
+#' Either \code{"searchTerms"} or \code{"solrQuery"} must be specified.
+#' 
+#' The \code{"as"} argument is used to specify the query result to be returned as: "json", xml", "list", "data.frame".
+#' 
+#' The \code{"parsed"} argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
+#' For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or 
+#' If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have 
+#' the result parseed to an R list, with each list element containing one Solr query result of the total result set.
 #' @param x The CNode or MNode instance to send the query to.
 #' @param ... (Not yet used.)
-#' @return search results
+#' @return search results as a list, data.frame or XML document
 #' @rdname query
 #' @aliases query
-# Need plyr for rbind.fill in query()
+## Need plyr for rbind.fill in query()
 #' @import plyr
 #' @examples \dontrun{
 #' library(dataone)
@@ -706,12 +710,12 @@ setGeneric("query", function(x, ...) {
 })
 
 #' @rdname query
-#' @param solrQuery The query parameters to be searched, either as a string or as list with named attributes.
-#' @param encode A boolean, if true then the entire query string is URLencoded if it is a character, or each parameter value if a list.
+#' @param solrQuery The query search terms, either as a string or as list with named members.
+#' @param encode A boolean, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
-#' @param parse A boolean value. If TRUE, then the result is parsed and converted to R data types. If FALSE, text values are returned.
-#' @param searchTerms A list of name / value pairs. Either \code{'searchTerms'} or \code{'solrQuery'} must be specified.
-#' @param encodeReserved logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{'URLencode'} for details.
+#' @param parse A boolean value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.
+#' @param searchTerms A list of name / value pairs (an alternative to \code{solrQuery}). 
+#' @param encodeReserved A logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{URLencode} for details.
 #' @export
 setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, 
                                                  searchTerms=as.character(NA), 
