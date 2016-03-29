@@ -34,7 +34,7 @@ search term in the query sent to the CN, or by just sending the query to a speci
 
 The following query shows how to query the entire DataONE network and locate and download data from 
 any MN that has the desired data:
-```{r,warning=FALSE,autodep=T}
+```{r,warning=FALSE,autodep=T,message=FALSE}
 library(dataone)
 cn <- CNode("PROD")
 # Ask for the id, title and abstract
@@ -89,7 +89,7 @@ This approach uses the *getDataObject* method from the R package.  The *getDataO
 member node in DataONE holds the data item and downloads it into a datapack::DataObject. The DataObject R object is 
 a wrapper that contains the data bytes for the DataONE dataset requested as well as the DataONE system metadata for the object. 
 
-```{r, eval=FALSE}
+```{r, warning=FALSE, eval=FALSE, message=FALSE}
 d1c <- D1Client("PROD", "urn:node:KNB")
 # Ask for the id, title and abstract
 queryParams <- list(q="abstract:\"biogenic hydrocarbon\"", fq="id:doi*", 
