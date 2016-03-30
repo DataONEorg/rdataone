@@ -777,8 +777,9 @@ setGeneric("convert.csv", function(x, ...) {
 #' @rdname convert.csv
 #' @export
 setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
-    con <- textConnection("csvbuf", "w")
-    write.csv(df, file=con, row.names = FALSE, col.names = TRUE, ...)
+    con <- textConnection(NULL, "w")
+    write.csv(df, file=con, row.names = FALSE, ...)
+    csvbuf <- textConnectionValue(con)
     close(con)
     csvdata <- paste(csvbuf, collapse="\n")
     return(csvdata)
