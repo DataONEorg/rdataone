@@ -97,7 +97,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   
   #cn <- CNode("STAGING2")
   # Get list of query engines for a CN, and get description for each engine
-  cn <- CNode("STAGING")
+  cn <- CNode("STAGING2")
   engines <- listQueryEngines(cn)
   expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -108,7 +108,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   }
   
   # Get list of query engines for an MN, and get description for each engine
-  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+  mn <- getMNode(cn, "urn:node:mnTestKNB")
   engines <- listQueryEngines(mn)
   expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -122,7 +122,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
 test_that("CNode object index query works with query string param", {
   library(dataone)
   
-  cn <- CNode("STAGING")
+  cn <- CNode("STAGING2")
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, cn))
   if (authValid) {
