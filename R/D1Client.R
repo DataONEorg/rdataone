@@ -339,7 +339,7 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' @param ... Additional arguments
 #' @rdname createDataPackage
 #' @aliases createDataPackage
-#' @return NULL
+#' @return The identifier of the uploaded package.
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 #' @examples \dontrun{

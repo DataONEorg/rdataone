@@ -17,6 +17,9 @@ createDataPackage(x, dataPackage, ...)
 
 \item{...}{Additional arguments}
 }
+\value{
+The identifier of the uploaded package.
+}
 \description{
 Upload all members of a DataPackage to DataONE.
 }
