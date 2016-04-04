@@ -34,7 +34,7 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
   expect_is(result[[1]]$size, "numeric")
-  expect_match(result[[1]]$abstract, "Chlorophyll")
+  expect_match(result[[1]]$abstract, "chlorophyll")
   
   # Test a query that contains embedded quotes
   queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
