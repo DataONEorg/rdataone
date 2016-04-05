@@ -231,15 +231,15 @@ service outages occurring as needed by the development staff.
 
 The *dataone* R package uses the following abbreviations for the DataONE environments:
 
-DataONE environment | *dataone* R package abbreviation | CN URL
-------------------- | -------------------------------- | --------------------------
-production          | PROD                             | https://cn.dataone.org/cn
-stage               | STAGING                          | https://cn-stage.test.dataone.org/cn
-stage 2             | STAGING2                         | https://cn-stage-2.test.dataone.org/cn
-sandbox             | SANDBOX                          | https://cn-sandbox.test.dataone.org/cn
-sandbox2            | SANDBOX2                         | https://cn-sandbox-2.test.dataone.org/cn
-dev                 | DEV                              | https://cn-dev.test.dataone.org/cn
-dev2                | DEV2                             | https://cn-dev.test.dataone.org/cn
+DataONE environment | *dataone* R package abbreviation | 
+------------------- | -------------------------------- | 
+production          | PROD                             | 
+stage               | STAGING                          | 
+stage 2             | STAGING2                         | 
+sandbox             | SANDBOX                          | 
+sandbox2            | SANDBOX2                         | 
+dev                 | DEV                              | 
+dev2                | DEV2                             | 
 
 Each DataONE environment has a CN that maintains a registry of all MNs in that network. The CN can be queried for a list of 
 all MNs in a network, for example, to see the MNs that are currently in the production environmemt:
@@ -248,7 +248,11 @@ cn <- CNode("PROD")
 unlist(lapply(listNodes(cn), function(x) x@identifier))
 ```
 
-Note: this same information can be obtained by navigating a web browser to https://cn.dataone.org/cn/v2/node.
+To see the URL service endpoint for a CN, you can view the `endpoint` slot:
+
+```{r,eval=F}
+cn@endpoint
+```
 
 To see the member nodes that are currenly in the STAGE2 environment:
 ```{r, eval=F}
