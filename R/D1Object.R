@@ -26,6 +26,7 @@
 #' @aliases D1Object-class
 #' @keywords classes
 #' @import datapack
+#' @importFrom utils read.csv
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}

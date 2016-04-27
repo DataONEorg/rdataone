@@ -216,6 +216,7 @@ setMethod("getCertExpires", signature("CertificateManager"), function(x) {
 #' @aliases downloadCert
 #' @return NULL
 #' @export
+#' @importFrom utils browseURL
 setGeneric("downloadCert", function(x, ...) { 
     standardGeneric("downloadCert")
 })

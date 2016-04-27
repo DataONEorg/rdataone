@@ -39,6 +39,7 @@
 #' @include D1Node.R
 #' @include auth_request.R
 #' @import methods
+#' @importFrom utils URLencode
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{MNode}}}{: Create a MNode object representing a DataONE Member Node repository.}

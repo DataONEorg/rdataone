@@ -47,6 +47,7 @@
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @import methods
+#' @importFrom utils URLencode
 #' @export
 setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 

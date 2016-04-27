@@ -51,6 +51,7 @@
 #'  \item{\code{\link{query}}}{: Update the system metadata associated with an object.}
 #' }
 #' @import methods
+#' @importFrom utils URLencode
 #' @export
 setClass("D1Node",
          slots = c(	identifier = "character",

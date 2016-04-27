@@ -29,6 +29,7 @@
 #' @slot cn The Coordinating Node associated with the D1Client object
 #' @slot mn The Member Node associated with this D1Client object
 #' @import datapack
+#' @importFrom utils URLencode
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
@@ -570,6 +571,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
+#' @importFrom utils flush.console
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
@@ -764,6 +766,7 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @return the dataframe serialized as a .csv
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
+#' @importFrom utils write.csv
 #' @examples \dontrun{ 
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' testdf <- data.frame(x=1:10,y=11:20)
