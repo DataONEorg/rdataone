@@ -22,8 +22,8 @@
       - DataONE (4:27, 18:9, 18:53)
       - metadata (17:57, 21:34, 22:5)
   - A NOTE about the suggested package "PKIplus" that is available throught the
-    "Additional_repositories" mechanism from the repository http://NCEAS.github.io.drat which 
-    includes builds for Mac OS X, Windows and a source distribution.
+    "Additional_repositories" mechanism from the repository http://NCEAS.github.io.drat. This repo
+    includes PKIplus builds for Mac OS X, Windows and a source distribution.
 
 ## Downstream dependencies
 
