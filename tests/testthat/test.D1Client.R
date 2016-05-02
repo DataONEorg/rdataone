@@ -32,6 +32,9 @@ test_that("D1Client constructors", {
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn-stage.test.dataone.org/cn"))
         
+        # Skip the remainder of the tests because these test environments are 
+        # often down due to upgrades, reconfiguring, testing new features.
+        skip_on_cran()
         cli <- D1Client("SANDBOX")
         expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
