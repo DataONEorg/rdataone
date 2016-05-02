@@ -112,6 +112,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   engines <- listQueryEngines(mn)
   expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
+    if(engines[[i]] == "pathquery") next
     engineDesc <- getQueryEngineDescription(mn, engines[[i]])
     expect_gt(length(engineDesc), 0)
     expect_match(engineDesc$name, engines[[i]])
