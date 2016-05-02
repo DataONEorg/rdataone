@@ -60,7 +60,7 @@ test_that("MNode generateIdentifier()", {
     library(dataone)
     cn <- CNode("STAGING")
     mn <- getMNode(cn, "urn:node:mnStageUCSB2")  
-    # Suppress PKIplus, cert missing warnings
+    # Suppress openssl, cert missing warnings
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if(authValid) {
@@ -82,7 +82,7 @@ test_that("MNode generateIdentifier() on API v1 node", {
     # so this test should find and use a cert if it is available.
     cn <- CNode("STAGING2")
     mn <- getMNode(cn, "urn:node:mnDemo9")
-    # Suppress PKIplus, cert missing warnings
+    # Suppress openssl, cert missing warnings
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if(authValid) {
@@ -123,7 +123,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
     mnId <- "urn:node:mnStageUCSB2"
     mn <- getMNode(cn, mnId)
     am <- AuthenticationManager()
-    # Suppress PKIplus, cert missing warnings
+    # Suppress openssl, cert missing warnings
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if (authValid) {
       if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
@@ -208,7 +208,7 @@ test_that("MNode createObject() works for large files", {
     # Ensure the user is logged in before running the tests
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
     am <- AuthenticationManager()
-    # Suppress PKIplus, cert missing warnings
+    # Suppress openssl, cert missing warnings
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
     if (authValid) {
       #if(getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
