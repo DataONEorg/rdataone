@@ -21,7 +21,7 @@
 #' GET a resource with authenticated credentials if available.
 #' @description Retrieve the data at a URL using an HTTP GET request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKIplus package. If the PKIplus package is not installed, then the request falls back
+#' openssl package. If the openssl package is not installed, then the request falls back
 #' to an unauthenticated request, which may fail due to insufficient permissions.
 #' Configuration options for httr/RCurl can be passed using the normal config()
 #' mechanisms to generate a config option. Use httr_options() to see a complete list
@@ -120,7 +120,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' POST a resource with authenticated credentials.
 #' @description POST data to a URL using an HTTP POST request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKIplus package. If the PKIplus package is not installed, then the request fails.
+#' openssl package. If the openssl package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated POST
 #' @param encode the type of encoding to use for the POST body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the POST request
@@ -135,7 +135,7 @@ auth_post <- function(url, encode="multipart", body=as.list(NA), node) {
 #' PUT a resource with authenticated credentials.
 #' @description PUT data to a URL using an HTTP PUT request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKIplus package. If the PKIplus package is not installed, then the request fails.
+#' openssl package. If the openssl package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated PUT
 #' @param encode the type of encoding to use for the PUT body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the PUT request
@@ -150,7 +150,7 @@ auth_put <- function(url, encode="multipart", body=as.list(NA), node) {
 #' DELETE a resource with authenticated credentials.
 #' @description DELETE data at a URL using an HTTP DELETE request using authentication credentials 
 #' provided in a client certificate.  Authenticated access depends on the suggested
-#' PKIplus package. If the PKIplus package is not installed, then the request fails.
+#' openssl package. If the openssl package is not installed, then the request fails.
 #' @param url The URL to be accessed via authenticated DELETE
 #' @param encode the type of encoding to use for the DELETE body, defaults to 'multipart'
 #' @param body a list of data to be included in the body of the DELETE request
@@ -160,15 +160,6 @@ auth_put <- function(url, encode="multipart", body=as.list(NA), node) {
 auth_delete <- function(url, encode="multipart", body=as.list(NA), node) {
     response <- auth_put_post_delete("delete", url, encode, body, node)
     return(response)
-}
-
-#' Determine if the PKI package is installed
-check4PKI <- function() {
-    if (!requireNamespace("PKIplus", quietly = TRUE)) {
-        invisible(FALSE)
-    } else {
-        invisible(TRUE)
-    }
 }
 
 #' User agent string

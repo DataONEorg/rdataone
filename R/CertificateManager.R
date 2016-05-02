@@ -103,8 +103,8 @@ setGeneric("CertificateManager", function(...) {
 
 #' @rdname CertificateManager
 setMethod("CertificateManager", signature=character(), function() {
-    if (!requireNamespace("PKIplus", quietly = TRUE)) {
-        stop("CertificateManager functions require the PKIplus package to be installed.")
+    if (!requireNamespace("openssl", quietly = TRUE)) {
+        stop("CertificateManager functions require the openssl package to be installed.")
     }
     result <- new("CertificateManager")
     result@location=as.character(NA)
@@ -133,8 +133,8 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
     PUBLIC="public"
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
-        cert <- PKIplus::PKI.load.cert(file=certfile)
-        subject <- PKIplus::PKI.get.subject(cert)
+        cert <- openssl::read_cert(file=certfile)
+        subject <- as.list(cert)$subject
     } else {
         subject=PUBLIC
     }
@@ -194,8 +194,8 @@ setGeneric("getCertExpires", function(x, ...) {
 setMethod("getCertExpires", signature("CertificateManager"), function(x) {
     certfile <- getCertLocation(x)
     if (!is.null(certfile)) {
-        cert <- PKIplus::PKI.load.cert(file=certfile)
-        expires <- PKIplus::PKI.get.notAfter(cert)
+        cert <- openssl::read_cert(file=certfile)
+        expires <- as.POSIXct(as.list(cert)$validity[[2]], format="%b %d %H:%M:%S %Y", tz="GMT")
     } else {
         expires=NULL
     }

@@ -21,6 +21,6 @@ the HTTP response from the request
 \description{
 DELETE data at a URL using an HTTP DELETE request using authentication credentials 
 provided in a client certificate.  Authenticated access depends on the suggested
-PKIplus package. If the PKIplus package is not installed, then the request fails.
+openssl package. If the openssl package is not installed, then the request fails.
 }
 

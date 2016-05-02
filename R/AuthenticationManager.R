@@ -473,7 +473,7 @@ setGeneric("getCertInfo", function(.Object) {
 #' @rdname getCertInfo
 #' @export
 setMethod("getCertInfo", signature("AuthenticationManager"), function(.Object) {
-  if (check4PKI()) {
+  if (requireNamespace("openssl", quietly = TRUE)) {
     # Suppress "deprecated" warning
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(cert <- getCertLocation(cm))
@@ -493,9 +493,8 @@ setMethod("getCertInfo", signature("AuthenticationManager"), function(.Object) {
       subject <- 'public'
     }
   } else {
-    # PKIplus is not available, we are unable to read the Certificate, so print a warning and fall back to unauthenticated
-    message("PKIplus not installed. You must install the PKIplus package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
-    message("To install PKIplus, try 'drat::addRepo(\"NCEAS\"); install.packages(\"PKIplus\")`")
+    # openssl is not available, we are unable to read the Certificate, so print a warning and fall back to unauthenticated
+    message("openssl is not installed. You must install the openssl package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
     cert <- as.character(NA)
     expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
     expired <- TRUE

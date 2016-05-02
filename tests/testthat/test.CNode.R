@@ -93,7 +93,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   # Until the dataone package can decrypt auth tokens, we have to manually provide same subject
   # used by reserveIdentifier.  
   am <- AuthenticationManager()
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   # First check if authentication is available and if not, skip this test
   if (authValid) {

@@ -2,7 +2,7 @@ context("CertificateManager tests")
 
 test_that("CertificateManager getCertLocation()", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   suppressWarnings(cm <- CertificateManager())
   expect_that(is.null(cm), is_false())
@@ -17,7 +17,7 @@ test_that("CertificateManager getCertLocation()", {
 
 test_that("CertificateManager loads", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   suppressWarnings(cm <- CertificateManager())
   expect_that(is.null(cm), is_false())
@@ -25,7 +25,7 @@ test_that("CertificateManager loads", {
 
 test_that("getCertExpires", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(expires <- getCertExpires(cm))
@@ -40,7 +40,7 @@ test_that("getCertExpires", {
 
 test_that("isCertExpired", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(isExpired <- isCertExpired(cm))
@@ -57,7 +57,7 @@ test_that("isCertExpired", {
 
 test_that("showClientSubject", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(result <- showClientSubject(cm))
@@ -76,7 +76,7 @@ test_that("showClientSubject", {
 
 test_that("obscureCert and restoreCert", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(subject1 <- showClientSubject(cm))
@@ -92,7 +92,7 @@ test_that("obscureCert and restoreCert", {
 
 test_that("custom certificate location", {
   skip_on_cran()
-  if(!suppressWarnings(require("PKIplus", quietly=TRUE))) skip("This test requires the PKIplus package")
+  if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     suppressWarnings(cm <- CertificateManager())
     suppressWarnings(subject1 <- showClientSubject(cm))

@@ -19,7 +19,7 @@ the response object from the method
 \description{
 Retrieve the data at a URL using an HTTP GET request using authentication credentials 
 provided in a client certificate.  Authenticated access depends on the suggested
-PKIplus package. If the PKIplus package is not installed, then the request falls back
+openssl package. If the openssl package is not installed, then the request falls back
 to an unauthenticated request, which may fail due to insufficient permissions.
 Configuration options for httr/RCurl can be passed using the normal config()
 mechanisms to generate a config option. Use httr_options() to see a complete list

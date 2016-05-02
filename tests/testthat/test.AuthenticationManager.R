@@ -8,7 +8,7 @@ test_that("AuthenticationManager isAuthValid() for v2 node works", {
   # v2 node
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   authValid <- dataone:::isAuthValid(am, mn)
   if(!authValid) {
     expect_match(dataone:::getAuthSubject(am, mn), "public")
@@ -28,7 +28,7 @@ test_that("AuthenticationManager isAuthValid() for v1 node works", {
   expect_false(is.null(am))
   cn <- CNode("STAGING")
   # v1 node
-  mn <- getMNode(cn, "urn:node:mnStageUNM1")  # Suppress PKIplus, cert missing warnings
+  mn <- getMNode(cn, "urn:node:mnStageUNM1")  # Suppress openssl, cert missing warnings
   suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(!authValid) {
     expect_match(dataone:::getAuthSubject(am, mn), "public")
@@ -45,7 +45,7 @@ test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   skip_on_cran()
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(authValid) {
     expect_false(is.na(dataone:::getAuthMethod(am, mn)))
@@ -65,7 +65,7 @@ test_that("getAuthExpires() works", {
   expect_false(is.null(am))
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if(authValid) {
     expect_false(is.na(dataone:::getAuthMethod(am, mn)))
@@ -84,7 +84,7 @@ test_that("isCertExpired() works", {
   skip_on_cran()
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   if(authValid) {
     expDate <- dataone:::getAuthExpires(am, cn)
@@ -105,7 +105,7 @@ test_that("getAuthSubject() works", {
   skip_on_cran()
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   authValid <- dataone:::isAuthValid(am, cn)
   result <- dataone:::getAuthSubject(am, cn)
   if (!authValid) {
@@ -122,14 +122,14 @@ test_that("obscureAuth(), restoreAuth() work", {
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Disable authentication
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   am <- dataone:::obscureAuth(am)
   expect_false(dataone:::isAuthValid(am, cn))
   expect_equal(dataone:::getAuthSubject(am, cn), "public")
   expect_equal(dataone:::getToken(am, cn), as.character(NA))
   expect_equal(dataone:::getCert(am), as.character(NA))
   am <- restoreAuth(am)
-  # Suppress PKIplus, cert missing warnings
+  # Suppress openssl, cert missing warnings
   authValid <- dataone:::isAuthValid(am, cn)
   if(authValid) {
     if(dataone:::getAuthMethod(am, cn) == "token") {
