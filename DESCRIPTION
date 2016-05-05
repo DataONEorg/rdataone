@@ -28,7 +28,7 @@ Suggests:
     knitr,
     testthat,
     digest,
-    openssl 
+    openssl (>= 0.9.3)
 Imports:
     XML (>= 3.95-0.1),
     hash,
