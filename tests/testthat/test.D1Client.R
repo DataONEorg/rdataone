@@ -215,6 +215,42 @@ test_that("D1Client uploadDataPackage works", {
   }
 })
 
+test_that("D1Client uploadDataPackage works for a minimal DataPackage", {
+  
+  # Test that a DataPackage with only one member (metadata in this case) and not
+  # user defined relationships is created and uploaded correctly.
+  skip_on_cran()
+  library(dataone)
+  library(datapack)
+  # Create a csv file for the science object
+  testdf <- data.frame(x=1:10,y=11:20)
+  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+  write.csv(testdf, csvfile, row.names=FALSE)
+  d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+  expect_false(is.null(d1c))
+  preferredNodes <- NA
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
+  if (authValid) {
+    if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    dp <- new("DataPackage")
+    
+    # Create metadata object that describes science data
+    emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
+    expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
+    addData(dp, metadataObj)
+    expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
+    
+    # Upload the data package to DataONE    
+    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, quiet=F)
+    expect_true(!is.null(resourceMapId))
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
 test_that("D1Client createD1Object works", {
   skip_on_cran()
   library(dataone)
