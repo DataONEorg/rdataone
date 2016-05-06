@@ -420,7 +420,13 @@ setGeneric("getTokenInfo", function(.Object) {
 setMethod("getTokenInfo", signature("AuthenticationManager"), function(.Object) {
  tdf <- getTokenDetails("dataone_token")
  tdftest <- getTokenDetails("dataone_test_token")
- return(rbind(tdf, tdftest))
+ if(nrow(tdf) == 0 && nrow(tdftest) == 0) {
+   message("No tokens are currently defined.")
+   # Return one of the empty data.frames, just in case the user is inspecting the values.
+   invisible(rbind(tdf))
+ } else {
+   return(rbind(tdf, tdftest))
+ }
 })
 
 getTokenDetails <- function(tokenName) {
@@ -451,10 +457,11 @@ getTokenDetails <- function(tokenName) {
     }
     tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
   } else {
-    subject <- 'public'
-    expiresDT <- as.POSIXct("1970-01-01 01:01:01", tz="UTC")
-    expired <- TRUE
-    tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
+    #subject <- 'public'
+    #expiresDT <- as.POSIXct("1970-01-01 01:01:01", tz="UTC")
+    #expired <- TRUE
+    #tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
+    tdf <- data.frame(name=character(), subject=character(), end=character(), expired=logical(), stringsAsFactors=FALSE)
   }
   return(tdf)
 }
