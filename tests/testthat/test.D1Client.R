@@ -244,7 +244,7 @@ test_that("D1Client uploadDataPackage works for a minimal DataPackage", {
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Upload the data package to DataONE    
-    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, quiet=F)
+    resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE)
     expect_true(!is.null(resourceMapId))
   } else {
     skip("This test requires valid authentication.")
