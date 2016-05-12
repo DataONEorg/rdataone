@@ -278,19 +278,6 @@ setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
     return(sysmeta)
 })
 
-#' @rdname describeObject
-#' @export
-setMethod("describeObject", signature("MNode"), function(x, pid) {
-  stopifnot(is.character(pid))
-    url <- file.path(x@endpoint, "object", pid)
-    response <- HEAD(url)
-    if(response$status != "200") {
-        d1_errors(response)
-    } else { 
-        return(unclass(response$headers))
-    }
-})
-
 #' @rdname getChecksum
 #' @param checksumAlgorithm The algorithm used to calculate the checksum. Default="SHA-1"
 #' @export

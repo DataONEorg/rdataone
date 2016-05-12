@@ -484,17 +484,6 @@ setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
     return(sysmeta)
 })
 
-#' @rdname describeObject
-#' @export
-setMethod("describeObject", signature("CNode"), function(x, pid) {
-  stopifnot(is.character(pid))
-  url <- file.path(x@endpoint, "object", pid)
-  response <- HEAD(url)
-  if(response$status != "200") {
-    d1_errors(response)
-  } else { return(unclass(response$headers)) }
-})
-
 #' Get a list of coordinating nodes holding a given pid.
 #' @description Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
 #' @param x a valid CNode object

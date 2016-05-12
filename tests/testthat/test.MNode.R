@@ -96,7 +96,6 @@ test_that("MNode generateIdentifier() on API v1 node", {
     }
 })
 
-
 test_that("MNode describeObject()", {
   library(dataone)
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
@@ -105,6 +104,48 @@ test_that("MNode describeObject()", {
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
+
+test_that("MNode describeObject() with authentication", {
+  # Skip as this test requires authentication
+  skip_on_cran()
+  library(dataone)
+  library(uuid)
+  library(digest)
+  cn <- CNode("STAGING")
+  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+  # Suppress openssl, cert missing warnings
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
+  if(authValid) {
+    if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    user <- dataone:::getAuthSubject(am, mn)
+    newid <- generateIdentifier(mn, "UUID")
+    cname <- class(newid)
+    testdf <- data.frame(x=1:10,y=11:20)
+    csvfile <- paste(tempfile(), ".csv", sep="")
+    write.csv(testdf, csvfile, row.names=FALSE)
+    # Create SystemMetadata for the object
+    format <- "text/csv"
+    size <- file.info(csvfile)$size
+    sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+    # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
+                     originMemberNode=mn@identifier, authoritativeMemberNode=mn@identifier)
+    # sysmeta <- addAccessRule(sysmeta, "public", "read")
+    # Upload the data to the MN using createObject(), checking for success and a returned identifier
+    # The object is not created with public read access so that we can test that an authenticated
+    # describeObject, i.e. can't read the object unless you have read access, in this case via
+    # being the rightsholder.
+    response <- createObject(mn, newid, csvfile, sysmeta)
+    expect_false(is.null(response))
+    res <- describeObject(mn, newid)
+    expect_is(res, "list")
+    expect_equal(res$`content-type`, "text/csv")
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
 test_that("MNode createObject(), updateObject(), archive()", {
     skip_on_cran()
     library(dataone)

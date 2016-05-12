@@ -55,6 +55,45 @@ auth_get <- function(url, nconfig=config(), node) {
   return(response)
 }
 
+#' Send a http HEAD request for a resource with authenticated credentials if available.
+#' @description Retrieve http header information for a URL using an HTTP HEAD request 
+#' using authentication credentials provided in a client certificate or token.  
+#' Authenticated access depends on the suggested openssl package. If the openssl 
+#' package is not installed, then the request falls back to an unauthenticated request, 
+#' which may fail due to insufficient permissions.
+#' Configuration options for httr/RCurl can be passed using the normal config()
+#' mechanisms to generate a config option. Use httr_options() to see a complete list
+#' of available options. Note: The HEAD method is identical to GET except that the server MUST 
+#' NOT return a message-body in the response.
+#' @param url The URL to be accessed via authenticated HEAD.
+#' @param nconfig HTTP configuration options as used by curl, defaults to empty list
+#' @param node The D1Node object that the request will be made to.
+#' @return the response object from the method
+#' @import httr
+auth_head <- function(url, nconfig=config(), node) {
+  response <- NULL
+  am <- AuthenticationManager()
+  if(!missing(node) && isAuthValid(am, node)) {
+    if(getAuthMethod(am, node) == "token") {
+      # Authentication will use an authentication token.
+      authToken <- getToken(am, node)
+      response <- HEAD(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
+    } else {
+      # Authenticatin will use a certificate.
+      cert <- getCert(am)
+      new_config <- c(nconfig, config(sslcert = cert))
+      response <- HEAD(url, config = new_config, user_agent(get_user_agent()))
+    }
+  } else {
+    # Send request as the public user
+    message("Attempting to call as public user without being authenticated.")
+    response <- HEAD(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
+  }
+  rm(am)
+  
+  return(response)
+}
+  
 #' POST, PUT, or DELETE a resource with authenticated credentials.
 #' @description POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
 #' provided in a client authentication, either via authentiction token or certificate.
