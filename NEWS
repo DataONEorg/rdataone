@@ -7,8 +7,8 @@
 * Support for the DataONE v2 API, as well as the existing v1 API
 
 * DataONE authentication tokens are supported for any DataONE node
-  that has implemented the DataONE v2 API. Tokens are supported in
-  both the production and test environments.
+  that has implemented the DataONE v2 API (https://purl.dataone.org/architecture).
+  Tokens are supported in both the production and test environments.
 
 ## NEW S4 CLASSES
 
