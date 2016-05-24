@@ -23,7 +23,7 @@ methods that are common between these two child classes.
 
 \item{\code{contactSubject}}{The Distinguished Name of contact person for this node}
 
-\item{\code{replicate}}{a boolean flag indicating whether the node accepts replicas}
+\item{\code{replicate}}{a logical flag indicating whether the node accepts replicas}
 
 \item{\code{type}}{the node type, either 'mn' or 'cn'}
 

@@ -169,7 +169,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @param x D1Object
 #' @param subject : the subject name of the person/system to check for read permissions
 #' @param ... Additional arguments
-#' @return boolean TRUE if the subject has read permission, or FALSE otherwise
+#' @return logical TRUE if the subject has read permission, or FALSE otherwise
 #' @rdname canRead
 #' @export
 setMethod("canRead", signature("D1Object"), function(x, subject) {

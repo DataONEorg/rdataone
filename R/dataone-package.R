@@ -16,7 +16,8 @@
 #   limitations under the License.
 #
 #' Search, download and upload data to the DataONE network.
-#' @description The R package \emph{dataone} provides read/write access to data and metadata from the DataONE network of 
+#' @description The R package \emph{dataone} provides read/write access to data and metadata from the 
+#' \href{https://www.dataone.org/}{DataONE} network of 
 #' Member Node data repositories. Member Nodes in DataONE are independent data repositories that have adopted the DataONE 
 #' services for interoperability, making each of the repositories accessible to client tools such as the DataONE R Client 
 #' using a standard interface. The DataONE R Client can be used to access data files and to write new data and metadata files 

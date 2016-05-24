@@ -30,7 +30,7 @@
 #' @slot baseURL The registered baseURL for the node, which does not include the version string
 #' @slot subject The Distinguished Name of this node, used for authentication
 #' @slot contactSubject The Distinguished Name of contact person for this node
-#' @slot replicate  a boolean flag indicating whether the node accepts replicas
+#' @slot replicate  a logical flag indicating whether the node accepts replicas
 #' @slot type the node type, either 'mn' or 'cn'
 #' @slot state an indication of whether the node is accessible, either 'up' or 'down'
 #' @slot services A data.frame containing the service tiers supported by this node.
@@ -727,9 +727,9 @@ setGeneric("query", function(x, ...) {
 
 #' @rdname query
 #' @param solrQuery The query search terms, either as a string or as list with named members.
-#' @param encode A boolean, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.
+#' @param encode A logical, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
-#' @param parse A boolean value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.
+#' @param parse A logical value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.
 #' @param searchTerms A list of name / value pairs (an alternative to \code{solrQuery}). 
 #' @param encodeReserved A logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{URLencode} for details.
 #' @export

@@ -15,7 +15,7 @@
 \item{...}{Additional arguments}
 }
 \value{
-boolean TRUE if the subject has read permission, or FALSE otherwise
+logical TRUE if the subject has read permission, or FALSE otherwise
 }
 \description{
 Using the AccessPolicy, tests whether the subject has read permission

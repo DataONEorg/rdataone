@@ -3,8 +3,7 @@
 \docType{class}
 \name{AuthenticationManager-class}
 \alias{AuthenticationManager-class}
-\title{AuthenticationManager provides mechanisms to validate DataONE authentication,
-when either a DataONE authentication token or X.509 Certificate is used.}
+\title{Manage DataONE authentication.}
 \description{
 AuthenticationManager provides mechanisms to validate DataONE authentication,
 when either a DataONE authentication token or X.509 Certificate is used.
@@ -21,9 +20,9 @@ DataONE identifies you using CILogon-provided x509 certificates. DataONE has
 partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
 that allows DataONE users to use existing trusted institutional and public accounts.
 
-DataONE version 2.0.0 provides an addition authentication mechanism known as
+DataONE version 2.0 provides an addition authentication mechanism known as
 authentication tokens. For information about tokens and instructions for generating
-a token for use with the DataONE R client, view the package overview by
+a token for use with the dataone R package, view the overview document by
 entering the command: \code{'vignette("dataone-overview")'}. DataONE authentication
 tokens can be obtained by signing in to your DataONE account at https://search.dataone.org.
 

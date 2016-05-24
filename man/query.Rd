@@ -19,11 +19,11 @@ query(x, ...)
 
 \item{solrQuery}{The query search terms, either as a string or as list with named members.}
 
-\item{encode}{A boolean, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.}
+\item{encode}{A logical, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.}
 
 \item{as}{The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.}
 
-\item{parse}{A boolean value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.}
+\item{parse}{A logical value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.}
 
 \item{searchTerms}{A list of name / value pairs (an alternative to \code{solrQuery}).}
 

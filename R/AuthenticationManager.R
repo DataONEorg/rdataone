@@ -18,7 +18,8 @@
 #   limitations under the License.
 #
 
-#' AuthenticationManager provides mechanisms to validate DataONE authentication,
+#' @title Manage DataONE authentication.
+#' @description AuthenticationManager provides mechanisms to validate DataONE authentication,
 #' when either a DataONE authentication token or X.509 Certificate is used.
 #' @details   
 #' Understanding how your identity is managed is important for working with DataONE, especially to 
@@ -32,9 +33,9 @@
 #' partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
 #' that allows DataONE users to use existing trusted institutional and public accounts.
 #' 
-#' DataONE version 2.0.0 provides an addition authentication mechanism known as
+#' DataONE version 2.0 provides an addition authentication mechanism known as
 #' authentication tokens. For information about tokens and instructions for generating
-#' a token for use with the DataONE R client, view the package overview by
+#' a token for use with the dataone R package, view the overview document by
 #' entering the command: \code{'vignette("dataone-overview")'}. DataONE authentication
 #' tokens can be obtained by signing in to your DataONE account at https://search.dataone.org.
 #' 
