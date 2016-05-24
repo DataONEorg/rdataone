@@ -1,11 +1,10 @@
 ## Test environments
 
-* OS X 10.10.5, R 3.2.4
-* OS X 10.11.3 R 3.2.4
-* Ubuntu 14.04, R 3.2.4
-* Windows 7, R 3.1.3, R 3.2.4, R 3.3.0 beta (2016-04-17 r70499)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.2.5 (2016-04-14)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.0 beta (2016-04-23 r70535)
+* OS X 10.10.5, R 3.3.0
+* Ubuntu 14.04, R 3.3.0
+* Windows 7, R 3.3.0 (i386, x86_64), R 3.4.0 Pre-release (i386, x86_64)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.0 (2016-05-03)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R devel (2016-05-24 r70661)
 
 ## R CMD check results
 
@@ -21,10 +20,7 @@
       - API (4:40)
       - DataONE (4:27, 18:9, 18:53)
       - metadata (17:57, 21:34, 22:5)
-  - A NOTE about the suggested package "PKIplus" that is available throught the
-    "Additional_repositories" mechanism from the repository http://NCEAS.github.io.drat. This repo
-    includes PKIplus builds for Mac OS X, Windows and a source distribution.
 
 ## Downstream dependencies
 
-* No downstream dependencies found using revdep_check()
+* New submission, so no downstream dependencies currently exist.
