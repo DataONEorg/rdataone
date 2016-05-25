@@ -18,7 +18,7 @@ Provides read and write access to data and metadata from the [DataONE network
     access to metadata for particular data packages, and read the data objects 
     from the data repository using the global identifier for each data object. 
     Users can also insert and update data objects on repositories that support 
-    these methods. FOr more details, see the vignettes.
+    these methods. For more details, see the vignettes.
 
 ## Installation Notes 
 
