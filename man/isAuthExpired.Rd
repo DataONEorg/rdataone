@@ -4,7 +4,7 @@
 \name{isAuthExpired}
 \alias{isAuthExpired}
 \alias{isAuthExpired,AuthenticationManager-method}
-\title{CHeck if the currently valid authentication method has reached the expiratin time.}
+\title{Check if the currently valid authentication method has reached the expiration time.}
 \usage{
 isAuthExpired(.Object, ...)
 
@@ -21,6 +21,6 @@ isAuthExpired(.Object, ...)
 A logical value: TRUE if authenentication has expired, FALSE if not.
 }
 \description{
-CHeck if the currently valid authentication method has reached the expiratin time.
+Check if the currently valid authentication method has reached the expiration time.
 }
 

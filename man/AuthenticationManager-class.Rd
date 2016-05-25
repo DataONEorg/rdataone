@@ -10,13 +10,13 @@ when either a DataONE authentication token or X.509 Certificate is used.
 }
 \details{
 Understanding how your identity is managed is important for working with DataONE, especially to 
-avoid unexpected results. For example, depending your authorization status, searches may or may 
+avoid unexpected results. For example, depending your authorization status, searches may
 return only public records, or the full set of public and private records. Object and package 
 retrievals might fail if some or all of the objects being retrieved are private.  Creating or 
-updating objects on DataONE nodes and reserving identifiers reservations might fail if your 
-authorization certificate is missing or expired.
+updating objects on DataONE nodes and reserving identifiers might fail if your 
+authorization credentials are missing or expired.
 
-DataONE identifies you using CILogon-provided x509 certificates. DataONE has 
+DataONE version 1.0 identifies you using CILogon-provided x509 certificates. DataONE has 
 partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
 that allows DataONE users to use existing trusted institutional and public accounts.
 
@@ -46,7 +46,7 @@ of their existing accounts. For more information about the CILogon service, see
  \item{\code{\link{getAuthMethod}}}{: Get the current valid authentication mechanism.}
  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
  \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
- \item{\code{\link{isAuthExpired}}}{: CHeck if the currently valid authentication method has reached the expiratin time.}
+ \item{\code{\link{isAuthExpired}}}{: Check if the currently valid authentication method has reached the expiration time.}
  \item{\code{\link{obscureAuth}}}{: Temporarity disable DataONE authentication.}
  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
  \item{\code{\link{showAuth}}}{: Display all authentication information.}
