@@ -10,10 +10,7 @@ notifications:
 
 apt_packages:
   - r-cran-httr
-  - libraptor2-dev
-  - librasqal3-dev
   - librdf0
-  - librdf0-dev
 
 r_packages:
   - rmarkdown
