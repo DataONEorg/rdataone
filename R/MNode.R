@@ -311,7 +311,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @description This method provides the ability to upload a data or metadata object to the Member Node
 #' provided in the \code{'mnode'} parameter.  
 #' @details In the version 2.0 library and higher, this operation can utilize an 
-#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("dataone-overview")} for details.
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
@@ -414,7 +414,7 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
 #' maintained, each with its own persistent identifier, and the 'obsoletes' field in the SystemMetadata is
 #' used to reflect the fact that the new object replaces the old.  Both objects remain accessible.
 #' @details In the version 2.0 library and higher, this operation can utilize an 
-#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("dataone-overview")} for details.
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
@@ -489,7 +489,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sys
 #' updating the object that it describes, so that mutable attribures such as accessPolicy
 #' can be updated easily.
 #' @details In the version 2.0 library and higher, this operation can utilize an 
-#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("dataone-overview")} for details.
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
@@ -550,7 +550,7 @@ setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) 
 #' rules for how the identifier that is generated is formatted.  All Member Nodes that implement this method must 
 #' support the UUID scheme, but may also support other schemes such as DOI and others.
 #' @details In the version 2.0 library and higher, this operation can utilize an 
-#' 'authentication_token' option to provide credentials for write operations in DataONE.
+#' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("dataone-overview")} for details.
 #' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
