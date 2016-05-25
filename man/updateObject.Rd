@@ -24,7 +24,7 @@ updateObject(x, ...)
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
 }
 \value{
-XML describing the result of the operation, including the identifier if successful
+A \code{character} containing the identifier if successful.
 }
 \description{
 This method provides the ability to update a data or metadata object to the Member Node

@@ -22,7 +22,7 @@ createObject(x, ...)
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
 }
 \value{
-XML describing the result of the operation, including the identifier if successful
+a \code{character} containing the identifier that was created.
 }
 \description{
 This method provides the ability to upload a data or metadata object to the Member Node
