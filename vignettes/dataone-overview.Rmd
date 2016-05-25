@@ -54,8 +54,7 @@ For example, if the SID is specified when the object is downloaded, the most rec
 ### 2. New Authentication Mechanism
 Uploading data to DataONE requires that a DataONE user identity be provided. In DataONE Version 1.x, the 
 identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
-adds an additional method to provide identity information - an *authentication token*, also refered to as
-an identity code. Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API.
+adds an additional method to provide identity information - an *authentication token*. Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API.
 
 The process of providing user identity information either via an X.509 certificate or via an authentication token
 is refered to as *authentication*.
