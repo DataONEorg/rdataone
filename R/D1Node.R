@@ -619,7 +619,7 @@ getErrorDescription <- function(response) {
   
   responseContent <- content(response, as="text", encoding=charset)
   # DataONE services return XML
-  if (grepl(headers(response)[['content-type']], "text/xml")) {
+  if (grepl("text/xml", headers(response)[['content-type']], fixed=TRUE)) {
      msgNode <- getNodeSet(xmlParse(responseContent), "/error/description")
      if (length(msgNode) > 0) {
        errorMsg <- xmlValue(msgNode[[1]])
@@ -627,7 +627,7 @@ getErrorDescription <- function(response) {
        # Don't know how to get error, so return generic error
        errorMsg <- http_status(response)$message
      }
-  } else if (grepl(headers(response)[['content-type']], "text/html")) {
+  } else if (grepl("text/html", headers(response)[['content-type']], fixed=TRUE)) {
     # To complex to try to get an error message from HTML, so
     # just get info from the response object. This will be a
     # generic message, so not as informative as specific msg from DataONE
