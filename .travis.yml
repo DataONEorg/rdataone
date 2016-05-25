@@ -7,6 +7,9 @@ notifications:
     on_success: change
     on_failure: change
 
+r_packages:
+  - rmarkdown
+  
 apt_packages:
   - librdf0
   - librdf0-dev
