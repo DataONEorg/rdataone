@@ -2,29 +2,33 @@
 # dataone: R interface to the DataONE network of data repositories
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
 
-- **Authors**: Matthew B. Jones ([NCEAS](http://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, and Scott Chamberlain
+- **Authors**: Matthew B. Jones ([NCEAS](http://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain
 - [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
 - **License**: [Apache 2](http://opensource.org/licenses/Apache-2.0)
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
 
 Provides read and write access to data and metadata from the [DataONE network 
-    of data repositories](https://www.dataone.org/current-member-nodes).  
+    of data repositories](https://www.dataone.org/current-member-nodes), including the
+    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](http://datadryad.org),
+    and the NSF [Arctic Data Center](https://arcticdata.io).
     Each DataONE repository implements a consistent repository application 
     programming interface. Users call methods in R to access these remote 
     repository functions, such as methods to query the metadata catalog, get 
     access to metadata for particular data packages, and read the data objects 
-    from the data repository. Users can also insert and update data objects on 
-    repositories that support these methods.
+    from the data repository using the global identifier for each data object. 
+    Users can also insert and update data objects on repositories that support 
+    these methods. FOr more details, see the vignettes.
 
 ## Installation Notes 
+
+Installation from CRAN is straightforward using `install.packages("dataone")`, assuming all of the dependency packages are already installed.  To install the `redland` package dependency, the `redland` C library must be installed on your OS prior to installing the R package. See the installation
+instructions for `redland` for details.
 
 The current version of the *dataone* R package removes the dependency on rJava and significantly changes the base 
 API to correspond to the published  [DataONE API](https://purl.dataone.org/architecture/apis/index.html).  Previous methods for accessing DataONE will be maintained, but new methods have been added. 
 
-The `redland` C library must be installed on your OS prior to installing the R package. 
-
-## Installing development versions of the package
+### Installing development versions of the package
 To obtain builds of the *dataone* R package before they are available from CRAN, development builds
 can be obtained using the NCEAS repository.  The NCEAS repository is maintained and accessed using the 
 R package *drat*.
@@ -49,7 +53,7 @@ To disable installation of *dataone* development builds from the NCEAS drat repo
 detach("package:drat", unload=TRUE)
 ```
 
-## Installing on Mac OS X
+#### Installing on Mac OS X
 
 On Mac OS X, the required Redland C libraries can be installed with either [Mac Ports](https://www.macports.org) package manager
 or the [HomeBrew](http://brew.sh) package manager. The HomeBrew package manager can be significantly faster to install
@@ -61,7 +65,7 @@ You can check if you have MacPorts installed by entering the following command i
 port version
 ```
 
-### Mac OS X install option 1: install using Macports
+##### Mac OS X install option 1: install using Macports
 If you are already using the MacPorts package manager, you can install *dataone* with the following commands, 
 otherwise, it is recommended that you skip to the next section *Installing with HomeBrew*. To install
 the *dataone* R package with MacPorts, first enter this command at a terminal window:
@@ -82,7 +86,7 @@ source is only necessary if Macports is being used, and is not a requirement if 
 
 The *dataone* R package should be available for use at this point.
 
-### Mac OS X install option 2: install using HomeBrew
+##### Mac OS X install option 2: install using HomeBrew
 On Mac OS X you can use the package management system [HomeBrew](http://brew.sh) to install the 
 necessary libraries. The HomeBrew software can be installed with the following command entered at a terminal window:
 
@@ -105,7 +109,7 @@ library(dataone)
   
 The *dataone* R package should be available for use at this point.
 
-## Installing on Ubuntu
+#### Installing on Ubuntu
 
 For ubuntu, install the required Redland C libraies:
 
@@ -123,7 +127,7 @@ library(dataone)
   
 The *dataone* R package should be available for use at this point.
 
-## Installing on Windows
+#### Installing on Windows
 
 For windows, the redland R package is distributed as a binary release, and it is not necessary to install any 
 additional system libraries.
