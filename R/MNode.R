@@ -322,7 +322,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @param x The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used.)
-#' @return XML describing the result of the operation, including the identifier if successful
+#' @return a \code{character} containing the identifier that was created.
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
 #' @import datapack
 #' @export
@@ -402,7 +402,11 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
           charset <- media$params$charset
         }
       } 
-      return(xmlParse(content(response, as="text", encoding=charset)))
+      xml <- xmlParse(content(response, as="text", encoding=charset))
+      # Return the identifier, ignoring the namespace (in case it changes in the future).
+      # xml is similiar to:
+      #     <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">urn:uuid:6b36a8eb-75c8-4651-b6b6-b954786933f2</d1:identifier>
+      return(xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]]))
     }
 })
 
@@ -423,7 +427,7 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
 #' @param x The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be updated
 #' @param ... (Not yet used.)
-#' @return XML describing the result of the operation, including the identifier if successful
+#' @return A \code{character} containing the identifier if successful.
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.update}
 #' @import datapack
 #' @export
@@ -479,7 +483,11 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sys
             charset <- media$params$charset
           }
         } 
-        return(xmlParse(content(response, as="text", encoding=charset)))
+        xml <- xmlParse(content(response, as="text", encoding=charset))
+        # Return the identifier, ignoring the namespace (in case it changes in the future).
+        # xml is similiar to:
+        #     <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">urn:uuid:6b36a8eb-75c8-4651-b6b6-b954786933f2</d1:identifier>
+        return(xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]]))
     }
 })
 

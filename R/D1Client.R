@@ -723,7 +723,7 @@ setMethod("uploadDataObject", signature("D1Client"),
     }
     
     #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
-    if (is.null(createdId) || !grepl(doId, xmlValue(xmlRoot(createdId)))) {
+    if (is.null(createdId) || doId != createdId) {
         #warning(paste0("Error on returned identifier: ", createdId))
         return(NULL)
     } else {

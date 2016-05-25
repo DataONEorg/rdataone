@@ -136,8 +136,8 @@ test_that("MNode describeObject() with authentication", {
     # The object is not created with public read access so that we can test that an authenticated
     # describeObject, i.e. can't read the object unless you have read access, in this case via
     # being the rightsholder.
-    response <- createObject(mn, newid, csvfile, sysmeta)
-    expect_false(is.null(response))
+    createdId <- createObject(mn, newid, csvfile, sysmeta)
+    expect_false(is.null(createdId))
     res <- describeObject(mn, newid)
     expect_is(res, "list")
     expect_equal(res$`content-type`, "text/csv")
@@ -193,9 +193,9 @@ test_that("MNode createObject(), updateObject(), archive()", {
       expect_that(sysmeta@authoritativeMemberNode, equals(mn@identifier))
       
       # Upload the data to the MN using createObject(), checking for success and a returned identifier
-      response <- createObject(mn, newid, csvfile, sysmeta)
-      expect_false(is.null(response))
-      expect_that(xmlValue(xmlRoot(response)), matches(newid))
+      createdId <- createObject(mn, newid, csvfile, sysmeta)
+      expect_false(is.null(createdId))
+      expect_match(createdId, newid)
       
       # Update the object with a new version
       updateid <- generateIdentifier(mn, "UUID")
@@ -208,8 +208,9 @@ test_that("MNode createObject(), updateObject(), archive()", {
       sysmeta@size <- size
       sysmeta@checksum <- sha1
       sysmeta@obsoletes <- newid
-      response <- updateObject(mn, newid, csvfile, updateid, sysmeta)
-      expect_that(xmlValue(xmlRoot(response)), matches(updateid))
+      newId <- updateObject(mn, newid, csvfile, updateid, sysmeta)
+      expect_false(is.null(newId))
+      expect_match(newId, updateid)
       updsysmeta <- getSystemMetadata(mn, updateid)
       expect_that(class(updsysmeta)[1], matches("SystemMetadata"))
       expect_that(updsysmeta@obsoletes, matches(newid))
@@ -275,9 +276,9 @@ test_that("MNode createObject() works for large files", {
       
       # Upload the data to the MN using createObject(), checking for success and a returned identifier
       # Note: createObject() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
-      response <- createObject(mn, newid, csvfile, sysmeta)
-      expect_false(is.null(response))
-      expect_that(xmlValue(xmlRoot(response)), matches(newid)) 
+      createdId <- createObject(mn, newid, csvfile, sysmeta)
+      expect_false(is.null(createdId))
+      expect_that(createdId, matches(newid)) 
       
       # Remove the big data file we createObjectd locally
       unlink(csvfile)
