@@ -14,7 +14,7 @@ This document describes how to use the *dataone* R package to upload data to Dat
 maintenance operations on the data after it has been uploaded.
 
 The *dataone* package provides methods to allow R scripts to interact with DataONE Coordinating Nodes (CN) and Member Nodes (MN). The *dataone* R package takes care of the details of calling the 
-corresponding DataONE web service on a DataONE node. For example, the *dataone* `create` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
+corresponding DataONE web service on a DataONE node. For example, the *dataone* `createObject` R method calls the DataONE web service [MNStorage.create()](https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create) that uploads a dataset to a DataONE MN. 
 
 Before uploading any data to a DataONE MN, it is necessary to obtain a DataONE user identity, and the means to provide that user 
 identity when data is uploaded. The method that DataONE uses to achieve this is known as *user identity authentication*, and 
@@ -216,15 +216,14 @@ using the DataONE search facility. Note that if objects in DataONE are not publi
 user performing the search isn't granted access in an object's access policy, then the objects will not be 
 viewable or discoverable via the search facility for that user.
 
-## Uploading Individual Datasets And Metadata
+## Uploading Individual Data And Metadata files
 
-A single dataset or metadata file can be uploaded to a DataONE MN using the *createObject* method.
-When uploading a single dataset using this method, additional information must be supplied to DataONE that
-controls how DataONE interacts with the uploaded dataset. This additional information is stored
+A single data or metadata file can be uploaded to a DataONE MN using the *createObject* method.
+When uploading a single file using this method, additional information must be supplied to DataONE that
+controls how DataONE interacts with the uploaded file. This additional information is stored
 in DataONE as a *system metadata* object and contains information such as who can access or update
-the dataset, how many copies of the dataset should be maintained, whether the object has been superceded by
-another object, etc. The system metadata information that will be uploaded to DataONE is collected and stored
-in an R object type *datapack::SystemMetadata*, as shown below:
+the file, how many copies of the file should be maintained, whether the file has been superseded by
+another object, etc. The system metadata information that will be uploaded to DataONE is collected and stored in an R object type *datapack::SystemMetadata*, as shown below:
 
 ```{r,eval=F}
 library(digest)

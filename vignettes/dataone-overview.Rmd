@@ -42,7 +42,7 @@ Each data, metadata, and resource map object in DataONE has a unique identifier,
 Identifier (PID). A PID is associated with one object in DataONE and always refers to the same object, the same set of bytes that are 
 stored on the DataONE network. 
 
-A data or metadata object can be updated on a DataONE Member Node by using the R method MNode::update(), so that 
+A data or metadata object can be updated on a DataONE Member Node by using the R method dataone::updateObject(), so that 
 a new version of the object becomes the active version that is discoverable in searches of DataONE. The older
 version is still available if the PID is known, but this version will not show up in DataONE searches. In order
 to download the new version, the new PID must be discovered and specified when the object is downloaded.

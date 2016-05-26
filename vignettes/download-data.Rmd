@@ -44,7 +44,7 @@ result <- query(cn, solrQuery=queryParams, as="data.frame", parse=FALSE)
 result[1,c("id", "title")]
 ```
 
-The *result* object, a data.frame, can be inspe cted to determine which matching dataset to download, as
+The *result* object, a data.frame, can be inspected to determine which matching dataset to download, as
 multiple matching dataset identifiers may be returned from the query.
 Each object in DataONE is uniquely identified by a Persistent Identifier (PID) that can be used to refer to the object and perform operations on it, such as downloading it to a local machine. 
 
