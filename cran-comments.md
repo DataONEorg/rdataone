@@ -9,7 +9,7 @@
 ## R CMD check results
 
 * There were no ERRORs or WARNINGs.
-* There were 2 NOTEs:
+* There was 1 NOTE:
   - A NOTE checking CRAN incoming feasibility:
     - indicating that this is a new submission
     - indicating that the old dataone package was archived on CRAN
