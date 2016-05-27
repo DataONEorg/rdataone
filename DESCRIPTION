@@ -15,12 +15,12 @@ Authors@R: c(
   person("Regents of the University of California", role = c("cph"))) 
 VignetteBuilder: knitr
 Description: Provides read and write access to data and metadata from
-    the DataONE network of data repositories.  Each DataONE repository
-    implements a consistent repository application programming interface. 
-    Users call methods in R to access these remote repository functions, 
-    such as methods to query the metadata catalog, get access to
-    metadata for particular data packages, and read the data objects from 
-    the data repository. Users can also insert and update data objects on 
+    the DataONE network <https://www.dataone.org> of data repositories.  
+    Each DataONE repository implements a consistent repository application 
+    programming interface. Users call methods in R to access these remote 
+    repository functions, such as methods to query the metadata catalog, get 
+    access to metadata for particular data packages, and read the data objects 
+    from the data repository. Users can also insert and update data objects on 
     repositories that support these methods.
 Depends:
     R (>= 3.1.1),
