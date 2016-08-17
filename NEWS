@@ -1,3 +1,12 @@
+# Version 2.0.1
+
+## Bug Fixes
+
+* The unit tests were dependent on unstable development machines
+  and would fail if these machines were not available, not configured
+  correctly, or did not contain expected content. This dependancy has been
+  resolved.
+
 # Version 2.0.0
 
 ## New features and functions
