@@ -5,7 +5,7 @@ test_that("dataone library loads", {
 
 test_that("CNode ping", {
   library(dataone)
-  cn <- CNode("STAGING")
+  cn <- CNode("PROD")
   alive <- ping(cn)
   expect_true(alive)
 })
@@ -14,7 +14,7 @@ test_that("CNode object index query works with query list param", {
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
-  cn <- CNode("STAGING")  
+  cn <- CNode("PROD")  
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, cn))
   if (authValid) {
@@ -37,20 +37,20 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$abstract, "chlorophyll")
   
   # Test a query that contains embedded quotes
-  queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="1000",
+  queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="10",
                         fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="data.frame")
   expect_true(class(result) == "data.frame")
   expect_true(nrow(result) > 0)
   
   # Test if query can handle solr syntax error
-  queryParamList <- list(q="(attribute:lake) and attribute:\"Percent Nitrogen\")", rows="1000",
+  queryParamList <- list(q="(attribute:lake) and attribute:\"Percent Nitrogen\")", rows="10",
                          fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="data.frame")
   expect_true(is.null(result))
   
   # Test if query can handle solr syntax error (mispelled field name "attr")
-  queryParamList <- list(q="(attribute:lake) and attr:\"Percent Nitrogen\")", rows="1000",
+  queryParamList <- list(q="(attribute:lake) and attr:\"Percent Nitrogen\")", rows="10",
                          fl="title,id,abstract,size,dateUploaded,attributeName", wt="xml")
   result <- query(cn, queryParamList, as="data.frame")
   expect_true(is.null(result))
@@ -59,8 +59,9 @@ test_that("CNode object index query works with query list param", {
 test_that("Object listing works for CNode, MNode", {
   library(dataone)
   
-  cn <- CNode("STAGING")
-  fromDate <- "2013-01-01T01:01:01.000+00:00"
+  # Note: this test assumes that there are at least 5 EML 2.1.0 documents in DataONE
+  cn <- CNode("PROD")
+  fromDate <- "2001-01-01T01:01:01.000+00:00"
   toDate <- "2015-12-31T01:01:01.000+00:00"
   formatId <- "eml://ecoinformatics.org/eml-2.1.0"
   start <- 0
@@ -71,7 +72,8 @@ test_that("Object listing works for CNode, MNode", {
   for (i in 1:(length(objects)-1) ) {
     expect_match(objects[i]$objectInfo$formatId, formatId)
   }
-  mn <- getMNode(cn, "urn:node:mnStageUCSB2")
+  # Note: this test assumes that there are at least 5 EML 2.1.0 documents in KNB
+  mn <- getMNode(cn, "urn:node:KNB")
   objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count)
   # The XML parser used in listObjects creates one more element than returned elements, used to hold attributes?
   expect_equal(length(objects) - 1, count)
@@ -97,7 +99,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   
   #cn <- CNode("STAGING2")
   # Get list of query engines for a CN, and get description for each engine
-  cn <- CNode("STAGING2")
+  cn <- CNode("PROD")
   engines <- listQueryEngines(cn)
   expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -108,7 +110,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
   }
   
   # Get list of query engines for an MN, and get description for each engine
-  mn <- getMNode(cn, "urn:node:mnTestKNB")
+  mn <- getMNode(cn, "urn:node:KNB")
   engines <- listQueryEngines(mn)
   expect_gt(length(engines), 0)
   for (i in 1:length(engines)) {
@@ -123,12 +125,14 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
 test_that("CNode object index query works with query string param", {
   library(dataone)
   
-  cn <- CNode("STAGING2")
+  cn <- CNode("PROD")
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, cn))
   if (authValid) {
     if(getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
+  # This test assumes that there are at least two pids on KNB that are DOIs (i.e. begin with "doi:")
+  # This test requests two results and checks that 2 results are returned.
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   result <- query(cn, queryParams, as="list")
   expect_true(length(result) == 2)
@@ -141,8 +145,7 @@ test_that("MNode object index query works", {
   library(dataone)
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   #queryParams <- 'q=attribute:"net primary production" AND (abstract:"above ground" OR title:"above ground")'
-  #mn_uri <- "https://dev.nceas.ucsb.edu/knb/d1/mn/v1"
-  mn_uri <- "https://mn-stage-ucsb-2.test.dataone.org/knb/d1/mn/v1"
+  mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
   mn <- MNode(mn_uri)
   am <- AuthenticationManager()
   suppressMessages(authValid <- isAuthValid(am, mn))
@@ -150,8 +153,6 @@ test_that("MNode object index query works", {
     if(getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   result <- query(mn, queryParams, as="list")
-  #expect_is(result, "XMLInternalDocument")
-  #resultList <- parseSolrResult(result)
   expect_true(length(result) > 0)
   pid <- result[[1]]$id
   expect_is(pid, "character")
