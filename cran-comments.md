@@ -1,20 +1,16 @@
 ## Test environments
 
-* OS X 10.10.5, R 3.3.0
-* Ubuntu 14.04, R 3.3.0
-* Windows 7, R 3.3.0 (i386, x86_64), R 3.4.0 Pre-release (i386, x86_64)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.0 (2016-05-03)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R devel (2016-05-24 r70661)
+* OS X 10.11.6, R 3.3.1
+* Ubuntu 14.04, R 3.3.1
+* Windows 7, R 3.3.1 (i386, x86_64)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.1 (2016-06-21)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R devel (2016-08-16 r71104)
 
 ## R CMD check results
 
 * There were no ERRORs or WARNINGs.
 * There was 1 NOTE:
   - A NOTE checking CRAN incoming feasibility:
-    - indicating that this is a new submission
-    - indicating that the old dataone package was archived on CRAN
-      - it was archived due solely to perceived license issues with Java code, 
-        all of which has been removed in this release
     - indicating possible mispelled words in the DESCRIPTION. These have been checked
       and are either valid acronyms or proper names:
       - API (4:40)
@@ -23,4 +19,4 @@
 
 ## Downstream dependencies
 
-* New submission, so no downstream dependencies currently exist.
+* No downstream dependencies currently exist, as reported by devtools::revdep_check()
