@@ -55,7 +55,7 @@ test_that("MNode getSystemMetadata()", {
 })
 
 test_that("MNode generateIdentifier()", {
-    # Skip as this test requires authentication
+    # This test requires valid DataONE user authentication and writes to unstable development machines
     skip_on_cran()
     library(dataone)
     cn <- CNode("STAGING")
@@ -75,7 +75,7 @@ test_that("MNode generateIdentifier()", {
 })
 
 test_that("MNode generateIdentifier() on API v1 node", {
-    # Skip as this test requires authentication
+    # This test requires valid DataONE user authentication and writes to unstable development machines
     skip_on_cran()
     library(dataone)
     # Currently this is a v1 node, so only X.509 certs work for authentication
@@ -106,7 +106,7 @@ test_that("MNode describeObject()", {
 })
 
 test_that("MNode describeObject() with authentication", {
-  # Skip as this test requires authentication
+  # This test requires valid DataONE user authentication and writes to unstable development machines
   skip_on_cran()
   library(dataone)
   library(uuid)
@@ -147,6 +147,7 @@ test_that("MNode describeObject() with authentication", {
 })
 
 test_that("MNode createObject(), updateObject(), archive()", {
+    # This test requires valid DataONE user authentication and writes to unstable development machines
     skip_on_cran()
     library(dataone)
     library(digest)
@@ -234,6 +235,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
 })
 
 test_that("MNode createObject() works for large files", {
+    # This line has to be commented out to run this test.
     skip("Skip large file testing.")
     if (grepl("Darwin", Sys.info()['sysname'])) {
         skip("fallocate not available on Mac")
@@ -289,18 +291,18 @@ test_that("MNode createObject() works for large files", {
 
 test_that("MNode getPackage() works", {
   library(uuid)
+  # This test can exceed the CRAN test running time limits
   skip_on_cran()
-  cn <- CNode("SANDBOX2")
-  mn <- getMNode(cn, "urn:node:mnDemo2")
-  resMapPid <- "urn:uuid:62febde3-5e7b-47b8-97a9-a874ffc9a180"
-  #resMapPid <- "resourceMap_hpackage-test.1.1"
+  cn <- CNode("PROD")
+  mn <- getMNode(cn, "urn:node:KNB")
+  resMapPid <- "resourceMap_lrw.3.5"
   am <- AuthenticationManager()
   suppressWarnings(authValid <- dataone:::isAuthValid(am, mn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   
-  bagitFile <- getPackage(mn, id=resMapPid)
+  suppressWarnings(bagitFile <- getPackage(mn, id=resMapPid))
   expect_true(!is.null(bagitFile))
   expect_true(file.exists(bagitFile))
   # Now check error handling
@@ -312,6 +314,7 @@ test_that("MNode getPackage() works", {
 })
 
 test_that("updateSystemMetadata() works",{
+  # This test requires valid DataONE user authentication and writes to unstable development machines
   skip_on_cran()
   library(dataone)
   # Create a csv file for the data object
