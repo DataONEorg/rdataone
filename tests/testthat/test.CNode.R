@@ -4,14 +4,15 @@ test_that("dataone library loads", {
 })
 test_that("CNode constructors", {
 	library(dataone)
+    # If not specified, "PROD" environment is used.
 	cn <- CNode()
 	expect_that(cn@endpoint, matches("https://cn.dataone.org/cn"))
 	cn <- CNode("PROD")
 	expect_that(cn@endpoint, matches("https://cn.dataone.org/cn"))
+	# Skip unstable test environments.
+	skip_on_cran()
 	cn <- CNode("STAGING2")
 	expect_that(cn@endpoint, matches("https://cn-stage-2.test.dataone.org/cn"))
-	# Skip unstable test envs
-	skip_on_cran()
 	cn <- CNode("DEV")
 	expect_that(cn@endpoint, matches("https://cn-dev.test.dataone.org/cn"))
 })
@@ -33,7 +34,7 @@ test_that("CNode listNodes()", {
 test_that("CNode getObject()", {
   library(dataone)
   library(XML)
-  cn <- CNode()
+  cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   obj <- getObject(cn, pid)
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
@@ -46,7 +47,7 @@ test_that("CNode getObject()", {
 
 test_that("CNode getSystemMetadata()", {
   library(dataone)
-  cn <- CNode()
+  cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   sysmeta <- getSystemMetadata(cn, pid)
   expect_that(sysmeta@identifier, matches(pid))
@@ -54,7 +55,7 @@ test_that("CNode getSystemMetadata()", {
 
 test_that("CNode describeObject()", {
   library(dataone)
-  cn <- CNode("STAGING2")
+  cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   res <- dataone::describeObject(cn, pid)
   expect_is(res, "list")
@@ -63,7 +64,7 @@ test_that("CNode describeObject()", {
 
 test_that("CNode getMNode()", {
   library(dataone)
-  cn <- CNode()
+  cn <- CNode("PROD")
   nodelist <- listNodes(cn)
   nodeid <- nodelist[[length(nodelist)]]@identifier
   newnode <- getMNode(cn, nodeid)
@@ -78,7 +79,7 @@ test_that("CNode getMNode()", {
 
 test_that("CNode resolve()",{
   library(dataone) 
-  cn <- CNode()
+  cn <- CNode("PROD")
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cn,id)
   expect_that(res$id, matches(id) )
@@ -86,6 +87,7 @@ test_that("CNode resolve()",{
 })
 
 test_that("CNode reserveIdentifier(), hasReservation() works",{
+  # Skip this test that is dependant on unstable test environments
   skip_on_cran()
   library(dataone)
   library(uuid)
@@ -118,7 +120,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
 
 test_that("CNode listFormats, getFormat",{
   library(dataone) 
-  cn <- CNode()
+  cn <- CNode("PROD")
   fmts <- listFormats(cn)
   expect_that(is.data.frame(fmts),is_true())
   expect_gt(length(grep("eml", fmts$ID)), 0)
