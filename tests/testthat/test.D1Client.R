@@ -91,19 +91,19 @@ test_that("D1Client getDataObject", {
     if(authValid) {
       # Skip if Mac OS and X.509 Certificate
       if(dataone:::getAuthMethod(am, cli@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    }
       
       # Try retrieving a known object from the PROD environment
-      pid <- "solson.5.1"
-      obj <- getDataObject(cli, pid)
-      cname <- class(obj)[1]
-      expect_that(cname, matches("DataObject"))
-      expect_that(class(obj@sysmeta), matches("SystemMetadata"))
-      expect_that(getIdentifier(obj), matches(pid))
-      expect_that(getFormatId(obj), matches("text/csv"))
-      data <- getData(obj)
-      sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-      expect_that(sha1, matches(obj@sysmeta@checksum))
-    }
+    pid <- "solson.5.1"
+    obj <- getDataObject(cli, pid)
+    cname <- class(obj)[1]
+    expect_that(cname, matches("DataObject"))
+    expect_that(class(obj@sysmeta), matches("SystemMetadata"))
+    expect_that(getIdentifier(obj), matches(pid))
+    expect_that(getFormatId(obj), matches("text/csv"))
+    data <- getData(obj)
+    sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
+    expect_that(sha1, matches(obj@sysmeta@checksum))
 })
 
 test_that("D1Client uploadDataObject with raw data works", {
@@ -299,25 +299,24 @@ test_that("D1Client getD1Object works", {
   am <- AuthenticationManager()
   d1c <- D1Client("PROD", "urn:node:KNB")
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
+  # Skip if Mac OS X and certificate.
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    expect_false(is.null(d1c))
-    expect_that(class(d1c), matches("D1Client"))
-    expect_that(d1c@cn@baseURL, matches("https://cn.dataone.org/cn"))
-    
-    # Try retrieving a known object from the PROD environment
-    pid <- "solson.5.1"
-    suppressWarnings(dataObj <- getD1Object(d1c, pid))
-    expect_that(class(dataObj)[1], matches("DataObject"))
-    expect_that(class(dataObj@sysmeta), matches("SystemMetadata"))
-    expect_that(getIdentifier(dataObj), matches(pid))
-    expect_that(getFormatId(dataObj), matches("text/csv"))
-    data <- getData(dataObj)
-    sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-    expect_that(sha1, matches(dataObj@sysmeta@checksum))
-  } else {
-    skip("This test requires valid authentication.")
   }
+  expect_false(is.null(d1c))
+  expect_that(class(d1c), matches("D1Client"))
+  expect_that(d1c@cn@baseURL, matches("https://cn.dataone.org/cn"))
+    
+  # Try retrieving a known object from the PROD environment
+  pid <- "solson.5.1"
+  suppressWarnings(dataObj <- getD1Object(d1c, pid))
+  expect_that(class(dataObj)[1], matches("DataObject"))
+  expect_that(class(dataObj@sysmeta), matches("SystemMetadata"))
+  expect_that(getIdentifier(dataObj), matches(pid))
+  expect_that(getFormatId(dataObj), matches("text/csv"))
+  data <- getData(dataObj)
+  sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
+  expect_that(sha1, matches(dataObj@sysmeta@checksum))
 })
 
 
@@ -326,16 +325,15 @@ test_that("D1Client d1SolrQuery works", {
   d1c <- D1Client("PROD")
   am <- AuthenticationManager()
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
+  # Skip if Mac OS X and certificate.
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
-    suppressWarnings(result <- d1SolrQuery(d1c, queryParams))
-    expect_match(class(result)[1], "XMLInternalDocument")
-    resList <- xmlToList(result)
-    expect_true(length(resList) > 0)
-  } else {
-    skip("This test requires valid authentication.")
   }
+  queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
+  suppressWarnings(result <- d1SolrQuery(d1c, queryParams))
+  expect_match(class(result)[1], "XMLInternalDocument")
+  resList <- xmlToList(result)
+  expect_true(length(resList) > 0)
 })
 
 test_that("D1Client listMemberNodes() works", {
@@ -358,15 +356,14 @@ test_that("D1Client d1IdentifierSearch works", {
   am <- AuthenticationManager()
   d1c <- D1Client("PROD")
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@cn))
+  # Skip if Mac OS X and certificate.
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
-    suppressWarnings(result <- d1IdentifierSearch(d1c, queryParams))
-    expect_match(class(result), "character")
-    expect_equal(length(result), 2)
-  } else {
-    skip("This test requires valid authentication.")
   }
+  queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
+  suppressWarnings(result <- d1IdentifierSearch(d1c, queryParams))
+  expect_match(class(result), "character")
+  expect_equal(length(result), 2)
 })
 
 test_that("D1Client createDataPackage works", {
