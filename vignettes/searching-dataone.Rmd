@@ -20,8 +20,7 @@ The same search mechanism is available on [DataONE Member Nodes](https://www.dat
 index on a member node only contains dataset information for datasets that are contained 
 on that member node.
 
-Information about the Solr search engine can be obtained at [Solr Resources](http://lucene.apache.org/solr/resources.html) and 
-[Solr Tutorial](http://www.solrtutorial.com)
+Information about the Solr search engine can be obtained at [Solr Resources](http://lucene.apache.org/solr/resources.html).
 
 Additional information about searching DataONE can be viewed at [Content Discovery](https://purl.dataone.org/architecture/design/SearchMetadata.html). 
 
