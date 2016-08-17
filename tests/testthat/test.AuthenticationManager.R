@@ -18,26 +18,6 @@ test_that("AuthenticationManager isAuthValid() for v2 node works", {
   }
 })
 
-test_that("AuthenticationManager isAuthValid() for v1 node works", {
-  skip_on_cran()
-  # MAC OS X currently doesn't ahve a valid authentication mechanism for
-  # v1 nodes, for various curl / Mac OS X version combinations, so skip this
-  # v1 test for all Mac OS X versions
-  if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip v1 node test on Mac OS X")
-  am <- AuthenticationManager()
-  expect_false(is.null(am))
-  cn <- CNode("STAGING")
-  # v1 node
-  mn <- getMNode(cn, "urn:node:mnStageUNM1")  # Suppress openssl, cert missing warnings
-  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
-  if(!authValid) {
-    expect_match(dataone:::getAuthSubject(am, mn), "public")
-  } else {
-    expect_match(dataone:::getAuthMethod(am, mn), "cert|token")
-    expect_false(dataone:::isAuthExpired(am, mn))
-  }
-})
-
 test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   am <- AuthenticationManager()
   expect_that(is.null(cm), is_false())
