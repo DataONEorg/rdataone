@@ -4,7 +4,7 @@
 
 * The unit tests were dependent on unstable development machines
   and would fail if these machines were not available, not configured
-  correctly, or did not contain expected content. This dependancy has been
+  correctly, or did not contain expected content. This dependency has been
   resolved.
 
 # Version 2.0.0
