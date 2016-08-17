@@ -15,6 +15,9 @@ test_that("D1Client constructors", {
         expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
         expect_that(cli@mn@baseURL, matches ("https://knb.ecoinformatics.org/knb/d1/mn"))
         
+        # Skip the remainder of the tests because these test environments are 
+        # often down due to upgrades, reconfiguring, testing new features.
+        skip_on_cran()
         cn <- CNode("STAGING2")
         cli <- new("D1Client", cn=cn, mn=getMNode(cn, "urn:node:mnTestKNB"))
         expect_false(is.null(cli))
@@ -32,9 +35,6 @@ test_that("D1Client constructors", {
         expect_that(class(cli), matches("D1Client"))
         expect_that(cli@cn@baseURL, matches ("https://cn-stage.test.dataone.org/cn"))
         
-        # Skip the remainder of the tests because these test environments are 
-        # often down due to upgrades, reconfiguring, testing new features.
-        skip_on_cran()
         cli <- D1Client("SANDBOX")
         expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))
@@ -46,7 +46,14 @@ test_that("D1Client constructors", {
         expect_that(cli@cn@baseURL, matches("https://cn-dev.test.dataone.org/cn"))
 })
 
-test_that("D1Client methods", {
+test_that("D1Client methods", {  
+  # Test listMemberNodes
+  cli <- D1Client("PROD")
+  nodes <- listMemberNodes(cli)
+  expect_gt(length(nodes), 0)
+  expect_identical(class(nodes), "list")
+    
+  # The remainder of this test uses development machines.
   skip_on_cran()
   # Test getEndPoint()
   cli <- D1Client("DEV")
@@ -69,12 +76,6 @@ test_that("D1Client methods", {
   # Test getCN (deprecated)
   suppressWarnings(testCN <- getCN(cli))
   expect_match(testCN@baseURL, "test.dataone")
-  
-  # Test listMemberNodes
-  cli <- D1Client("PROD")
-  nodes <- listMemberNodes(cli)
-  expect_gt(length(nodes), 0)
-  expect_identical(class(nodes), "list")
   
 })
 
