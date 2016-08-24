@@ -525,11 +525,14 @@ setMethod("parseCapabilities", signature("D1Node"), function(x, xml) {
   x@state <- attrs[["state"]]
   # Store the available services for this node in a data.frame
   services <- data.frame(name=character(), version=character(), available=character(), row.names=NULL, stringsAsFactors=FALSE)
-  hasServices <- xmlToList(xml[['services']])
-  for (i in 1:length(hasServices)) {
-    thisService <- hasServices[[i]]
-    services <- rbind(services, data.frame(name=thisService[['name']], version=thisService[['version']], 
-                                           available=thisService[['available']], row.names=NULL, stringsAsFactors=FALSE))
+  reportedServices <- xml[['services']]
+  if(!is.null(reportedServices)) {
+      hasServices <- xmlToList(reportedServices)
+      for (i in 1:length(hasServices)) {
+          thisService <- hasServices[[i]]
+          services <- rbind(services, data.frame(name=thisService[['name']], version=thisService[['version']], 
+                                                 available=thisService[['available']], row.names=NULL, stringsAsFactors=FALSE))
+      }
   }
   x@services <- services
   # Set the node API version based on MNCore (tier 1)
