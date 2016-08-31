@@ -40,14 +40,41 @@ auth_get <- function(url, nconfig=config(), node) {
       authToken <- getToken(am, node)
       response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
     } else {
-      # Authenticatin will use a certificate.
+      # Authentication will use a certificate.
       cert <- getCert(am)
       new_config <- c(nconfig, config(sslcert = cert))
       response <- GET(url, config = new_config, user_agent(get_user_agent()))
     }
   } else {
     # Send request as the public user
-    message("Attempting to call as public user without being authenticated.")
+    # Warn the user if their auth token or certificate has expired. The regular auth checks
+    # are designed to check for and return whatever valid auth mechanism is used, and are not
+    # designed to find an invalid, i.e. expired one, so we have to perform these checks manually.
+    # First check if a token is present, for the appropriate D1 environment, i.e. v1 vs v2, production
+    # vs development.
+    authToken <- getToken(am, node)
+    if(!is.null(authToken)) {
+      tokenInfo <- getTokenDetails(attr(authToken, "name"))
+      if(tokenInfo$expired) {
+        msg <- "You attempted this operation with an expired token, so you were not authenticated."
+        msg <- paste0(msg, "\nYou may wish to try again with a valid token.")
+        msg <- paste0(msg, "\nAttempting to perform this operation as the public user without being authenticated.")
+        message(msg)
+      }
+    } else {
+      # If no token, then check for a certificate
+      certInfo <- getCertInfo(am)
+      # A certificate exists
+      if(!is.na(certInfo$file)) {
+        if(certInfo$expired) {
+          msg <- sprintf("You attempted this operation with an expired certificate located at %s", certInfo$file)
+          msg <- paste0(msg, sprintf("\nso you were not authenticated. You may wish to try again with a valid certificate."))
+          msg <- paste0(msg, sprintf("\nAttempting to perform this operation as the public user without being authenticated."))
+          message(msg)
+        }
+      }
+    }
+      
     response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
   }
   rm(am)

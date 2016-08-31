@@ -375,9 +375,9 @@ setMethod("evaluateAuth", signature("AuthenticationManager"), function(.Object, 
         authInfo$expired <- expired
         authInfo$subject <- subject
         return(authInfo)
-      } else {
-        message("Checking X.509 certificate...")
-      }
+      } #else {
+        #message("Checking X.509 certificate...")
+      #}
     }
   }
   
@@ -460,7 +460,7 @@ getTokenDetails <- function(tokenName) {
     subject <- tokenInfo[['sub']]
     # Check if the authToken is expired
     if(as.POSIXct(Sys.time(), "UTC") > expiresDT) {
-      message("Your authentication token is expired or invalid. Please login to search.dataone.org and generate a new token.")
+      #message("Your authentication token is expired or invalid. Please login to search.dataone.org and generate a new token.")
       expired <- TRUE
     } else {
       expired <- FALSE
@@ -496,14 +496,14 @@ setMethod("getCertInfo", signature("AuthenticationManager"), function(.Object) {
     suppressWarnings(cert <- getCertLocation(cm))
     # Does cert exist and is it readable?
     if (!is.null(cert) && (file.access(c(cert),4) == 0)) {
-      if(suppressWarnings(isCertExpired(cm))) {
-        message("Your login certificate is expired. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
-      }
+      #if(suppressWarnings(isCertExpired(cm))) {
+      #  message("Your login certificate is expired. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+      #}
       suppressWarnings(expires <- getCertExpires(cm))
       suppressWarnings(expired <- isCertExpired(cm))
       suppressWarnings(subject <- showClientSubject(cm))
     } else {
-      message("Your login certificate is missing or unreadable. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+      # message("Your login certificate is missing or unreadable. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
       cert <- as.character(NA)
       expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
       expired <- TRUE
