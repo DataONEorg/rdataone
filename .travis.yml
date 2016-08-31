@@ -9,7 +9,6 @@ notifications:
     on_failure: change
 
 apt_packages:
-  - r-cran-httr
   - librdf0
   - librdf0-dev
 
