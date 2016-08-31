@@ -1,5 +1,5 @@
 Package: dataone
-Version: 2.0.1
+Version: 2.0.1.9000
 Date: 2016-08-17
 Title: R Interface to the DataONE REST API
 Authors@R: c( 
@@ -26,6 +26,7 @@ Depends:
     R (>= 3.1.1),
 Suggests:
     knitr,
+    rmarkdown,
     testthat,
     digest,
     openssl (>= 0.9.3)
