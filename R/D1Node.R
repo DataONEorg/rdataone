@@ -50,6 +50,7 @@
 #'  \item{\code{\link{ping}}}{: Download a data package from a member node.}
 #'  \item{\code{\link{encodeSolr}}}{: Update an object on a Member Node, by creating a new object that replaces an original.}
 #'  \item{\code{\link{query}}}{: Update the system metadata associated with an object.}
+#'  \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
 #' }
 #' @import methods
 #' @importFrom utils URLencode
@@ -245,7 +246,7 @@ setGeneric("getChecksum", function(x, ...) {
 #' @export
 #' @examples
 #' library(dataone)
-#' cn <- CNode("STAGING")
+#' cn <- CNode("PROD")
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' cat(sprintf("Query engine version: %s\n", engineDesc$queryEngineVersion))
 #' cat(sprintf("Query engine name: %s\n", engineDesc$name))
@@ -925,3 +926,51 @@ parseSolrField <- function(xNode, parse) {
     return(xmlValue(xNode))
   }
 }
+
+#' Check if an action is authorized for the specified identifier
+#' @description Test if the user identified by the provided token has 
+#' authorization for operation on the specified object.
+#' @details The identifer parameter may be either a DataONE persistant identifier (pid)
+#' or series identifier (sid).
+#' @rdname isAuthorized
+#' @aliases isAuthorized
+#' @param x The node to send the request to. This is either a \code{"Cnode"} or \code{"MNode"} instance.
+#' @param ... (Not yet used)
+#' @return a logical, TRUE if the action is authorized, false if not.
+#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
+#' @export
+#' @examples \dontrun{
+#' # Send an authorization check to the D1 production CN.
+#' cn <- CNode("PROD")
+#' canRead <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "read")
+#' canWrite <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "write")
+#' canChange <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "changePermission")
+#' 
+#' # Now send a check to a member node.
+#' mn <- getMNode(cn, "urn:node:KNB")
+#' canRead <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "read")
+#' canWrite <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "write")
+#' canChange <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "changePermission")
+#' }
+setGeneric("isAuthorized", function(x, ...) {
+    standardGeneric("isAuthorized")
+})
+
+#' @rdname isAuthorized
+#' @param id The DataONE identifier (pid or sid) to check access for.
+#' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
+#' @export
+setMethod("isAuthorized", signature("D1Node"), function(x, id, action) {
+    url <- sprintf("%s/isAuthorized/%s?action=%s", x@endpoint,id,action)
+    response <- auth_get(url, node=x)
+    # Status = 200 means that the action is authorized for the id.
+    # Status = 401 means that the subject is not authorized for the action, not an error.
+    if(response$status == "401") {
+        return(FALSE)
+    } else if (response$status != "200") {
+        warning(sprintf("Error checking authorized for action \"%s\" on id:\" %s\": %s", action, id, getErrorDescription(response)))
+        return(FALSE)
+    } else {
+        return(TRUE)
+    }
+})

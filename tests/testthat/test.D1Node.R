@@ -216,3 +216,31 @@ test_that("D1Node archive() works",{
       skip("This test requires valid authentication.")
   }
 })
+
+test_that("D1Node isAuthorized() works",{
+  skip_on_cran()
+  library(dataone)
+  cn <- CNode("PROD")
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
+  # Don't use a cert on Mac OS X
+  if (authValid) {
+    if(getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+  }
+  # Send an authorization check to the D1 production CN.
+  canRead <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "read")
+  expect_true(canRead)
+  canWrite <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "write")
+  expect_false(canWrite)
+  canChange <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "changePermission")
+  expect_false(canChange)
+    
+  # Now send a check to a member node.
+  mn <- getMNode(cn, "urn:node:KNB")
+  canRead <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "read")
+  expect_true(canRead)
+  canWrite <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "write")
+  expect_false(canWrite)
+  canChange <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "changePermission")
+  expect_false(canChange)
+})
