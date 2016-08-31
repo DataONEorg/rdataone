@@ -16,6 +16,9 @@
       - API (4:40)
       - DataONE (4:27, 18:9, 18:53)
       - metadata (17:57, 21:34, 22:5)
+* This release fixes testing errors that had arisen due to the test web service that are
+  accessed during testing being down.  These issues have been resolved, and all tests pass
+  now, and example code runs correctly.
 
 ## Downstream dependencies
 
