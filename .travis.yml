@@ -8,6 +8,8 @@ notifications:
     on_success: change
     on_failure: change
 
-apt_packages:
-  - librdf0
-  - librdf0-dev
+addons:
+  apt:
+    packages:
+      - librdf0
+      - librdf0-dev
