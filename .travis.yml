@@ -11,6 +11,7 @@ notifications:
 apt_packages:
   - r-cran-httr
   - librdf0
+  - librdf0-dev
 
 r_packages:
   - rmarkdown
