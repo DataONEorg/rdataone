@@ -1,7 +1,7 @@
 language: r
 cache: packages
 warnings_are_errors: true
-sudo: required
+sudo: false
 
 notifications:
   email:
@@ -11,6 +11,3 @@ notifications:
 apt_packages:
   - librdf0
   - librdf0-dev
-
-r_packages:
-  - rmarkdown
