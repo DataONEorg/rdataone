@@ -16,7 +16,7 @@ test_that("CNode object index query works with query list param", {
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   cn <- CNode("PROD")  
   am <- AuthenticationManager()
-  suppressMessages(authValid <- isAuthValid(am, cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   if (authValid) {
     if(getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
@@ -127,7 +127,7 @@ test_that("CNode object index query works with query string param", {
   
   cn <- CNode("PROD")
   am <- AuthenticationManager()
-  suppressMessages(authValid <- isAuthValid(am, cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   if (authValid) {
     if(getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
@@ -148,7 +148,7 @@ test_that("MNode object index query works", {
   mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
   mn <- MNode(mn_uri)
   am <- AuthenticationManager()
-  suppressMessages(authValid <- isAuthValid(am, mn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
   if (authValid) {
     if(getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
@@ -188,7 +188,7 @@ test_that("D1Node archive() works",{
   mnId <- "urn:node:mnStageUCSB2"
   d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
   am <- AuthenticationManager()
-  suppressMessages(authValid <- isAuthValid(am, d1c@mn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
   if (authValid) {
     if(getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
@@ -244,3 +244,4 @@ test_that("D1Node isAuthorized() works",{
   canChange <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "changePermission")
   expect_false(canChange)
 })
+
