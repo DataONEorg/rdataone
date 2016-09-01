@@ -934,7 +934,7 @@ parseSolrField <- function(xNode, parse) {
 #' or series identifier (sid).
 #' @rdname isAuthorized
 #' @aliases isAuthorized
-#' @param x The node to send the request to. This is either a \code{"Cnode"} or \code{"MNode"} instance.
+#' @param x The node to send the request to. This is either a \code{"CNode"} or \code{"MNode"} instance.
 #' @param ... (Not yet used)
 #' @return a logical, TRUE if the action is authorized, false if not.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
@@ -942,15 +942,17 @@ parseSolrField <- function(xNode, parse) {
 #' @examples \dontrun{
 #' # Send an authorization check to the D1 production CN.
 #' cn <- CNode("PROD")
-#' canRead <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "read")
-#' canWrite <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "write")
-#' canChange <- isAuthorized(cn, "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d", "changePermission")
+#' pid <- "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d"
+#' canRead <- isAuthorized(cn, pid, "read")
+#' canWrite <- isAuthorized(cn, pid, "write")
+#' canChange <- isAuthorized(cn, pid, "changePermission")
 #' 
 #' # Now send a check to a member node.
 #' mn <- getMNode(cn, "urn:node:KNB")
-#' canRead <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "read")
-#' canWrite <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "write")
-#' canChange <- isAuthorized(mn, "doi:10.6085/AA/pisco_recruitment.149.1", "changePermission")
+#' pid <- "doi:10.6085/AA/pisco_recruitment.149.1"
+#' canRead <- isAuthorized(mn, pid, "read")
+#' canWrite <- isAuthorized(mn, pid, "write")
+#' canChange <- isAuthorized(mn, pid, "changePermission")
 #' }
 setGeneric("isAuthorized", function(x, ...) {
     standardGeneric("isAuthorized")
