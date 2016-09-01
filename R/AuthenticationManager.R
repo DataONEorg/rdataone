@@ -111,8 +111,8 @@ setGeneric("isAuthValid", function(.Object, ...) {
 
 #' @rdname isAuthValid
 setMethod("isAuthValid", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- evaluateAuth(.Object, node)
-  return(authInfo$valid)
+    authInfo <- evaluateAuth(.Object, node)
+    return(authInfo$valid)
 })
 
 #' Get the value of the DataONE Authentication Token, if one exists.
@@ -130,25 +130,25 @@ setGeneric("getToken", function(.Object, ...) {
 #' @rdname getToken
 #' @param node either a CNode or MNode object to get the appropriate token for.
 setMethod("getToken", signature("AuthenticationManager"), function(.Object, node=as.character(NA)) {
-  if(.Object@obscured) {
-    return(as.character(NA))
-  } else {
-    stopifnot(is(node, "CNode") || is(node, "MNode"))
-    if (node@env == "test") {
-      token <- getOption("dataone_test_token")
-      if(!is.null(token) && !is.na(token)) {
-        attr(token, "name") <- "dataone_test_token"
-      }
-      return(token)
+    if(.Object@obscured) {
+        return(as.character(NA))
     } else {
-      # Look for a production token
-      token <- getOption("dataone_token")
-      if(!is.null(token) && !is.na(token)) {
-        attr(token, "name") <- "dataone_token"
-      }
-      return(token)
+        stopifnot(is(node, "CNode") || is(node, "MNode"))
+        if (node@env == "test") {
+            token <- getOption("dataone_test_token")
+            if(!is.null(token) && !is.na(token)) {
+                attr(token, "name") <- "dataone_test_token"
+            }
+            return(token)
+        } else {
+            # Look for a production token
+            token <- getOption("dataone_token")
+            if(!is.null(token) && !is.na(token)) {
+                attr(token, "name") <- "dataone_token"
+            }
+            return(token)
+        }
     }
-  }
 })
     
 #' Get the DataONE X.509 Certificate location.
@@ -158,17 +158,17 @@ setMethod("getToken", signature("AuthenticationManager"), function(.Object, node
 #' @param ... (Not yet used)
 #' @return The filename of the current DataONE X.509 Certificate if it is available.
 setGeneric("getCert", function(.Object, ...) { 
-  standardGeneric("getCert")
+    standardGeneric("getCert")
 })
 
 #' @rdname getCert
 setMethod("getCert", signature("AuthenticationManager"), function(.Object) { 
-  if(.Object@obscured) {
-    return(as.character(NA))
-  } else {
-    suppressWarnings(cm <- CertificateManager())
-    return(suppressWarnings(getCertLocation(cm)))
-  }
+    if(.Object@obscured) {
+        return(as.character(NA))
+    } else {
+        suppressWarnings(cm <- CertificateManager())
+        return(suppressWarnings(getCertLocation(cm)))
+    }
 })
 
 #' Get the current valid authentication mechanism.
@@ -178,7 +178,7 @@ setMethod("getCert", signature("AuthenticationManager"), function(.Object) {
 #' @param ... (Not yet used)
 #' @return The current authentication mechanism as a character string, either "token" or "cert".
 setGeneric("getAuthMethod", function(.Object, ...) { 
-  standardGeneric("getAuthMethod")
+    standardGeneric("getAuthMethod")
 })
 
 #' @rdname getAuthMethod
@@ -188,8 +188,8 @@ setGeneric("getAuthMethod", function(.Object, ...) {
 #' node uses the V1 API, then only an X.509 certificate can be used.
 #' @param node A D1Node instance to determine the authentication method for.
 setMethod("getAuthMethod", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- evaluateAuth(.Object, node)
-  return(authInfo$authMethod)
+    authInfo <- evaluateAuth(.Object, node)
+    return(authInfo$authMethod)
 })
 
 #' Get the authentication subject.
@@ -199,7 +199,7 @@ setMethod("getAuthMethod", signature("AuthenticationManager"), function(.Object,
 #' @param ... (Not yet used)
 #' @return the DataONE Subject that is your client's identity
 setGeneric("getAuthSubject", function(.Object, ...) { 
-  standardGeneric("getAuthSubject")
+    standardGeneric("getAuthSubject")
 })
 
 #' @rdname getAuthSubject
@@ -210,8 +210,8 @@ setGeneric("getAuthSubject", function(.Object, ...) {
 #' node uses the V1 API, then only an X.509 certificate can be used.
 #' @param node A D1Node instance
 setMethod("getAuthSubject", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- evaluateAuth(.Object, node)
-  return(authInfo$subject)
+    authInfo <- evaluateAuth(.Object, node)
+    return(authInfo$subject)
 })
 
 #' Get the expiration date of the current authentication method.
@@ -223,13 +223,13 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(.Object
 #' @param node A D1Node instance
 #' @return The expiration date for the current authentication mechanism being used.
 setGeneric("getAuthExpires", function(.Object, node) { 
-  standardGeneric("getAuthExpires")
+    standardGeneric("getAuthExpires")
 })
 
 #' @rdname getAuthExpires
 setMethod("getAuthExpires", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- evaluateAuth(.Object, node)
-  return(authInfo$expires)
+    authInfo <- evaluateAuth(.Object, node)
+    return(authInfo$expires)
 })
 #' Check if the currently valid authentication method has reached the expiration time.
 #' @rdname isAuthExpired
@@ -239,13 +239,13 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(.Object
 #' @param ... (Not yet used)
 #' @return A logical value: TRUE if authenentication has expired, FALSE if not.
 setGeneric("isAuthExpired", function(.Object, ...) { 
-  standardGeneric("isAuthExpired")
+    standardGeneric("isAuthExpired")
 })
 
 #' @rdname isAuthExpired
 setMethod("isAuthExpired", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- evaluateAuth(.Object, node)
-  return(authInfo$expired)
+    authInfo <- evaluateAuth(.Object, node)
+    return(authInfo$expired)
 })
 
 #' Temporarity disable DataONE authentication.
@@ -258,13 +258,13 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(.Object,
 #' @param .Object An AuthenticationManager instance
 #' @return The expiration date for the current authentication mechanism being used.
 setGeneric("obscureAuth", function(.Object) { 
-  standardGeneric("obscureAuth")
+    standardGeneric("obscureAuth")
 })
 
 #' @rdname obscureAuth
 setMethod("obscureAuth", signature("AuthenticationManager"), function(.Object) {
-  .Object@obscured <- TRUE
-  return(.Object)
+    .Object@obscured <- TRUE
+    return(.Object)
 })
 
 #' Restore authentication (after being disabled with \code{obscureAuth}).
@@ -273,13 +273,13 @@ setMethod("obscureAuth", signature("AuthenticationManager"), function(.Object) {
 #' @param .Object An AuthenticationManager instance
 #' @return The expiration date for the current authentication mechanism being used.
 setGeneric("restoreAuth", function(.Object) { 
-  standardGeneric("restoreAuth")
+    standardGeneric("restoreAuth")
 })
 
 #' @rdname restoreAuth
 setMethod("restoreAuth", signature("AuthenticationManager"), function(.Object) {
-  .Object@obscured <- FALSE
-  return(.Object)
+    .Object@obscured <- FALSE
+    return(.Object)
 })
 
 #' Display all authentication information
@@ -289,29 +289,29 @@ setMethod("restoreAuth", signature("AuthenticationManager"), function(.Object) {
 #' @param node A D1Node instance
 #' @param ... (Not yet used)
 setGeneric("showAuth", function(.Object, ...) { 
-  standardGeneric("showAuth")
+    standardGeneric("showAuth")
 })
 
 #' @rdname showAuth
 setMethod("showAuth", signature("AuthenticationManager"), function(.Object, node) {
-  suppressMessages(authInfo <- evaluateAuth(.Object, node))
-  message(sprintf("authentication method: %s", authInfo$authMethod))
-  message(sprintf("token: %s", authInfo$token))
-  message(sprintf("cert: %s", authInfo$cert))
-  message(sprintf("node: %s", authInfo$node))
-  message(sprintf("valid: %s", as.character(authInfo$valid)))
-  message(sprintf("expires: %s", as.character(authInfo$expires)))
-  message(sprintf("subject: %s" , authInfo$subject))
-  invisible(authInfo)
+    suppressMessages(authInfo <- evaluateAuth(.Object, node))
+    message(sprintf("authentication method: %s", authInfo$authMethod))
+    message(sprintf("token: %s", authInfo$token))
+    message(sprintf("cert: %s", authInfo$cert))
+    message(sprintf("node: %s", authInfo$node))
+    message(sprintf("valid: %s", as.character(authInfo$valid)))
+    message(sprintf("expires: %s", as.character(authInfo$expires)))
+    message(sprintf("subject: %s" , authInfo$subject))
+    invisible(authInfo)
 })
 
 parseAuthToken <- function(authToken) {
-  # TODO: put in checks for a valid token format
-  payload <- unlist(strsplit(authToken, "\\."))[[2]]
-  payloadRaw <- base64decode(payload)
-  payloadChar <- rawToChar(payloadRaw)
-  tokenInfo <- fromJSON(payloadChar)
-  return(tokenInfo)
+    # TODO: put in checks for a valid token format
+    payload <- unlist(strsplit(authToken, "\\."))[[2]]
+    payloadRaw <- base64decode(payload)
+    payloadChar <- rawToChar(payloadRaw)
+    tokenInfo <- fromJSON(payloadChar)
+    return(tokenInfo)
 }
 #' Evaluate DataONE authentication.
 #' @description A valid DataONE authentication method is looked for and all
@@ -327,91 +327,91 @@ parseAuthToken <- function(authToken) {
 #' @param ... additional parameters
 #' @return A hash containing authentication information.
 setGeneric("evaluateAuth", function(.Object, ...) { 
-  standardGeneric("evaluateAuth")
+    standardGeneric("evaluateAuth")
 })
 
 #' @rdname evaluateAuth
 setMethod("evaluateAuth", signature("AuthenticationManager"), function(.Object, node) {
-  authInfo <- new("hash")
-  # First check if an authentication token is available. 
-  # Authentication tokens were implemented in DatONE v2, so if this node is not 
-  # v2 or greater, don't send the authToken but look for a x509 certificate instead.
-  # This will probably only be useful for development testing, where a single user may
-  # be making requests to both v1 and v2 nodes.
-  if(.Object@obscured) {
-    #warning("DataONE authentication is currenly disabled. See \"?restoreAuth\" to enable it again.")
-    authInfo$authMethod <- as.character(NA)
-    authInfo$token <- as.character(NA)
-    authInfo$cert <- as.character(NA)
-    authInfo$node <- node@identifier
-    authInfo$valid <- FALSE
-    authInfo$expires <- as.character(NA)
-    authInfo$expired <- TRUE
-    authInfo$subject <- 'public'
-    return(authInfo)
-  }
-  # If DataONE API v2 (tokens are supported), then check if an auth token is available and not expired
-  if (node@APIversion >= "v2") {
-    # Check if the node we are authentication against is in the DataONE test environment. If yes,
-    # then check the option name for a test environment token. Otherwise look for a production
-    # token.
-    authToken <- getToken(.Object, node)
-    # auth token will be null if not set with options(), i.e. getOptions will return NULL; 
-    # NA might be set by user
-    if(!is.null(authToken) && !is.na(authToken)) {
-      tokenName <- attr(authToken, "name")
-      tokenInfo <- getTokenDetails(tokenName)
-      subject <- tokenInfo[1, 'subject']
-      expires <- tokenInfo[1, 'end']
-      expired <- tokenInfo[1, 'expired']
-      # If the auth token is not valid (e.g. expired) then check for a valid certificate.
-      if(subject != 'public' && !expired) {
-        authInfo$authMethod <- "token"
-        authInfo$token <- authToken
+    authInfo <- new("hash")
+    # First check if an authentication token is available. 
+    # Authentication tokens were implemented in DatONE v2, so if this node is not 
+    # v2 or greater, don't send the authToken but look for a x509 certificate instead.
+    # This will probably only be useful for development testing, where a single user may
+    # be making requests to both v1 and v2 nodes.
+    if(.Object@obscured) {
+        #warning("DataONE authentication is currenly disabled. See \"?restoreAuth\" to enable it again.")
+        authInfo$authMethod <- as.character(NA)
+        authInfo$token <- as.character(NA)
         authInfo$cert <- as.character(NA)
         authInfo$node <- node@identifier
-        authInfo$valid <- TRUE
+        authInfo$valid <- FALSE
+        authInfo$expires <- as.character(NA)
+        authInfo$expired <- TRUE
+        authInfo$subject <- 'public'
+        return(authInfo)
+    }
+    # If DataONE API v2 (tokens are supported), then check if an auth token is available and not expired
+    if (node@APIversion >= "v2") {
+        # Check if the node we are authentication against is in the DataONE test environment. If yes,
+        # then check the option name for a test environment token. Otherwise look for a production
+        # token.
+        authToken <- getToken(.Object, node)
+        # auth token will be null if not set with options(), i.e. getOptions will return NULL; 
+        # NA might be set by user
+        if(!is.null(authToken) && !is.na(authToken)) {
+            tokenName <- attr(authToken, "name")
+            tokenInfo <- getTokenDetails(tokenName)
+            subject <- tokenInfo[1, 'subject']
+            expires <- tokenInfo[1, 'end']
+            expired <- tokenInfo[1, 'expired']
+            # If the auth token is not valid (e.g. expired) then check for a valid certificate.
+            if(subject != 'public' && !expired) {
+                authInfo$authMethod <- "token"
+                authInfo$token <- authToken
+                authInfo$cert <- as.character(NA)
+                authInfo$node <- node@identifier
+                authInfo$valid <- TRUE
+                authInfo$expires <- expires
+                authInfo$expired <- expired
+                authInfo$subject <- subject
+                return(authInfo)
+            } #else {
+            #message("Checking X.509 certificate...")
+            #}
+        }
+    }
+    
+    # The authentication token is undefined or invalid, so check if a valid certificate is 
+    # available. 
+    certInfo <- getCertInfo(.Object)
+    subject <- certInfo[1,'subject']
+    expires <- certInfo[1,'end']
+    expired <- certInfo[1,'expired']
+    cert <- certInfo[1,'file']
+    if(is.na(cert)) {
+        authInfo$authMethod <- as.character(NA)
+        authInfo$token <- as.character(NA)
+        authInfo$cert <- as.character(NA)
+        authInfo$node <- node@identifier
+        authInfo$valid <- FALSE
+        authInfo$expires <- as.character(NA)
+        authInfo$expired <- TRUE
+        authInfo$subject <- 'public'
+    } else {
+        authInfo$authMethod <- "cert"
+        authInfo$token <- as.character(NA)
+        authInfo$cert <- cert
+        authInfo$node <- node@identifier
+        if(!expired) {
+            authInfo$valid <- TRUE
+        } else {
+            authInfo$valid <- FALSE
+        }
         authInfo$expires <- expires
         authInfo$expired <- expired
         authInfo$subject <- subject
-        return(authInfo)
-      } #else {
-        #message("Checking X.509 certificate...")
-      #}
     }
-  }
-  
-  # The authentication token is undefined or invalid, so check if a valid certificate is 
-  # available. 
-  certInfo <- getCertInfo(.Object)
-  subject <- certInfo[1,'subject']
-  expires <- certInfo[1,'end']
-  expired <- certInfo[1,'expired']
-  cert <- certInfo[1,'file']
-  if(is.na(cert)) {
-    authInfo$authMethod <- as.character(NA)
-    authInfo$token <- as.character(NA)
-    authInfo$cert <- as.character(NA)
-    authInfo$node <- node@identifier
-    authInfo$valid <- FALSE
-    authInfo$expires <- as.character(NA)
-    authInfo$expired <- TRUE
-    authInfo$subject <- 'public'
-  } else {
-    authInfo$authMethod <- "cert"
-    authInfo$token <- as.character(NA)
-    authInfo$cert <- cert
-    authInfo$node <- node@identifier
-    if(!expired) {
-      authInfo$valid <- TRUE
-    } else {
-      authInfo$valid <- FALSE
-    }
-    authInfo$expires <- expires
-    authInfo$expired <- expired
-    authInfo$subject <- subject
-  }
-  return(authInfo)
+    return(authInfo)
 })
 
 #' Get authentication token information
@@ -422,58 +422,58 @@ setMethod("evaluateAuth", signature("AuthenticationManager"), function(.Object, 
 #' @return A data.frame containing information about the authentication token.
 #' @export
 setGeneric("getTokenInfo", function(.Object) { 
-  standardGeneric("getTokenInfo")
+    standardGeneric("getTokenInfo")
 })
 
 #' @rdname getTokenInfo
 #' @export
 setMethod("getTokenInfo", signature("AuthenticationManager"), function(.Object) {
- tdf <- getTokenDetails("dataone_token")
- tdftest <- getTokenDetails("dataone_test_token")
- if(nrow(tdf) == 0 && nrow(tdftest) == 0) {
-   message("No tokens are currently defined.")
-   # Return one of the empty data.frames, just in case the user is inspecting the values.
-   invisible(rbind(tdf))
- } else {
-   return(rbind(tdf, tdftest))
- }
+    tdf <- getTokenDetails("dataone_token")
+    tdftest <- getTokenDetails("dataone_test_token")
+    if(nrow(tdf) == 0 && nrow(tdftest) == 0) {
+        message("No tokens are currently defined.")
+        # Return one of the empty data.frames, just in case the user is inspecting the values.
+        invisible(rbind(tdf))
+    } else {
+        return(rbind(tdf, tdftest))
+    }
 })
 
 getTokenDetails <- function(tokenName) {
-  authToken <- getOption(tokenName)
-  # auth token will be null if not set with options(), i.e. getOptions will return NULL; 
-  # NA might be set by user
-  if(!is.null(authToken) && !is.na(authToken)) {
-    tokenInfo <- parseAuthToken(authToken)
-    # issuedAt is UTC
-    issuedAt <- tokenInfo[['issuedAt']]
-    # Remove the ISO 8601 'T' from the time, R doesn't handle it well.
-    issuedAt <- gsub("T", " ", issuedAt)
-    startDT <- as.POSIXct(issuedAt, "UTC")
-    startSeconds <- as.integer(startDT)
-    ttl <- tokenInfo[['ttl']]
-    # ttl is 'time to live' in seconds. Calculate expiration date
-    # by adding this to 'issuedAt'
-    expiresSeconds <- startSeconds + ttl
-    # Seconds since the start of the epoch according to R = 1970-01-01
-    expiresDT <- as.POSIXct(expiresSeconds, origin="1970-01-01", tz="UTC")
-    subject <- tokenInfo[['sub']]
-    # Check if the authToken is expired
-    if(as.POSIXct(Sys.time(), "UTC") > expiresDT) {
-      #message("Your authentication token is expired or invalid. Please login to search.dataone.org and generate a new token.")
-      expired <- TRUE
+    authToken <- getOption(tokenName)
+    # auth token will be null if not set with options(), i.e. getOptions will return NULL; 
+    # NA might be set by user
+    if(!is.null(authToken) && !is.na(authToken)) {
+        tokenInfo <- parseAuthToken(authToken)
+        # issuedAt is UTC
+        issuedAt <- tokenInfo[['issuedAt']]
+        # Remove the ISO 8601 'T' from the time, R doesn't handle it well.
+        issuedAt <- gsub("T", " ", issuedAt)
+        startDT <- as.POSIXct(issuedAt, "UTC")
+        startSeconds <- as.integer(startDT)
+        ttl <- tokenInfo[['ttl']]
+        # ttl is 'time to live' in seconds. Calculate expiration date
+        # by adding this to 'issuedAt'
+        expiresSeconds <- startSeconds + ttl
+        # Seconds since the start of the epoch according to R = 1970-01-01
+        expiresDT <- as.POSIXct(expiresSeconds, origin="1970-01-01", tz="UTC")
+        subject <- tokenInfo[['sub']]
+        # Check if the authToken is expired
+        if(as.POSIXct(Sys.time(), "UTC") > expiresDT) {
+            #message("Your authentication token is expired or invalid. Please login to search.dataone.org and generate a new token.")
+            expired <- TRUE
+        } else {
+            expired <- FALSE
+        }
+        tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
     } else {
-      expired <- FALSE
+        #subject <- 'public'
+        #expiresDT <- as.POSIXct("1970-01-01 01:01:01", tz="UTC")
+        #expired <- TRUE
+        #tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
+        tdf <- data.frame(name=character(), subject=character(), end=character(), expired=logical(), stringsAsFactors=FALSE)
     }
-    tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
-  } else {
-    #subject <- 'public'
-    #expiresDT <- as.POSIXct("1970-01-01 01:01:01", tz="UTC")
-    #expired <- TRUE
-    #tdf <- data.frame(name=tokenName, subject=subject, end=expiresDT, expired=expired, stringsAsFactors=FALSE)
-    tdf <- data.frame(name=character(), subject=character(), end=character(), expired=logical(), stringsAsFactors=FALSE)
-  }
-  return(tdf)
+    return(tdf)
 }
 
 #' Get X.509 Certificate information
@@ -484,39 +484,39 @@ getTokenDetails <- function(tokenName) {
 #' @return A data.frame containing informoration about the X.509 certificate.
 #' @export
 setGeneric("getCertInfo", function(.Object) { 
-  standardGeneric("getCertInfo")
+    standardGeneric("getCertInfo")
 })
 
 #' @rdname getCertInfo
 #' @export
 setMethod("getCertInfo", signature("AuthenticationManager"), function(.Object) {
-  if (requireNamespace("openssl", quietly = TRUE)) {
-    # Suppress "deprecated" warning
-    suppressWarnings(cm <- CertificateManager())
-    suppressWarnings(cert <- getCertLocation(cm))
-    # Does cert exist and is it readable?
-    if (!is.null(cert) && (file.access(c(cert),4) == 0)) {
-      #if(suppressWarnings(isCertExpired(cm))) {
-      #  message("Your login certificate is expired. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
-      #}
-      suppressWarnings(expires <- getCertExpires(cm))
-      suppressWarnings(expired <- isCertExpired(cm))
-      suppressWarnings(subject <- showClientSubject(cm))
+    if (requireNamespace("openssl", quietly = TRUE)) {
+        # Suppress "deprecated" warning
+        suppressWarnings(cm <- CertificateManager())
+        suppressWarnings(cert <- getCertLocation(cm))
+        # Does cert exist and is it readable?
+        if (!is.null(cert) && (file.access(c(cert),4) == 0)) {
+            #if(suppressWarnings(isCertExpired(cm))) {
+            #  message("Your login certificate is expired. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+            #}
+            suppressWarnings(expires <- getCertExpires(cm))
+            suppressWarnings(expired <- isCertExpired(cm))
+            suppressWarnings(subject <- showClientSubject(cm))
+        } else {
+            # message("Your login certificate is missing or unreadable. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
+            cert <- as.character(NA)
+            expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
+            expired <- TRUE
+            subject <- 'public'
+        }
     } else {
-      # message("Your login certificate is missing or unreadable. You must login again via CILogon using 'dataone::downloadCert(CertificateManager())'")
-      cert <- as.character(NA)
-      expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
-      expired <- TRUE
-      subject <- 'public'
+        # openssl is not available, we are unable to read the Certificate, so print a warning and fall back to unauthenticated
+        message("openssl is not installed. You must install the openssl package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
+        cert <- as.character(NA)
+        expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
+        expired <- TRUE
+        subject <- 'public'
     }
-  } else {
-    # openssl is not available, we are unable to read the Certificate, so print a warning and fall back to unauthenticated
-    message("openssl is not installed. You must install the openssl package to enable authenticated operations such as reading private data or uploading data to DataONE repositories.")
-    cert <- as.character(NA)
-    expires <- as.POSIXct("1970-01-01 01:01:01", "UTC")
-    expired <- TRUE
-    subject <- 'public'
-  }
-  tdf <- data.frame(subject=subject, end=expires, expired=expired, file=cert, stringsAsFactors=FALSE)
-  return(tdf)
+    tdf <- data.frame(subject=subject, end=expires, expired=expired, file=cert, stringsAsFactors=FALSE)
+    return(tdf)
 })
