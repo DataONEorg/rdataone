@@ -25,7 +25,7 @@ Query a node for the list of query engines available on the node
 }
 \examples{
 library(dataone)
-cn <- CNode("STAGING")
+cn <- CNode("PROD")
 engineDesc <- getQueryEngineDescription(cn, "solr")
 cat(sprintf("Query engine version: \%s\\n", engineDesc$queryEngineVersion))
 cat(sprintf("Query engine name: \%s\\n", engineDesc$name))

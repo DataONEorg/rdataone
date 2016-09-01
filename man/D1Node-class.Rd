@@ -51,6 +51,7 @@ methods that are common between these two child classes.
  \item{\code{\link{ping}}}{: Download a data package from a member node.}
  \item{\code{\link{encodeSolr}}}{: Update an object on a Member Node, by creating a new object that replaces an original.}
  \item{\code{\link{query}}}{: Update the system metadata associated with an object.}
+ \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
 }
 }
 
