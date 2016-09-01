@@ -33,8 +33,11 @@
 #' @import httr
 auth_get <- function(url, nconfig=config(), node) {
   response <- NULL
+  if (missing(url) || missing(node)) {
+      stop("Error: url or node is missing. Please report this error.")
+  }
   am <- AuthenticationManager()
-  if(!missing(node) && isAuthValid(am, node)) {
+  if(isAuthValid(am, node)) {
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
       authToken <- getToken(am, node)
@@ -99,8 +102,11 @@ auth_get <- function(url, nconfig=config(), node) {
 #' @import httr
 auth_head <- function(url, nconfig=config(), node) {
   response <- NULL
+  if (missing(url) || missing(node)) {
+      stop("Error: url or node is missing. Please report this error.")
+  }
   am <- AuthenticationManager()
-  if(!missing(node) && isAuthValid(am, node)) {
+  if(isAuthValid(am, node)) {
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
       authToken <- getToken(am, node)
