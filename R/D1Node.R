@@ -356,7 +356,7 @@ setGeneric("describeObject", function(x, ...) {
 #' @export
 setMethod("describeObject", signature("D1Node"), function(x, pid) {
   stopifnot(is.character(pid))
-  url <- file.path(x@endpoint, "object", pid)
+  url <- file.path(x@endpoint, "object", URLencode(pid, reserved=T))
   response <- auth_get(url, node=x)
   if(response$status != "200") {
     d1_errors(response)
@@ -963,7 +963,7 @@ setGeneric("isAuthorized", function(x, ...) {
 #' @param action The DataONE action to check, possible values: "read", "write", "changePermission"
 #' @export
 setMethod("isAuthorized", signature("D1Node"), function(x, id, action) {
-    url <- sprintf("%s/isAuthorized/%s?action=%s", x@endpoint,id,action)
+    url <- sprintf("%s/isAuthorized/%s?action=%s", x@endpoint,URLencode(id, reserved=T),action)
     response <- auth_get(url, node=x)
     # Status = 200 means that the action is authorized for the id.
     # Status = 401 means that the subject is not authorized for the action, not an error.

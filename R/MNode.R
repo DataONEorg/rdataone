@@ -230,7 +230,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     }
 
     # TODO: need to properly URL-escape the PID
-    url <- paste(x@endpoint, "object", pid, sep="/")
+    url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     
     # Check if the requested pid has been obsoleted by a newer version
     # and print a warning
@@ -254,9 +254,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
 #' @rdname getSystemMetadata
 setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
   stopifnot(is.character(pid))
-    # TODO: need to properly URL-escape the PID
-    url <- paste(x@endpoint, "meta", pid, sep="/")
-
+    url <- paste(x@endpoint, "meta", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
     # Use charset 'utf-8' if not specified in response headers
@@ -283,7 +281,7 @@ setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
 #' @export
 setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm="SHA-1") {
   stopifnot(is.character(pid))
-  url <- paste(x@endpoint, "checksum", pid, sep="/")
+  url <- paste(x@endpoint, "checksum", URLencode(pid, reserved=T), sep="/")
   response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
@@ -521,7 +519,7 @@ setGeneric("updateSystemMetadata", function(x, ...) {
 setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) {
   stopifnot(is.character(pid))
   stopifnot(class(sysmeta) == "SystemMetadata")
-    url <- paste(x@endpoint, "meta", pid, sep="/")
+    url <- paste(x@endpoint, "meta", URLencode(pid, reserved=T), sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
     # if not, then set them to the values contained in their authentication token 

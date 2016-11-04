@@ -213,7 +213,7 @@ setGeneric("getFormat", function(x, ...) {
 #' @param formatId The formatId to retrieve.
 #' @export
 setMethod("getFormat", signature("CNode"), function(x, formatId) {
-  url <- paste(x@endpoint,"formats", URLencode(formatId), sep="/")
+  url <- paste(x@endpoint,"formats", URLencode(formatId, reserved=T), sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   
   if(response$status != "200") {
@@ -237,7 +237,7 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(cn, pid)
 setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
-  url <- paste(x@endpoint, "checksum", pid, sep="/")
+  url <- paste(x@endpoint, "checksum", URLencode(pid, reserved=T), sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
@@ -373,7 +373,7 @@ setGeneric("hasReservation", function(x, ...) {
 #' @return A logical value where TRUE means a reservation exists for the specified pid by the subject.
 setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.character(NA)) {
   stopifnot(is.character(pid))
-  url <- paste(x@endpoint, "reserve", pid, sep="/")
+  url <- paste(x@endpoint, "reserve", URLencode(pid, reserved=T), sep="/")
   # Obtain the subject from the client certificate if it has not been specified
   if(is.na(subject)) {
     am <- AuthenticationManager()
@@ -441,7 +441,7 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(x, pid, ob
 
 #' @rdname getObject
 setMethod("getObject", signature("CNode"), function(x, pid) {
-    url <- paste(x@endpoint, "object", pid, sep="/")
+    url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
     if(response$status != "200") {
@@ -470,7 +470,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
-    url <- paste(x@endpoint, "meta", pid, sep="/")
+    url <- paste(x@endpoint, "meta", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
     if(response$status != "200") {
@@ -508,7 +508,7 @@ setGeneric("resolve", function(x, ...) {
 #' @export
 setMethod("resolve", signature("CNode"), function(x, pid){
   stopifnot(is.character(pid))
-  url <- paste(x@endpoint,"resolve",pid,sep="/")
+  url <- paste(x@endpoint,"resolve",URLencode(pid, reserved=T),sep="/")
   config <- c(add_headers(Accept = "text/xml"), config(followlocation = 0L))
   res <- auth_get(url, nconfig=config, node=x)
   # Check if there was an error downloading the object
