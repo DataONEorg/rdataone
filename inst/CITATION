@@ -13,7 +13,7 @@ authors <-  c(
   person("Edmund", "Hart", role = "aut", email = "edmund.m.hart@gmail.com"), 
   person("Jordan", "Read", role = "aut", email = "jread@usgs.gov")) 
 bibentry(bibtype = "Manual",
-         title = paste0("{redland}: ", title),
+         title = paste0("{dataone}: ", title),
          author = authors,
          year = year,
          note = note,
