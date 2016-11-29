@@ -58,7 +58,7 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 ## D1Client constructors
 #########################
 
-#' The DataONE client class used to downlaod, update and search for data in the DataONE network.
+#' The DataONE client class used to download, update and search for data in the DataONE network.
 #' @rdname D1Client
 #' @param x The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
 #' @param y The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
