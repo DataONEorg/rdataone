@@ -4,9 +4,10 @@
 \name{D1Client}
 \alias{D1Client}
 \alias{D1Client,ANY,ANY-method}
+\alias{D1Client,CNode,MNode-method}
 \alias{D1Client,character,ANY-method}
 \alias{D1Client,character,character-method}
-\title{The DataONE client class used to downlaod, update and search for data in the DataONE network.}
+\title{The DataONE client class used to download, update and search for data in the DataONE network.}
 \usage{
 D1Client(x, y, ...)
 
@@ -15,11 +16,15 @@ D1Client(x, y, ...)
 \S4method{D1Client}{character,ANY}(x, y, ...)
 
 \S4method{D1Client}{character,character}(x, y)
+
+\S4method{D1Client}{CNode,MNode}(x, y, ...)
 }
 \arguments{
-\item{x}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')}
+\item{x}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV'). This parameter
+can alternatively be a \code{\link{CNode}} instance, with the `y` parameter specified as an \code{\link{MNode}} instance.}
 
-\item{y}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'}
+\item{y}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'. This
+parameter can alternatively be an \code{\link{MNode}} instance, with the `x` parameter specified as a \code{\link{CNode}} instance.}
 
 \item{...}{(not yet used)}
 }
@@ -27,10 +32,14 @@ D1Client(x, y, ...)
 the D1Client object representing the DataONE environment
 }
 \description{
-The DataONE client class used to downlaod, update and search for data in the DataONE network.
+The DataONE client class used to download, update and search for data in the DataONE network.
 }
 \examples{
 cli <- D1Client("PROD", "urn:node:KNB")
+
+cn <- CNode('STAGING2')
+mn <- getMNode(cn,'urn:node:mnTestKNB')
+cli <- D1Client(cn,mn)
 }
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}

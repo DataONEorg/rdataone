@@ -25,6 +25,14 @@ test_that("D1Client constructors", {
         expect_that(cli@cn@baseURL, matches ("https://cn.stage-2.test.dataone.org/cn"))
         expect_that(cli@mn@baseURL, matches ("https://dev.nceas.ucsb.edu/knb/d1/mn"))
         
+        cn <- CNode('STAGING2')
+        mn <- getMNode(cn,'urn:node:mnTestKNB')
+        cli <- new("D1Client", cn,mn)
+        expect_false(is.null(cli))
+        expect_that(class(cli), matches("D1Client"))
+        expect_that(cli@cn@baseURL, matches ("https://cn.stage-2.test.dataone.org/cn"))
+        expect_that(cli@mn@baseURL, matches ("https://dev.nceas.ucsb.edu/knb/d1/mn"))
+        
         cli <- D1Client()
         expect_false(is.null(cli))
         expect_that(class(cli), matches("D1Client"))

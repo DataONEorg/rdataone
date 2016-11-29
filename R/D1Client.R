@@ -60,14 +60,20 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 
 #' The DataONE client class used to download, update and search for data in the DataONE network.
 #' @rdname D1Client
-#' @param x The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV')
-#' @param y The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'
+#' @param x The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV'). This parameter
+#' can alternatively be a \code{\link{CNode}} instance, with the `y` parameter specified as an \code{\link{MNode}} instance.
+#' @param y The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'. This
+#' parameter can alternatively be an \code{\link{MNode}} instance, with the `x` parameter specified as a \code{\link{CNode}} instance.
 #' @param ... (not yet used)
 #' @return the D1Client object representing the DataONE environment
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 #' @examples 
 #' cli <- D1Client("PROD", "urn:node:KNB")
+#' 
+#' cn <- CNode('STAGING2')
+#' mn <- getMNode(cn,'urn:node:mnTestKNB')
+#' cli <- D1Client(cn,mn)
 setGeneric("D1Client", function(x, y, ...) {
     standardGeneric("D1Client")
 })
@@ -91,6 +97,13 @@ setMethod("D1Client", signature("character"), function(x, ...) {
 #' @export
 setMethod("D1Client", signature("character", "character"), function(x, y) {
     result <- new("D1Client", env=x, mNodeid=y)
+    return(result)
+})
+
+#' @rdname D1Client
+#' @export
+setMethod("D1Client", signature("CNode", "MNode"), function(x, y, ...) {
+    result <- new("D1Client", cn=x, mn=y)
     return(result)
 })
 
