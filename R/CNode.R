@@ -335,7 +335,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
     resultText <- content(response, as="text")
     doc <- xmlInternalTreeParse(resultText)
     # XML doc is similiar to: <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">WedSep91341002015-ub14</d1:identifier>
-    nodes <- getNodeSet(doc, "/d1:identifier")
+    nodes <- getNodeSet(doc, "/*[local-name() = 'identifier']")
     id <- xmlValue(nodes[[1]])
     # Return the identifier as a character value
     return(id)
