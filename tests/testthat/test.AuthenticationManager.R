@@ -90,7 +90,7 @@ test_that("getAuthSubject() works", {
   result <- dataone:::getAuthSubject(am, cn)
   if (!authValid) {
     # No valid authentication, so should return "public" user
-    expect_that(result, matches("public"))
+    expect_match(result, "public")
   } else {
     # Testing normal case
     expect_that(length(result) > 0, is_true())

@@ -6,7 +6,7 @@ test_that("MNode constructors", {
 	library(dataone)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
 	mn <- MNode(mn_uri)
-	expect_that(mn@endpoint, matches(mn_uri))
+	expect_match(mn@endpoint, mn_uri)
 })
 test_that("MNode getCapabilities()", {
 	library(dataone)
@@ -15,8 +15,8 @@ test_that("MNode getCapabilities()", {
 	mn <- MNode(mn_uri)
     xml <- getCapabilities(mn)
 	val <- xmlName(xmlRoot(xml))
-	expect_that(val, matches("node"))
-	expect_that(mn@identifier, matches("urn:node"))
+	expect_match(val, "node")
+	expect_match(mn@identifier, "urn:node")
 })
 test_that("MNode getObject(), getChecksum()", {
     library(dataone)
@@ -26,19 +26,19 @@ test_that("MNode getObject(), getChecksum()", {
     bytes <- getObject(mn, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
-    expect_that(cname, matches("XML"))
+    expect_match(cname, "XML")
     pid <- "solson.5.1"
     obj <- getObject(mn, pid)
     df <- read.csv(text=rawToChar(obj))
     cname <- class(df)[1]
-    expect_that(cname, matches("data.frame"))
+    expect_match(cname, "data.frame")
     cn <- CNode()
     knb <- getMNode(cn, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
     bytes <- getObject(mn, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
-    expect_that(cname, matches("XML"))
+    expect_match(cname, "XML")
     chksum <- getChecksum(mn, pid)
     expect_that(chksum, is_a("character"))
     expect_false(is.null(chksum))
@@ -50,8 +50,8 @@ test_that("MNode getSystemMetadata()", {
     pid <- "doi:10.5063/F1QN64NZ"
     sysmeta <- getSystemMetadata(mn, pid)
     cname <- class(sysmeta)[1]
-    expect_that(cname, matches("SystemMetadata"))
-    expect_that(sysmeta@identifier, matches("doi:10.5063/F1QN64NZ"))
+    expect_match(cname, "SystemMetadata")
+    expect_match(sysmeta@identifier, "doi:10.5063/F1QN64NZ")
 })
 
 test_that("MNode generateIdentifier()", {
@@ -67,8 +67,8 @@ test_that("MNode generateIdentifier()", {
       if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
-      expect_that(cname, matches("character"))
-      expect_that(newid, matches("urn:uuid:"))
+      expect_match(cname, "character")
+      expect_match(newid, "urn:uuid:")
     } else {
       skip("This test requires valid authentication.")
     }
@@ -89,8 +89,8 @@ test_that("MNode generateIdentifier() on API v1 node", {
       if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
-      expect_that(cname, matches("character"))
-      expect_that(newid, matches("urn:uuid:"))
+      expect_match(cname, "character")
+      expect_match(newid, "urn:uuid:")
     } else {
       skip("This test requires valid authentication.")
     }
@@ -172,9 +172,9 @@ test_that("MNode createObject(), updateObject(), archive()", {
       user <- dataone:::getAuthSubject(am, mn)
       newid <- generateIdentifier(mn, "UUID")
       cname <- class(newid)
-      expect_that(cname, matches("character"))
-      expect_that(newid, matches("urn:uuid:"))
-      expect_that(user, matches("cilogon|dataone|orcid"))
+      expect_match(cname, "character")
+      expect_match(newid, "urn:uuid:")
+      expect_match(user, "cilogon|dataone|orcid")
       # Create a data object, and convert it to csv format
       testdf <- data.frame(x=1:10,y=11:20)
       csvfile <- paste(tempfile(), ".csv", sep="")
@@ -213,21 +213,21 @@ test_that("MNode createObject(), updateObject(), archive()", {
       expect_false(is.null(newId))
       expect_match(newId, updateid)
       updsysmeta <- getSystemMetadata(mn, updateid)
-      expect_that(class(updsysmeta)[1], matches("SystemMetadata"))
-      expect_that(updsysmeta@obsoletes, matches(newid))
+      expect_match(class(updsysmeta)[1], "SystemMetadata")
+      expect_match(updsysmeta@obsoletes, newid)
       
       # Now get the sysmeta using the seriesId, if supported
       if(mn@APIversion >= "v2") {
         headSysmeta <- getSystemMetadata(mn, seriesId)
-        expect_that(class(headSysmeta)[1], matches("SystemMetadata"))
-        expect_that(updsysmeta@identifier, matches(headSysmeta@identifier))
+        expect_match(class(headSysmeta)[1], "SystemMetadata")
+        expect_match(updsysmeta@identifier, headSysmeta@identifier)
       }
       
       # Archive the object
       response <- archive(mn, newid)
-      expect_that(response, matches(newid))
+      expect_match(response, newid)
       newsysmeta <- getSystemMetadata(mn, newid)
-      expect_that(class(newsysmeta)[1], matches("SystemMetadata"))
+      expect_match(class(newsysmeta)[1], "SystemMetadata")
       expect_that(newsysmeta@archived, is_true())
     } else {
       skip("This test requires valid authentication.")
@@ -247,8 +247,8 @@ test_that("MNode createObject() works for large files", {
     mn <- getMNode(cn, "urn:node:mnStageUCSB2")
     newid <- generateIdentifier(mn, "UUID")
     cname <- class(newid)
-    expect_that(cname, matches("character"))
-    expect_that(newid, matches("urn:uuid:"))
+    expect_match(cname, "character")
+    expect_match(newid, "urn:uuid:")
     # Ensure the user is logged in before running the tests
     # Set 'user' to authentication subject, if available, so we will have permission to change this object
     am <- AuthenticationManager()
@@ -280,7 +280,7 @@ test_that("MNode createObject() works for large files", {
       # Note: createObject() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set
       createdId <- createObject(mn, newid, csvfile, sysmeta)
       expect_false(is.null(createdId))
-      expect_that(createdId, matches(newid)) 
+      expect_match(createdId, newid) 
       
       # Remove the big data file we createObjectd locally
       unlink(csvfile)
@@ -309,7 +309,7 @@ test_that("MNode getPackage() works", {
   # Can't be a valid pid because we just created the unique string.
   #notApid <- sprintf("urn:uuid:%s", UUIDgenerate())
   #err <- try(bagitFile <- getPackage(mn, id=notApid), silent=TRUE)
-  #expect_that(class(err), matches("try-error"))
+  #expect_match(class(err), "try-error")
   
 })
 

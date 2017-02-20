@@ -6,14 +6,14 @@ test_that("D1Client constructors", {
         library(dataone)
         cli <- new("D1Client")
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn.dataone.org/cn")
         
         cli <- new("D1Client", env="PROD", mNodeid="urn:node:KNB")
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
-        expect_that(cli@mn@baseURL, matches ("https://knb.ecoinformatics.org/knb/d1/mn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn.dataone.org/cn")
+        expect_match(cli@mn@baseURL, "https://knb.ecoinformatics.org/knb/d1/mn")
         
         # Skip the remainder of the tests because these test environments are 
         # often down due to upgrades, reconfiguring, testing new features.
@@ -21,37 +21,37 @@ test_that("D1Client constructors", {
         cn <- CNode("STAGING2")
         cli <- new("D1Client", cn=cn, mn=getMNode(cn, "urn:node:mnTestKNB"))
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn.stage-2.test.dataone.org/cn"))
-        expect_that(cli@mn@baseURL, matches ("https://dev.nceas.ucsb.edu/knb/d1/mn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn.stage-2.test.dataone.org/cn")
+        expect_match(cli@mn@baseURL, "https://dev.nceas.ucsb.edu/knb/d1/mn")
         
         cn <- CNode('STAGING2')
         mn <- getMNode(cn,'urn:node:mnTestKNB')
         cli <- new("D1Client", cn,mn)
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn.stage-2.test.dataone.org/cn"))
-        expect_that(cli@mn@baseURL, matches ("https://dev.nceas.ucsb.edu/knb/d1/mn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn.stage-2.test.dataone.org/cn")
+        expect_match(cli@mn@baseURL, "https://dev.nceas.ucsb.edu/knb/d1/mn")
         
         cli <- D1Client()
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn.dataone.org/cn")
         
         cli <- D1Client("STAGING")
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn-stage.test.dataone.org/cn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn-stage.test.dataone.org/cn")
         
         cli <- D1Client("SANDBOX")
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches ("https://cn-sandbox.test.dataone.org/cn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn-sandbox.test.dataone.org/cn")
         
         cli <- D1Client("DEV")
         expect_false(is.null(cli))
-        expect_that(class(cli), matches("D1Client"))
-        expect_that(cli@cn@baseURL, matches("https://cn-dev.test.dataone.org/cn"))
+        expect_match(class(cli), "D1Client")
+        expect_match(cli@cn@baseURL, "https://cn-dev.test.dataone.org/cn")
 })
 
 test_that("D1Client methods", {  
@@ -92,8 +92,8 @@ test_that("D1Client getDataObject", {
     library(digest)
     cli <- D1Client("PROD", "urn:node:KNB")
     expect_false(is.null(cli))
-    expect_that(class(cli), matches("D1Client"))
-    expect_that(cli@cn@baseURL, matches ("https://cn.dataone.org/cn"))
+    expect_match(class(cli), "D1Client")
+    expect_match(cli@cn@baseURL, "https://cn.dataone.org/cn")
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, cli@mn))
     if(authValid) {
@@ -105,13 +105,13 @@ test_that("D1Client getDataObject", {
     pid <- "solson.5.1"
     obj <- getDataObject(cli, pid)
     cname <- class(obj)[1]
-    expect_that(cname, matches("DataObject"))
-    expect_that(class(obj@sysmeta), matches("SystemMetadata"))
-    expect_that(getIdentifier(obj), matches(pid))
-    expect_that(getFormatId(obj), matches("text/csv"))
+    expect_match(cname, "DataObject")
+    expect_match(class(obj@sysmeta), "SystemMetadata")
+    expect_match(getIdentifier(obj), pid)
+    expect_match(getFormatId(obj), "text/csv")
     data <- getData(obj)
     sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-    expect_that(sha1, matches(obj@sysmeta@checksum))
+    expect_match(sha1, obj@sysmeta@checksum)
 })
 
 test_that("D1Client uploadDataObject with raw data works", {
@@ -130,7 +130,7 @@ test_that("D1Client uploadDataObject with raw data works", {
     if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Create DataObject for the science data 
     do <- new("DataObject", format="text/csv", dataobj=data, mnNodeId=getMNodeId(d1c))
-    expect_that(do@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(do@sysmeta@identifier, "urn:uuid")
     newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA, public=TRUE)
     expect_true(!is.null(newId))
   } else {
@@ -156,7 +156,7 @@ test_that("D1Client uploadDataObject with filename works", {
     if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Create DataObject for the science data 
     do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
-    expect_that(do@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(do@sysmeta@identifier, "urn:uuid")
     newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
     expect_true(!is.null(newId))
   } else {
@@ -187,7 +187,7 @@ test_that("D1Client uploadDataPackage works", {
     # Create DataObject for the science data 
     sciObj <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_that(sciObj@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(sciObj@sysmeta@identifier, "urn:uuid")
     sciObj <- setPublicAccess(sciObj)
     accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
     sciObj <- addAccessRule(sciObj, accessRules)
@@ -197,7 +197,7 @@ test_that("D1Client uploadDataPackage works", {
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
     metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
-    expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
     addData(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
@@ -248,7 +248,7 @@ test_that("D1Client uploadDataPackage works for a minimal DataPackage", {
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
     metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
-    expect_that(metadataObj@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
     addData(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
@@ -289,7 +289,7 @@ test_that("D1Client createD1Object works", {
     suppressWarnings(stf <- charToRaw(convert.csv(d1c, testdf)))
     suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(sciObj@dataObject@sysmeta@identifier, "urn:uuid")
     suppressWarnings(sciObj <- setPublicAccess(sciObj))
     # Upload the data object to DataONE
     suppressWarnings(success <- createD1Object(d1c, sciObj))
@@ -312,19 +312,19 @@ test_that("D1Client getD1Object works", {
     if(dataone:::getAuthMethod(am, d1c@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   }
   expect_false(is.null(d1c))
-  expect_that(class(d1c), matches("D1Client"))
-  expect_that(d1c@cn@baseURL, matches("https://cn.dataone.org/cn"))
+  expect_match(class(d1c), "D1Client")
+  expect_match(d1c@cn@baseURL, "https://cn.dataone.org/cn")
     
   # Try retrieving a known object from the PROD environment
   pid <- "solson.5.1"
   suppressWarnings(dataObj <- getD1Object(d1c, pid))
-  expect_that(class(dataObj)[1], matches("DataObject"))
-  expect_that(class(dataObj@sysmeta), matches("SystemMetadata"))
-  expect_that(getIdentifier(dataObj), matches(pid))
-  expect_that(getFormatId(dataObj), matches("text/csv"))
+  expect_match(class(dataObj)[1], "DataObject")
+  expect_match(class(dataObj@sysmeta), "SystemMetadata")
+  expect_match(getIdentifier(dataObj), pid)
+  expect_match(getFormatId(dataObj), "text/csv")
   data <- getData(dataObj)
   sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-  expect_that(sha1, matches(dataObj@sysmeta@checksum))
+  expect_match(sha1, dataObj@sysmeta@checksum)
 })
 
 
@@ -349,14 +349,14 @@ test_that("D1Client listMemberNodes() works", {
   d1c <- D1Client("PROD")
   nodelist <- listMemberNodes(d1c)
   expect_that(length(nodelist) > 0, is_true())
-  expect_that(class(nodelist[[1]]), matches("Node"))
-  expect_that(nodelist[[1]]@identifier, matches("urn:node:"))
-  expect_that(nodelist[[1]]@type, matches("cn|mn"))
-  expect_that(nodelist[[1]]@state, matches("up"))
-  expect_that(nodelist[[length(nodelist)]]@identifier, matches("urn:node:"))
-  expect_that(nodelist[[length(nodelist)]]@baseURL, matches("http"))
-  expect_that(nodelist[[length(nodelist)]]@subject, matches("urn:node:"))
-  expect_that(nodelist[[length(nodelist)]]@type, matches("cn|mn"))
+  expect_match(class(nodelist[[1]]), "Node")
+  expect_match(nodelist[[1]]@identifier, "urn:node:")
+  expect_match(nodelist[[1]]@type, "cn|mn")
+  expect_match(nodelist[[1]]@state, "up")
+  expect_match(nodelist[[length(nodelist)]]@identifier, "urn:node:")
+  expect_match(nodelist[[length(nodelist)]]@baseURL, "http")
+  expect_match(nodelist[[length(nodelist)]]@subject, "urn:node:")
+  expect_match(nodelist[[length(nodelist)]]@type, "cn|mn")
 })
 
 test_that("D1Client d1IdentifierSearch works", {
@@ -401,7 +401,7 @@ test_that("D1Client createDataPackage works", {
     emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
     emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
     suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
-    expect_that(metadataObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(metadataObj@dataObject@sysmeta@identifier, "urn:uuid")
     suppressWarnings(addData(dp, metadataObj))
     expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
     
@@ -411,7 +411,7 @@ test_that("D1Client createDataPackage works", {
     sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
     suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_that(sciObj@dataObject@sysmeta@identifier, matches("urn:uuid"))
+    expect_match(sciObj@dataObject@sysmeta@identifier, "urn:uuid")
     suppressWarnings(addData(dp, sciObj, metadataObj))
     expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
     

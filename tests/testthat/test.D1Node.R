@@ -34,7 +34,7 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
   expect_is(result[[1]]$size, "numeric")
-  expect_match(result[[1]]$abstract, "chlorophyll")
+  expect_match(result[[1]]$abstract, "chlorophyll", ignore.case=TRUE)
   
   # Test a query that contains embedded quotes
   queryParamList <- list(q="(attribute:lake) and (attribute:\"Percent Nitrogen\")", rows="10",
@@ -85,12 +85,12 @@ test_that("Object listing works for CNode, MNode", {
   fromDate <- "20-01-01T01:01:01.000+00:00" # Invalid year
   toDate <- "2015-12-31T01:01:01.000+00:00" # valid
   err <- try(objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count), silent=TRUE)
-  expect_that(class(err), (matches("try-error")))
+  expect_match(class(err), ("try-error"))
   
   fromDate <- "2013-01-01T01:01:01.000+00:00" # valid
   toDate <- "01/01/15" # Invalid - not ISO 8601
   try(objects <- listObjects(cn, fromDate=fromDate, toDate=toDate, formatId=formatId, start=start, count=count), silent=TRUE)
-  expect_that(class(err), (matches("try-error")))
+  expect_match(class(err), ("try-error"))
 
 })
 

@@ -10,8 +10,8 @@ test_that("CertificateManager getCertLocation()", {
   # No cert found so skip rest of test
   if(!is.null(location)) {
     cname <- class(location)
-    expect_that(cname, matches("character"), info="Tests require a valid X509 certificate")
-    expect_that(location, matches("x509"), info="Tests require a valid X509 certificate")
+    expect_match(cname, "character", info="Tests require a valid X509 certificate")
+    expect_match(location, "x509", info="Tests require a valid X509 certificate")
   }
 })
 
@@ -64,10 +64,10 @@ test_that("showClientSubject", {
     suppressWarnings(expires <- getCertExpires(cm))
     if (is.null(expires)) {
         # Testing no certificate case
-        expect_that(result, matches("public"))
+        expect_match(result, "public")
     } else if (suppressWarnings(isCertExpired(cm))) {
         # Testing expired certificate case
-        expect_that(result, matches("public"))
+        expect_match(result, "public")
     } else {
         # Testing normal case
         expect_that(length(result) > 0, is_true())
@@ -83,10 +83,10 @@ test_that("obscureCert and restoreCert", {
     if (!subject1 == "public") {
       suppressWarnings(cm <- obscureCert(cm))
       suppressWarnings(subject2 <- showClientSubject(cm))
-      expect_that(subject2, matches("public"))
+      expect_match(subject2, "public")
       suppressWarnings(restoreCert(cm))
       suppressWarnings(subject3 <- showClientSubject(cm))
-      expect_that(subject3, matches(subject1))
+      expect_match(subject3, subject1)
     }
 })
 
@@ -106,7 +106,7 @@ test_that("custom certificate location", {
         file.copy(cert, custom_cert)
         cm@location <- custom_cert
         suppressWarnings(subject2 <- showClientSubject(cm))
-        expect_that(subject2, matches(subject1))
+        expect_match(subject2, subject1)
         suppressWarnings(newCertLoc <- getCertLocation(cm))
         expect_equal(custom_cert, newCertLoc)
     }
