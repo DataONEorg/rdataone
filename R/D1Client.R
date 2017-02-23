@@ -593,7 +593,11 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMN()")
     }
-  
+    
+    # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
+    if(is.na(resolveURI)) {
+        resolveURI <- paste0(x@cn@endpoint, "/resolve")
+    } 
     # Ensure that the resmap has the same permissions as the package members, so
     # create an access policy for the resmap that will have the same APs as the
     # package members.
