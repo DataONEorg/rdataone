@@ -1,6 +1,6 @@
 context("D1Node tests")
 test_that("dataone library loads", {
-  library(dataone)
+  expect_true(require(dataone))
 })
 
 test_that("CNode ping", {

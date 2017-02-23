@@ -1,6 +1,6 @@
 context("auth_request tests")
 test_that("dataone library loads", {
-	library(dataone)
+	expect_true(require(dataone))
 })
 
 test_that("auth_get", {

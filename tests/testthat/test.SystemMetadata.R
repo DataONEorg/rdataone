@@ -1,6 +1,6 @@
 context("SystemMetadata tests")
 test_that("dataone library loads", {
-	library(dataone)
+	expect_true(require(dataone))
 })
 test_that("SystemMetadata constructors", {
     library(datapack)

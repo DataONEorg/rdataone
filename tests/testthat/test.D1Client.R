@@ -1,6 +1,6 @@
 context("D1Client tests")
 test_that("dataone library loads", {
-	library(dataone)
+	expect_true(require(dataone))
 })
 test_that("D1Client constructors", {
         library(dataone)
