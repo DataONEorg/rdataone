@@ -191,24 +191,24 @@ test_that("D1Client uploadDataPackage works", {
     sciObj <- setPublicAccess(sciObj)
     accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
     sciObj <- addAccessRule(sciObj, accessRules)
-    addData(dp, sciObj)
+    dp <- addData(dp, sciObj)
     expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
     metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
     expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
-    addData(dp, metadataObj)
+    dp <- addData(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Associate the metadata object with the science object it describes
-    insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
+    dp <- insertRelationship(dp, subjectID=getIdentifier(metadataObj), objectIDs=getIdentifier(sciObj))
     
     # Upload the data package to DataONE    
     resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
     expect_true(!is.null(resourceMapId))
     
-    # Now test if the package members can be uploaded a second time. uploadDataObject should test the sysmeta@dataUploaded of each object
+        # Now test if the package members can be uploaded a second time. uploadDataObject should test the sysmeta@dataUploaded of each object
     # and not let it be uploaded again.
     ids <- getIdentifiers(dp)
     for(idInd in 1:length(ids)) {
@@ -249,7 +249,7 @@ test_that("D1Client uploadDataPackage works for a minimal DataPackage", {
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
     metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
     expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
-    addData(dp, metadataObj)
+    dp <- addData(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Upload the data package to DataONE    
