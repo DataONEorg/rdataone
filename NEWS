@@ -1,3 +1,15 @@
+# Version 2.0.2
+
+## Bug Fixes
+* Fixed a problem where the unit tests were failing due to an incompatibility with 
+  testthat 1.0.2. All unit tests are now passing with testthat 1.0.2. (#171)
+  
+* uploadDataPackage() now uses the @cn slot to set the value for
+  the default resolveURI (#170)
+  
+* All methods that send a PID to DataONE now property URLencode
+  the PID. (#163)
+
 # Version 2.0.1
 
 ## Bug Fixes
