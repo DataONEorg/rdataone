@@ -1,10 +1,21 @@
 ## Test environments
 
-* OS X 10.11.6, R 3.3.1
-* Ubuntu 14.04, R 3.3.1
-* Windows 7, R 3.3.1 (i386, x86_64)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.1 (2016-06-21)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R devel (2016-08-16 r71104)
+* macOS 10.12.3 R 3.3.2
+* Ubuntu 14.04, R 3.3.2
+* Windows 7, R 3.3.2 (i386, x86_64)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.2 (2016-10-31)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R unstable (2017-03-02 r72298)
+
+## Changes since last release
+
+* Fixed a problem where the unit tests were failing due to an incompatibility with 
+  testthat 1.0.2. All unit tests are now passing with testthat 1.0.2. (#171)
+  
+* uploadDataPackage() now uses the @cn slot to set the value for
+  the default resolveURI (#170)
+  
+* All methods that send a PID to DataONE now property URLencode
+  the PID. (#163)
 
 ## R CMD check results
 
@@ -16,8 +27,8 @@
       - API (4:40)
       - DataONE (4:27, 18:9, 18:53)
       - metadata (17:57, 21:34, 22:5)
-* This release fixes testing errors that had arisen due to the test web service that are
-  accessed during testing being down.  These issues have been resolved, and all tests pass
+* This release fixes testing errors due to incompatibility with a new release of the
+  testing software testthat v 1.0.2. These issues have been resolved, and all tests pass
   now, and example code runs correctly.
 
 ## Downstream dependencies
