@@ -795,8 +795,17 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     
   queryUrl <- paste(serviceUrl, queryParams, sep="")
 
+  response <- NULL
   # Send the query to the Node
-  response <- auth_get(queryUrl, node=x)
+  tryCatch({
+    response <- auth_get(queryUrl, node=x)
+  }, error = function(err) {
+      msg <- sprintf("Error accessing %s: %s\n", queryUrl, conditionMessage(err))
+      message(msg)
+  })
+  
+  if(is.null(response)) return(NULL)
+  
   if(response$status != "200") {
     message(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)
