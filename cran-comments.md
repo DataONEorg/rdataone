@@ -1,9 +1,8 @@
 ## Test environments
 
 * macOS 10.12.3 R 3.3.2
-* Ubuntu 14.04, R 3.3.2
+* Ubuntu 14.04.5, R 3.3.2
 * Windows 7, R 3.3.2 (i386, x86_64)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.3.2 (2016-10-31)
 * Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R unstable (2017-03-02 r72298)
 
 ## Changes since last release
