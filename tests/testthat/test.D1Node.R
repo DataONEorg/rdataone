@@ -25,6 +25,7 @@ test_that("CNode object index query works with query list param", {
   expect_true(length(result) == 2)
   expect_match(result[[2]]$id, "doi:")
   size <- result[[1]]$size
+  expect_is(result[[1]]$dateUploaded, "POSIXct")
   expect_is(size, "numeric")
 
   # Test query of CN object index using query list
@@ -34,6 +35,7 @@ test_that("CNode object index query works with query list param", {
   expect_match(result[[1]]$id, "doi:")
   size <- result[[1]]$size
   expect_is(result[[1]]$size, "numeric")
+  expect_is(result[[1]]$dateUploaded, "POSIXct")
   expect_match(result[[1]]$abstract, "chlorophyll", ignore.case=TRUE)
   
   # Test a query that contains embedded quotes

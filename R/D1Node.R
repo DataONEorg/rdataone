@@ -927,7 +927,7 @@ parseSolrField <- function(xNode, parse) {
     } else if (nodeName == "int") {
       return(as.numeric(xmlValue(xNode)))
     } else if (nodeName == "date") {
-      return(as.Date(xmlValue(xNode)))
+      return(as.POSIXct(xmlValue(xNode), tz="UTC", format="%Y-%m-%dT%H:%M:%S"))
     } else {
       warning(sprintf("Unhandled Solr field data type: %s\n", nodeName))
     }
