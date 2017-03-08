@@ -28,4 +28,3 @@ DataONE, or utilize any other methods that require authentication.
 \seealso{
 \code{\link{restoreCert}} is this method's inverse operation
 }
-

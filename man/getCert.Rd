@@ -21,4 +21,3 @@ The filename of the current DataONE X.509 Certificate if it is available.
 \description{
 Get the DataONE X.509 Certificate location.
 }
-

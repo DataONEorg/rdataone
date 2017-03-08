@@ -30,4 +30,3 @@ The subject name used in both the AccessPolicy and in the \code{'subject'}
 argument to this method is a string value, but is generally formatted as an X.509
 name formatted according to RFC 2253.
 }
-

@@ -33,4 +33,3 @@ cnUrl <- getEndpoint(cli)
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

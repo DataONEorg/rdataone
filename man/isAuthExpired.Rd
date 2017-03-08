@@ -23,4 +23,3 @@ A logical value: TRUE if authenentication has expired, FALSE if not.
 \description{
 Check if the currently valid authentication method has reached the expiration time.
 }
-

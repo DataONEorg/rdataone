@@ -4,6 +4,7 @@
 \name{documented.entityNames}
 \alias{documented.entityNames}
 \alias{documented.entityNames,EMLParser-method}
+\alias{documented.entityNames}
 \title{Get the entity names associated with each table}
 \usage{
 documented.entityNames(x, ...)
@@ -24,4 +25,3 @@ The entity names associated with each table are returned.
 \author{
 rnahf
 }
-

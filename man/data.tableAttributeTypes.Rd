@@ -4,6 +4,7 @@
 \name{data.tableAttributeTypes}
 \alias{data.tableAttributeTypes}
 \alias{data.tableAttributeTypes,EMLParser,numeric-method}
+\alias{data.tableAttributeTypes}
 \title{returns the attributes' data types}
 \usage{
 data.tableAttributeTypes(x, index, ...)
@@ -27,4 +28,3 @@ the specified data table
 \author{
 rnahf
 }
-

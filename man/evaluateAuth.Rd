@@ -31,4 +31,3 @@ and not expired, then information for the token is returned. If a valid token do
 not exist, then the X.509 certificate is checked, if it exists. If it is valid
 then information is returned for the certificate.
 }
-

@@ -4,6 +4,7 @@
 \name{data.formatFamily}
 \alias{data.formatFamily}
 \alias{data.formatFamily,EMLParser,numeric-method}
+\alias{data.formatFamily}
 \title{Data Format}
 \usage{
 data.formatFamily(x, index, ...)
@@ -26,4 +27,3 @@ Get the table format family.
 \author{
 rnahf
 }
-

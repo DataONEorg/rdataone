@@ -4,6 +4,7 @@
 \name{data.tableAttributeNames}
 \alias{data.tableAttributeNames}
 \alias{data.tableAttributeNames,EMLParser,numeric-method}
+\alias{data.tableAttributeNames}
 \title{returns the attribute names}
 \usage{
 data.tableAttributeNames(x, index, ...)
@@ -27,4 +28,3 @@ the specified data table
 \author{
 rnahf
 }
-

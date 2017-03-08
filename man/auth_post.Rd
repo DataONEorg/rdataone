@@ -23,4 +23,3 @@ POST data to a URL using an HTTP POST request using authentication credentials
 provided in a client certificate.  Authenticated access depends on the suggested
 openssl package. If the openssl package is not installed, then the request fails.
 }
-

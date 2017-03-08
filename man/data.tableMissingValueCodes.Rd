@@ -4,6 +4,7 @@
 \name{data.tableMissingValueCodes}
 \alias{data.tableMissingValueCodes}
 \alias{data.tableMissingValueCodes,EMLParser,numeric-method}
+\alias{data.tableMissingValueCodes}
 \title{returns missing value codes}
 \usage{
 data.tableMissingValueCodes(x, index, ...)
@@ -27,4 +28,3 @@ the specified data table
 \author{
 rnahf
 }
-

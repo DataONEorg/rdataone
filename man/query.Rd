@@ -91,4 +91,3 @@ mySearchTerms <- list(abstract="kelp", attribute="biomass")
 result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
 }
 }
-

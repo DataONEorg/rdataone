@@ -13,5 +13,5 @@ no longer supported.
  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid.}
 }
 }
-\keyword{internal}
 
+\keyword{internal}

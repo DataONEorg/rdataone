@@ -26,6 +26,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.
 \describe{
 \item{\code{endpoint}}{The url to access node services, which is the baseURL plus the version string}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -39,6 +40,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.
  \item{\code{\link{updateSystemMetadata}}}{: Update the system metadata associated with an object.}
 }
 }
+
 \examples{
 library(dataone)
 library(uuid)
@@ -68,4 +70,3 @@ response <- createObject(mn, newid, csvfile, sysmeta)
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
-

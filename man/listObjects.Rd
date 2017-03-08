@@ -60,4 +60,3 @@ objects[1]$objectInfo$identifier
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_read.listObjects}
 }
-

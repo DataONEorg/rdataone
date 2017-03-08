@@ -17,7 +17,7 @@
 
 \item{\code{xmlDocRoot}}{the xml representation of the metadata}
 }}
+
 \author{
 rnahf
 }
-

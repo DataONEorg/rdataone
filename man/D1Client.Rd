@@ -4,9 +4,9 @@
 \name{D1Client}
 \alias{D1Client}
 \alias{D1Client,ANY,ANY-method}
-\alias{D1Client,CNode,MNode-method}
 \alias{D1Client,character,ANY-method}
 \alias{D1Client,character,character-method}
+\alias{D1Client,CNode,MNode-method}
 \title{The DataONE client class used to download, update and search for data in the DataONE network.}
 \usage{
 D1Client(x, y, ...)
@@ -44,4 +44,3 @@ cli <- D1Client(cn,mn)
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

@@ -36,6 +36,7 @@ of their existing accounts. For more information about the CILogon service, see
 \describe{
 \item{\code{obscured}}{Value of type \code{"character"} Is authentication disabled (obscured)?}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -55,7 +56,7 @@ of their existing accounts. For more information about the CILogon service, see
  
 }
 }
+
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
-

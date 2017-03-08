@@ -33,4 +33,3 @@ creds <- echoCredentials(cn)
 print(creds$person$subject)
 }
 }
-

@@ -16,6 +16,7 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 
 \item{\code{mn}}{The Member Node associated with this D1Client object}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -37,7 +38,7 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
  \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
 }
 }
+
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
-

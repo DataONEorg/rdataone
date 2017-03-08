@@ -34,4 +34,3 @@ fullyEncodedPath <- paste0("cn/v1/object/",
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

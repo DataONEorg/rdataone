@@ -24,4 +24,3 @@ This method is intended to be used for authentication testing.
 \code{isAuthValid} will return FALSE. Authentication can be re-enabled by calling
 \code{restoreAuth}.
 }
-

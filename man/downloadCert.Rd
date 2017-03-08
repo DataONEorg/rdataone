@@ -24,4 +24,3 @@ the certificate is saved in the default Globus location for certificates
 package will use the certificate for all authenticated operations.  Deleting 
 the certificate file is the equivalent of logging out.
 }
-

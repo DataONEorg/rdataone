@@ -32,4 +32,3 @@ cat(sprintf("Query engine name: \%s\\n", engineDesc$name))
 engineDesc <- getQueryEngineDescription(cn, "solr")
 head(engineDesc$queryFields, n=3L)
 }
-

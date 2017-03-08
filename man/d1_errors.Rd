@@ -14,4 +14,3 @@ d1_errors(x)
 This function parses a DataONE service response message for errors, and extracts and
 prints error information.
 }
-

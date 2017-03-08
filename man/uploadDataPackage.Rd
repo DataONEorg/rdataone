@@ -74,4 +74,3 @@ packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberRepli
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

@@ -34,4 +34,3 @@ In DataONE version 2.0, authentication tokens can also be used.
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

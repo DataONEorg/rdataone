@@ -13,6 +13,7 @@ a wrapper for data and associated SystemMetadata.
 \describe{
 \item{\code{dataObject}}{A backing instance of a DataObject, to which all methods and state are proxied}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -25,8 +26,8 @@ a wrapper for data and associated SystemMetadata.
  \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
 }
 }
+
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
 \keyword{classes}
-

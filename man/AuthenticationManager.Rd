@@ -20,4 +20,3 @@ the AuthenticationManager object
 Construct an instance of AuthenticationManager to provide mechanisms to load, verify, and 
 display DataONE authenticatin information.
 }
-

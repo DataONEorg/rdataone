@@ -10,4 +10,3 @@ get_user_agent()
 Get a string representation of the user agent to be sent to the server along
 with other request details.
 }
-

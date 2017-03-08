@@ -38,4 +38,3 @@ sciObj <- new("DataObject", id=newId, format="text/csv",filename=csvfile)
 dp <- addData(dp, do = sciObj)
 }
 }
-

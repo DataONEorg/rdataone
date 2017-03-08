@@ -34,4 +34,3 @@ cat(sprintf("format Id: \%s\\n", fmt$id))
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

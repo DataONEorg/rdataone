@@ -50,4 +50,3 @@ canChange <- isAuthorized(mn, pid, "changePermission")
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

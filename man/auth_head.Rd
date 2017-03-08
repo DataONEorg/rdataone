@@ -27,4 +27,3 @@ mechanisms to generate a config option. Use httr_options() to see a complete lis
 of available options. Note: The HEAD method is identical to GET except that the server MUST 
 NOT return a message-body in the response.
 }
-

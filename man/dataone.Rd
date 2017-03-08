@@ -23,10 +23,10 @@ to nodes in the DataONE network.
  \item{\code{\link[=MNode-class]{MNode}}}{: MNode provides functions interacting with the a DataONE Member Node repository.}
 }
 }
-\author{
-Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
-}
+
 \seealso{
 A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
 }
-
+\author{
+Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
+}

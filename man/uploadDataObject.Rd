@@ -51,4 +51,3 @@ newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

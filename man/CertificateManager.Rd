@@ -25,4 +25,3 @@ location is searched, which is \code{'/tmp/x509up_u${UID}'} on Unix
 or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} if \code{'${UID}'} 
 is not defined.
 }
-

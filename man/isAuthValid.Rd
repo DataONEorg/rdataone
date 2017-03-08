@@ -28,4 +28,3 @@ authentication tokens can only be used for DataONE v2 or higher nodes. X.509 cer
 with DataONE v1 or higher nodes. 
 See the \emph{"dataone"} vignette \emph{"dataone-overview"} for more information on authentication.
 }
-

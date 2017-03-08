@@ -33,4 +33,3 @@ nodeid <- nodelist[[2]]@identifier
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

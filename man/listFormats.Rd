@@ -30,4 +30,3 @@ formats <- listFormats(cn)
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

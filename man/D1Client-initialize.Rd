@@ -2,8 +2,8 @@
 % Please edit documentation in R/D1Client.R
 \docType{methods}
 \name{initialize,D1Client-method}
-\alias{D1Client-initialize}
 \alias{initialize,D1Client-method}
+\alias{D1Client-initialize}
 \title{Initialize a D1Client object}
 \usage{
 \S4method{initialize}{D1Client}(.Object, cn = NA, mn = NA,
@@ -30,4 +30,3 @@ d1c <- D1Client("PROD", "urn:node:KNB")
 \seealso{
 \code{\link[=D1Client-class]{dataone}}{ class description.}
 }
-

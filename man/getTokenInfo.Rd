@@ -20,4 +20,3 @@ A data.frame containing information about the authentication token.
 The DataONE authentication token is read, if it has been
 set, and the information it contains is returned as a data.frame.
 }
-

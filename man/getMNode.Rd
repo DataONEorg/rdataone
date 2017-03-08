@@ -35,4 +35,3 @@ mn <- getMNode(cn, "urn:node:KNB")
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

@@ -16,6 +16,7 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
 
 \item{\code{serviceUrls}}{A data.frame contains URL endpoints for certain services}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -36,7 +37,7 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
  \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
 }
 }
+
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
-

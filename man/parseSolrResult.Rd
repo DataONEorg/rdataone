@@ -23,4 +23,3 @@ resultList The Solr result as an R list
 \description{
 Solr output that is specified with a writer type of XML \code{'&wt="xml"'}
 }
-

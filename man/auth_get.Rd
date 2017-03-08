@@ -25,4 +25,3 @@ Configuration options for httr/RCurl can be passed using the normal config()
 mechanisms to generate a config option. Use httr_options() to see a complete list
 of available options.
 }
-

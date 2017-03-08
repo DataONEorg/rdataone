@@ -22,4 +22,3 @@ The expiration date for the current authentication mechanism being used.
 The expiration date of the current authentication method, either
 authentication token or X.509 certificate, is returned as a Greenich Mean Time (GMT) value.
 }
-

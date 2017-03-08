@@ -3,8 +3,8 @@
 \docType{methods}
 \name{d1SolrQuery}
 \alias{d1SolrQuery}
-\alias{d1SolrQuery,D1Client,character-method}
 \alias{d1SolrQuery,D1Client,list-method}
+\alias{d1SolrQuery,D1Client,character-method}
 \title{A method to query the DataONE solr endpoint of the Coordinating Node.}
 \usage{
 d1SolrQuery(x, solrQuery)
@@ -39,4 +39,3 @@ result <- d1SolrQuery(d1c, queryParams)
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

@@ -3,9 +3,9 @@
 \docType{methods}
 \name{asDataFrame}
 \alias{asDataFrame}
-\alias{asDataFrame,D1Object,ANY-method}
-\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
 \alias{asDataFrame,D1Object,D1Object-method}
+\alias{asDataFrame,D1Object,AbstractTableDescriber-method}
+\alias{asDataFrame,D1Object,ANY-method}
 \title{return the D1Object data as a data.frame.}
 \usage{
 asDataFrame(x, reference, ...)
@@ -29,4 +29,3 @@ how to parse the data table (which parameters to set)
 'reference' is the metadata D1Object that gives instruction on how to read the data
 into the dataFrame
 }
-

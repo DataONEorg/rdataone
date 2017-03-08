@@ -13,4 +13,3 @@
 \description{
 Get the data content of a D1Object.
 }
-

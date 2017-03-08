@@ -37,4 +37,3 @@ describeObject(mn, "adfadf") # warning message when wrong pid
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe}
 }
-

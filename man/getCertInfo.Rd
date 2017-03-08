@@ -20,4 +20,3 @@ A data.frame containing informoration about the X.509 certificate.
 The DataONE X.509 certificate is read, if it is present and the
 information contained in the certficate is returned as a data.frame.
 }
-

@@ -23,4 +23,3 @@ The return types handled by this function are:
     case the DataONE response is parsed in an attemp to retrieve a
     meaningfull error message.
 }
-

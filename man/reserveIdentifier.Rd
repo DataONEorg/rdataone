@@ -43,4 +43,3 @@ newId <- reserveIdentifier(cn, myId)
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}
 }
-

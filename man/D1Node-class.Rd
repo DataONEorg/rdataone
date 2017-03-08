@@ -37,6 +37,7 @@ methods that are common between these two child classes.
 
 \item{\code{env}}{a character string, either 'prod' if this node is in the production environment, otherwise 'test'}
 }}
+
 \section{Methods}{
 
 \itemize{

@@ -33,4 +33,3 @@ sdf <- convert.csv(d1c, testdf)
 \seealso{
 \code{\link[=D1Client-class]{D1Client}}{ class description.}
 }
-

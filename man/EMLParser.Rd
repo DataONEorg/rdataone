@@ -18,4 +18,3 @@ EMLParser(d1Object, ...)
 \description{
 Construct an EML parser object.
 }
-

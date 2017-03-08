@@ -45,5 +45,5 @@ marked as Defunct and removed in a future version.
  \item{\code{\link{getCN}}}{: Get the coordinating node associated with this D1Client object.}
 }
 }
-\keyword{internal}
 
+\keyword{internal}

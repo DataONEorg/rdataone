@@ -28,4 +28,3 @@ cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 isAlive <- ping(mn)
 }
-

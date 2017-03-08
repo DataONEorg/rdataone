@@ -19,4 +19,3 @@ The expiration date for the current authentication mechanism being used.
 \description{
 Restore authentication (after being disabled with \code{obscureAuth}).
 }
-

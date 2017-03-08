@@ -25,4 +25,3 @@ characters, and double-quote if necessary.
 \examples{
 encodeSolr("this & that")
 }
-

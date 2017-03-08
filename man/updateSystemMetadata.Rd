@@ -43,4 +43,3 @@ Please see the vignette *upload-data* for an example: \code{vignette("upload-dat
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 }
-

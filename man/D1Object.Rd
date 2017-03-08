@@ -18,4 +18,3 @@ Create a D1Object instance.
 \seealso{
 \code{\link[=D1Object-class]{D1Object}}{ class description.}
 }
-

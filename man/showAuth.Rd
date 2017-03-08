@@ -20,4 +20,3 @@ showAuth(.Object, ...)
 \description{
 Display all authentication information
 }
-

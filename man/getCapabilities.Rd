@@ -31,4 +31,3 @@ xml <- getCapabilities(mn)
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_core.getCapabilities}
 }
-

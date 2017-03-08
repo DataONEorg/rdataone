@@ -3,8 +3,8 @@
 \docType{methods}
 \name{MNode}
 \alias{MNode}
-\alias{MNode,D1Node-method}
 \alias{MNode,character-method}
+\alias{MNode,D1Node-method}
 \title{Create a MNode object representing a DataONE Member Node repository.}
 \usage{
 MNode(x)
@@ -35,4 +35,3 @@ mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
 \seealso{
 \code{\link[=MNode-class]{MNode}}{ class description.}
 }
-

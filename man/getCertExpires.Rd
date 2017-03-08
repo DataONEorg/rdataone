@@ -22,4 +22,3 @@ POSIXct value
 Each X.509 has a range of certificate validity times.  This method returns the X.509 
 \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
 }
-

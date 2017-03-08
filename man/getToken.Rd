@@ -27,4 +27,3 @@ Get the value of the DataONE Authentication Token, if one exists.
 A token value is retrieved based on the DataONE environment that the specified node is
 located in, either the production environment or a test environment.
 }
-

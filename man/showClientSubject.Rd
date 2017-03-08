@@ -24,4 +24,3 @@ field of the X.509 certificate.  The value is a Distinguished Name, and can be u
 require a user identity for access control authorization. If the certificate is missing on expired, then
 the subject 'public' is returned.
 }
-

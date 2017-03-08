@@ -24,4 +24,3 @@ A certificate is expired if any of the following conditions hold: 1) the current
 certificate validity dates, 2) the certificate is not valid according to a trusted Certificate Authority, or
 3) no certificate can be found.
 }
-

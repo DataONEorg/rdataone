@@ -29,4 +29,3 @@ argument is used to determine the authentication mechanism that is appropriate f
 For example, authentication tokens are supported on DataONE nodes that use the DataONE V2.0 API or higher, so if the 
 node uses the V1 API, then only an X.509 certificate can be used.
 }
-

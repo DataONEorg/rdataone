@@ -67,4 +67,3 @@ createObject(mn, newid, csvfile, sysmeta)
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
 }
-

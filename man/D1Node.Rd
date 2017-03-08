@@ -21,4 +21,3 @@ the Node object representing the DataONE environment
 \description{
 Create a D1Node object.
 }
-

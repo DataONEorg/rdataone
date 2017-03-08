@@ -27,4 +27,3 @@ operations.
 \seealso{
 \code{\link{obscureCert}} is this method's inverse operation
 }
-

@@ -26,4 +26,3 @@ the D1Object.
 \seealso{
 \code{\link[=DataObject-class]{DataObject}}{ class description.}
 }
-

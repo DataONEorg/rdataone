@@ -23,4 +23,3 @@ The Node object with modified capabilities properties from the XML
 \description{
 Construct a Node, using a passed in capabilities XML
 }
-

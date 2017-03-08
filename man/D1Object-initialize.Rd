@@ -2,8 +2,8 @@
 % Please edit documentation in R/D1Object.R
 \docType{methods}
 \name{initialize,D1Object-method}
-\alias{D1Object-initialize}
 \alias{initialize,D1Object-method}
+\alias{D1Object-initialize}
 \title{Initialize a D1Object}
 \usage{
 \S4method{initialize}{D1Object}(.Object, id, data, format,
@@ -26,4 +26,3 @@ Initialize a D1Object
 \seealso{
 \code{\link[=D1Object-class]{D1Object}}{ class description.}
 }
-

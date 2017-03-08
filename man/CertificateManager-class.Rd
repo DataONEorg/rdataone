@@ -45,6 +45,7 @@ the first time you interact with DataONE each day.
 
 \item{\code{obscuredpath}}{value of type \code{"character"}, containing the path used to temporarily obscure a certificate}
 }}
+
 \section{Methods}{
 
 \itemize{
@@ -58,6 +59,7 @@ the first time you interact with DataONE each day.
  \item{\code{\link{restoreCert}}}{: Restore the CILogon client certificate by renaming it to its original location}
 }
 }
+
 \examples{
 \dontrun{
 cm <- suppressWarnings(CertificateManager())
@@ -69,11 +71,10 @@ cm <- obscureCert(cm)
 cm <- restoreCert(cm)
 }
 }
-\author{
-Matthew Jones, Rob Nahf
-}
 \seealso{
 \code{\link{dataone}}{ package description.}
 }
+\author{
+Matthew Jones, Rob Nahf
+}
 \keyword{classes}
-
