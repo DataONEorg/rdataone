@@ -842,13 +842,17 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     res <- parseSolrResult(xmlDoc, parse)
     dfAll <- data.frame()
     if (length(res) > 0) {
-      for (i in 1:length(res)) {
-        df1 <- as.data.frame(res[[i]], stringsAsFactors=FALSE)
-        # Have to use plyr:rbind.fill, as each row from the list could contain
-        # a different number of field values, and hence data frame columns, and
-        # each row of the data frame must have the same number of columns. Thanks H.W. for rbind.fill!
-        dfAll <- rbind.fill(dfAll, df1)
-      }
+        # Simplify each result and cast to a data.frame
+        simplified <- lapply(res, function(r) {
+            # Simplify multi-valued fields into space-separted character vectors
+            for (n in names(r)) {
+                r[[n]] <- paste(r[[n]], collapse = " ")
+            }
+            
+            as.data.frame(r, stringsAsFactors = FALSE)
+        })
+        
+        dfAll <- do.call(rbind.fill, simplified)
     }
     res <- dfAll
   }
