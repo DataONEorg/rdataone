@@ -128,8 +128,9 @@ network. Users should use "STAGING" for testing, and "PROD" for real data submis
 ## Acknowledgements
 Work on this package was supported by:
 
-- NSF-ABI grant #1262458 to C. Gries, M. Jones, and S. Collins.
-- NSF-DATANET grants #0830944 and #1430508 to W. Michener, M. Jones, D. Vieglais, S. Allard and P. Cruse
+- NSF-ABI grant #1262458 to C. Gries, M. B. Jones, and S. Collins.
+- NSF-DATANET grants #0830944 and #1430508 to W. Michener, M. B. Jones, D. Vieglais, S. Allard and P. Cruse
+- NSF DIBBS grant #1443062 to T. Habermann and M. B. Jones
 
 Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
