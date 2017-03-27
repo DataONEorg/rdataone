@@ -91,8 +91,9 @@ To search the DataONE Federation Member Node *Knowledge Network for Biocomplexit
 ```
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
-mySearchTerms <- list(id="doi*hstuar*", abstract="Zostera", keywords="Benthic")
-result <- query(mn, searchTerms=mySearchTerms, as="data.frame")
+mySearchTerms <- list(q="id:doi*hstuar*+AND+abstract:Zostera+AND+keywords:Benthic", 
+                      fl="id,title,dateUploaded,abstract,datasource,size")
+result <- query(cn, solrQuery=mySearchTerms, as="data.frame")
 pid <- result[1,'id']
 ```
 
@@ -107,8 +108,18 @@ theData <- textConnection(dataChar)
 df <- read.csv(theData, stringsAsFactors=FALSE)
 ```
 
-Uploading a CSV file to a DataONE Member Node requires authentication via CILogon, but is similarly simple::
+Uploading a CSV file to a DataONE Member Node requires authentication, which is done by:
 
+- Login at DataONE: [Production](https://search.dataone.org) or [Staging](https://search-stage.test.dataone.org)
+- Navigate to the 'My profile' page
+- Then navigate to 'Settings | Authentication Token | Token for DataONE R'
+- Add the token to you environment, but be sure to not save the token in any scripts
+
+```
+options(dataone_test_token = "eyJh8YwQ12NNaqxuDsJSUzI1NiJ9.eyJzdWIi09awjd67rt7n1AC5vc...rest.of.long.token.here")
+```
+
+Once you have the token loaded, uploading is done with:
 ```
 library(datapack)
 library(uuid)
@@ -122,8 +133,12 @@ d1Object <- new("DataObject", id, format="text/csv", filename=csvfile)
 uploadDataObject(d1c, d1Object, public=TRUE)
 ```
 
-Note that this example uploads a data file to the DataONE test environment "STAGING" and not the production environment ("PROD"), in order to avoid inserting a bunch of test data into the production
-network. Users should use "STAGING" for testing, and "PROD" for real data submissions.
+Note that this example uploads a data file to the DataONE test environment "STAGING" 
+and not the production environment ("PROD"), in order to avoid inserting a bunch of test data into the production
+network. Users should use "STAGING" for testing (https://search-stage.test.dataone.org), 
+and "PROD" (https://search.dataone.org) for real data submissions. When switching between STAGING
+and PROD, the token used must come from the appropriate environement, and be set with the appropriate name
+(`dataone_test_token` for STAGING, and `dataone_token` for PROD).
 
 ## Acknowledgements
 Work on this package was supported by:
