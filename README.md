@@ -93,7 +93,7 @@ cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
 mySearchTerms <- list(q="id:doi*hstuar*+AND+abstract:Zostera+AND+keywords:Benthic", 
                       fl="id,title,dateUploaded,abstract,datasource,size")
-result <- query(cn, solrQuery=mySearchTerms, as="data.frame")
+result <- query(mn, solrQuery=mySearchTerms, as="data.frame")
 pid <- result[1,'id']
 ```
 
