@@ -837,9 +837,10 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     # Ensure that the resmap has the same permissions as the package members, so
     # create an access policy for the resmap that will have the same APs as the
     # package members.
-    resMapAP <- data.frame(subject=as.character(), permission=as.character())
-    
+    resMapAP <- data.frame(subject=as.character(), permission=as.character(), row.names = NULL,
+                           stringsAsFactors = FALSE)
     submitter <- as.character(NA)
+    uploadedMember <- FALSE
     # Upload each object that has been added to the DataPackage
     for (doId in getIdentifiers(dp)) {
         do <- getMember(dp, doId)
