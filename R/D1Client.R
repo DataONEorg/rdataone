@@ -270,6 +270,180 @@ setMethod("getDataObject", "D1Client", function(x, identifier) {
     return(do)
 })
 
+#' Download a data package from the DataONE Federation as a DataPackage.
+#' @description This is convenience method that will download all the members in a DataONE data package 
+#' and insert them into a DataPackage, including associated SystemMetadata for each package
+#' member.
+#' @details A 'data package' that resides on a DataONE member node is defined as a collection of
+#' digital objects that are described by a metadata document. The 
+#' @param x A D1Client object.
+#' @param identifier The identifier of a package, package metadata or other package member
+#' @param ... (not yet used)
+#' @rdname getDataPackage
+#' @aliases getDataPackage
+#' @return A DataPackage or NULL if the package was not found in DataONE
+#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' d1c <- D1Client("PROD", "urn:node:KNB")
+#' pid <- "solson.5.1"
+#' pkg <- getDataPackage(d1c, pid)
+#' }
+setGeneric("getDataPackage", function(x, identifier, ...) { 
+    standardGeneric("getDataPackage")
+})
+
+#' @rdname getDataPackage
+#' @export
+setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
+    
+  # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
+  # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
+  # data, for example, the metadata solr record must be retrieved to obtain all the package members.
+  resmapId <- as.character(NA)
+  metadataPid <- as.character(NA)
+  # First find the metadata object for a package. Try to get all required info, but not all record types have all 
+  # these fields filled out.
+  queryParamList <- list(q=sprintf('id:\"%s\"', identifier), fl='isDocumentedBy,resourceMap,documents,formatType',
+                         fq="-obsoletedBy:*")
+  node <- x@cn
+  result <- query(node, queryParamList, as="list")
+  # Didn't get a result from the CN, query the MN directly. This may happen for several reasons including
+  # a new package hasn't been synced to the CN, the package is in a dev environment where CN sync is off, etc.
+  if(is.null(result) || length(result) == 0) {
+    cat(sprintf("Trying %s\n", x@mn@identifier))
+    node <- x@mn
+    result <- query(node, queryParamList, as="list")
+    if(is.null(result)) {
+      stop(sprintf("Unable to get response for identifier %s", identifier))
+    }
+  } 
+  if (length(result) == 0) {
+    stop(sprintf("Identifier %s not found on node %s or %s", identifier, x@cn@identifier, x@mn@identifier))
+  }
+  
+  formatType <- result[[1]]$formatType[[1]]
+  # Check if we have the metadata object, and if not, then get it. If a data object pid was specified, then it is possible that
+  # it can be contained in mulitple packages. For now, just use the first package returned. 
+  # TODO: follow the obsolesence chain up to the most current version.
+  if(formatType == "METADATA") {
+    # We have the metadata object, which contains the list of package members in the 'documents' field
+    resmapId <- result[[1]]$resourceMap
+    metadataPid <- identifier
+    packageMembers <- as.list(result[[1]]$documents)
+  } else if(formatType == "RESOURCE") {
+    resmapId <- identifier
+    # Get the metadata object for this resource map
+    queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents,formatType')
+    result <- query(node, queryParamList, as="list")
+    if (length(result) == 0) {
+      stop(sprintf("Unable to find metadata object with identifier: %s on node %", identifier, node@identifier))
+    }
+    metadataPid <- result[[1]]$id
+    packageMembers <- as.list(result[[1]]$documents)
+  } else {
+    # This must be a package member, so get the metadata pid for the package
+    metadataPid <- result[[1]]$isDocumentedBy
+    queryParamList <- list(q=sprintf('id:\"%s\"', metadataPid), fl='documents,formatType,resourceMap')
+    result <- query(node, queryParamList, as="list")
+    if (length(result) == 0) {
+      stop(sprintf("Unable to find metadata object with identifier: %s on node %", identifier, node@identifier))
+    }
+    resmapId <- result[[1]]$resourceMap
+    packageMembers <- as.list(result[[1]]$documents)
+  }
+  
+  # The Solr index can contain multiple resource maps that refer to our metadata object. There should be only
+  # one current resource map that refers to this metadata, the others may be previous versions of the resmap
+  # that are now obsolete. If multple resource map pids were returned, filter out the obsolete ones.
+  if(length(resmapId) > 1) {
+    if(!quiet) {
+      cat(sprintf("Multiple resource maps for this identifier, will filter out obsolete ones.\n"))
+    }
+    quoteSetting <- getOption("useFancyQuotes")
+    options(useFancyQuotes = FALSE)
+    newIds <- dQuote(unlist(resmapId))
+    options(useFancyQuotes = quoteSetting)
+    
+    qStr <- sprintf("id:(%s)", paste(newIds, collapse=" OR "))
+    queryParamList <- list(q=qStr, fq="-obsoletedBy:*", fq="archived:false", fl="id")
+    result <- query(node, queryParamList, as="list")
+    resmapId <- unlist(result)
+    if(length(resmapId) == 0) {
+      stop("It appears that all resource maps that reference this package are obsolete or archived.")
+    }
+    if(length(resmapId) > 1) {
+      resmapStr <- paste(resmapId, collapse=", ")
+      stop(sprintf("The metadata identifier %s is referenced by more than one current resource map: %s", metadataPid, resmapStr))
+    }
+    if(!quiet) cat(sprintf("Using resource map with identifier: %s\n", resmapId))
+  }
+  
+  if(!quiet) {
+    cat(sprintf("Downloading package members for package with metadata identifier: %s\n", metadataPid))
+  }
+  
+  dpkg <- new("DataPackage")
+  # Solr can return multiple resource maps 
+  resmapId <- unlist(resmapId)[[1]]
+  dpkg@resmapId <- resmapId
+  # Don't lazyload the metadata
+  metadataObj <- getDataObject(x, identifier=metadataPid, lazyLoad=FALSE, quiet=quiet)
+  if(length(packageMembers) > 0) {
+    for (iPid in 1:length(packageMembers)) {
+      thisPid <- packageMembers[[iPid]]
+      if(thisPid == metadataPid) {
+        cat(sprintf("Skipping metadata object, already downloaded\n"))
+        next
+      }
+      obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet)
+      # The metadata object will be added this first time addMember is called.
+      # Note that the 'cito:documents' relationship should already be in the package
+      # resource map, so don't add this relationship now.
+      dpkg <- addMember(dpkg, obj)
+    }
+  } else if (is.na(metadataPid)) {
+    message(sprintf("This package does not contain any members or metadata, resource map identifier: %s", resmapId))
+    return(NULL)
+  }
+  
+  # Add the metadata object to the package.
+  dpkg <- addMember(dpkg, metadataObj)
+  
+  # Download the resource map, parse it and load the relationships into the DataPackage
+  # Currently we only use the first resource map
+  if(!quiet) cat(sprintf("Getting resource map with id: %s\n", dpkg@resmapId))
+  resMapBytes <- getObject(x@mn, pid=resmapId)
+  resMap <- new("ResourceMap", id=resmapId)
+  resMap <- parseRDF(resMap, rdf=rawToChar(resMapBytes), asText=TRUE)
+  if(!quiet) cat(sprintf("Setting resource map identifier %s\n", resmapId))
+  # All identifiers from the package are needed for obtaining the triples, including
+  # the identifiers for the metadata object and the resource map itself.
+  allIds <- packageMembers
+  allIds[[length(allIds)+1]] <- resmapId
+  allIds[[length(allIds)+1]] <- metadataPid
+  relations <- getTriples(resMap, identifiers=allIds)
+  freeResourceMap(resMap)
+  
+  if(nrow(relations) > 0) {
+    for(irel in 1:nrow(relations)) {
+      dpkg <- insertRelationship(dpkg, subjectID=relations[irel, 'subject'],
+                                 objectIDs=relations[irel, 'object'],
+                                 predicate=relations[irel, 'predicate'],
+                                 subjectType=relations[irel, 'subjectType'],
+                                 objectType=relations[irel, 'objectType'],
+                                 dataTypeURI=relations[irel, 'dataTypeURI'])
+    }
+  }
+  
+  # Reset the 'update' status flag on the relations (resourceMap) as this downloaded package
+  # has not been updated by the user (after download).
+  dpkg@relations[['updated']] <- FALSE 
+  
+  return(dpkg)
+})
+
 #' A method to query the DataONE solr endpoint of the Coordinating Node.
 #' @description It expects any lucene reserved characters to already be escaped with backslash. If
 #' solrQuery is a list, it is expected to have field names as attributes and search
