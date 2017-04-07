@@ -875,14 +875,20 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         }
     }
     
-    tf <- tempfile()
-    serializationId <- paste0("urn:uuid:", UUIDgenerate())
-    status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
-    resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
-    resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
-    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
-    returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
-    if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
+    # Don't create and upload the resource map if no DataObjects have been uploaded.
+    if(uploadedMember) {
+      tf <- tempfile()
+      serializationId <- paste0("urn:uuid:", UUIDgenerate())
+      status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
+      resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
+      resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+      if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
+      returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+      if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
+    } else {
+      if(!quiet) cat(sprintf("No DataObjects uploaded from the DataPackage, so a resource map will not be created and uploaded.\n"))
+      returnId <- as.character(NA)
+    }
     return(returnId)
 })
 
