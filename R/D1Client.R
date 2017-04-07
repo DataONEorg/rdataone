@@ -1106,6 +1106,165 @@ setMethod("updateDataObject", signature("D1Client"),
   }
   return(updateId)
 })
+#' Update a DataPackage on a DataONE member node.
+#' @description Update all DataObjects contained in the DataPackage if they have be changed
+#' since the DataPackage was created. The \code{"updateDataPackage"} method is intended to 
+#' be used on local \code{"DataPackage"} objects that have been downloaed from a repository
+#' using the \code{"getDataPackage"} method.
+#' @details The DataPackage describes the collection of data object and their associated 
+#' metadata object, with the relationships and members serialized into a document
+#' stored under, and retrievable with, the packageId as it's own distinct object.
+#' Any objects in the data map that have a dataUploaded value are assumed to be 
+#' pre-existing in the system, and skipped.
+#' @note Member objects are created serially, and most errors in creating one object will 
+#' interrupt the create process for the whole, with the result that some members will 
+#' be created, and the remainder not.
+#' @param x A D1Client instance.
+#' @param ... (Not yet used.)
+#' @return id The identifier of the resource map for this data package
+#' @rdname updateDataPackage
+#' @aliases updateDataPackage
+#' @import datapack
+#' @import uuid
+#' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' library(datapack)
+#' dp <- new("DataPackage")
+#' sampleData <- system.file("extdata/sample.csv", package="dataone")
+#' dataObj <- new("DataObject", format="text/csv", file=sampleData)
+#' dataObj <- setPublicAccess(dataObj)
+#' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
+#' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
+#' metadataObj <- setPublicAccess(metadataObj)
+#' dp <- addMember(dp, do = dataObj, mo = metadataObj)
+#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+#' # Upload all members of the DataPackage to DataONE (requires authentication)
+#' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
+#' }
+#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+setGeneric("updateDataPackage", function(x, ...) {
+  standardGeneric("updateDataPackage")
+})
+
+#' @rdname updateDataPackage
+#' @param dp The DataPackage instance to be submitted to DataONE for creation.
+#' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
+#' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
+#' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
+#' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
+#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
+#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
+#' @importFrom utils flush.console
+#' @export
+setMethod("updateDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
+                                                               accessRules=NA, quiet=as.logical(TRUE), 
+                                                               resolveURI=as.character(NA), identifiers=data.frame(), ...) {
+  stopifnot(class(dp) == "DataPackage")
+  if (nchar(x@mn@identifier) == 0) {
+    stop("Please set the DataONE Member Node to upload to using setMNodeId()")
+  }
+  
+  # TODO: check current authentication and set the submitter
+  # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
+  if(is.na(resolveURI)) {
+    resolveURI <- paste0(x@cn@endpoint, "/resolve")
+  } 
+  # Ensure that the resmap has the same permissions as the package members, so
+  # create an access policy for the resmap that will have the same APs as the
+  # package members.
+  resMapAP <- data.frame(subject=as.character(), permission=as.character(), row.names=NULL, stringsAsFactors = FALSE)
+  
+  # Upload each object that has been added to the DataPackage
+  for (doId in getIdentifiers(dp)) {
+    do <- getMember(dp, doId)
+    if (public) {
+      if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
+      do <- setPublicAccess(do)
+    }
+    # Add this package member's access policy to the resmap AP
+    resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
+    
+    if(!is.na(do@filename)) {
+      fn <- basename(do@filename)
+    } else {
+      fn <- as.character(NA)
+    }
+    
+    if(!quiet) {
+      cat(sprintf("Checking if DataObject has been updated, id: %s, filename: %s, size: %s bytes\n", 
+                  x@mn@endpoint, doId, fn, format(do@sysmeta@size, scientific=FALSE)))
+      flush.console()
+    }
+    
+    # Check if the user has provided an identifier to use for the updated object. If the object
+    # has changed and no identifier is provided, then a new one will be generated.
+    newpid <- as.character(NA)
+    if(nrow(identifiers) > 0) {
+      newpid <- identifiers[identifiers$oldId==getIdentifier(do), 'newId']
+    }
+    if(is.na(newpid) || length(newpid) == 0) newpid <- sprintf("urn:uuid:%s", UUIDgenerate())
+    # Update the object to the member node
+    updateId <- updateDataObject(x, do=do, newpid=newpid, replicate=replicate, numberReplicas=numberReplicas,
+                                 preferredNodes=preferredNodes, public=public, accessRules=accessRules,
+                                 quiet=quiet)
+    
+    # If the object was uploaded
+    
+    if(!quiet) message(sprintf("DataObject with identifier %s has been uploaded.", do@sysmeta@identifier))
+    # If the 
+    
+    if(!is.na(updateId)) {
+      if(!quiet) cat(sprintf("Updated identifier: %s\n", returnId))
+      # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
+      do@sysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+      do@sysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+      do@updated[['sysmeta']] <- FALSE
+      do@updated[['data']] <- FALSE
+      
+      # Replace the updated member in the DataPackage
+      dp <- removeMember(dp, doId, keepRelationships=TRUE)
+      dp <- addMember(dp, do)
+    }
+  }
+  
+  if(is.na(dp@resmapId)) {
+    stop("A resource map identifier has not been assigned to the current DataPackage.")
+  }
+  
+  # Only update the resource map if new package relationships have been added to the package.
+  # This would be the case if describeWorkflow() or insertRelationships() has been called
+  # since the package was downloaded.
+  # The DataPackage, if it was downloaded using getDataPackage, should not have any ORE statements
+  # in it, so it is not necessary to update the package relationships with a new resource map pid.
+  # The serializePackge routine will add the ORE package relationships for the new pid, and the
+  # updateObject routine will obsolete the old resmap pid with the new resmap pid.
+  if(dp@relations[['updated']]) {
+    newpid <- identifiers[identifiers$oldId == dp@resmapId, 'newId']
+    if(is.null(newpid) || is.na(newpid) || length(newpid) == 0) newpid <- sprintf("urn:uuid:%s", UUIDgenerate())
+    
+    tf <- tempfile()
+    status <- serializePackage(dp, file=tf, id=newpid, resolveURI=resolveURI)
+    
+    resMapObj <- new("DataObject", id=dp@resmapId, format="http://www.openarchives.org/ore/terms", filename=tf)
+    resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+    if(!quiet) cat(sprintf("Existing resource map id is %s\n", getIdentifier(resMapObj)))
+    if(!quiet) cat(sprintf("Updating resource map with new id %s to %s\n", newpid, x@mn@endpoint))
+    # Have to forceUpdate because we just created this object and the update status flags won't be set on this
+    # object.
+    returnId <- updateDataObject(x, do=resMapObj, newpid=newpid, replicate=replicate, numberReplicas=numberReplicas, 
+                                 preferredNodes=preferredNodes, public=public, accessRules=accessRules, 
+                                 forceUpdate=TRUE)
+    if(!quiet) cat(sprintf("Updated resource map id: %s\n", returnId))
+    dp@relations[['update']] <- FALSE
+  } else {
+    if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
+  }
+  
+  return(returnId)
+})
+
 #' List DataONE Member Nodes.
 #' @description A D1Client object is associated with a DataONE Coordinating Node. The
 #' \code{listMemberNodes} method lists all member nodes associated with a CN.
