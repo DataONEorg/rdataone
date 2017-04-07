@@ -233,40 +233,102 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 
 #' @rdname getDataObject
 #' @export
-setMethod("getDataObject", "D1Client", function(x, identifier) {
+setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
     
     # Resolve the object location
     result <- resolve(x@cn, identifier)
     if(is.null(result)) {
-      message("Unable to download object with identifier: %s\n", identifier)
-      return(NULL)
+      #message("Unable to download object with identifier: %s\n", identifier)
+      #return(NULL)
+      # If the object isn't resolved from the CN, then try the member node directly. Fill out the
+      # mntable as if the member node had returned the object.
+      mntable <- data.frame(nodeIdentifier=x@mn@identifier, 
+                            baseURL=x@mn@baseURL,
+                            url=sprintf("%s/object/%s", x@mn@baseURL, URLencode(identifier, reserved=TRUE)), 
+                            row.names=NULL, stringsAsFactors=FALSE)
+    } else {
+      mntable <- result$data
     }
-    mntable <- result$data
+    
+    # Convert download size limit to a number. This will only be used if lazyLoad=TRUE
+    if(grepl("tb", limit, ignore.case=TRUE)) {
+      limitBytes <- as.numeric(gsub("tb", "", limit, ignore.case=TRUE)) * 1099511627776
+    } else if(grepl("gb", limit, ignore.case=TRUE)) {
+      limitBytes <- as.numeric(gsub("gb", "", limit, ignore.case=TRUE)) * 1073741824
+    } else if(grepl("mb", limit, ignore.case=TRUE)) {
+      limitBytes <- as.numeric(gsub("mb", "", limit, ignore.case=TRUE)) * 1048576
+    } else if (grepl("kb", limit, ignore.case=TRUE)) {
+      limitBytes <- as.numeric(gsub("kb", "", limit, ignore.case=TRUE)) * 1024
+    } else if(!is.na(as.numeric(x))) {
+      limitByptes <- as.numeric(limit)
+    } else {
+      stop(sprintf("Unknown limit specified: %s", limit))
+    }
     
     # Get the SystemMetadata and object bytes from one of the MNs
     # Process them in order, until we get non-NULL responses from a node
     sysmeta <- NA
     bytes <- NA
+    success <- FALSE
+    dataURL <- as.character(NA)
+    deferredDownload <- lazyLoad
     if(nrow(mntable) > 0) {
       for (i in 1:nrow(mntable)) { 
         suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
         if (!is.null(currentMN)) {
           sysmeta <- getSystemMetadata(currentMN, identifier)
-          bytes <- getObject(currentMN, identifier)
-          if (!is.null(sysmeta) & !is.null(bytes)) {
-            success=TRUE
-            break
+          if(is.null(sysmeta)) next
+          # If lazy loading, check if the object size is larger that the specified
+          # download threshold for loading now.
+          if(!lazyLoad) { 
+            deferredDownload <- FALSE
+            bytes <- getObject(currentMN, identifier)
+            if (!is.null(sysmeta) & !is.null(bytes)) {
+              success <- TRUE
+              dataURL <- mntable[i,]$url
+              break
+            }
+          } else {
+            if(as.numeric(sysmeta@size) <= limitBytes) {
+              deferredDownload <- FALSE
+              bytes <- getObject(currentMN, identifier)
+              if (!is.null(sysmeta) & !is.null(bytes)) {
+                success <- TRUE
+                dataURL <- mntable[i,]$url
+                break
+              }
+            } else {
+              # This object is larger than the download max size, so just set
+              # the bytes to NULL - DataObject initialize() will have to be
+              # told that lazyLoad = TRUE for this object.
+              deferredDownload <- TRUE
+              bytes <- NA
+              success <- TRUE
+              dataURL <- mntable[i,]$url
+              break
+            }
           }
         }
+      } 
+    }
+    
+    if(!success) {
+       message("Unable to download object with identifier: %s\n", identifier)
+       return(NULL)
+    }
+    
+    if(!quiet) {
+      if(deferredDownload) {
+        cat(sprintf("Lazy Loaded object at URL %s\n", dataURL))
+      } else {
+        cat(sprintf("Downloaded object at URL %s\n", dataURL))
       }
-    } else {
-      message("Unable to download object with identifier: %s\n", identifier)
-      return(NULL)
     }
     
     # Construct and return a DataObject
-    do <- new("DataObject", id=sysmeta@identifier, dataobj=bytes)
-    do@sysmeta <- sysmeta
+    # Notice that we are passing the existing sysmeta for this object via the 'id' parameter,
+    # which will cause the DataObject to use this sysmeta and not generate a new one.
+    do <- new("DataObject", id=sysmeta, dataobj=bytes, dataURL=dataURL)
     return(do)
 })
 
