@@ -609,7 +609,7 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' stf <- charToRaw(convert.csv(d1c, sdf))
 #' sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
 #' sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c))
-#' dp <- addData(dp, do=sciObj, mo=metadataObj)
+#' dp <- addMember(dp, do=sciObj, mo=metadataObj)
 #' expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
 #' resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE)
 #' }
@@ -801,7 +801,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
 #' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 #' metadataObj <- setPublicAccess(metadataObj)
-#' dp <- addData(dp, do = dataObj, mo = metadataObj)
+#' dp <- addMember(dp, do = dataObj, mo = metadataObj)
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' # Upload all members of the DataPackage to DataONE (requires authentication)
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
@@ -827,7 +827,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                                                                            resolveURI=as.character(NA), ...) {
   stopifnot(class(dp) == "DataPackage")
     if (nchar(x@mn@identifier) == 0) {
-      stop("Please set the DataONE Member Node to upload to using setMN()")
+      stop("Please set the DataONE Member Node to upload to using setMNodeId()")
     }
     
     # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
@@ -865,12 +865,12 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
           if(!quiet) cat(sprintf("Uploaded identifier: %s\n", returnId))
           # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
           do@sysmeta@dateUploaded <- datapack:::defaultUTCDate()
-          removeMember(dp, doId)
-          addData(dp, do)
+          removeMember(dp, doId, keepRelationships=TRUE)
+          addMember(dp, do)
           
           # Add this package member's access policy to the resmap AP
           resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
-          
+          uploadedMember <- TRUE
         } else {
           warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
         }
@@ -1113,6 +1113,7 @@ setMethod("updateDataObject", signature("D1Client"),
   }
   return(updateId)
 })
+
 #' Update a DataPackage on a DataONE member node.
 #' @description Update all DataObjects contained in the DataPackage if they have be changed
 #' since the DataPackage was created. The \code{"updateDataPackage"} method is intended to 
@@ -1418,8 +1419,8 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   
   # Add deprecated here instead of in the generic function, as the generic function is the datapack R package.
-  msg <- sprintf("'addData' is deprecated.\nUse 'datapack:addData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("addData(x, do, mo)")
+  msg <- sprintf("'addData' is deprecated.\nUse 'datapack:addMember' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
+  methodSig <- sprintf("addMember(x, do, mo)")
   .Deprecated("DataObject", package="datapack", msg, methodSig)
   x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
   # If a metadata object identifier is specified on the command line, then add the relationship to this package
@@ -1428,7 +1429,7 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as
     # CHeck that the metadata object has already been added to the DataPackage. If it has not
     # been added, then add it now.
     if (!containsId(x, getIdentifier(mo@dataObject))) {
-      moId <- addData(x, mo@dataObject)
+      moId <- addMember(x, mo@dataObject)
     }
     # Now add the CITO "documents" and "isDocumentedBy" relationships
     insertRelationship(x, getIdentifier(mo@dataObject), getIdentifier(do@dataObject))
