@@ -584,6 +584,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
+#' @param packageId A value of type \code{"character"} specifying a unique identifier to use for the uploaded package (resource map pid)
 #' @importFrom utils flush.console
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
@@ -641,7 +642,6 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     
     tf <- tempfile()
     if(!is.na(packageId)) {
-        cat(sprintf("Using package id %s\n", packageId))
         serializationId <- packageId
     } else {
         serializationId <- paste0("urn:uuid:", UUIDgenerate())

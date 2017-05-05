@@ -11,7 +11,7 @@ uploadDataPackage(x, ...)
 \S4method{uploadDataPackage}{D1Client}(x, dp, replicate = NA,
   numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
   accessRules = NA, quiet = as.logical(TRUE),
-  resolveURI = as.character(NA), ...)
+  resolveURI = as.character(NA), packageId = as.character(NA), ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}
@@ -33,6 +33,8 @@ uploadDataPackage(x, ...)
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
 \item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}}
+
+\item{packageId}{A value of type \code{"character"} specifying a unique identifier to use for the uploaded package (resource map pid)}
 }
 \value{
 id The identifier of the resource map for this data package
