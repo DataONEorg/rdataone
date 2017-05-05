@@ -588,7 +588,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
-                                                                           resolveURI=as.character(NA), ...) {
+                                                                           resolveURI=as.character(NA), packageId=as.character(NA), ...) {
   stopifnot(class(dp) == "DataPackage")
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMN()")
@@ -640,7 +640,12 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     }
     
     tf <- tempfile()
-    serializationId <- paste0("urn:uuid:", UUIDgenerate())
+    if(!is.na(packageId)) {
+        cat(sprintf("Using package id %s\n", packageId))
+        serializationId <- packageId
+    } else {
+        serializationId <- paste0("urn:uuid:", UUIDgenerate())
+    }
     status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
     resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
     resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
