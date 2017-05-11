@@ -830,6 +830,21 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
       stop("Please set the DataONE Member Node to upload to using setMNodeId()")
     }
     
+    # First check if any members of this DataPackage have been previously uploaded. If a package
+    # was first downloaded from a repository and then at least one member was modified, then this 
+    # is considered a package update.
+    downloadedPkg <- FALSE
+    dates <- getValue(dp, name="sysmeta@dateUploaded")
+    for (thisDate in dates) {
+        if(!is.na(thisDate)) downloadedPkg <- TRUE
+    }
+    if(!quiet) {
+      if(downloadedPkg) {
+          cat(sprintf("Updating a modified package to member node %s\n", x@mn@endpoint))
+      } else {
+          cat(sprintf("Uploading a new package to member node %s.\n", x@mn@endpoint))
+      }
+    }
     # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
     if(is.na(resolveURI)) {
         resolveURI <- paste0(x@cn@endpoint, "/resolve")
@@ -846,7 +861,6 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         do <- getMember(dp, doId)
         submitter <- do@sysmeta@submitter
         if (public) {
-            if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
             do <- setPublicAccess(do)
         }
         
@@ -855,40 +869,106 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         } else {
           fn <- as.character(NA)
         }
-        if(!quiet) {
-          cat(sprintf("Uploading data object to %s with id: %s, filename: %s, size: %s bytes\n", 
-                               x@mn@endpoint, doId, fn, format(do@sysmeta@size, scientific=FALSE)))
-          flush.console()
-        }
-        returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
-        if(!is.null(returnId)) {
-          if(!quiet) cat(sprintf("Uploaded identifier: %s\n", returnId))
-          # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
-          do@sysmeta@dateUploaded <- datapack:::defaultUTCDate()
-          removeMember(dp, doId, keepRelationships=TRUE)
-          addMember(dp, do)
-          
-          # Add this package member's access policy to the resmap AP
-          resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
-          uploadedMember <- TRUE
+        
+        # Add this package member's access policy to the resmap AP
+        resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
+        
+        # If this DataObject has never been uploaded before, then upload it now.
+        if(is.na(do@sysmeta@dateUploaded)) {
+            returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
+            if(is.na(returnId)) {
+               warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
+            } else {
+                if(!quiet) cat(sprintf("Uploaded data object with id: %s, filename: %s, size: %s bytes\n", 
+                            doId, fn, format(do@sysmeta@size, scientific=FALSE)))
+                # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
+                dp <- setValue(dp, name="sysmeta@dateUploaded", value = datapack:::defaultUTCDate(), 
+                               identifiers=getIdentifier(do))
+                removeMember(dp, doId, keepRelationships=TRUE)
+                dp <- addMember(dp, do)
+                uploadedMember <- TRUE
+            }
         } else {
-          warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
+            # This is not a new DataObject, it may have been downloaded from a repository and modified. 
+            # The updateDataObject() method will check if the object has been modified.
+            # Check if the user has provided an identifier to use for the updated object. If the object
+            # has changed and no identifier is provided, then a new one will be generated.
+            # Update the object to the member node
+            pid <- getIdentifier(do)
+            updateId <- updateDataObject(x, do=do, replicate=replicate, numberReplicas=numberReplicas,
+                                         preferredNodes=preferredNodes, public=public, accessRules=accessRules,
+                                         quiet=quiet)
+            
+            if(!is.na(updateId)) {
+                # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
+                # The DataPackage is not returned from this method so these updates won't all persist (except
+                # for fields that are hashes(), but leave these lines in here in case we ever decide to return the
+                # DataPackage object instead of just the id.
+                now <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+                dp <- setValue(dp, name="sysmeta@dateUploaded", value = now, identifiers=getIdentifier(do))
+                dp <- setValue(dp, name="sysmeta@dateSysMetadataModified", value = now, identifiers=getIdentifier(do))
+                # Change the updated status so that this DataObject won't be accidentially uploaded again, if the
+                # user calls this function again without actually updated the object..
+                dp <- setValue(dp, name="updated[['sysmeta']]", value=FALSE, identifiers=getIdentifier(do))
+                dp <- setValue(dp, name="updated[['data']]", value=FALSE, identifiers=getIdentifier(do))
+                # Replace the updated member in the DataPackage
+                dp <- removeMember(dp, doId, keepRelationships=TRUE)
+                dp <- addMember(dp, do)
+                # Now update the package relationships, substituting the old id for the new
+                dp <- updateRelationships(dp, pid, updateId)
+                if(!quiet) cat(sprintf("Updated data object with identifier: %s\n", updateId))
+            } 
         }
     }
     
-    # Don't create and upload the resource map if no DataObjects have been uploaded.
-    if(uploadedMember) {
-      tf <- tempfile()
-      serializationId <- paste0("urn:uuid:", UUIDgenerate())
-      status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
-      resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
-      resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
-      if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
-      returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
-      if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
+    # Now upload or update the resource map if necessary.
+    returnId <- as.character(NA)
+    # This is a new package, so potentially we need to upload a resource map
+    if(!downloadedPkg) {
+        # Only upplad a resource map if a DataObjects was uploaded, i.e. not all uploads failed.
+        if (uploadedMember) {
+            tf <- tempfile()
+            newPid <- paste0("urn:uuid:", UUIDgenerate())
+            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI)
+            # Recreate the old resource map, so that it can be updated with a new pid
+            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
+                             suggestedFilename="resourceMap.xml")
+            resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+            
+            returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+            if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", newPid))
+        } else {
+            if(!quiet) cat(sprintf("No DataObjects uploaded from the DataPackage, so a resource map will not be created and uploaded.\n"))
+        }
     } else {
-      if(!quiet) cat(sprintf("No DataObjects uploaded from the DataPackage, so a resource map will not be created and uploaded.\n"))
-      returnId <- as.character(NA)
+        # This is a package update, so we will update the existing resource map.
+        if(is.na(dp@resmapId)) {
+            stop("A resource map identifier has not been assigned to the current DataPackage.")
+        }
+        # Update the resource map if new package relationships have been added or modified.
+        if(dp@relations[['updated']]) {
+            newPid <- sprintf("urn:uuid:%s", UUIDgenerate())
+            tf <- tempfile()
+            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI)
+            
+            # Create a new resource map that will replace the old one.
+            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
+            # Assign the old resource map id (possibly from a repository) for the pid to update
+            resMapObj@oldId <- dp@resmapId
+            resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+            resMapObj@updated[['sysmeta']] <- TRUE
+            resMapObj@updated[['data']] <- TRUE
+            if(!quiet) cat(sprintf("Updating resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
+            returnId <- updateDataObject(x, do=resMapObj, replicate=replicate, numberReplicas=numberReplicas, 
+                                         preferredNodes=preferredNodes, public=public, accessRules=accessRules,
+                                         quiet=quiet, force=TRUE) 
+            dp@relations[['update']] <- FALSE
+            if(!is.na(returnId)) {
+                if(!quiet) cat(sprintf("Updated resource map successfully\n"))
+            }
+        } else {
+            if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
+        } 
     }
     return(returnId)
 })
@@ -961,7 +1041,8 @@ setMethod("uploadDataObject", signature("D1Client"),
       msg <- sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", do@sysmeta@identifier, do@sysmeta@dateUploaded)
       msg <- sprintf("%sThis object will not be uploaded.", msg)
       warning(msg)
-      return(NULL)
+      # options(warn) may be set to essentially ignore warnings, so return NA if this is the case.
+      return(as.character(NA))
     }
     
     # If the DataObject has both @filename and @data defined, filename takes precedence 
@@ -978,19 +1059,16 @@ setMethod("uploadDataObject", signature("D1Client"),
         createdId <- createObject(x@mn, doId, tf, do@sysmeta)
         file.remove(tf)
       } else {
-        warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", do@sysmeta@identifier))
+        warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data slots are set.", do@sysmeta@identifier))
       }
     }
     
-    #    if (is.null(createdId) | !grepl(newid, xmlValue(xmlRoot(createdId)))) {
-    if (is.null(createdId) || doId != createdId) {
-        #warning(paste0("Error on returned identifier: ", createdId))
-        return(NULL)
+    if (is.null(createdId)) {
+        return(as.character(NA))
     } else {
-        return(doId)
+        return(createdId)
     }
 })
-
 
 #' Update a DataObject on a DataONE member node.
 #' @param x A D1Client instance. 
@@ -1114,163 +1192,16 @@ setMethod("updateDataObject", signature("D1Client"),
   return(updateId)
 })
 
-#' Update a DataPackage on a DataONE member node.
-#' @description Update all DataObjects contained in the DataPackage if they have be changed
-#' since the DataPackage was created. The \code{"updateDataPackage"} method is intended to 
-#' be used on local \code{"DataPackage"} objects that have been downloaed from a repository
-#' using the \code{"getDataPackage"} method.
-#' @details The DataPackage describes the collection of data object and their associated 
-#' metadata object, with the relationships and members serialized into a document
-#' stored under, and retrievable with, the packageId as it's own distinct object.
-#' Any objects in the data map that have a dataUploaded value are assumed to be 
-#' pre-existing in the system, and skipped.
-#' @note Member objects are created serially, and most errors in creating one object will 
-#' interrupt the create process for the whole, with the result that some members will 
-#' be created, and the remainder not.
-#' @param x A D1Client instance.
-#' @param ... (Not yet used.)
-#' @return id The identifier of the resource map for this data package
-#' @rdname updateDataPackage
-#' @aliases updateDataPackage
-#' @import datapack
-#' @import uuid
-#' @export
-#' @examples \dontrun{
-#' library(dataone)
-#' library(datapack)
-#' dp <- new("DataPackage")
-#' sampleData <- system.file("extdata/sample.csv", package="dataone")
-#' dataObj <- new("DataObject", format="text/csv", file=sampleData)
-#' dataObj <- setPublicAccess(dataObj)
-#' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
-#' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
-#' metadataObj <- setPublicAccess(metadataObj)
-#' dp <- addMember(dp, do = dataObj, mo = metadataObj)
-#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-#' # Upload all members of the DataPackage to DataONE (requires authentication)
-#' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
-#' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-setGeneric("updateDataPackage", function(x, ...) {
-  standardGeneric("updateDataPackage")
-})
-
-#' @rdname updateDataPackage
-#' @param dp The DataPackage instance to be submitted to DataONE for creation.
-#' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
-#' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
-#' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
-#' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
-#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
-#' @importFrom utils flush.console
-#' @export
-setMethod("updateDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
-                                                               accessRules=NA, quiet=as.logical(TRUE), 
-                                                               resolveURI=as.character(NA), identifiers=data.frame(), ...) {
-  stopifnot(class(dp) == "DataPackage")
-  if (nchar(x@mn@identifier) == 0) {
-    stop("Please set the DataONE Member Node to upload to using setMNodeId()")
-  }
-  
-  # TODO: check current authentication and set the submitter
-  # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
-  if(is.na(resolveURI)) {
-    resolveURI <- paste0(x@cn@endpoint, "/resolve")
-  } 
-  # Ensure that the resmap has the same permissions as the package members, so
-  # create an access policy for the resmap that will have the same APs as the
-  # package members.
-  resMapAP <- data.frame(subject=as.character(), permission=as.character(), row.names=NULL, stringsAsFactors = FALSE)
-  
-  # Upload each object that has been added to the DataPackage
-  for (doId in getIdentifiers(dp)) {
-    do <- getMember(dp, doId)
-    if (public) {
-      if(!quiet) cat(sprintf("Setting public access for object with id: %s\n", doId))
-      do <- setPublicAccess(do)
-    }
-    # Add this package member's access policy to the resmap AP
-    resMapAP <- rbind(resMapAP, do@sysmeta@accessPolicy)
-    
-    if(!is.na(do@filename)) {
-      fn <- basename(do@filename)
-    } else {
-      fn <- as.character(NA)
-    }
-    
     if(!quiet) {
-      cat(sprintf("Checking if DataObject has been updated, id: %s, filename: %s, size: %s bytes\n", 
-                  x@mn@endpoint, doId, fn, format(do@sysmeta@size, scientific=FALSE)))
-      flush.console()
-    }
-    
-    # Check if the user has provided an identifier to use for the updated object. If the object
-    # has changed and no identifier is provided, then a new one will be generated.
-    newpid <- as.character(NA)
-    if(nrow(identifiers) > 0) {
-      newpid <- identifiers[identifiers$oldId==getIdentifier(do), 'newId']
-    }
-    if(is.na(newpid) || length(newpid) == 0) newpid <- sprintf("urn:uuid:%s", UUIDgenerate())
-    # Update the object to the member node
-    updateId <- updateDataObject(x, do=do, newpid=newpid, replicate=replicate, numberReplicas=numberReplicas,
-                                 preferredNodes=preferredNodes, public=public, accessRules=accessRules,
-                                 quiet=quiet)
-    
-    # If the object was uploaded
-    
-    if(!quiet) message(sprintf("DataObject with identifier %s has been uploaded.", do@sysmeta@identifier))
-    # If the 
-    
-    if(!is.na(updateId)) {
-      if(!quiet) cat(sprintf("Updated identifier: %s\n", returnId))
-      # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
-      do@sysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-      do@sysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-      do@updated[['sysmeta']] <- FALSE
-      do@updated[['data']] <- FALSE
-      
-      # Replace the updated member in the DataPackage
-      dp <- removeMember(dp, doId, keepRelationships=TRUE)
-      dp <- addMember(dp, do)
+      if(is.na(updateId)) {
+          message(sprintf("Unable to upload an update to DataObject with new id %s.", pid))
+      } else {
+          message(sprintf("Uploaded an update to DataObject with new id: %s, old id: %s.", pid, oldId))
+      }
     }
   }
-  
-  if(is.na(dp@resmapId)) {
-    stop("A resource map identifier has not been assigned to the current DataPackage.")
-  }
-  
-  # Only update the resource map if new package relationships have been added to the package.
-  # This would be the case if describeWorkflow() or insertRelationships() has been called
-  # since the package was downloaded.
-  # The DataPackage, if it was downloaded using getDataPackage, should not have any ORE statements
-  # in it, so it is not necessary to update the package relationships with a new resource map pid.
-  # The serializePackge routine will add the ORE package relationships for the new pid, and the
-  # updateObject routine will obsolete the old resmap pid with the new resmap pid.
-  if(dp@relations[['updated']]) {
-    newpid <- identifiers[identifiers$oldId == dp@resmapId, 'newId']
-    if(is.null(newpid) || is.na(newpid) || length(newpid) == 0) newpid <- sprintf("urn:uuid:%s", UUIDgenerate())
-    
-    tf <- tempfile()
-    status <- serializePackage(dp, file=tf, id=newpid, resolveURI=resolveURI)
-    
-    resMapObj <- new("DataObject", id=dp@resmapId, format="http://www.openarchives.org/ore/terms", filename=tf)
-    resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
-    if(!quiet) cat(sprintf("Existing resource map id is %s\n", getIdentifier(resMapObj)))
-    if(!quiet) cat(sprintf("Updating resource map with new id %s to %s\n", newpid, x@mn@endpoint))
-    # Have to forceUpdate because we just created this object and the update status flags won't be set on this
-    # object.
-    returnId <- updateDataObject(x, do=resMapObj, newpid=newpid, replicate=replicate, numberReplicas=numberReplicas, 
-                                 preferredNodes=preferredNodes, public=public, accessRules=accessRules, 
-                                 forceUpdate=TRUE)
-    if(!quiet) cat(sprintf("Updated resource map id: %s\n", returnId))
-    dp@relations[['update']] <- FALSE
-  } else {
-    if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
-  }
-  
-  return(returnId)
+
+  return(updateId)
 })
 
 #' List DataONE Member Nodes.
