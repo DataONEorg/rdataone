@@ -1,5 +1,5 @@
 Package: dataone
-Version: 2.0.2
+Version: 2.0.1.9000
 Date: 2017-03-08
 Title: R Interface to the DataONE REST API
 Authors@R: c( 
