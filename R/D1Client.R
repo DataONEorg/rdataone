@@ -400,7 +400,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents,formatType')
     result <- query(node, queryParamList, as="list")
     if (length(result) == 0) {
-      stop(sprintf("Unable to find metadata object with identifier: %s on node %", identifier, node@identifier))
+      stop(sprintf("Unable to find metadata object with identifier: %s on node %s", identifier, node@identifier))
     }
     metadataPid <- result[[1]]$id
     packageMembers <- as.list(result[[1]]$documents)
