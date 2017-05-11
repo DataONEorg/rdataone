@@ -1097,24 +1097,22 @@ setGeneric("updateDataObject", function(x, ...) {
 
 #' @rdname updateDataObject
 #' @param do The DataObject instance to be uploaded to DataONE.
-#' @param newPid A unique identifier for the object that will update (replace) the orinal DataONE object
 #' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate the updated object to other member nodes
 #' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
 #' @param public A \code{"logical"} value - if TRUE then the uploaded object will be publicly readable.
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
+#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #
 #' @export
 setMethod("updateDataObject", signature("D1Client"), 
-            function(x, do, newpid=as.character(NA), replicate = as.logical(FALSE), numberReplicas = NA, 
-                     preferredNodes = NA, public = as.logical(FALSE), accessRules = NA, quiet=TRUE, ..., 
-                     forceUpdate=FALSE)  {
+            function(x, do, replicate = as.logical(FALSE), numberReplicas = NA, 
+                     preferredNodes = NA, public = as.logical(FALSE), accessRules = NA, quiet=TRUE, ...)  {
               
   stopifnot(class(do) == "DataObject")
   if (nchar(x@mn@identifier) == 0) {
     stop("Please set the DataONE Member Node using setMNodeId()")
   }
-  if (is.na(newpid)) newpid <- paste0("urn:uuid:", UUIDgenerate())
   
   if(!is.na(do@sysmeta@obsoletedBy)) {
     msg <- sprintf("This DataObject with identifier %s has been obsoleted by identifier %s\nso will not be updated", 
@@ -1124,11 +1122,8 @@ setMethod("updateDataObject", signature("D1Client"),
   }
    
   pid <- getIdentifier(do)
-  if(pid == newpid) {
-    stop("The identifier (PID) of the existing DataObject is the same and the newpid argument.\n")
-  }
+
   newSysmeta <- do@sysmeta
-  newSysmeta@identifier <- newpid
   newSysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
   newSysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
   
@@ -1155,43 +1150,42 @@ setMethod("updateDataObject", signature("D1Client"),
   # Check if this object has been updated. If neither the sysmeta or the data have
   # not been updated, then we can skip it.
   updateId <- as.character(NA)
-  if(!do@updated[['sysmeta']] && !do@updated[['data']] && !forceUpdate) {
-    if(!quiet) message(sprintf("Neither the system metadata or data has changed for DataObject %s, so it will be skipped.", pid))
+  if(!do@updated[['sysmeta']] && !do@updated[['data']]) {
+    if(!quiet) sprintf("Neither the system metadata nor the data has changed for DataObject %s, so it will not updated.", pid)
   } else if(do@updated[['sysmeta']] && !do@updated[['data']]) {
     # Just update the sysmeta, as it changed, but the data did not.
-    if(!quiet) message(sprintf("Only sysmetadata has changed for DataObject %s, which will be updated.", pid))
+    if(!quiet) message(sprintf("Updating sysmetadata for DataObject %s.", pid))
     updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=newSysmeta)
     updateId <- pid
     do@sysmeta <- newSysmeta
   } else {
-    if(!quiet) message(sprintf("Updating DataObject %s.", pid))
-    # Both sysmeta and data have changed, so update them both.
+    oldId <- do@oldId
+    if(is.na(oldId)) {
+      stop("DataObject for id %s does not have a previous pid defined.\n")
+    }
+    if(oldId == pid) {
+        stop("The identifier of the existing DataObject is the same as the previous pid (the pid before it was modified).\n")
+    }
+    # Both sysmeta and data have changed, so update them both. (The case of data being updated and not sysmeta isn't possible)
     # If the DataObject has both @filename and @data defined, filename takes precedence
     if (!is.na(do@filename)) {
       # Upload the data to the MN using updateObject(), checking for success and a returned identifier
-      updateId <- updateObject(x@mn, pid=pid, file=do@filename, newpid=newpid, sysmeta=newSysmeta)
+      updateId <- updateObject(x@mn, pid=oldId, file=do@filename, newpid=pid, sysmeta=newSysmeta)
     } else {
       if (length(do@data != 0)) {
-        if(!quiet) message(sprintf("Updating DataObject %s.", pid))
         # Write the DataObject raw data to disk and upload the resulting file.
         tf <- tempfile()
         con <- file(tf, "wb")
         writeBin(do@data, con)
         close(con)
-        updateId <- updateObject(x@mn, pid=pid, file=tf, newpid=newpid, sysmeta=newSysmeta)
+        updateId <- updateObject(x@mn, pid=oldId, file=tf, newpid=pid, sysmeta=newSysmeta)
         file.remove(tf)
       } else {
         warning(
-          sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.",
-                  do@sysmeta@identifier
-          )
+          sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", pid)
         )
       }
     }
-  }
-  return(updateId)
-})
-
     if(!quiet) {
       if(is.na(updateId)) {
           message(sprintf("Unable to upload an update to DataObject with new id %s.", pid))
