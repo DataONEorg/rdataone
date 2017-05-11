@@ -485,7 +485,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   allIds <- packageMembers
   allIds[[length(allIds)+1]] <- resmapId
   allIds[[length(allIds)+1]] <- metadataPid
-  relations <- getTriples(resMap, identifiers=allIds)
+  relations <- getTriples(resMap, filter=TRUE, identifiers=allIds)
   freeResourceMap(resMap)
   
   if(nrow(relations) > 0) {
