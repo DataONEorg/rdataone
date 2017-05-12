@@ -825,7 +825,7 @@ setGeneric("uploadDataPackage", function(x, ...) {
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
                                                                            resolveURI=as.character(NA), ...) {
-  stopifnot(class(dp) == "DataPackage")
+    stopifnot(class(dp) == "DataPackage")
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMNodeId()")
     }
@@ -875,7 +875,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         
         # If this DataObject has never been uploaded before, then upload it now.
         if(is.na(do@sysmeta@dateUploaded)) {
-            returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules)
+            returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules, quiet=quiet)
             if(is.na(returnId)) {
                warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
             } else {
@@ -895,7 +895,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             # has changed and no identifier is provided, then a new one will be generated.
             # Update the object to the member node
             pid <- getIdentifier(do)
-            updateId <- updateDataObject(x, do=do, replicate=replicate, numberReplicas=numberReplicas,
+            updateId <- uploadDataObject(x, do=do, replicate=replicate, numberReplicas=numberReplicas,
                                          preferredNodes=preferredNodes, public=public, accessRules=accessRules,
                                          quiet=quiet)
             
@@ -935,7 +935,8 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                              suggestedFilename="resourceMap.xml")
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             
-            returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
+            returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
+                                         quiet=quiet)
             if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", newPid))
         } else {
             if(!quiet) cat(sprintf("No DataObjects uploaded from the DataPackage, so a resource map will not be created and uploaded.\n"))
@@ -958,13 +959,12 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             resMapObj@updated[['sysmeta']] <- TRUE
             resMapObj@updated[['data']] <- TRUE
-            if(!quiet) cat(sprintf("Updating resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
-            returnId <- updateDataObject(x, do=resMapObj, replicate=replicate, numberReplicas=numberReplicas, 
+            returnId <- uploadDataObject(x, do=resMapObj, replicate=replicate, numberReplicas=numberReplicas, 
                                          preferredNodes=preferredNodes, public=public, accessRules=accessRules,
-                                         quiet=quiet, force=TRUE) 
+                                         quiet=quiet) 
             dp@relations[['update']] <- FALSE
             if(!is.na(returnId)) {
-                if(!quiet) cat(sprintf("Updated resource map successfully\n"))
+            if(!quiet) cat(sprintf("Updating resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
             }
         } else {
             if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
@@ -1005,197 +1005,162 @@ setGeneric("uploadDataObject", function(x, ...) {
 #' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
 #' @param public A \code{"logical"} value - if TRUE then the uploaded object will be publicly readable.
 #' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
-#
-#' @export
-setMethod("uploadDataObject", signature("D1Client"), 
-    function(x, do, replicate=as.logical(FALSE), numberReplicas=NA, 
-             preferredNodes=NA, public=as.logical(FALSE), accessRules=NA, ...)  {
-      stopifnot(class(do) == "DataObject")
-      
-    if (nchar(x@mn@identifier) == 0) {
-      stop("Please set the DataONE Member Node to upload to using setMN()")
-    }
-   
-    doId <- do@sysmeta@identifier
-    # Set sysmeta values if passed in and not already set in sysmeta for each data object
-    if (!is.na(replicate)) {
-        do@sysmeta@replicationAllowed <- as.logical(replicate)
-    }
-    if (!is.na(numberReplicas)) {
-        do@sysmeta@numberReplicas <- as.numeric(numberReplicas)
-    }
-    if (!all(is.na(preferredNodes))) {
-        do@sysmeta@preferredNodes <- as.list(preferredNodes)
-    }
-    
-    if (public) {
-        do@sysmeta <- addAccessRule(do@sysmeta, "public", "read")
-    }
-        
-    # addAccessRule will add all rules (rows) in accessRules in one call
-    if(!all(is.na(accessRules))) {
-        do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
-    }
-    
-    if (!is.na(do@sysmeta@dateUploaded)) {
-      msg <- sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", do@sysmeta@identifier, do@sysmeta@dateUploaded)
-      msg <- sprintf("%sThis object will not be uploaded.", msg)
-      warning(msg)
-      # options(warn) may be set to essentially ignore warnings, so return NA if this is the case.
-      return(as.character(NA))
-    }
-    
-    # If the DataObject has both @filename and @data defined, filename takes precedence 
-    if(!is.na(do@filename)) {
-      # Upload the data to the MN using create(), checking for success and a returned identifier
-      createdId <- createObject(x@mn, doId, do@filename, do@sysmeta)
-    } else {
-      if(length(do@data == 0)) {
-        # Write the DataObject raw data to disk and upload the resulting file.
-        tf <- tempfile()
-        con <- file(tf, "wb")
-        writeBin(do@data, con)
-        close(con)
-        createdId <- createObject(x@mn, doId, tf, do@sysmeta)
-        file.remove(tf)
-      } else {
-        warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data slots are set.", do@sysmeta@identifier))
-      }
-    }
-    
-    if (is.null(createdId)) {
-        return(as.character(NA))
-    } else {
-        return(createdId)
-    }
-})
-
-#' Update a DataObject on a DataONE member node.
-#' @param x A D1Client instance. 
-#' @param ... (Not yet used.) 
-#' @return id The id of the DataObject that was uploaded
-#' @rdname updateDataObject
-#' @aliases updateDataObject
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
-#' @import datapack
-#' @export
-#' @examples
-#' library(dataone)
-#' library(datapack)
-#' testdf <- data.frame(x=1:10,y=11:20)
-#' csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
-#' write.csv(testdf, csvfile, row.names=FALSE)
-#' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-#' do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
-#' # Upload a single DataObject to DataONE (requires authentication)
-#' \dontrun{
-#' newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
-#' }
-setGeneric("updateDataObject", function(x, ...) {
-  standardGeneric("updateDataObject")
-})
-
-#' @rdname updateDataObject
-#' @param do The DataObject instance to be uploaded to DataONE.
-#' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate the updated object to other member nodes
-#' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
-#' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
-#' @param public A \code{"logical"} value - if TRUE then the uploaded object will be publicly readable.
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#
 #' @export
-setMethod("updateDataObject", signature("D1Client"), 
-            function(x, do, replicate = as.logical(FALSE), numberReplicas = NA, 
-                     preferredNodes = NA, public = as.logical(FALSE), accessRules = NA, quiet=TRUE, ...)  {
-              
-  stopifnot(class(do) == "DataObject")
-  if (nchar(x@mn@identifier) == 0) {
-    stop("Please set the DataONE Member Node using setMNodeId()")
-  }
-  
-  if(!is.na(do@sysmeta@obsoletedBy)) {
-    msg <- sprintf("This DataObject with identifier %s has been obsoleted by identifier %s\nso will not be updated", 
-                   do@sysmeta@identifier, do@sysmeta@obsoletedBy)
-    message(msg)
-    return(as.character(NA))
-  }
-   
-  pid <- getIdentifier(do)
-
-  newSysmeta <- do@sysmeta
-  newSysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-  newSysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-  
-  # Set sysmeta values if passed in and not already set in sysmeta for each data object
-  if (!is.na(replicate)) {
-    newSysmeta@replicationAllowed <- as.logical(replicate)
-  }
-  if (!is.na(numberReplicas)) {
-    newSysmeta@numberReplicas <- as.numeric(numberReplicas)
-  }
-  if (!all(is.na(preferredNodes))) {
-    newSysmeta@preferredNodes <- as.list(preferredNodes)
-  }
-  
-  if (public) {
-    newSysmeta <- addAccessRule(newSysmeta, "public", "read")
-  }
-  
-  # addAccessRule will add all rules (rows) in accessRules in one call
-  if (!all(is.na(accessRules))) {
-    newSysmeta <- addAccessRule(newSysmeta, accessRules)
-  }
-  
-  # Check if this object has been updated. If neither the sysmeta or the data have
-  # not been updated, then we can skip it.
-  updateId <- as.character(NA)
-  if(!do@updated[['sysmeta']] && !do@updated[['data']]) {
-    if(!quiet) sprintf("Neither the system metadata nor the data has changed for DataObject %s, so it will not updated.", pid)
-  } else if(do@updated[['sysmeta']] && !do@updated[['data']]) {
-    # Just update the sysmeta, as it changed, but the data did not.
-    if(!quiet) message(sprintf("Updating sysmetadata for DataObject %s.", pid))
-    updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=newSysmeta)
-    updateId <- pid
-    do@sysmeta <- newSysmeta
-  } else {
-    oldId <- do@oldId
-    if(is.na(oldId)) {
-      stop("DataObject for id %s does not have a previous pid defined.\n")
+setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=as.logical(FALSE),  numberReplicas=NA,  
+                                                               preferredNodes=NA,  public=as.logical(FALSE),  accessRules=NA, 
+                                                               quiet=TRUE, ...)  { 
+    
+    
+    stopifnot(class(do) == "DataObject")
+    if (nchar(x@mn@identifier) == 0) {
+        stop("Please set the DataONE Member Node using setMNodeId()")
     }
-    if(oldId == pid) {
-        stop("The identifier of the existing DataObject is the same as the previous pid (the pid before it was modified).\n")
-    }
-    # Both sysmeta and data have changed, so update them both. (The case of data being updated and not sysmeta isn't possible)
-    # If the DataObject has both @filename and @data defined, filename takes precedence
-    if (!is.na(do@filename)) {
-      # Upload the data to the MN using updateObject(), checking for success and a returned identifier
-      updateId <- updateObject(x@mn, pid=oldId, file=do@filename, newpid=pid, sysmeta=newSysmeta)
+    
+    # Checks are made for a DataObject being "new" or "downloaded, not modified" or "downloaded,"
+    
+    # Object is new, as it has never been uploaded
+    if(is.na(do@sysmeta@dateUploaded)) {
+        if (nchar(x@mn@identifier) == 0) {
+            stop("Please set the DataONE Member Node to upload to using setMN()")
+        }
+        
+        doId <- do@sysmeta@identifier
+        # Set sysmeta values if passed in and not already set in sysmeta for each data object
+        if (!is.na(replicate)) {
+            do@sysmeta@replicationAllowed <- as.logical(replicate)
+        }
+        if (!is.na(numberReplicas)) {
+            do@sysmeta@numberReplicas <- as.numeric(numberReplicas)
+        }
+        if (!all(is.na(preferredNodes))) {
+            do@sysmeta@preferredNodes <- as.list(preferredNodes)
+        }
+        
+        if (public) {
+            do@sysmeta <- addAccessRule(do@sysmeta, "public", "read")
+        }
+        
+        # addAccessRule will add all rules (rows) in accessRules in one call
+        if(!all(is.na(accessRules))) {
+            do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
+        }
+        
+        if (!is.na(do@sysmeta@dateUploaded)) {
+            msg <- sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", do@sysmeta@identifier, do@sysmeta@dateUploaded)
+            msg <- sprintf("%sThis object will not be uploaded.", msg)
+            warning(msg)
+            # options(warn) may be set to essentially ignore warnings, so return NA if this is the case.
+            return(as.character(NA))
+        }
+        
+        # If the DataObject has both @filename and @data defined, filename takes precedence 
+        if(!is.na(do@filename)) {
+            # Upload the data to the MN using create(), checking for success and a returned identifier
+            createdId <- createObject(x@mn, doId, do@filename, do@sysmeta)
+        } else {
+            if(length(do@data == 0)) {
+                # Write the DataObject raw data to disk and upload the resulting file.
+                tf <- tempfile()
+                con <- file(tf, "wb")
+                writeBin(do@data, con)
+                close(con)
+                createdId <- createObject(x@mn, doId, tf, do@sysmeta)
+                file.remove(tf)
+            } else {
+                warning(sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data slots are set.", do@sysmeta@identifier))
+            }
+        }
+        
+        if (is.null(createdId)) {
+            return(as.character(NA))
+        } else {
+            return(createdId)
+        }
     } else {
-      if (length(do@data != 0)) {
-        # Write the DataObject raw data to disk and upload the resulting file.
-        tf <- tempfile()
-        con <- file(tf, "wb")
-        writeBin(do@data, con)
-        close(con)
-        updateId <- updateObject(x@mn, pid=oldId, file=tf, newpid=pid, sysmeta=newSysmeta)
-        file.remove(tf)
-      } else {
-        warning(
-          sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", pid)
-        )
-      }
+        # This object has been downloaded from a repository and possibly updated.
+        if(!is.na(do@sysmeta@obsoletedBy)) {
+            msg <- sprintf("This DataObject with identifier %s has been obsoleted by identifier %s\nso will not be updated", 
+                           do@sysmeta@identifier, do@sysmeta@obsoletedBy)
+            message(msg)
+            return(as.character(NA))
+        }
+        
+        pid <- getIdentifier(do)
+        
+        newSysmeta <- do@sysmeta
+        newSysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+        newSysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+        
+        # Set sysmeta values if passed in and not already set in sysmeta for each data object
+        if (!is.na(replicate)) {
+            newSysmeta@replicationAllowed <- as.logical(replicate)
+        }
+        if (!is.na(numberReplicas)) {
+            newSysmeta@numberReplicas <- as.numeric(numberReplicas)
+        }
+        if (!all(is.na(preferredNodes))) {
+            newSysmeta@preferredNodes <- as.list(preferredNodes)
+        }
+        
+        if (public) {
+            newSysmeta <- addAccessRule(newSysmeta, "public", "read")
+        }
+        
+        # addAccessRule will add all rules (rows) in accessRules in one call
+        if (!all(is.na(accessRules))) {
+            newSysmeta <- addAccessRule(newSysmeta, accessRules)
+        }
+        
+        # Check if this object has been updated. If neither the sysmeta or the data have
+        # not been updated, then we can skip it.
+        updateId <- as.character(NA)
+        if(!do@updated[['sysmeta']] && !do@updated[['data']]) {
+            if(!quiet) sprintf("Neither the system metadata nor the data has changed for DataObject %s, so it will not updated.", pid)
+        } else if(do@updated[['sysmeta']] && !do@updated[['data']]) {
+            # Just update the sysmeta, as it changed, but the data did not.
+            if(!quiet) message(sprintf("Updating sysmetadata for DataObject %s.", pid))
+            updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=newSysmeta)
+            updateId <- pid
+            do@sysmeta <- newSysmeta
+        } else {
+            oldId <- do@oldId
+            if(is.na(oldId)) {
+                stop("DataObject for id %s does not have a previous pid defined.\n")
+            }
+            if(oldId == pid) {
+                stop("The identifier of the existing DataObject is the same as the previous pid (the pid before it was modified).\n")
+            }
+            # Both sysmeta and data have changed, so update them both. (The case of data being updated and not sysmeta isn't possible)
+            # If the DataObject has both @filename and @data defined, filename takes precedence
+            if (!is.na(do@filename)) {
+                # Upload the data to the MN using updateObject(), checking for success and a returned identifier
+                updateId <- updateObject(x@mn, pid=oldId, file=do@filename, newpid=pid, sysmeta=newSysmeta)
+            } else {
+                if (length(do@data != 0)) {
+                    # Write the DataObject raw data to disk and upload the resulting file.
+                    tf <- tempfile()
+                    con <- file(tf, "wb")
+                    writeBin(do@data, con)
+                    close(con)
+                    updateId <- updateObject(x@mn, pid=oldId, file=tf, newpid=pid, sysmeta=newSysmeta)
+                    file.remove(tf)
+                } else {
+                    warning(
+                        sprintf("DataObject %s cannot be uploaded, as neither @filename nor @data are set.", pid)
+                    )
+                }
+            }
+            if(!quiet) {
+                if(is.na(updateId)) {
+                    sprintf("Unable to upload data object with new id %s to replace id: %s.", pid, oldId)
+                } else {
+                    sprintf("Uploaded data object with new id: %s, obsoleting id: %s.", pid, oldId)
+                }
+            }
+        }
+        return(updateId) 
     }
-    if(!quiet) {
-      if(is.na(updateId)) {
-          message(sprintf("Unable to upload an update to DataObject with new id %s.", pid))
-      } else {
-          message(sprintf("Uploaded an update to DataObject with new id: %s, old id: %s.", pid, oldId))
-      }
-    }
-  }
-
-  return(updateId)
 })
 
 #' List DataONE Member Nodes.
