@@ -357,6 +357,7 @@ setGeneric("createObject", function(x, ...) {
 #' @rdname createObject
 #' @param file the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @param dataobj a \code{raw} object to use for the upload, instead of the contents of the \code{file} argument.
 setMethod("createObject", signature("MNode"), function(x, pid, file=as.character(NA), sysmeta, dataobj=NULL, ...) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
@@ -444,6 +445,7 @@ setGeneric("updateObject", function(x, ...) {
 #' @param file the absolute file location of the object to be uploaded
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @param dataobj a \code{raw} object to use for the upload, instead of the contents of the \code{file} argument.
 #' @rdname updateObject
 setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character(NA), newpid, sysmeta, dataobj=NULL) {
   stopifnot(is.character(pid))
