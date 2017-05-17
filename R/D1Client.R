@@ -33,21 +33,18 @@
 #' @section Methods:
 #' \itemize{
 #'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
-#'  \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
-#'  \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
-#'  \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
-#'  \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
-#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
-#'  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node}
+#'  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
+#'  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node.}
+#'  \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
+#'  \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
+#'  \item{\code{\link{getDataObject}}}{: Download a single data object from a DataONE Federation member node.}
+#'  \item{\code{\link{getDataPackage}}}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
 #'  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node}
 #'  \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
-#'  \item{\code{\link{getMN}}}{: Get a member node client based on its node identifier.}
-#'  \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
-#'  \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node..}
 #'  \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
-#'  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
-#'  \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
-#'  \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
+#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
+#'  \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node.}
+#'  \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
@@ -204,16 +201,23 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
   return(getDataObject(x, identifier))
 })
 
-#' Download a data object from the DataONE Federation as a DataObject.
+#' Download a from the DataONE Federation as a DataObject.
 #' @description A convenience method to download a data object and its associated SystemMetadata, wrapped
 #' in a DataObject class.
 #' @details This method performs multiple underlying calls to the DataONE repository network. 
 #' CN.resolve() is called to locate the object on one or more repositories, and then each of these
 #' is accessed until success at downloading the associated SystemMetadata and data bytes, which are 
 #' finally wrapped in a DataObject and returned. Replaces previous getD1Object() method in the version 1
-#' dataone library.
+#' dataone library. The \code{lazyLoad} parameter specifies that only sysmeta metadata is downloaded and
+#' not the data itself. This argument is used together with the \code{limit} parameter, which specifies 
+#' the maximum size of data object that will be downloaded. IF \code{lazyLoad} is FALSE, then \code{limit}
+#' is ignored.
 #' @param x A D1Client object.
 #' @param identifier The identifier of the object to get.
+#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
+#' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
+#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".
+#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param ... (not yet used)
 #' @rdname getDataObject
 #' @aliases getDataObject
@@ -332,15 +336,13 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     return(do)
 })
 
-#' Download a data package from the DataONE Federation as a DataPackage.
+#' Download data from the DataONE Federation as a DataPackage.
 #' @description This is convenience method that will download all the members in a DataONE data package 
 #' and insert them into a DataPackage, including associated SystemMetadata for each package
 #' member.
 #' @details A 'data package' that resides on a DataONE member node is defined as a collection of
 #' digital objects that are described by a metadata document. The 
 #' @param x A D1Client object.
-#' @param identifier The identifier of a package, package metadata or other package member
-#' @param ... (not yet used)
 #' @rdname getDataPackage
 #' @aliases getDataPackage
 #' @return A DataPackage or NULL if the package was not found in DataONE
@@ -357,6 +359,12 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 })
 
 #' @rdname getDataPackage
+#' @param identifier The identifier of a package, package metadata or other package member
+#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
+#' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
+#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".
+#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param ... (not yet used)
 #' @export
 setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
     
