@@ -41,7 +41,7 @@ sdf <- read.csv(csvfile)
 stf <- charToRaw(convert.csv(d1c, sdf))
 sciId <- sprintf("urn:uuid:\%s", UUIDgenerate())
 sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c))
-dp <- addData(dp, do=sciObj, mo=metadataObj)
+dp <- addMember(dp, do=sciObj, mo=metadataObj)
 expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
 resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE)
 }

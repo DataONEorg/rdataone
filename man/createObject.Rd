@@ -8,7 +8,8 @@
 \usage{
 createObject(x, ...)
 
-\S4method{createObject}{MNode}(x, pid, file, sysmeta)
+\S4method{createObject}{MNode}(x, pid, file = as.character(NA), sysmeta,
+  dataobj = NULL, ...)
 }
 \arguments{
 \item{x}{The MNode instance on which the object will be created}
@@ -20,6 +21,8 @@ createObject(x, ...)
 \item{file}{the absolute file location of the object to be uploaded}
 
 \item{sysmeta}{a SystemMetadata instance describing properties of the object}
+
+\item{dataobj}{a \code{raw} object to use for the upload, instead of the contents of the \code{file} argument.}
 }
 \value{
 a \code{character} containing the identifier that was created.

@@ -21,21 +21,18 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 
 \itemize{
  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
- \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
- \item{\code{\link{getDataObject}}}{: Get the data content of a specified data object}
- \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
- \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
- \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
- \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node}
+ \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
+ \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node.}
+ \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
+ \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
+ \item{\code{\link{getDataObject}}}{: Download a single data object from a DataONE Federation member node.}
+ \item{\code{\link{getDataPackage}}}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node}
  \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
- \item{\code{\link{getMN}}}{: Get a member node client based on its node identifier.}
- \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
- \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node..}
  \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
- \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
- \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
- \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
+ \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
+ \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node.}
+ \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
 }
 }
 
