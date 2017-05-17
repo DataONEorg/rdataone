@@ -924,7 +924,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                 dp <- addMember(dp, do)
                 # Now update the package relationships, substituting the old id for the new
                 dp <- updateRelationships(dp, pid, updateId)
-                if(!quiet) cat(sprintf("Updated data object with identifier: %s\n", updateId))
+                if(!quiet) cat(sprintf("Updated data object with id: %s, obsoleting id: %s\n", updateId, do@oldId))
             } 
         }
     }
