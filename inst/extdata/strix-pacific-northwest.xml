@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packageId="urn:uuid:439c8d9d-f0ed-4f47-8cac-275d0d64bafd" system="uuid" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 eml.xsd">
+  <dataset scope="document">
+    <title>Strix occidentalis Distribution in the Pacific Northwest.</title>
+    <creator>
+      <individualName>
+        <givenName>Connell</givenName>
+        <surName>Joseph</surName>
+      </individualName>
+      <electronicMailAddress>jconnell@example.com</electronicMailAddress>
+    </creator>
+    <pubDate>2015-12-14</pubDate>
+    <abstract>Strix occidentalis sightings in the Pacific Northwest.</abstract>
+    <intellectualRights>CC0, http://creativecommons.org/publicdomain/zero/1.0</intellectualRights>
+    <coverage>
+      <geographicCoverage>
+        <geographicDescription>Northwest Oregon</geographicDescription>
+        <boundingCoordinates>
+          <westBoundingCoordinate>-124.07</westBoundingCoordinate>
+          <eastBoundingCoordinate>-123.22</eastBoundingCoordinate>
+          <northBoundingCoordinate>45.53</northBoundingCoordinate>
+          <southBoundingCoordinate>44.47</southBoundingCoordinate>
+        </boundingCoordinates>
+      </geographicCoverage>
+      <temporalCoverage>
+        <rangeOfDates>
+          <beginDate>
+            <calendarDate>2015</calendarDate>
+          </beginDate>
+          <endDate>
+            <calendarDate>2015</calendarDate>
+          </endDate>
+        </rangeOfDates>
+      </temporalCoverage>
+    </coverage>
+    <contact>
+      <individualName>
+        <givenName>Connell</givenName>
+        <surName>Joseph</surName>
+      </individualName>
+      <electronicMailAddress>jconnell@example.com</electronicMailAddress>
+    </contact>
+    <methods>
+      <methodStep>
+        <description>This is the method description.</description>
+      </methodStep>
+    </methods>
+    <otherEntity>
+      <entityName>Species input file</entityName>
+      <entityDescription>Sample data contains observations of bird species.</entityDescription>
+      <physical>
+        <objectName>sample.csv</objectName>
+        <size unit="byte">11577</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>text/csv</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+        <distribution id="14303434251521">
+          <online>
+            <url function="download"></url>
+          </online>
+        </distribution>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+    <otherEntity>
+      <entityName>Filter R script</entityName>
+      <entityDescription>An R script that takes an input file and cleans the data by filtering out only species of interest.</entityDescription>
+      <physical>
+        <objectName>filterSpecies.R</objectName>
+        <size unit="byte">380</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>application/R</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+        <distribution id="1430343425152">
+          <online>
+            <url function="download"></url>
+          </online>
+        </distribution>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+    <otherEntity>
+      <entityName>filteredSpecies</entityName>
+      <entityDescription>A data file that was filtered from the input date to contain only the species MUSS</entityDescription>
+      <physical>
+        <objectName>filteredSpecies.csv</objectName>
+        <size unit="byte">6017</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>text/csv</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+        <distribution id="1430343425153">
+          <online>
+            <url function="download"></url>
+          </online>
+        </distribution>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+    <otherEntity>
+      <entityName>collectionMethods</entityName>
+      <entityDescription>A data file in CSV format that contains a list of possible data collection method abbreviations.</entityDescription>
+      <physical>
+        <objectName>collectionMethods.csv</objectName>
+        <size unit="byte">775</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>text/csv</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+        <distribution id="1430343425154">
+          <online>
+            <url function="download"></url>
+          </online>
+        </distribution>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+  </dataset>
+</eml:eml>
+
