@@ -357,7 +357,8 @@ setGeneric("createObject", function(x, ...) {
 #' @rdname createObject
 #' @param file the absolute file location of the object to be uploaded
 #' @param sysmeta a SystemMetadata instance describing properties of the object
-setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
+#' @param dataobj a \code{raw} object to use for the upload, instead of the contents of the \code{file} argument.
+setMethod("createObject", signature("MNode"), function(x, pid, file=as.character(NA), sysmeta, dataobj=NULL, ...) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(x@endpoint, "object", sep="/")
@@ -384,6 +385,13 @@ setMethod("createObject", signature("MNode"), function(x, pid, file, sysmeta) {
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=x@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
+    if(!is.null(dataobj)) {
+      if(!is.na(file)) {
+        stop("Both 'file' and 'dataobj' arguments have been specified")
+      }
+      file <- tempfile()
+      writeBin(file, dataobj)
+    }
     response <- auth_post(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file),
                 sysmeta=upload_file(sm_file, type='text/xml')), node=x)
@@ -437,8 +445,9 @@ setGeneric("updateObject", function(x, ...) {
 #' @param file the absolute file location of the object to be uploaded
 #' @param newpid The identifier of the new object to be created
 #' @param sysmeta a SystemMetadata instance describing properties of the object
+#' @param dataobj a \code{raw} object to use for the upload, instead of the contents of the \code{file} argument.
 #' @rdname updateObject
-setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sysmeta) {
+setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character(NA), newpid, sysmeta, dataobj=NULL) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID
     url <- paste(x@endpoint, "object", sep="/")
@@ -465,6 +474,13 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file, newpid, sys
     sysmetaxml <- serializeSystemMetadata(sysmeta, version=x@APIversion)
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
+    if(!is.null(dataobj)) {
+      if(!is.na(file)) {
+        stop("Both 'file' and 'dataobj' arguments have been specified")
+      }
+      file <- tempfile()
+      writeBin(file, dataobj)
+    }
     response <- auth_put(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file), 
                 newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=x)

@@ -4,11 +4,12 @@
 \name{getDataObject}
 \alias{getDataObject}
 \alias{getDataObject,D1Client-method}
-\title{Download a data object from the DataONE Federation as a DataObject.}
+\title{Download a from the DataONE Federation as a DataObject.}
 \usage{
 getDataObject(x, identifier, ...)
 
-\S4method{getDataObject}{D1Client}(x, identifier)
+\S4method{getDataObject}{D1Client}(x, identifier, lazyLoad = FALSE,
+  limit = "1MB", quiet = TRUE)
 }
 \arguments{
 \item{x}{A D1Client object.}
@@ -16,6 +17,13 @@ getDataObject(x, identifier, ...)
 \item{identifier}{The identifier of the object to get.}
 
 \item{...}{(not yet used)}
+
+\item{lazyLoad}{A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.}
+
+\item{limit}{A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
+for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".}
+
+\item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 }
 \value{
 A DataObject or NULL if the object was not found in DataONE
@@ -29,7 +37,10 @@ This method performs multiple underlying calls to the DataONE repository network
 CN.resolve() is called to locate the object on one or more repositories, and then each of these
 is accessed until success at downloading the associated SystemMetadata and data bytes, which are 
 finally wrapped in a DataObject and returned. Replaces previous getD1Object() method in the version 1
-dataone library.
+dataone library. The \code{lazyLoad} parameter specifies that only sysmeta metadata is downloaded and
+not the data itself. This argument is used together with the \code{limit} parameter, which specifies 
+the maximum size of data object that will be downloaded. IF \code{lazyLoad} is FALSE, then \code{limit}
+is ignored.
 }
 \examples{
 \dontrun{

@@ -10,7 +10,7 @@ uploadDataObject(x, ...)
 
 \S4method{uploadDataObject}{D1Client}(x, do, replicate = as.logical(FALSE),
   numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
-  accessRules = NA, ...)
+  accessRules = NA, quiet = TRUE, ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}
@@ -28,6 +28,8 @@ uploadDataObject(x, ...)
 \item{public}{A \code{"logical"} value - if TRUE then the uploaded object will be publicly readable.}
 
 \item{accessRules}{Access rules of \code{'data.frame'} that will be added to the access policy}
+
+\item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 }
 \value{
 id The id of the DataObject that was uploaded
