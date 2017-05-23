@@ -930,20 +930,6 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         }
     }
     
-<<<<<<< HEAD
-    tf <- tempfile()
-    if(!is.na(packageId)) {
-        serializationId <- packageId
-    } else {
-        serializationId <- paste0("urn:uuid:", UUIDgenerate())
-    }
-    status <- serializePackage(dp, file=tf, id=serializationId, resolveURI=resolveURI)
-    resMapObj <- new("DataObject", id=serializationId, format="http://www.openarchives.org/ore/terms", user=submitter, mnNodeId=x@mn@identifier, filename=tf)
-    resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
-    if(!quiet) cat(sprintf("Uploading resource map with id %s to %s\n", getIdentifier(resMapObj), x@mn@endpoint))
-    returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules)
-    if(!quiet) cat(sprintf("Uploading identifier: %s\n", returnId))
-=======
     # Now upload or update the resource map if necessary.
     returnId <- as.character(NA)
     # This is a new package, so potentially we need to upload a resource map
@@ -993,7 +979,6 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
         } 
     }
->>>>>>> workflow
     return(returnId)
 })
 
