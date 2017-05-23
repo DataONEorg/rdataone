@@ -1134,7 +1134,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         } else {
             oldId <- do@oldId
             if(is.na(oldId)) {
-                stop("DataObject for id %s does not have a previous pid defined.\n")
+                stop(sprintf("DataObject for id %s does not have a previous pid defined.\n", pid))
             }
             if(oldId == pid) {
                 stop("The identifier of the existing DataObject is the same as the previous pid (the pid before it was modified).\n")
