@@ -834,6 +834,9 @@ setGeneric("uploadDataPackage", function(x, ...) {
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
                                                                            resolveURI=as.character(NA), packageId=as.character(NA), ...) {
+  
+    # Define the creator that will appear in the ORE Resource Map for this package.
+    creator <- "DataONE R Client"
     stopifnot(class(dp) == "DataPackage")
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMNodeId()")
@@ -938,12 +941,11 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         if (uploadedMember) {
             tf <- tempfile()
             newPid <- paste0("urn:uuid:", UUIDgenerate())
-            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI)
+            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             # Recreate the old resource map, so that it can be updated with a new pid
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
                              suggestedFilename="resourceMap.xml")
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
-            
             returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
                                          quiet=quiet)
             if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", newPid))
@@ -959,12 +961,16 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         if(dp@relations[['updated']]) {
             newPid <- sprintf("urn:uuid:%s", UUIDgenerate())
             tf <- tempfile()
-            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI)
+            status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             
             # Create a new resource map that will replace the old one.
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
             # Assign the old resource map id (possibly from a repository) for the pid to update
             resMapObj@oldId <- dp@resmapId
+            # Make it appear that this object was downloaded and is now being updated. The resource map
+            # is different than any other object in the package, because there is not a DataObject contained
+            # in the DataPackage, instead the resource map info is stored in the package relationships.
+            resMapObj@sysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             resMapObj@updated[['sysmeta']] <- TRUE
             resMapObj@updated[['data']] <- TRUE
