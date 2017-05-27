@@ -887,6 +887,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         
         # If this DataObject has never been uploaded before, then upload it now.
         if(is.na(do@sysmeta@dateUploaded)) {
+            cat(sprintf("Uploading object with id %s", do@sysmeta@identifier))
             returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules, quiet=quiet)
             if(is.na(returnId)) {
                warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
@@ -979,7 +980,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                                          quiet=quiet) 
             dp@relations[['update']] <- FALSE
             if(!is.na(returnId)) {
-            if(!quiet) cat(sprintf("Updating resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
+                if(!quiet) cat(sprintf("Updated resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
             }
         } else {
             if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
@@ -1025,7 +1026,6 @@ setGeneric("uploadDataObject", function(x, ...) {
 setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=as.logical(FALSE),  numberReplicas=NA,  
                                                                preferredNodes=NA,  public=as.logical(FALSE),  accessRules=NA, 
                                                                quiet=TRUE, ...)  { 
-    
     
     stopifnot(class(do) == "DataObject")
     if (nchar(x@mn@identifier) == 0) {
@@ -1097,12 +1097,11 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         if(!is.na(do@sysmeta@obsoletedBy)) {
             msg <- sprintf("This DataObject with identifier %s has been obsoleted by identifier %s\nso will not be updated", 
                            do@sysmeta@identifier, do@sysmeta@obsoletedBy)
-            message(msg)
+            cat(sprintf(msg))
             return(as.character(NA))
         }
         
         pid <- getIdentifier(do)
-        
         newSysmeta <- do@sysmeta
         newSysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
         newSysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
@@ -1134,8 +1133,8 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             if(!quiet) sprintf("Neither the system metadata nor the data has changed for DataObject %s, so it will not updated.", pid)
         } else if(do@updated[['sysmeta']] && !do@updated[['data']]) {
             # Just update the sysmeta, as it changed, but the data did not.
-            if(!quiet) message(sprintf("Updating sysmetadata for DataObject %s.", pid))
             updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=newSysmeta)
+            if(!quiet) cat(sprintf("Updated sysmetadata for DataObject %s.", pid))
             updateId <- pid
             do@sysmeta <- newSysmeta
         } else {
