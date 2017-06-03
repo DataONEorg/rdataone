@@ -1102,28 +1102,31 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         }
         
         pid <- getIdentifier(do)
-        newSysmeta <- do@sysmeta
-        newSysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-        newSysmeta@dateSysMetadataModified <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
-        
+        # Update the sysmeta with the necessary new values
+        # Set these values to NA so they won't be included in the serialized sysmeta,
+        # as DataONE will complain or get confused if they are set. DataONE will
+        # set these values on upload/update.
+        do@sysmeta@obsoletes <- as.character(NA)
+        do@sysmeta@obsoletedBy <- as.character(NA)
+        do@sysmeta@dateUploaded <- as.character(NA)
+        do@sysmeta@dateSysMetadataModified <- as.character(NA)
+        do@sysmeta@archived <- as.logical(NA)
         # Set sysmeta values if passed in and not already set in sysmeta for each data object
         if (!is.na(replicate)) {
-            newSysmeta@replicationAllowed <- as.logical(replicate)
+            do@sysmeta@replicationAllowed <- as.logical(replicate)
         }
         if (!is.na(numberReplicas)) {
-            newSysmeta@numberReplicas <- as.numeric(numberReplicas)
+            do@sysmeta@numberReplicas <- as.numeric(numberReplicas)
         }
         if (!all(is.na(preferredNodes))) {
-            newSysmeta@preferredNodes <- as.list(preferredNodes)
+            do@sysmeta@preferredNodes <- as.list(preferredNodes)
         }
-        
         if (public) {
-            newSysmeta <- addAccessRule(newSysmeta, "public", "read")
+            do@sysmeta <- addAccessRule(do@sysmeta, "public", "read")
         }
-        
         # addAccessRule will add all rules (rows) in accessRules in one call
         if (!all(is.na(accessRules))) {
-            newSysmeta <- addAccessRule(newSysmeta, accessRules)
+            do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
         }
         
         # Check if this object has been updated. If neither the sysmeta or the data have
@@ -1133,12 +1136,13 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             if(!quiet) sprintf("Neither the system metadata nor the data has changed for DataObject %s, so it will not updated.", pid)
         } else if(do@updated[['sysmeta']] && !do@updated[['data']]) {
             # Just update the sysmeta, as it changed, but the data did not.
-            updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=newSysmeta)
+            updated <- updateSystemMetadata(x@mn, pid=pid, sysmeta=do@sysmeta)
             if(!quiet) cat(sprintf("Updated sysmetadata for DataObject %s.", pid))
             updateId <- pid
-            do@sysmeta <- newSysmeta
         } else {
             oldId <- do@oldId
+            # The obsoleted object will always have serialVersion = 1, it's new!
+            do@sysmeta@serialVersion <- 1
             if(is.na(oldId)) {
                 stop(sprintf("DataObject for id %s does not have a previous pid defined.\n", pid))
             }
@@ -1149,7 +1153,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             # If the DataObject has both @filename and @data defined, filename takes precedence
             if (!is.na(do@filename)) {
                 # Upload the data to the MN using updateObject(), checking for success and a returned identifier
-                updateId <- updateObject(x@mn, pid=oldId, file=do@filename, newpid=pid, sysmeta=newSysmeta)
+                updateId <- updateObject(x@mn, pid=oldId, file=do@filename, newpid=pid, sysmeta=do@sysmeta)
             } else {
                 if (length(do@data != 0)) {
                     # Write the DataObject raw data to disk and upload the resulting file.
@@ -1157,7 +1161,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
                     con <- file(tf, "wb")
                     writeBin(do@data, con)
                     close(con)
-                    updateId <- updateObject(x@mn, pid=oldId, file=tf, newpid=pid, sysmeta=newSysmeta)
+                    updateId <- updateObject(x@mn, pid=oldId, file=tf, newpid=pid, sysmeta=do@sysmeta)
                     file.remove(tf)
                 } else {
                     warning(
