@@ -10,22 +10,22 @@ vignette: >
 
 ## Updating A DataONE Package
 
-After a package has been uploaded to DataONE, it may be determined by the package submitter or other interested
+After a package has been uploaded to a DataONE Member Node, it may be determined by the package submitter or other interested
 parties that the package needs to be updated, 
 for example to add a missing file, replace one file with another, or remove a package member from the package.
 
-These types of modifications can be accomplished by downloading the entire package from DataONE using the 
+These types of modifications can be accomplished by downloading the package from DataONE using the 
 `getDataPackage` method to create a local copy of the package in R, then modifying the package contents and 
-uploading the package back to the DataONE.
+uploading the package back to the DataONE. 
 
 ### 1. Create A Package And Upload To DataONE
 
-To demonstrate a package update, a slightly more complex package than the previous example package will be used. This
-example package must first be created and then uploading to DataONE. Once this has been accomplished, the steps
+To demonstrate a package update, a simple example package will be used from files provided with the `dataone`
+R package. This example package must first be created and then uploading to DataONE. Once this has been accomplished, the steps
 necessary to update it will be shown.
 
 First, a DataPackage is created and a sample EML metadata file is added.
-This EML file contains descriptions of all the DataObjects that will be uploaded in the example package:
+This EML file contains descriptions of all the DataObjects that will be added to and uploaded with the example package:
 
 ```{r}
 library(dataone)
@@ -49,8 +49,8 @@ sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggested
 dp <- addMember(dp, sourceObj, metadataObj)
 ```
 
-The next step shows how to update the EML DataObject within the DataPackage directly, rather than having
-to extract the DataObject, update it, then re-insert it.
+The next step shows how to update the DataObject that contains EML, directly within the DataPackage, rather than having
+to extract the DataObject from the DataPackage, update it, then re-insert it.
 
 The section of the metadata that describes the dataset `sample.csv` will be updated. This is an EML 
 `<otherEntity>` element,  which contains the `<url>` element:
@@ -90,7 +90,7 @@ are required by DataONE when the modified object is uploaded to DataONE.
 
 If the `newId` parameter  is not included in the call to `updateMetadata`, then the new identifier will be generated automatically. Alternatively, the `newId` parameter can be used to specify a desired value for the new identifier
 
-The identifier for DataObject can be retrieved from a DataPackage using the `selectMember` method:
+The identifier for the DataObject can be retrieved from a DataPackage using the `selectMember` method:
 ```{r}
 metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
 ```
