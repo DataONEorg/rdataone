@@ -333,6 +333,9 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     # Notice that we are passing the existing sysmeta for this object via the 'id' parameter,
     # which will cause the DataObject to use this sysmeta and not generate a new one.
     do <- new("DataObject", id=sysmeta, dataobj=bytes, dataURL=dataURL)
+    # Save the identifier that this object had on the repository. If this update is to be updated,
+    # the old identifier is needed for the update processing on the repo.
+    do@oldId <- getIdentifier(do)
     return(do)
 })
 
