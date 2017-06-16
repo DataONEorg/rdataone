@@ -54,19 +54,21 @@ For example, if the SID is specified when the object is downloaded, the most rec
 ### 2. New Authentication Mechanism
 Uploading data to DataONE requires that a DataONE user identity be provided. In DataONE Version 1.x, the 
 identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
-adds an additional method to provide identity information - an *authentication token*. Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API.
+adds an additional method to provide identity information - an *authentication token*.
+An authentication token is an encrypted text string that is provided by DataONE that
+can be sent to DataONE services to prove a user's identity.
 
-The process of providing user identity information either via an X.509 certificate or via an authentication token
-is refered to as *authentication*.
+Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API
 
-Authentication tokens can be obtained from a user's DataONE account settings web page. To create an
-authentication token:
+The process of providing user identity information either via an X.509 certificate or via an authentication token is refered to as *authentication*.
+
+Authentication tokens can be obtained from a user's DataONE account settings web page. To create an authentication token:
 
 - Navigate to https://search.dataone.org
 - Click *Sign in*, or *Sign up* if necessary
-- Once signed in, click on the user name and select 'My profile' in the drop down menu.
+- Once signed in, move the cursor over the user name and select 'My profile' in the drop down menu.
 - Click on the "Settings" tab.
-- Click the "Apps" menu item.
+- Click on "Authentication Token" in the menu below "Welcome"
 - Click on the "Token for DataONE R" tab.
 - Click "Renew authentication token" if the token you have been using has expired.
 - Click on the "Copy" button below the text window to copy the authentication string to the paste buffer.
