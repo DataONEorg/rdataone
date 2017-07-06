@@ -51,7 +51,7 @@ With *dataone* Version 2.0, an additional, optional identifier can be associated
 Using SIDs the most current version of an object can be obtained, without the need to determine the PID of the latest version.
 For example, if the SID is specified when the object is downloaded, the most recent version of that object will be downloaded.
 
-### 2. New Authentication Mechanism
+### 2. DataONE User Authentication
 Uploading data to DataONE requires that a DataONE user identity be provided. In DataONE Version 1.x, the 
 identity of a user was provided by an X.509 client certificate. DataONE Version 2.0
 adds an additional method to provide identity information - an *authentication token*.
