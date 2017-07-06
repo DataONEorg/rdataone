@@ -765,6 +765,10 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     if (is(solrQuery, "list")) {
       encodedKVs <- character()
       for(key in attributes(solrQuery)$names) {
+        # Convert query terms to character if not already
+        if(!class(solrQuery[[key]]) == "character") {
+            solrQuery[[key]] <- as.character(solrQuery[[key]])
+        }
         if (encode) {
           kv <- paste0(key, "=", URLencode(solrQuery[[key]], reserved=encodeReserved))
         } else {
