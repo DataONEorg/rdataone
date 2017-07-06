@@ -10,258 +10,279 @@ vignette: >
 
 ## Updating A DataONE Package
 
-After a package has been uploaded to a DataONE Member Node, it may be determined by the package submitter or other interested
-parties that the package needs to be updated, 
-for example to add a missing file, replace one file with another, or remove a package member from the package.
+A DataONE package is a collection of datasets and other files that are described by a metadata file.
+
+A *DataPackge* is a `dataone` R object that can contain a DataONE package that is either downloaded from
+DataONE. Also, a *DataPackage* can be created locally in R and then uploaded to DataONE.
+
+After a package has been uploaded to a DataONE Member Node, it may be determined by the package submitter or other
+interested parties that the package needs to be updated, for example to add a missing file, replace one file 
+with another, or remove a package member from the package.
 
 These types of modifications can be accomplished by downloading the package from DataONE using the 
-`getDataPackage` method to create a local copy of the package in R, then modifying the package contents and 
-uploading the package back to the DataONE. 
+`getDataPackage` method to create a local copy of the package in R, modifying the package contents locally,
+then uploading the modified package to DataONE. 
 
-### 1. Create A Package And Upload To DataONE
-
-To demonstrate a package update, a simple example package will be used from files provided with the `dataone`
-R package. This example package must first be created and then uploading to DataONE. Once this has been accomplished, the steps
-necessary to update it will be shown.
-
-First, a DataPackage is created and a sample EML metadata file is added.
-This EML file contains descriptions of all the DataObjects that will be added to and uploaded with the example package:
+The complete example script used to perform a package update is shown below:
 
 ```{r}
-library(dataone)
 library(datapack)
-library(uuid)
-
-d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-dp <- new("DataPackage")
-
-emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile,
-                   suggestedFilename=basename(emlFile))
-dp <- addMember(dp, metadataObj)
+library(dataone)
 ```
-
-Next, an input data file will be added to the package:
-
-```{r}
-sourceData <- system.file("extdata/sample.csv", package="dataone")
-sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename=basename(sourceData))
-dp <- addMember(dp, sourceObj, metadataObj)
-```
-
-The next step shows how to update the DataObject that contains EML, directly within the DataPackage, rather than having
-to extract the DataObject from the DataPackage, update it, then re-insert it.
-
-The section of the metadata that describes the dataset `sample.csv` will be updated. This is an EML 
-`<otherEntity>` element,  which contains the `<url>` element:
-```
-<physical>
-    <distribution>
-        <online>
-            <url>some url value here</url>
-        </online>
-    </distribution>
-</physical>
-```
-This element contains the link that can be used to download the file from DataONE, 
-which includes the DataONE identifier for the object. Because the identifier value is set when the DataObject
-is created, the EML metadata is out of date and needs to be updated with the new identifier value.
-
-In the example below, the metadata is updated to have the distribution URL similiar to:
-`https://mn-stage-ucsb-2.test.dataone.org/metacat/d1/mn/v2/object/urn:uuid:563c265b-3743-4e03-bcee-8ec09697a1a3`,
-using the `updateMetadata` method:
-
-```{r}
-xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"sample.csv\"]/online/url"
-newURL <- sprintf("%s/%s/object/%s", d1c@mn@baseURL, d1c@mn@APIversion, getIdentifier(sourceObj))
-dp <- updateMetadata(dp, do=metadataObj, xpath=xpathToURL, replacement=newURL)
-```
-
-The `updateMetadata` method updates the DataObject specified with the `do` argument. This argument can alternatively
-be specified as the identifier value of the DataObject. 
-
-The `xpath` argument specifies a location in the EML document as an XML Xpath expression. The `replacement`
-argument specifies the character string that will be substituted for the previous value. An updated DataPackage
-containing the updated metadata DataObject is returned from the call.
-
-Also, `updateMedata` will update the identifier associated with the DataObject if necessary.
-and retain the original identifier. The original identifer and a new identifier 
-are required by DataONE when the modified object is uploaded to DataONE. 
-
-If the `newId` parameter  is not included in the call to `updateMetadata`, then the new identifier will be generated automatically. Alternatively, the `newId` parameter can be used to specify a desired value for the new identifier
-
-The identifier for the DataObject can be retrieved from a DataPackage using the `selectMember` method:
-```{r}
-metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-```
-
-The `selectMember` method checks the `name` slot, in this case `sysmeta@formatId`, of each DataObject in the 
-DataPackage `dp` and returns the identifier of any member that matches the specified 
-value (`eml://ecoinformatics.org/eml-2.1.1` in this case). Only the DataObject that contains the EML metadata i
-matches for the example DataPackage, so the identifier for just that member is returned.
-
-Next, an R script and data file will be added to the DataPackage in the same manner as the previous file.
-Note that the identifier for the metadata DataObject can be used instead of the DataObject itself for calls 
-to `addMember` (argument `mo`) and `updateMetadata` (argument `do`):
-```{r}
-
-progFile <- system.file("extdata/filterSpecies.R", package="dataone")
-progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc", suggestedFilename=basename(progFile))
-dp <- addMember(dp, progObj, mo=metadataId)
-
-xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filterSpecies.R\"]/online/url"
-newURL <- sprintf("%s/%s/object/%s", d1c@mn@baseURL, d1c@mn@APIversion, getIdentifier(progObj))
-dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, replacement=newURL)
-metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-
-outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
-outputObj <- new("DataObject", format="text/csv", filename=outputData, suggestedFilename=basename(outputData))
-dp <- addMember(dp, outputObj, mo=metadataId)
-
-xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filteredSpecies.csv\"]/online/url"
-newURL <- sprintf("%s/%s/object/%s", d1c@mn@baseURL, d1c@mn@APIversion, getIdentifier(outputObj))
-dp <- updateMetadata(dp, do=metadataId, xpath=xpathToURL, replacement=newURL)
-```
-Now upload the package to DataONE:
-```{r, eval=FALSE}
-packageId <- uploadDataPackage(d1c, dp, public=TRUE, quiet=FALSE)
-
-```
-Note that uploading a package to DataONE requires valid DataONE user authentication.
-
-### 2. Download The Package From DataONE
-
-The first step in updating a package is to download the package from DataONE so that it can 
-be modified using methods in the `dataone` package. Modifications can be made to the package such as adding 
-or removing members from the package, or changing the contents of a package member, as would be the case 
-if the wrong file was initially uploaded.
-
-Because calling `uploadDataPackage` to upload a package to DataONE requires valid DataONE user authentication,
-this demonstration will use a locally saved DataPackage that was previously created using a valid DataONE account 
-using the `uploadDataPackage` method shown in the previous section, then using the following statements:
-
 ```{r, eval=FALSE}
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-# The variable 'packageId' was obtained from the previous call to 'uploadDataPackage'
+```
+<!-- The user sees the 'd1c' init above, but read the saved object so we don't incure a network access. -->
+```{r, echo=FALSE}
+d1c <- readRDS(system.file("./extdata/d1c.rds", package="dataone"))
+```
+```{r, eval=FALSE}
 pkg <- getDataPackage(d1c, identifier=packageId, lazyLoad=TRUE, limit="0MB", quiet=FALSE)
-saveRDS(pkg, file="./extdata/pkg.rds")
 ```
-For this example, load the saved DataPackage object, which simulates the download that would occur
-using `getDataPackage`.
-```{r}
-updatePkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
+<!-- Read a saved object so we don't incure a network access. -->
+```{r, echo=FALSE}
+pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
 ```
+```{r, message=FALSE}
+metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
+zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
+pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream", 
+                     suggestedFilename=basename(zipfile))
+auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
+auxObj <- new("DataObject", format="text/csv", filename=auxFile, suggestedFilename=basename(auxFile))
+pkg <- addMember(pkg, auxObj, metadataId)
+
+```
+<!-- Need authentication, so can't upload from a vignette. -->
+```{r,eval=FALSE}
+newPackageId <- uploadDataPackage(d1c, pkg, public=TRUE, quiet=FALSE)
+```
+
+This example script downloads the example package that was created and uploaded to DataONE
+in the vignette `upload-data`.
+
+Each line of this script will be described in the following sections.
+
+### 1. Download the package from DataONE
+
+The first step in updating a package is to download the package from DataONE into R, so that it 
+can  be modified locally using methods in the `dataone` package. Modifications can be made to 
+the package such as adding  or removing members from the package, or changing the contents of 
+a package member, as would be the case if the wrong file was initially uploaded.
 
 The `getDataPackage` method downloads all files belonging to the package specified by
 the `identifier` parameter. 
 
+```{r, eval=FALSE}
+d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+```
+```{r, eval=FALSE}
+pkg <- getDataPackage(d1c, identifier=packageId, lazyLoad=TRUE, limit="0MB", quiet=FALSE)
+```
+<!-- Get a fresh copy of the saved package. -->
+```{r, echo=FALSE}
+pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
+```
+
 Because packages might contain large files or a large number of files, it is
-possible to `lazyLoad` the package. This means that the files are downloaded from the member node
-only when needed, so initially the system metadata is downloaded but not the data itself. An upper
-size limit can be specified when using `lazyLoad` by also specifying the `limit` parameter. Files that are larger than
+possible to `lazyLoad` the package. This means that the metadata describing the files is downloaded 
+downloaded, but the file contents, the data bytes,  are not. An upper size limit can be specified 
+when using `lazyLoad`  by also specifying the `limit` parameter.  Files that are larger than 
 the `limit` value are not downloaded, only system metadata. 
+
+For the package update that will be shown, it is not necessary to download the data bytes of each
+package member, so `lazyLoading` is acceptable. An example when lazyloading would not be appropriate
+is when the files in a package will be used for local computational processing.
 
 Note that metadata files, such as the EML in this example, are always downloaded regardless of the `lazyLoad` parameter value.
 
-### 3. Review Package Contents.
+### 2. Review package contents.
 
-The downloaded package can be viewed by typing the object name at the console, which invokes the
+The downloaded package can be viewed by typing the DataPackage object name at the console, which invokes the
 R `show` method for the object:
 ```{r, echo=FALSE}
 saveWidth <- getOption("width")
 options(width=100)
 ```
 ```{r}
-updatePkg
+pkg
 ```
 ```{r, echo=FALSE}
 options(width=saveWidth)
 ```
 Note that the `show` output for a DataPackage is condensed to fit the width of the current R console. If 
-the output is condensed and more detail is required, set the R console with to a larger value (options=<width>),
-or if using `Rstudio`, widen the console window.
+the output is condensed and more detail is required, set the R console width to a larger value, for example,
+`options(width=120)`, or if using `Rstudio`, widen the console window by clicking and dragging on 
+the window boarder.
 
-The identifier for the metadata DataObject that describes the package members will be retrieved from the DataPackage:
-```{r}
-metadataId <- selectMember(updatePkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-```
-
-### 4. Modify DataObjects In The Package
+### 3. Modify DataObjects in the package
 The original uploaded package included the file `filterSpecies.csv`. This file can be substituted
 for a different file, as would be necessary if it was determined that the zipped form of the
-file should have been used.
+file should have been used instead.
 
-First, determine which DataObject in the DataPackage `updatePkg` contains the errant file:
+First, determine which DataObject in the DataPackage `pkg` contains the file to be replaced:
 ```{r}
-objId <- selectMember(updatePkg, name="sysmeta@fileName", value='filteredSpecies.csv')
+objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
 ```
 
-Next, update the DataObject in `updatePkg` to replace the file `filteredSpecies.csv` with `filteredSpecies.csv.zip` 
+The `selectMember` method inspects every DataObject in the package `pkg` and checks 
+for a match in the R S4 slot specified by the `name` argument for the value specified with 
+the `value` argument. The identifer for any matching DataObject is returned. 
+
+The documentation for the DataObject R slots available can be viewed with the command
+`help("DataObject-class")`. As a *SystemMetadata* object is contained in each DataObject, the slots
+for SystemMetadata are available, with documentation viewable with `help("SystemMetadata-class")`
+
+Next, update the DataObject in `pkg` to replace the file `filteredSpecies.csv` with `filteredSpecies.csv.zip` 
 using the `replaceMember` method:
 ```{r}
+objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
 zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
-updatePkg <- replaceMember(updatePkg, objId, replacement=zipfile, formatId="application/octet-stream", 
+pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream", 
                      suggestedFilename=basename(zipfile))
-objId <- selectMember(updatePkg, name="sysmeta@fileName", value='filteredSpecies.csv.zip')
 ```
 
-The `replaceMember` method replaces the data content of the DataObject, updates the relevant system metadata slots such as `size` and `checksum`. Similiar
-to the `updateMetadata` method, if the `newId` parameter is not specified for `replaceMember`, then a new identifier
-will be automatically generated if necessary.
+The `replaceMember` method updates the DataPackage `pkg`, replacing the data content of the DataObject 
+with identifier `objId`, and updating the relevant system metadata slots such as `size` and `checksum`, 
+to reflect the new contents of the DataObject. 
 
-Next, update the filename in the EML in the relevant section:
-```{r}
-nameXpath <- '//otherEntity/physical/objectName[text()="filteredSpecies.csv"]'
-newName <- basename(zipfile)
-updatePkg <- updateMetadata(updatePkg, metadataId, xpath=nameXpath, replacement=newName)
-metadataId <- selectMember(updatePkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-
-```
-Since the identifier for the replace DataObject may have been updated, update the corresponding
-distribution URL in the metadata:
-```{r}
-# Update the distribution URL with the new id from 'replaceMember'
-urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", basename(zipfile))
-newURL <- sprintf("%s/%s/object/%s", d1c@mn@baseURL, d1c@mn@APIversion, objId)
-updatePkg <- updateMetadata(updatePkg, metadataId, xpath=urlXpath, replacement=newURL)
-metadataId <- selectMember(updatePkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-
-```
 In this example, the file `collectionMethods.csv` was mistakenly omitted from the original package upload,
 so add it now:
 
+First, the identifier for the metadata DataObject that describes the package members will be retrieved 
+from the DataPackage:
+
 ```{r}
-# Now add a new package member that was omitted from the original package
+metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+```
+
+The `selectMember` method returns the identifier of any DataObject in the package with an R slot name
+specified in the parameter `name` that matches the value specified in the argument `value`. In this
+particular package, there is only one DataPackage that has `formatId` of `eml://ecoinformatics.org/eml-2.1.1`, so only that identifier is returned.
+
+Note that the `getValue` method can be used to retrieve the values for DataObject slots, for example:
+
+```{r}
+getValue(pkg, name="sysmeta@formatId")
+```
+
+An R named list is returned, with the names being the identifiers of each DataPackage in the DataPackage
+and the values being the slot value.
+
+Next, add a new package member that was omitted from the original package:
+
+```{r}
 auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
 auxObj <- new("DataObject", format="text/csv", filename=auxFile, suggestedFilename=basename(auxFile))
-updatePkg <- addMember(updatePkg, auxObj, metadataId)
-
+pkg <- addMember(pkg, auxObj, metadataId)
 ```
-The metadata will be updated to have the correct download URL as shown for previous package members.
-
-```{r}
-urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", auxObj@sysmeta@fileName)
-newURL <- sprintf("%s/object/%s", d1c@mn@baseURL, getIdentifier(auxObj))
-updatePkg <- updateMetadata(updatePkg, metadataId, xpath=urlXpath, replacement=newURL)
-```
-
-The package can be reviewed before updating:
+The modified package can be reviewed before updating to DataONE:
 
 ```{r, echo=FALSE}
 saveWidth <- getOption("width")
 options(width=100)
 ```
 ```{r}
-updatePkg
+pkg
 ```
 ```{r, echo=FALSE}
 options(width=saveWidth)
 ```
 
-### 5. Upload The Modified DataPackage
+### 4. Upload the modified DataPackage
 Now upload the modified package to DataONE. Each DataObject in the DataPackage will be inspected by 
 `uploadDataPackage` and DataObjects that have been modified will be updated and DataObjects that have been
 added to the DataPackage will be uploaded. 
 ```{r, eval=FALSE}
-newPackageId <- uploadDataPackage(d1c, updatePkg, public=TRUE, quiet=FALSE)
+newPackageId <- uploadDataPackage(d1c, pkg, public=TRUE, quiet=FALSE)
 ```
+
+##  Updating Metadata For A DataPackage
+
+As DataPackage members are modified, the DataObject that holds the metadata that describes the 
+package members may become outdated. 
+
+For example, it was shown above that a package member was updated to contain the
+file `filteredSpecies.csv.zip` instead of `filteredSpecies.csv`. After this change, the DataObject
+holding the EML metadata should be updated so that the EML elemnt `objectName` for this 
+dataset matched the new filename:
+
+```{r, eval=FALSE}
+metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+nameXpath <- '//otherEntity/physical/objectName[text()="filteredSpecies.csv"]'
+newName <- basename(zipfile)
+pkg <- updateMetadata(pkg, metadataId, xpath=nameXpath, replacement=newName)
+```
+
+The `updateMetadata` method updates a DataObject containing XML, substituting the value located in the
+document specified with the `xpath` argument with the value provided in the `replacement` argument.
+In this example, the XML contained in the DataObject with identifier `metadataId` is an EML 
+metadata document. The EML elewent `objectName` is updated with the value `filteredSpecies.csv.zip`.
+
+
+Note the the `xpath` argument uses the XPath query language, which is used to locate elements within an
+XML document.
+
+For EML metadata, another element that may need to be updated, if it is present in the origianl
+EML file, is the distribution url. This element contains the link that can be used to download the file 
+from DataONE, which includes the DataONE identifier for the object. Because the identifier value is set 
+when the DataObject is created, the EML metadata is out of date and needs to be updated with the new 
+identifier value.
+
+In this example, the section of the metadata that describes the dataset `filteredSpecies.csv.zip` will be 
+updated. 
+
+A portion of the EML from our exmaple looks like this:
+```
+    <otherEntity>
+      <entityName>filteredSpecies</entityName>
+      <entityDescription>A data file that was filtered from the input date to contain only the species MUSS</entityDescription>
+      <physical>
+        <objectName>filteredSpecies.csv</objectName>
+        <size unit="byte">6017</size>
+        <dataFormat>
+          <externallyDefinedFormat>
+            <formatName>text/csv</formatName>
+          </externallyDefinedFormat>
+        </dataFormat>
+        <distribution id="1430343425153">
+          <online>
+            <url function="download"></url>
+          </online>
+        </distribution>
+      </physical>
+      <entityType>Other</entityType>
+    </otherEntity>
+```
+
+The following lines get the current identifier for the DataObject that contains the
+correct file, and uses this identifier value to construct a standard DataONE access
+URL, using the base URL of the DataONE coordinating node.
+
+```{r}
+objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv.zip')
+newURL <- sprintf("%s/%s/resolve/%s", d1c@cn@baseURL, d1c@cn@APIversion, objId)
+newURL
+```
+
+The `selectMember` method checks slot specified in `name` argument, in this case `sysmeta@fileName`, 
+of each *DataObject* in the 
+*DataPackage* `pkg` and returns the identifier of any member that matches the specified 
+value. This package has only one *DataObject* with the name `filteredSpecies.csv.zip` so only
+one identifier is returned in `objId`.
+
+Next, the metadata element for the distribution url will be updated in the *DataObject* that contains
+the EML metadata in the package `pkg`
+
+```{r}
+metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"sample.csv\"]/online/url"
+pkg <- updateMetadata(pkg, do=metadataId, xpath=xpathToURL, replacement=newURL)
+```
+
+When the modified metadata file is updated to DataONE, a new identifier is required, 
+as the modified metadata will replace the old one by created a new object in DataONE, 
+and marking the old one as `obsoleted` by the new one. For this reason, the call 
+to `updateMetadata` will assign a new identifier to the metadata *DataObject* in the
+DataPackage `pkg`, if necessary.
