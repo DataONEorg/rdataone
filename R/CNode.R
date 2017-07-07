@@ -160,8 +160,17 @@ setGeneric("listFormats", function(x, ...) {
 #' @export
 setMethod("listFormats", signature("CNode"), function(x) {
   url <- paste(x@endpoint,"formats",sep="/")
-  out <- GET(url, user_agent(get_user_agent()))
-  out <- xmlToList(xmlParse(content(out,as="text")))
+  response <- GET(url, user_agent(get_user_agent()))
+  # Use charset 'utf-8' if not specified in response headers
+  charset <- "utf-8"
+  if("content-type" %in% names(response$headers)) {
+      media <- parse_media(response$headers[['content-type']])
+      if("params" %in% names(media) && "charset" %in% names(media$params)) {
+          charset <- media$params$charset
+      }
+  }  
+  
+  out <- xmlToList(xmlParse(content(response, as="text", encoding=charset)))
   ## Below could be done with plyr functionality, but I want to reduce
   ## dependencies in the package
   #df <- data.frame(matrix(NA,ncol=length(out[[1]]),nrow=(length(out)-1)))
@@ -290,7 +299,16 @@ setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...
         return(NULL)
     }
     
-    xml <- xmlParse(content(response, as="text"))
+    # Use charset 'utf-8' if not specified in response headers
+    charset <- "utf-8"
+    if("content-type" %in% names(response$headers)) {
+        media <- parse_media(response$headers[['content-type']])
+        if("params" %in% names(media) && "charset" %in% names(media$params)) {
+            charset <- media$params$charset
+        }
+    } 
+    
+    xml <- xmlParse(content(response, as="text", encoding=charset))
     #node_identifiers <- sapply(getNodeSet(xml, "//identifier"), xmlValue)
     nodes <- getNodeSet(xml, "//node")
     nodelist <- sapply(nodes, D1Node)
