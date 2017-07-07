@@ -1348,3 +1348,54 @@ setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as
   }
   return(x)
 })
+
+
+#' Get the DataObject containing package metadata
+#' @description Each DataObject in the DataPackage is inspected to see if it matches one
+#' of the formats supported by DataONE for metadata. If a package member's format matches
+#' one of the supported formats, the identifier for that member is returned.
+#' @details This method calls the DataONE CN 'format' service to obtain the current format
+#' list.
+#' @param x A D1Client object
+#' @param dp A DataPackage object
+#' @param ... (Additional arguments, Not yet used.)
+#' @return The identifier of the metadata object
+#' @rdname getMetadataMember
+#' @aliases getMetadataMember
+#' @export
+setGeneric("getMetadataMember", function(x, dp, ...) {
+    standardGeneric("getMetadataMember")
+})
+
+#' @export
+#' @rdname getMetadataMember
+#' @param as A value of type \code{"character"} that specifies the return value. Possible values are \code{"character"} (the default) or \code{"DataPackage"}.
+setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x, dp, as="character", ...) {
+    formats <- listFormats(d1c@cn)
+    if(is.null(formats) || length(formats) == 0) {
+       return(as.charater(NA)) 
+    }
+    for (irow in 1:nrow(formats)) {
+        thisFormat <- formats[irow,]
+        thisType <- thisFormat$Type
+        if(thisType != "METADATA") next
+        thisID <- thisFormat$ID
+        # Search for this formatId in each of the package members sysmeta
+        id <- selectMember(pkg, name="sysmeta@formatId", value=thisID)
+        # Someday a package might have more than one metadata member,
+        # so just return the first one.
+        if(length(id) > 0) {
+            if(as == "character") {
+                return(id[[1]])
+            } else if (as == "DataObject") {
+                return(getMember(pkg, id[[1]]))
+            } else {
+                message(sprintf("Invalid value \"%s\" for argument \"as\", will return \"character\"", as))
+                return(id[[1]])
+            }
+        }
+    }
+    
+    # Didn't find the metadata format
+    return(as.character(NA))
+})
