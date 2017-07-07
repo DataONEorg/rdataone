@@ -248,7 +248,8 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
       # mntable as if the member node had returned the object.
       mntable <- data.frame(nodeIdentifier=x@mn@identifier, 
                             baseURL=x@mn@baseURL,
-                            url=sprintf("%s/object/%s", x@mn@baseURL, URLencode(identifier, reserved=TRUE)), 
+                            url=sprintf("%s/%s/object/%s", x@mn@baseURL, x@mn@APIversion, 
+                                        URLencode(identifier, reserved=TRUE)), 
                             row.names=NULL, stringsAsFactors=FALSE)
     } else {
       mntable <- result$data
@@ -289,7 +290,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
             bytes <- getObject(currentMN, identifier)
             if (!is.null(sysmeta) & !is.null(bytes)) {
               success <- TRUE
-              dataURL <- mntable[i,]$url
+              dataURL <- URLdecode(mntable[i,]$url)
               break
             }
           } else {
@@ -298,7 +299,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
               bytes <- getObject(currentMN, identifier)
               if (!is.null(sysmeta) & !is.null(bytes)) {
                 success <- TRUE
-                dataURL <- mntable[i,]$url
+                dataURL <- URLdecode(mntable[i,]$url)
                 break
               }
             } else {
@@ -308,7 +309,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
               deferredDownload <- TRUE
               bytes <- NA
               success <- TRUE
-              dataURL <- mntable[i,]$url
+              dataURL <- URLdecode(mntable[i,]$url)
               break
             }
           }
