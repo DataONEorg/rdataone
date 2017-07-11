@@ -29,7 +29,7 @@
 #' @slot cn The Coordinating Node associated with the D1Client object
 #' @slot mn The Member Node associated with this D1Client object
 #' @import datapack
-#' @import stringr
+#' @importFrom stringr str_match str_replace
 #' @importFrom utils URLencode
 #' @section Methods:
 #' \itemize{
