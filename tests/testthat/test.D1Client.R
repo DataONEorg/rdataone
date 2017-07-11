@@ -260,8 +260,7 @@ test_that("D1Client uploadDataPackage works for a minimal DataPackage", {
   }
 })
 
-
-test_that("D1Client updateDataPackage works for a modified DataPackage", {
+test_that("D1Client updateDataPackage works", {
     
     # Test that a DataPackage with only one member (metadata in this case) and not
     # user defined relationships is created and uploaded correctly.
@@ -284,89 +283,58 @@ test_that("D1Client updateDataPackage works for a modified DataPackage", {
         
         # Create metadata object that describes science data
         emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-        metadataDoc <- read_xml(emlFile, encoding = "", as_html = FALSE, options = "NOBLANKS")
         metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile, suggestedFilename=basename(emlFile))
-        expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
+        metadataId <- getIdentifier(metadataObj)
+        # Associate the metadata object with each data object using the 'insertRelationships' method.
+        # Since a relationship type (the predicate argument) is not specified, the default relationship
+        # of 'cito:documents' is used, to indicate the the metadata object documents each data object.
+        # See "http://vocab.ox.ac.uk/cito", for further information about the "Citation Type Ontology".
         dp <- addMember(dp, metadataObj)
         
         sourceData <- system.file("extdata/sample.csv", package="dataone")
-        sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename="sample.csv")
+        sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename=basename(sourceData))
         dp <- addMember(dp, sourceObj, metadataObj)
         
-        #entityNode <- xml_find_first(metadataObj, xpath="//otherEntity/entityNmae=[@%s]/../", ns = xml_ns(x))
-        urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", sourceObj@sysmeta@fileName)
-        urlNode <- xml_find_first(metadataDoc,  xpath=urlXpath, ns = xml_ns(metadataDoc))
-        xml_text(urlNode) <- sprintf("%s/object/%s", d1c@mn@baseURL, getIdentifier(sourceObj))
-        
-        expect_true(is.element(sourceObj@sysmeta@identifier, getIdentifiers(dp)))
+        resolveURL <- sprintf("%s/%s/object", d1c@mn@baseURL, d1c@mn@APIversion)
+        # Update the distribution URL in the metadata with the identifier that has been assigned to
+        # this DataObject. This provides a direct link between the detailed information for this package
+        # member and DataONE, which will assist DataONE in accessing and displaying this detailed information.
+        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"sample.csv\"]/online/url"
+        newURL <- sprintf("%s/%s", resolveURL, getIdentifier(sourceObj))
+        dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
+        metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+        metadataObj <- getMember(dp, metadataId)
         
         progFile <- system.file("extdata/filterSpecies.R", package="dataone")
-        progObj <- new("DataObject", format="application/R", filename=progFile,
-                       mediaType="text/x-rsrc", suggestedFilename="filterSpecies.R")
+        progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc", suggestedFilename=basename(progFile))
         dp <- addMember(dp, progObj, metadataObj)
-        urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", progObj@sysmeta@fileName)
-        urlNode <- xml_find_first(metadataDoc,  xpath=urlXpath, ns = xml_ns(metadataDoc))
-        xml_text(urlNode) <- sprintf("%s/object/%s", d1c@mn@baseURL, getIdentifier(progObj))
         
-        expect_true(is.element(progObj@sysmeta@identifier, getIdentifiers(dp)))
+        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filterSpecies.R\"]/online/url"
+        newURL <- sprintf("%s/%s", resolveURL, getIdentifier(progObj))
+        dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
+        metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
+        metadataObj <- getMember(dp, metadataId)
         
         outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
-        outputObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename="filteredSpecies.csv")
+        outputObj <- new("DataObject", format="text/csv", filename=outputData, suggestedFilename=basename(outputData))
         dp <- addMember(dp, outputObj, metadataObj)
-        urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", outputObj@sysmeta@fileName)
-        urlNode <- xml_find_first(metadataDoc,  xpath=urlXpath, ns = xml_ns(metadataDoc))
-        xml_text(urlNode) <- sprintf("%s/object/%s", d1c@mn@baseURL, getIdentifier(outputObj))
         
-        auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
-        auxObj <- new("DataObject", format="text/csv", filename=auxFile, suggestedFilename="collectionMethods.csv")
-        dp <- addMember(dp, auxObj, metadataObj)
-        urlXpath <- sprintf("//otherEntity/physical/distribution[../objectName/text()=\"%s\"]/online/url", auxObj@sysmeta@fileName)
-        urlNode <- xml_find_first(metadataDoc,  xpath=urlXpath, ns = xml_ns(metadataDoc))
-        xml_text(urlNode) <- sprintf("%s/object/%s", d1c@mn@baseURL, getIdentifier(auxObj))
-        
-        dp <- describeWorkflow(dp, sources=sourceObj, program=progObj, derivations=outputObj)
-        
-        # Now update the metadata object with the re-writen file, as we have updated the in-memory version (metadataDoc), but need to
-        # now update the DataObject version.
-        mfile <- tempfile(pattern="strix-pacific-northwest", fileext=".xml")
-        write_xml(metadataDoc, mfile)
-        dp <- replaceMember(dp, metadataObj, replacement=mfile)
-        expect_true(is.element(outputObj@sysmeta@identifier, getIdentifiers(dp)))
-        
-        # CHeck that the metadata object has been replaced correctly in the DataPackage and
-        # that correct values were calculated for the replacing object.
-        fileinfo <- file.info(mfile)
-        filesha1 <- digest(mfile, algo="sha1", serialize=FALSE, file=TRUE)
-        mo <- getMember(dp, getIdentifier(metadataObj))
-        expect_equal(fileinfo$size, mo@sysmeta@size)
-        expect_match(filesha1, mo@sysmeta@checksum)
+        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filteredSpecies.csv\"]/online/url"
+        newURL <- sprintf("%s/%s", resolveURL, getIdentifier(outputObj))
+        dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
         
         # Upload the data package to DataONE
-        resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, quiet=FALSE)
-        expect_true(!is.null(resourceMapId))
+        newPkg <- uploadDataPackage(d1c, dp, public=TRUE, quiet=FALSE, as="DataPackage")
+        pkgId <- newPkg@resmapId
+        expect_true(!is.na(pkgId))
         
-        # Sleep for a minute, to let indexing finish for the package. Because we are imposing a wait on this
-        # package, this test is not suitable for use in CRAN. It's not advisable to use a package in production,
-        # as accesses by the test routines will artificially inflate the DataONE usage statistics for the package.
-        Sys.sleep(90)
+        # Sleep for 90 secondsl to let indexing finish for the package. Because we are imposing a wait on this
+        # package, this test is not suitable for use in CRAN. 
         
-        # Now download the package, lazy loading objects, and check that the package has been downloaded 
-        # correctly.
-        if(!is.na(resourceMapId)) {
-            pkg <- getDataPackage(d1c, identifier=resourceMapId, lazyLoad=TRUE, limit="0MB", quiet=FALSE)
-            # Test if the data frame with retrieved relationships was constructed correctly
-            relations <- getRelationships(dp, quiet=TRUE)
-            expect_that(nrow(relations), equals(nrel))
-            ids <- getIdentifiers(pkg)
-            expect_true(getIdentifier(sourceObj) %in% ids)
-            expect_true(getIdentifier(outObj) %in% ids)
-            expect_true(getIdentifier(auxObj) %in% ids)
-        }
     } else {
         skip("This test requires valid authentication.")
     }
 })
-
 
 test_that("D1Client createD1Object works", {
   skip_on_cran()
@@ -531,3 +499,51 @@ test_that("D1Client createDataPackage works", {
     skip("This test requires valid authentication.")
   }
 })
+
+test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
+    
+    skip_on_cran()
+    # Test that a DataPackage with only one member (metadata in this case) and not
+    # user defined relationships is created and uploaded correctly.
+    # This is a long running test, so it should be run manually, which means
+    # running "test_file("tests/testthat/packageUpdate.R"), as this file is not
+    # run by default by testthat due to the name not including 'test*'
+    library(dataone)
+    library(datapack)
+    library(xml2)
+    library(digest)
+    # Create a csv file for the science object
+    d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
+    #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
+    #d1c <- D1Client("STAGING2", "urn:node:mnTestKNB")
+    #d1c <- D1Client("SANDBOX", "urn:node:mnSandboxUCSB1")
+    #d1c <- D1Client("DEV", "urn:node:mnDemo6")
+    #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
+    expect_false(is.null(d1c))
+    preferredNodes <- NA
+    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+    am <- AuthenticationManager()
+    suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
+    if (authValid) {
+        if(dataone:::getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        dp <- new("DataPackage")
+        
+        # Create metadata object that describes science data
+        emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
+        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile, suggestedFilename=basename(emlFile))
+        metadataId <- getIdentifier(metadataObj)
+        # Associate the metadata object with each data object using the 'insertRelationships' method.
+        # Since a relationship type (the predicate argument) is not specified, the default relationship
+        # of 'cito:documents' is used, to indicate the the metadata object documents each data object.
+        # See "http://vocab.ox.ac.uk/cito", for further information about the "Citation Type Ontology".
+        dp <- addMember(dp, metadataObj)
+        
+        pkgId <- uploadDataPackage(d1c, dp, public=TRUE, quiet=TRUE)
+        expect_true(!is.na(pkgId))
+        
+    } else {
+        skip("This test requires valid authentication.")
+    }
+})
+
+
