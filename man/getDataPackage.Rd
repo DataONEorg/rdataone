@@ -18,7 +18,8 @@ getDataPackage(x, identifier, ...)
 
 \item{...}{(not yet used)}
 
-\item{lazyLoad}{A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.}
+\item{lazyLoad}{A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data. 
+The default is \code{FALSE}.}
 
 \item{limit}{A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".}
