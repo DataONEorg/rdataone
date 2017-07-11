@@ -29,6 +29,7 @@
 #' @slot cn The Coordinating Node associated with the D1Client object
 #' @slot mn The Member Node associated with this D1Client object
 #' @import datapack
+#' @import stringr
 #' @importFrom utils URLencode
 #' @section Methods:
 #' \itemize{
@@ -240,7 +241,8 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
     
     # Resolve the object location
-    result <- resolve(x@cn, identifier)
+    # This service is too chatty if any of the locations aren't available
+    suppressMessages(result <- resolve(x@cn, identifier))
     if(is.null(result)) {
       #message("Unable to download object with identifier: %s\n", identifier)
       #return(NULL)
@@ -279,7 +281,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     deferredDownload <- lazyLoad
     if(nrow(mntable) > 0) {
       for (i in 1:nrow(mntable)) { 
-        suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
+        currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier)
         if (!is.null(currentMN)) {
           sysmeta <- getSystemMetadata(currentMN, identifier)
           if(is.null(sysmeta)) next
@@ -290,7 +292,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
             bytes <- getObject(currentMN, identifier)
             if (!is.null(sysmeta) & !is.null(bytes)) {
               success <- TRUE
-              dataURL <- URLdecode(mntable[i,]$url)
+              dataURL <- mntable[i,]$url
               break
             }
           } else {
@@ -299,7 +301,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
               bytes <- getObject(currentMN, identifier)
               if (!is.null(sysmeta) & !is.null(bytes)) {
                 success <- TRUE
-                dataURL <- URLdecode(mntable[i,]$url)
+                dataURL <- mntable[i,]$url
                 break
               }
             } else {
@@ -309,7 +311,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
               deferredDownload <- TRUE
               bytes <- NA
               success <- TRUE
-              dataURL <- URLdecode(mntable[i,]$url)
+              dataURL <- mntable[i,]$url
               break
             }
           }
