@@ -80,8 +80,9 @@ test_that("MNode generateIdentifier() on API v1 node", {
     library(dataone)
     # Currently this is a v1 node, so only X.509 certs work for authentication
     # so this test should find and use a cert if it is available.
-    cn <- CNode("STAGING2")
-    mn <- getMNode(cn, "urn:node:mnDemo9")
+    cn <- CNode("STAGING")
+    suppressWarnings(mn <- getMNode(cn, "urn:node:mnStageUCSB2"))
+    if(is.null(mn)) skip("Member node urn:node:mnStageUCSB2 not available")
     # Suppress openssl, cert missing warnings
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
@@ -231,6 +232,58 @@ test_that("MNode createObject(), updateObject(), archive()", {
       expect_that(newsysmeta@archived, is_true())
     } else {
       skip("This test requires valid authentication.")
+    }
+})
+
+test_that("MNode createObject() with in-memory object", {
+    # This test requires valid DataONE user authentication and writes to unstable development machines
+    skip_on_cran()
+    library(dataone)
+    library(digest)
+    library(datapack)
+    library(uuid)
+    library(XML)
+    #cn <- CNode("SANDBOX")
+    #cn <- CNode("DEV2")
+    cn <- CNode("STAGING")
+    mnId <- "urn:node:mnStageUCSB2"
+    mn <- getMNode(cn, mnId)
+    am <- AuthenticationManager()
+    # Suppress openssl, cert missing warnings
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mn))
+    if (authValid) {
+        if(dataone:::getAuthMethod(am, mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        user <- dataone:::getAuthSubject(am, mn)
+        newid <- sprintf("urn:uuid:%s", UUIDgenerate())
+        
+        # Create an in-memory object (vs file object)
+        testdf <- data.frame(x=1:10,y=11:20)
+        con <- textConnection(NULL, "w")
+        write.csv(testdf, file=con, row.names = FALSE)
+        csvbuf <- textConnectionValue(con)
+        close(con)
+        # Data must be type "raw" to be uploadable by createObject()
+        csvdata <- charToRaw(paste(csvbuf, collapse="\n"))
+        
+        # Create SystemMetadata for the object
+        format <- "text/csv"
+        size <- length(csvdata)
+        sha1 <- digest(csvdata, algo="sha1", serialize=FALSE, file=FALSE)
+        # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+        
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+        sysmeta <- addAccessRule(sysmeta, "public", "read")
+        expect_that(sysmeta@checksum, equals(sha1))
+        
+        # Upload the data to the MN using createObject(), checking for success and a returned identifier
+        createdId <- createObject(mn, newid, sysmeta = sysmeta, dataobj=csvdata)
+        expect_false(is.null(createdId))
+        expect_match(createdId, newid)
+        newSysmeta <- getSystemMetadata(mn, pid=newid)
+        expect_match(sysmeta@formatId, newSysmeta@formatId)
+        expect_equal(sysmeta@size, newSysmeta@size)
+    } else {
+        skip("This test requires valid authentication.")
     }
 })
 

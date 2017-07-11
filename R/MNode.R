@@ -389,8 +389,12 @@ setMethod("createObject", signature("MNode"), function(x, pid, file=as.character
       if(!is.na(file)) {
         stop("Both 'file' and 'dataobj' arguments have been specified")
       }
-      file <- tempfile()
-      writeBin(file, dataobj)
+      if(!is.raw(dataobj)) {
+        stop(sprintf("Invalid type \"%s\" for \"dataobj\" argument, only values of \"raw\" type are accepted.", class(dataobj)))
+      } else {
+        file <- tempfile()
+        writeBin(dataobj, file)
+      }
     }
     response <- auth_post(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file),
