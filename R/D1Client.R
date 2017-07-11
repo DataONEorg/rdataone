@@ -318,7 +318,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     }
     
     if(!success) {
-       message("Unable to download object with identifier: %s\n", identifier)
+       message(sprintf("Unable to download object with identifier: %s\n", identifier))
        return(NULL)
     }
     
@@ -364,7 +364,8 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 
 #' @rdname getDataPackage
 #' @param identifier The identifier of a package, package metadata or other package member
-#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
+#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data. 
+#' The default is \code{FALSE}.
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
@@ -379,14 +380,13 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   metadataPid <- as.character(NA)
   # First find the metadata object for a package. Try to get all required info, but not all record types have all 
   # these fields filled out.
-  queryParamList <- list(q=sprintf('id:\"%s\"', identifier), fl='isDocumentedBy,resourceMap,documents,formatType',
-                         fq="-obsoletedBy:*")
+  queryParamList <- list(q=sprintf('id:\"%s\"', identifier), fl='isDocumentedBy,resourceMap,documents,formatType')
   node <- x@cn
   result <- query(node, queryParamList, as="list")
   # Didn't get a result from the CN, query the MN directly. This may happen for several reasons including
   # a new package hasn't been synced to the CN, the package is in a dev environment where CN sync is off, etc.
   if(is.null(result) || length(result) == 0) {
-    cat(sprintf("Trying %s\n", x@mn@identifier))
+    if(!quiet) cat(sprintf("Trying %s\n", x@mn@identifier))
     node <- x@mn
     result <- query(node, queryParamList, as="list")
     if(is.null(result)) {
@@ -412,7 +412,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents,formatType')
     result <- query(node, queryParamList, as="list")
     if (length(result) == 0) {
-      stop(sprintf("Unable to find metadata object with identifier: %s on node %s", identifier, node@identifier))
+      stop(sprintf("Unable to find metadata object for identifier: %s on node %s", identifier, node@identifier))
     }
     metadataPid <- result[[1]]$id
     packageMembers <- as.list(result[[1]]$documents)
@@ -441,7 +441,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     options(useFancyQuotes = quoteSetting)
     
     qStr <- sprintf("id:(%s)", paste(newIds, collapse=" OR "))
-    queryParamList <- list(q=qStr, fq="-obsoletedBy:*", fq="archived:false", fl="id")
+    queryParamList <- list(q=qStr, fq="NOT obsoletedBy:* AND archived:false", fl="id")
     result <- query(node, queryParamList, as="list")
     resmapId <- unlist(result)
     if(length(resmapId) == 0) {
@@ -833,11 +833,13 @@ setGeneric("uploadDataPackage", function(x, ...) {
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
 #' @param packageId A value of type \code{"character"} specifying a unique identifier to use for the uploaded package (resource map pid)
+#' @param as A value of type \code{"character"} that specifies the return value. Possible values are \code{"character"} (the default) or \code{"DataPackage"}.
 #' @importFrom utils flush.console
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
                                                                            accessRules=NA, quiet=as.logical(TRUE), 
-                                                                           resolveURI=as.character(NA), packageId=as.character(NA), ...) {
+                                                                           resolveURI=as.character(NA), packageId=as.character(NA), 
+                                                                           as="character", ...) {
   
     # Define the creator that will appear in the ORE Resource Map for this package.
     creator <- "DataONE R Client"
@@ -891,7 +893,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         
         # If this DataObject has never been uploaded before, then upload it now.
         if(is.na(do@sysmeta@dateUploaded)) {
-            cat(sprintf("Uploading object with id %s", do@sysmeta@identifier))
+            cat(sprintf("Uploading object with id %s\n", do@sysmeta@identifier))
             returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules, quiet=quiet)
             if(is.na(returnId)) {
                warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
@@ -921,7 +923,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                 # The DataPackage is not returned from this method so these updates won't all persist (except
                 # for fields that are hashes(), but leave these lines in here in case we ever decide to return the
                 # DataPackage object instead of just the id.
-                now <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+                now <- format.POSIXct(Sys.time(), format="%FT%H:%M:%SZ", tz="GMT", usetz=FALSE)
                 dp <- setValue(dp, name="sysmeta@dateUploaded", value = now, identifiers=getIdentifier(do))
                 dp <- setValue(dp, name="sysmeta@dateSysMetadataModified", value = now, identifiers=getIdentifier(do))
                 # Change the updated status so that this DataObject won't be accidentially uploaded again, if the
@@ -944,38 +946,90 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     if(!downloadedPkg) {
         # Only upplad a resource map if a DataObjects was uploaded, i.e. not all uploads failed.
         if (uploadedMember) {
-            tf <- tempfile()
-            newPid <- paste0("urn:uuid:", UUIDgenerate())
+            if(!is.na(packageId)) {
+                newPid <- packageId
+            } else {
+                # Construct a resource map pid of the form "resourceMap_<metadata pid>"
+                # First get the pid of the metadata object
+                metadataId <- getMetadataMember(x, dp)
+                if(is.na(metadataId)) {
+                    newPid <- sprintf("resource_map_%s", paste0("urn:uuid:", UUIDgenerate()))
+                } else {
+                    newPid <- sprintf("resource_map_%s", metadataId)
+                }
+            }
+            # Get the pid of the metadata object, if one is available
+            tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             # Recreate the old resource map, so that it can be updated with a new pid
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
-                             suggestedFilename="resourceMap.xml")
+                             suggestedFilename=sprintf("%s.rdf", newPid))
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
                                          quiet=quiet)
-            if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", newPid))
+            
+            if(!is.na(returnId)) {
+                if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", returnId))
+                dp@resmapId <- returnId
+                dp@relations[['update']] <- FALSE
+            } else {
+                cat(sprintf("Error uploading resource map %s.", getIdentifier(resMapObj)))
+            }
         } else {
             if(!quiet) cat(sprintf("No DataObjects uploaded from the DataPackage, so a resource map will not be created and uploaded.\n"))
         }
     } else {
         # This is a package update, so we will update the existing resource map.
+        # Because we are updating the package, we must know what the previous resource map pid was,
+        # which is stored in the 'resmapId' slot.
         if(is.na(dp@resmapId)) {
-            stop("A resource map identifier has not been assigned to the current DataPackage.")
+            stop("A resource map identifier has not been assigned to the current DataPackage, unable to update the package.")
         }
         # Update the resource map if new package relationships have been added or modified.
+        # Use the serial version for the resource map so that updates to the resource map
+        # can the format "resource_map_<serial_version>_<metadata pid>
         if(dp@relations[['updated']]) {
-            newPid <- sprintf("urn:uuid:%s", UUIDgenerate())
-            tf <- tempfile()
+            if(!is.na(packageId)) {
+                newPid <- packageId
+            } else {
+                metadataId <- getMetadataMember(x, dp)
+                # The metadata pid should be defined, but if it couldn't be determined, then fallback
+                # to using just a UUID
+                if(is.na(metadataId)) {
+                    newPid <- sprintf("resource_map_%s", paste0("urn:uuid:", UUIDgenerate()))
+                } else {
+                    # Does the resource map pid contain the metadata pid? If no, then set the new
+                    # pid to be of the form "resource_map_<metadata pid>"
+                    if(!grepl(metadataId, dp@resmapId, fixed=TRUE)) {
+                        newPid <- sprintf("resource_map_%s", metadataId)
+                    } else {
+                        # See if the previous resource map pid is of the form
+                        #  "<something>_<revision-number>_<metadata pid> e.g. "resource_map_2_doi:10.18739/A2448T"
+                        regex <- sprintf(".*(_([0-9]*)_)%s", metadataId)
+                        ver <- str_match(dp@resmapId, regex)[,3]
+                        # If the resource map string contains the metadata id, then either add or increment
+                        # a version number preceding it. Otherwise, start using the format 'resource_map_<metadaaId>
+                        if(is.na(ver)) {
+                            newPid <- str_replace(dp@resmapId, metadataId, sprintf("1_%s", metadataId))
+                        } else {
+                            verMetaId <- sprintf("%s%s", str_match(dp@resmapId, regex)[,2], metadataId)
+                            newPid <- str_replace(dp@resmapId, verMetaId, sprintf("_%s_%s", as.numeric(ver)+1, metadataId))
+                        }
+                    }   
+                }
+            }
+            tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             
             # Create a new resource map that will replace the old one.
-            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
+            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
+                             suggestedFilename=sprintf("%s.rdf", newPid))
             # Assign the old resource map id (possibly from a repository) for the pid to update
             resMapObj@oldId <- dp@resmapId
             # Make it appear that this object was downloaded and is now being updated. The resource map
             # is different than any other object in the package, because there is not a DataObject contained
             # in the DataPackage, instead the resource map info is stored in the package relationships.
-            resMapObj@sysmeta@dateUploaded <- format(Sys.time(), format="%FT%H:%M:%SZ", tz="UTC")
+            resMapObj@sysmeta@dateUploaded <- format.POSIXct(Sys.time(), format="%FT%H:%M:%SZ", tz="GMT", usetz=FALSE)
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             resMapObj@updated[['sysmeta']] <- TRUE
             resMapObj@updated[['data']] <- TRUE
@@ -985,12 +1039,23 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             dp@relations[['update']] <- FALSE
             if(!is.na(returnId)) {
                 if(!quiet) cat(sprintf("Updated resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
+                dp@resmapId <- returnId
+            } else {
+                cat(sprintf("Error updating resource map %s.", resMapObj@oldId))
             }
         } else {
             if(!quiet) cat(sprintf("Package relationships have not been updated so the resource map was not updated"))
         } 
     }
-    return(returnId)
+    
+    if(as == "character") {
+        return(returnId)
+    } else if (as == "DataPackage") {
+        return(dp)
+    } else {
+        message(sprintf("Invalid value \"%s\" for argument \"as\", will return \"character\"", as))
+        return(returnId)
+    }
 })
 
 #' Upload a DataObject to a DataONE member node.
@@ -1145,7 +1210,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             updateId <- pid
         } else {
             oldId <- do@oldId
-            # The obsoleted object will always have serialVersion = 1, it's new!
+            # The obsoleting object will always have serialVersion = 1, it's new!
             do@sysmeta@serialVersion <- 1
             if(is.na(oldId)) {
                 stop(sprintf("DataObject for id %s does not have a previous pid defined.\n", pid))
@@ -1175,7 +1240,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             }
             if(!quiet) {
                 if(is.na(updateId)) {
-                    sprintf("Unable to upload data object with new id %s to replace id: %s.", pid, oldId)
+                    cat(sprintf("Unable to upload data object with new id %s to replace id: %s.\n", pid, oldId))
                 } else {
                     sprintf("Uploaded data object with new id: %s, obsoleting id: %s.", pid, oldId)
                 }
@@ -1381,14 +1446,14 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
         if(thisType != "METADATA") next
         thisID <- thisFormat$ID
         # Search for this formatId in each of the package members sysmeta
-        id <- selectMember(pkg, name="sysmeta@formatId", value=thisID)
+        id <- selectMember(dp, name="sysmeta@formatId", value=thisID)
         # Someday a package might have more than one metadata member,
         # so just return the first one.
         if(length(id) > 0) {
             if(as == "character") {
                 return(id[[1]])
             } else if (as == "DataObject") {
-                return(getMember(pkg, id[[1]]))
+                return(getMember(dp, id[[1]]))
             } else {
                 message(sprintf("Invalid value \"%s\" for argument \"as\", will return \"character\"", as))
                 return(id[[1]])
