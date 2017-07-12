@@ -15,7 +15,8 @@ getPackage(x, ...)
 
 \item{...}{(not yet used)}
 
-\item{identifier}{The identifier of the package to retrieve.}
+\item{identifier}{The identifier of the package to retrieve. The identifier can be for the
+resource map, metadata file, data file, or any other package member.}
 
 \item{format}{The format to send the package in.}
 }
@@ -23,8 +24,8 @@ getPackage(x, ...)
 The location of the package file downloaded from the member node.
 }
 \description{
-Given a valid identifier for a resource map, download a package file
-containing all of the package members of the corresponding DataONE data package.
+Given a valid identifier, download a file containing all of the package 
+members of the corresponding DataONE data package.
 }
 \details{
 The default data package file format is a Bagit file (\url{https://tools.ietf.org/html/draft-kunze-bagit-09}).

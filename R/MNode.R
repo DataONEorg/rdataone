@@ -630,8 +630,8 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
 })
 
 #' Download a data package from a member node.
-#' @description Given a valid identifier for a resource map, download a package file
-#' containing all of the package members of the corresponding DataONE data package. 
+#' @description Given a valid identifier, download a file containing all of the package 
+#' members of the corresponding DataONE data package. 
 #' @details The default data package file format is a Bagit file (\url{https://tools.ietf.org/html/draft-kunze-bagit-09}).
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
@@ -653,12 +653,81 @@ setGeneric("getPackage", function(x, ...) {
 })
 
 #' @rdname getPackage
-#' @param identifier The identifier of the package to retrieve.
+#' @param identifier The identifier of the package to retrieve. The identifier can be for the
+#' resource map, metadata file, data file, or any other package member.
 #' @param format The format to send the package in.
 setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097") {
     
+    # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
+    # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
+    # data, for example, the metadata solr record must be retrieved to obtain all the package members.
+    resmapId <- as.character(NA)
+    metadataPid <- as.character(NA)
+    # First find the metadata object for a package. Try to get all required info, but not all record types have all 
+    # these fields filled out.
+    queryParamList <- list(q=sprintf('id:\"%s\"', identifier), fl='isDocumentedBy,resourceMap,documents,formatType')
+    result <- query(x, queryParamList, as="list")
+    # Didn't get a result from the CN, query the MN directly. This may happen for several reasons including
+    # a new package hasn't been synced to the CN, the package is in a dev environment where CN sync is off, etc.
+    if(is.null(result) || length(result) == 0) {
+        stop(sprintf("Identifier %s not found on node %s", identifier, x@identifier))
+    } 
+    
+    formatType <- result[[1]]$formatType[[1]]
+    # Check if we have the metadata object, and if not, then get it. If a data object pid was specified, then it is possible that
+    # it can be contained in mulitple packages. For now, just use the first package returned. 
+    # TODO: follow the obsolesence chain up to the most current version.
+    if(formatType == "METADATA") {
+        # We have the metadata object, which contains the list of package members in the 'documents' field
+        resmapId <- result[[1]]$resourceMap
+        metadataPid <- identifier
+        packageMembers <- as.list(result[[1]]$documents)
+    } else if(formatType == "RESOURCE") {
+        resmapId <- identifier
+        # Get the metadata object for this resource map
+        queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents,formatType')
+        result <- query(x, queryParamList, as="list")
+        if (length(result) == 0) {
+            stop(sprintf("Unable to find metadata object for identifier: %s on node %s", identifier, x@identifier))
+        }
+        metadataPid <- result[[1]]$id
+        packageMembers <- as.list(result[[1]]$documents)
+    } else {
+        # This must be a package member, so get the metadata pid for the package
+        metadataPid <- result[[1]]$isDocumentedBy
+        queryParamList <- list(q=sprintf('id:\"%s\"', metadataPid), fl='documents,formatType,resourceMap')
+        result <- query(x, queryParamList, as="list")
+        if (length(result) == 0) {
+            stop(sprintf("Unable to find metadata object with identifier: %s on node %", identifier, x@identifier))
+        }
+        resmapId <- result[[1]]$resourceMap
+        packageMembers <- as.list(result[[1]]$documents)
+    }
+    
+    # The Solr index can contain multiple resource maps that refer to our metadata object. There should be only
+    # one current resource map that refers to this metadata, the others may be previous versions of the resmap
+    # that are now obsolete. If multple resource map pids were returned, filter out the obsolete ones.
+    if(length(resmapId) > 1) {
+        quoteSetting <- getOption("useFancyQuotes")
+        options(useFancyQuotes = FALSE)
+        newIds <- dQuote(unlist(resmapId))
+        options(useFancyQuotes = quoteSetting)
+        
+        qStr <- sprintf("id:(%s)", paste(newIds, collapse=" OR "))
+        queryParamList <- list(q=qStr, fq="NOT obsoletedBy:* AND archived:false", fl="id")
+        result <- query(x, queryParamList, as="list")
+        resmapId <- unlist(result)
+        if(length(resmapId) == 0) {
+            stop("It appears that all resource maps that reference this package are obsolete or archived.")
+        }
+        if(length(resmapId) > 1) {
+            resmapStr <- paste(resmapId, collapse=", ")
+            stop(sprintf("The metadata identifier %s is referenced by more than one current resource map: %s", metadataPid, resmapStr))
+        }
+    }
+    
     # getPackage was implemented in API v1.2
-    url <- sprintf("%s/packages/%s/%s", x@endpoint, URLencode(format, reserved=T), identifier)
+    url <- sprintf("%s/packages/%s/%s", x@endpoint, URLencode(format, reserved=T), resmapId)
     response <- auth_get(url, node=x)
     
     if (response$status == "200") {
