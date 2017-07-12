@@ -1438,9 +1438,9 @@ setGeneric("getMetadataMember", function(x, dp, ...) {
 #' @rdname getMetadataMember
 #' @param as A value of type \code{"character"} that specifies the return value. Possible values are \code{"character"} (the default) or \code{"DataPackage"}.
 setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x, dp, as="character", ...) {
-    formats <- listFormats(d1c@cn)
+    formats <- listFormats(x@cn)
     if(is.null(formats) || length(formats) == 0) {
-       return(as.charater(NA)) 
+       return(as.character(NA)) 
     }
     for (irow in 1:nrow(formats)) {
         thisFormat <- formats[irow,]
