@@ -47,10 +47,9 @@ pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
 objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
 zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
-pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream", 
-                     suggestedFilename=basename(zipfile))
+pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream")
 auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
-auxObj <- new("DataObject", format="text/csv", filename=auxFile, suggestedFilename=basename(auxFile))
+auxObj <- new("DataObject", format="text/csv", filename=auxFile) 
 pkg <- addMember(pkg, auxObj, metadataId)
 
 ```
@@ -139,8 +138,7 @@ using the `replaceMember` method:
 ```{r}
 objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
 zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
-pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream", 
-                     suggestedFilename=basename(zipfile))
+pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream")
 ```
 
 The `replaceMember` method updates the DataPackage `pkg`, replacing the data content of the DataObject 
@@ -174,7 +172,7 @@ Next, add a new package member that was omitted from the original package:
 
 ```{r}
 auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
-auxObj <- new("DataObject", format="text/csv", filename=auxFile, suggestedFilename=basename(auxFile))
+auxObj <- new("DataObject", format="text/csv", filename=auxFile)
 pkg <- addMember(pkg, auxObj, metadataId)
 ```
 The modified package can be reviewed before updating to DataONE:

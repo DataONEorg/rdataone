@@ -37,21 +37,19 @@ library(uuid)
 dp <- new("DataPackage")
 
 emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile,
-                   suggestedFilename=basename(emlFile))
+metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
 dp <- addMember(dp, metadataObj)
 
 sourceData <- system.file("extdata/sample.csv", package="dataone")
-sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename=basename(sourceData))
+sourceObj <- new("DataObject", format="text/csv", filename=sourceData) 
 dp <- addMember(dp, sourceObj, metadataObj)
 
 progFile <- system.file("extdata/filterSpecies.R", package="dataone")
-progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc",
-                suggestedFilename=basename(progFile))
+progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
 dp <- addMember(dp, progObj, metadataObj)
 
 outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
-outputObj <- new("DataObject", format="text/csv", filename=outputData, suggestedFilename=basename(outputData))
+outputObj <- new("DataObject", format="text/csv", filename=outputData) 
 dp <- addMember(dp, outputObj, metadataObj)
 
 myAccessRules <- data.frame(subject="http://orcid.org/0000-0002-2192-403X", permission="changePermission") 
@@ -109,8 +107,7 @@ The following commands create the DataObject for the science metadata, using an 
 
 ```{r}
 emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile,
-                   suggestedFilename=basename(emlFile))
+metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
 ```
 
 Now add the metadata object to the DataPackage:
@@ -163,7 +160,7 @@ The example below creates a DataObject for a science dataset:
 
 ```{r}
 sourceData <- system.file("extdata/sample.csv", package="dataone")
-sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename=basename(sourceData))
+sourceObj <- new("DataObject", format="text/csv", filename=sourceData) 
 dp <- addMember(dp, sourceObj, metadataObj)
 ```
 
@@ -176,12 +173,11 @@ Now DataObjects for an R script and for a file created by the R script will be c
 
 ```{r}
 progFile <- system.file("extdata/filterSpecies.R", package="dataone")
-progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc",
-                suggestedFilename=basename(progFile))
+progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
 dp <- addMember(dp, progObj, mo=metadataObj)
 
 outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
-outputObj <- new("DataObject", format="text/csv", filename=outputData, suggestedFilename=basename(outputData))
+outputObj <- new("DataObject", format="text/csv", filename=outputData) 
 dp <- addMember(dp, outputObj, mo=metadataObj)
 ```
 
