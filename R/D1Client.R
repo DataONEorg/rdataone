@@ -150,7 +150,7 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #' library(dataone)
 #' library(uuid)
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-#' data <- readLines(system.file("extdata/sample-eml.xml", package="dataone"))
+#' data <- readLines(system.file("extdata/strix-pacific-northwest.xml", package="dataone"))
 #' dataRaw <- charToRaw(paste(data, collapse="\n"))
 #' newid <- sprintf("urn:node:%s", UUIDgenerate())
 #' d1o <- new("D1Object", id=newid, data=dataRaw, format="text/plain")
@@ -613,7 +613,7 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' write.csv(testdf, csvfile, row.names=FALSE)
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' dp <- new("DataPackage")
-#' emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+#' emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
 #' emlChar <- readLines(emlFile)
 #' emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
 #' emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
@@ -812,7 +812,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' sampleData <- system.file("extdata/sample.csv", package="dataone")
 #' dataObj <- new("DataObject", format="text/csv", file=sampleData)
 #' dataObj <- setPublicAccess(dataObj)
-#' sampleEML <- system.file("extdata/sample-eml.xml", package="dataone")
+#' sampleEML <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
 #' metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", file=sampleEML)
 #' metadataObj <- setPublicAccess(metadataObj)
 #' dp <- addMember(dp, do = dataObj, mo = metadataObj)
@@ -964,8 +964,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             # Recreate the old resource map, so that it can be updated with a new pid
-            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
-                             suggestedFilename=sprintf("%s.rdf", newPid))
+            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
                                          quiet=quiet)
@@ -1024,8 +1023,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             
             # Create a new resource map that will replace the old one.
-            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf,
-                             suggestedFilename=sprintf("%s.rdf", newPid))
+            resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
             # Assign the old resource map id (possibly from a repository) for the pid to update
             resMapObj@oldId <- dp@resmapId
             # Make it appear that this object was downloaded and is now being updated. The resource map

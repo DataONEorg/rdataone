@@ -28,7 +28,7 @@ Create the Object in the DataONE System
 library(dataone)
 library(uuid)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-data <- readLines(system.file("extdata/sample-eml.xml", package="dataone"))
+data <- readLines(system.file("extdata/strix-pacific-northwest.xml", package="dataone"))
 dataRaw <- charToRaw(paste(data, collapse="\\n"))
 newid <- sprintf("urn:node:\%s", UUIDgenerate())
 d1o <- new("D1Object", id=newid, data=dataRaw, format="text/plain")
