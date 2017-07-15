@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packageId="sla.1.1" scope="system" system="knb" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.0 http://nis.lternet.edu/schemas/EML/eml-2.1.0/eml.xsd">
+  <access authSystem="knb" order="allowFirst" scope="document">
+    <allow>
+      <principal>uid=slaughter,o=unaffiliated,dc=ecoinformatics,dc=org</principal>
+      <permission>all</permission>
+    </allow>
+    <allow>
+      <principal>uid=sbc,o=LTER,dc=ecoinformatics,dc=org</principal>
+      <permission>all</permission>
+    </allow>
+    <allow>
+      <principal>uid=sbc,o=LTER,dc=ecoinformatics,dc=org</principal>
+      <permission>all</permission>
+    </allow>
+    <allow>
+      <principal>public</principal>
+      <permission>read</permission>
+    </allow>
+  </access>
+  <dataset scope="document">
+    <shortName>Reef fish abundance</shortName>
+    <title>SBCLTER: Reef: Kelp Forest Community Dynamics: Density of reef fish </title>
+    <creator scope="document">
+      <individualName>
+        <salutation>Mr.</salutation>
+        <givenName>Peter</givenName>
+        <surName>Slaughter</surName>
+      </individualName>
+      <address scope="document">
+        <deliveryPoint>NCEAS</deliveryPoint>
+        <deliveryPoint>University of California</deliveryPoint>
+        <city>Santa Barbara</city>
+        <administrativeArea>California</administrativeArea>
+        <postalCode>93106-6150</postalCode>
+        <country>United States</country>
+      </address>
+      <phone phonetype="voice">805 892 2528 </phone>
+      <electronicMailAddress>slaughter@nceas.ucsb.edu</electronicMailAddress>
+    </creator>
+    <associatedParty scope="document">
+      <individualName>
+        <salutation>Mr.</salutation>
+        <givenName>Harry</givenName>
+        <surName>Potter</surName>
+      </individualName>
+      <address scope="document">
+        <deliveryPoint>Marine Science Institute</deliveryPoint>
+        <deliveryPoint>University of California</deliveryPoint>
+        <city>Santa Barbara</city>
+        <administrativeArea>California</administrativeArea>
+        <postalCode>93106-6150</postalCode>
+        <country>United States</country>
+      </address>
+      <phone phonetype="voice">805 892 2528</phone>
+      <electronicMailAddress>harry@nceas.ucsb.edu</electronicMailAddress>
+      <onlineUrl>sbc.lternet.edu</onlineUrl>
+      <role>Point of Contact</role>
+    </associatedParty>
+    <pubDate>2013-04-10</pubDate>
+    <abstract>
+      <para>These data describe the abundance and size of fish species as part of SBCLTER's kelp
+        forest monitoring program to track long-term patterns in species abundance and diversity.
+        This study began in 2000 in the Santa Barbara Channel, California, USA, and the dataset is
+        updated periodically throughout the year. The abundance and size of all taxa of resident
+        kelp forest fish encountered along permanent transects are recorded at nine reef sites
+        located along the mainland coast of the Santa Barbara Channel and at two sites on the north
+        side of Santa Cruz Island. These sites reflect several oceanographic regimes in the channel
+        and vary in distance from sources of terrestrial runoff. In these surveys, fish were counted
+        in either a 40x2m benthic quadrat, or in the water parcel 0-2m off the bottom over the same
+        area.</para>
+    </abstract>
+    <keywordSet>
+      <keyword keywordType="theme">Santa Barbara Coastal</keyword>
+      <keyword keywordType="theme">LTER</keyword>
+    </keywordSet>
+    <intellectualRights>
+      <para>
+        <itemizedlist>
+          <listitem>
+            <para>The user of SBC LTER data agrees to contact the data owner (i.e., the SBC
+              investigator responsible for data) prior to publishing. Where appropriate, users whose
+              projects are integrally dependent on SBC LTER data are encouraged to consider
+              collaboration and/or co-authorship with the data owner.</para>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </intellectualRights>
+    <distribution id="Santa Barbara Coastal LTER" scope="system" system="sbclter">
+      <online>
+        <url function="information">http://sbc.lternet.edu</url>
+      </online>
+    </distribution>
+    <coverage scope="document">
+      <geographicCoverage id="ABUR" scope="document">
+        <geographicDescription>Arroyo Burro Reef</geographicDescription>
+        <boundingCoordinates>
+          <westBoundingCoordinate>-119.7443</westBoundingCoordinate>
+          <eastBoundingCoordinate>-119.7443</eastBoundingCoordinate>
+          <northBoundingCoordinate>34.4000</northBoundingCoordinate>
+          <southBoundingCoordinate>34.4000</southBoundingCoordinate>
+        </boundingCoordinates>
+      </geographicCoverage>
+      <temporalCoverage scope="document">
+        <rangeOfDates>
+          <beginDate>
+            <calendarDate>2000-08-01</calendarDate>
+          </beginDate>
+          <endDate>
+            <calendarDate>2012-07-25</calendarDate>
+          </endDate>
+        </rangeOfDates>
+      </temporalCoverage>
+    </coverage>
+    <maintenance>
+      <description>
+        <para>changed naming scheme to knb-lter-sbc</para>
+      </description>
+      <changeHistory>
+        <changeScope>packageId</changeScope>
+        <oldValue>sbclter.886</oldValue>
+        <changeDate>2005-03-15</changeDate>
+      </changeHistory>
+    </maintenance>
+    <contact id="sbc-boilerplate-contact_SBC" scope="system" system="sbclter">
+      <positionName>Information Manager, Santa Barbara Coastal LTER</positionName>
+      <address scope="document">
+        <deliveryPoint>Marine Science Institute</deliveryPoint>
+        <deliveryPoint>University of California</deliveryPoint>
+        <city>Santa Barbara</city>
+        <administrativeArea>California</administrativeArea>
+        <postalCode>93106-6150</postalCode>
+        <country>United States</country>
+      </address>
+      <phone phonetype="voice">805 893 2071</phone>
+      <electronicMailAddress>slaughter@nceas.ucsb.edu</electronicMailAddress>
+      <onlineUrl>http://sbc.lternet.edu</onlineUrl>
+    </contact>
+    <publisher id="sbc-boilerplate-publisher_SBC" scope="system" system="nceas">
+      <organizationName>Santa Barbara Coastal Long Term Ecological Research
+        Project</organizationName>
+    </publisher>
+    <pubPlace>Santa Barbara, CA, USA</pubPlace>
+    <methods>
+      <methodStep>
+        <description>
+          <para> The number, size and species identity of reef fish are
+            recorded within a 2 m wide swath centered along each transect extending 2 m off the bottom. See the protocol document for more information.</para>
+        </description>
+        <protocol scope="document">
+          <title>SBC LTER Kelp Forest Community Structure Methods -
+            Density of Reef Fish</title>
+          <creator>
+            <individualName>
+              <surName>Reed</surName>
+            </individualName>
+          </creator>
+          <distribution>
+            <online>
+              <url function="download">http://sbc.lternet.edu/external/Reef/Protocols/Kelp_Forest_Community_Dynamics/SBC_LTER_protocol_Reed_Kelp_forest_community_Density_fish_20130524.pdf</url>
+            </online>
+          </distribution>
+        </protocol>
+      </methodStep>
+    </methods>
+    <project id="sbc-boilerplate-project_SBC" scope="system" system="nceas">
+      <title>Santa Barbara Coastal Long Term Ecological Research Project</title>
+      <personnel scope="document">
+        <individualName>
+          <salutation>Dr.</salutation>
+          <givenName>Daniel</givenName>
+          <surName>Reed</surName>
+        </individualName>
+        <address scope="document">
+          <deliveryPoint>Marine Science Institute</deliveryPoint>
+          <deliveryPoint>University of California</deliveryPoint>
+          <city>Santa Barbara</city>
+          <administrativeArea>California</administrativeArea>
+          <postalCode>93106-6150</postalCode>
+          <country>United States</country>
+        </address>
+        <phone phonetype="voice">805 893 8363</phone>
+        <electronicMailAddress>reed@lifesci.ucsb.edu</electronicMailAddress>
+        <role>Principal Investigator</role>
+      </personnel>
+      <abstract>
+        <section>
+          <para>The primary research objective of the Santa Barbara Coastal LTER is good.</para>
+        </section>
+      </abstract>
+      <funding>
+        <section>
+          <para>NSF Award OCE-0620276 and OCE-1232779</para>
+        </section>
+      </funding>
+    </project>
+    <dataTable scope="document">
+      <entityName>All_Fish_All_Years_20130410.csv</entityName>
+      <entityDescription>abundance and size of fish along permanent transects</entityDescription>
+      <physical scope="document">
+        <objectName>All_Fish_All_Years_20120410.csv</objectName>
+        <characterEncoding>ASCII</characterEncoding>
+        <size unit="Mb">3.6</size>
+        <dataFormat>
+          <textFormat>
+            <numHeaderLines>1</numHeaderLines>
+            <recordDelimiter>\r\n</recordDelimiter>
+            <attributeOrientation>column</attributeOrientation>
+            <simpleDelimited>
+              <quoteCharacter>"</quoteCharacter>
+              <fieldDelimiter>,</fieldDelimiter>
+            </simpleDelimited>
+          </textFormat>
+        </dataFormat>
+        <distribution id="monitoring_all_fish_all_years" scope="document">
+          <online>
+            <url function="download">http://sbc.lternet.edu/external/Reef/Data/Kelp_Forest_Community_Dynamics/all_fish_all_years_20130208.csv</url>
+          </online>
+        </distribution>
+      </physical>
+      <attributeList>
+        <attribute id="1250638057574" scope="document">
+          <attributeName>year</attributeName>
+          <attributeLabel>Year</attributeLabel>
+          <attributeDefinition>Calendar year</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <dateTime>
+              <formatString>YYYY</formatString>
+              <dateTimePrecision>1</dateTimePrecision>
+            </dateTime>
+          </measurementScale>
+          <missingValueCode>
+            <code>-99999</code>
+            <codeExplanation>value not recorded or not available</codeExplanation>
+          </missingValueCode>
+        </attribute>
+        <attribute id="1250638057621" scope="document">
+          <attributeName>site</attributeName>
+          <attributeLabel>Site Name</attributeLabel>
+          <attributeDefinition>Name of reef site</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <enumeratedDomain enforced="yes">
+                  <codeDefinition>
+                    <code>ABUR</code>
+                    <definition>Arroyo Burro</definition>
+                  </codeDefinition>
+                </enumeratedDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+          <missingValueCode>
+            <code>-99999</code>
+            <codeExplanation>value not recorded or not available</codeExplanation>
+          </missingValueCode>
+          <coverage scope="document">
+            <geographicCoverage scope="document">
+              <references>ABUR</references>
+            </geographicCoverage>
+          </coverage>
+        </attribute>
+      </attributeList>
+      <numberOfRecords>18747</numberOfRecords>
+    </dataTable>
+  </dataset>
+</eml:eml>
