@@ -1,3 +1,23 @@
+# Version 2.1.0
+
+## Bug Fixes
+
+* Fixed bug where query() was incorrectly converting date results (#174)
+
+* Fixed bug where query() was returning incorrect results for multi-valued Solr fields (#179)
+
+* Fixed bug where createObject() was not uploading in-memory objects correctly (#198)
+
+## New Features and functions
+
+* Updated methods to aid in downloading, editing and updating packages in DataONE (#175)
+
+* Added getMetadataMember() to identify the metadata object for a DataPackage (#175)
+
+* Updated getPackage() to accept pids for data or metadata object (#178)
+
+* The resource map for a package now sets the default name (sysmeta.fileName) based on the metadata pid (#195)
+
 # Version 2.0.2
 
 ## Bug Fixes
