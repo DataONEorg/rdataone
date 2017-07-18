@@ -1,0 +1,49 @@
+
+The Weather file (Weather.zip) contains the following columns: 
+
+ CountryNum  The three digit code that identifies country where route is located.
+
+ StateNumber The two digit numerical code that identifies the state, province, or territory where the route is located.
+
+ Route       The three digit code that identifies the route.
+
+ RPID	     The run protocol identification number.  Identifies protocol used to sample route.
+
+ Year        The year. The CountryNum, StateNum, Route, RPID, and Year columns uniquely identify a 
+	     run of a route.
+
+ Month       The month the route was run (1-12).
+
+ Day         The day the route was run (1-31).
+
+ ObsN        Unique observer identification number.
+
+ TotalSpp    The total number of species recorded on that run of the route.
+
+ StartTemp   The temperature recorded at the beginning of the run of the route.
+
+ EndTemp     The temperature recorded at the end of the run of the route.
+
+ TempScale   The scale in which the temperatures were recorded. F stands for Fahrenheit; 
+	     C stands for Celcius.
+
+ StartWind   The Beaufort wind speed code recorded at the beginning of the run of the route.
+
+ EndWind     The Beaufort wind speed code recorded at the end of the run of the route.
+
+ StartSky    The Weather Bureau sky code recorded at the beginning of the run of the route.
+
+ EndSky      The Weather Bureau sky code recorded at the end of the run of the route.
+
+ StartTime   The time the run of the route began, recorded in 24 hour local time.
+
+ EndTime     The time the run of the route ended, recorded in 24 hour local time.
+
+ Assistant   If someone assisted the observer by recording the data, then this column 
+	     is 1, otherwise it is 0.
+
+ RunType     If this run is acceptable by BBS standards, then this column is 1, otherwise 
+	     it is 0.
+
+
+There is one record in the Weather file for every run of a route per year. 

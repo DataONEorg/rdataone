@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packageId="urn:uuid:439c8d9d-f0ed-4f47-8cac-275d0d64bafd" system="uuid" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 eml.xsd">
   <dataset scope="document">
-    <title>Strix occidentalis Distribution in the Pacific Northwest.</title>
+    <title>Strix occidentalis Population Data From The Pacific Northwest (1971-2014)</title>
     <creator>
       <individualName>
         <givenName>Connell</givenName>
@@ -9,9 +9,23 @@
       </individualName>
       <electronicMailAddress>jconnell@example.com</electronicMailAddress>
     </creator>
-    <pubDate>2015-12-14</pubDate>
-    <abstract>Strix occidentalis sightings in the Pacific Northwest.</abstract>
-    <intellectualRights>CC0, http://creativecommons.org/publicdomain/zero/1.0</intellectualRights>
+    <pubDate>2017-01-01</pubDate>
+    <abstract>
+      <section>
+      <para>This example data package is used to demonstrate the DataONE R Client for uploading, searching and downloading data from the DataONE Federation.
+        The sample data from this package was obtainted from the 1966-2014 North American Breeding Bird Survey Dataset which contains avian point
+        count data for more than 700 North American bird taxa (species, races, and unidentified species groupings).
+      </para>
+       <para>
+         The Breeding Bird Survey study was conducted by the USGS Patuxent Wildlife Research Center.
+           USGS Patuxent Wildlife Research Center,
+           Breeding Bird Survey,
+           12100 Beech Forest Road,
+           Laurel, MD 20708-4038,
+           (https://www.pwrc.usgs.gov/bbs/).
+      </para>
+    </section>
+    </abstract>
     <coverage>
       <geographicCoverage>
         <geographicDescription>Northwest Oregon</geographicDescription>
@@ -25,102 +39,512 @@
       <temporalCoverage>
         <rangeOfDates>
           <beginDate>
-            <calendarDate>2015</calendarDate>
+            <calendarDate>1971</calendarDate>
           </beginDate>
           <endDate>
-            <calendarDate>2015</calendarDate>
+            <calendarDate>2008</calendarDate>
           </endDate>
         </rangeOfDates>
       </temporalCoverage>
     </coverage>
     <contact>
       <individualName>
-        <givenName>Connell</givenName>
-        <surName>Joseph</surName>
+        <givenName>Slaughter</givenName>
+        <surName>Peter</surName>
       </individualName>
-      <electronicMailAddress>jconnell@example.com</electronicMailAddress>
+      <electronicMailAddress>slaughter@nceas.ucsb.edu</electronicMailAddress>
     </contact>
     <methods>
       <methodStep>
-        <description>This is the method description.</description>
+        <description>.</description>
       </methodStep>
     </methods>
-    <otherEntity>
-      <entityName>Species input file</entityName>
-      <entityDescription>Sample data contains observations of bird species.</entityDescription>
+    <dataTable>
+      <entityName>Observations for species Owls to Nightjars</entityName>
+      <entityDescription>Observations of selected species at sites along a defined route.</entityDescription>
       <physical>
-        <objectName>sample.csv</objectName>
+        <objectName>OwlNightj.csv</objectName>
         <size unit="byte">11577</size>
         <dataFormat>
           <externallyDefinedFormat>
             <formatName>text/csv</formatName>
           </externallyDefinedFormat>
         </dataFormat>
-        <distribution id="14303434251521">
+        <distribution>
           <online>
             <url function="download"></url>
           </online>
         </distribution>
       </physical>
-      <entityType>Other</entityType>
-    </otherEntity>
+      <attributeList>
+        <attribute id="ent1.att1">
+          <attributeName>countrynum</attributeName>
+          <attributeLabel>Country Number</attributeLabel>
+          <attributeDefinition>The three digit identification code for country.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att2">
+          <attributeName>statenum</attributeName>
+          <attributeLabel>statenum</attributeLabel>
+          <attributeDefinition>The two digit numerical code that identifies the state, province or territory where the route was run.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att3">
+          <attributeName>Route</attributeName>
+          <attributeLabel>Route</attributeLabel>
+          <attributeDefinition>The three digit code that identifies the route - unique within states.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>any text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att4">
+          <attributeName>RPID</attributeName>
+          <attributeLabel>Run Protocol ID</attributeLabel>
+          <attributeDefinition>Three digit run protocol identification number.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <enumeratedDomain enforced="yes">
+                  <codeDefinition>
+                    <code>101</code>
+                    <definition>Standard BBS</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>102</code>
+                    <definition>Standard BBS 1</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>103</code>
+                    <definition>Standard BBS 2</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>104</code>
+                    <definition>Standard BBS 3</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>105</code>
+                    <definition>Standard BBS 4</definition>
+                  </codeDefinition>
+                </enumeratedDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att5">
+          <attributeName>Year</attributeName>
+          <attributeLabel>YEAR</attributeLabel>
+          <attributeDefinition>Calendar year</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <dateTime>
+              <formatString>YYYY</formatString>
+              <dateTimePrecision>1</dateTimePrecision>
+            </dateTime>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att6">
+          <attributeName>Aou</attributeName>
+          <attributeLabel>AOU</attributeLabel>
+          <attributeDefinition>5 Digit species identification number</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <enumeratedDomain enforced="yes">
+                  <codeDefinition>
+                    <code>03690</code>
+                    <definition>Strix occidentalis</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>03680</code>
+                    <definition>Strix varia</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>11980</code>
+                    <definition>Strix fulvescens</definition>
+                  </codeDefinition>
+                 <codeDefinition>
+                  <code>03700</code>
+                  <definition>Strix varia</definition>
+                </codeDefinition>
+                <codeDefinition>
+                  <code>03700</code>
+                  <definition>Strix nebulosa</definition>
+                </codeDefinition>
+                </enumeratedDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att7">
+          <attributeName>count10</attributeName>
+          <attributeLabel>count 10</attributeLabel>
+          <attributeDefinition>Sum of the total individuals of the species recorded at stops 1-10.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att8">
+          <attributeName>count20</attributeName>
+          <attributeLabel>count 20</attributeLabel>
+          <attributeDefinition>Sum of the total individuals of the species recorded at stops 11-20.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att9">
+          <attributeName>count30</attributeName>
+          <attributeLabel>count 30</attributeLabel>
+          <attributeDefinition>Sum of the total individuals of the species recorded at stops 21-30.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att10">
+          <attributeName>count40</attributeName>
+          <attributeLabel>count40</attributeLabel>
+          <attributeDefinition>Sum of the total individuals of the species recorded at stops 31-40.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att11">
+          <attributeName>StopTotal</attributeName>
+          <attributeLabel>StopTotal</attributeLabel>
+          <attributeDefinition>Sum of the total individuals of the species recorded at stops 1-10.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent1.att12">
+          <attributeName>SpeciesTotal</attributeName>
+          <attributeLabel>SpeciesTotal</attributeLabel>
+          <attributeDefinition>Total individuals of the species recorded across all 50 stops.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+      </attributeList>
+      </dataTable>
     <otherEntity>
       <entityName>Filter R script</entityName>
       <entityDescription>An R script that takes an input file and cleans the data by filtering out only species of interest.</entityDescription>
       <physical>
-        <objectName>filterSpecies.R</objectName>
-        <size unit="byte">380</size>
+        <objectName>filterObs.R</objectName>
+        <size unit="byte">554</size>
         <dataFormat>
           <externallyDefinedFormat>
             <formatName>application/R</formatName>
           </externallyDefinedFormat>
         </dataFormat>
-        <distribution id="1430343425152">
+        <distribution>
           <online>
             <url function="download"></url>
           </online>
         </distribution>
       </physical>
-      <entityType>Other</entityType>
+      <entityType>other</entityType>
     </otherEntity>
-    <otherEntity>
-      <entityName>filteredSpecies</entityName>
-      <entityDescription>A data file that was filtered from the input date to contain only the species MUSS</entityDescription>
+    <dataTable>
+      <entityName>Strix-occidentalis-obs</entityName>
+      <entityDescription>A data file that contains only observations of Strix occidentalis.</entityDescription>
       <physical>
-        <objectName>filteredSpecies.csv</objectName>
-        <size unit="byte">6017</size>
+        <objectName>Strix-occidentalis-obs.csv</objectName>
+        <size unit="byte">1227</size>
         <dataFormat>
           <externallyDefinedFormat>
             <formatName>text/csv</formatName>
           </externallyDefinedFormat>
         </dataFormat>
-        <distribution id="1430343425153">
+        <distribution>
           <online>
             <url function="download"></url>
           </online>
         </distribution>
       </physical>
-      <entityType>Other</entityType>
-    </otherEntity>
+      <attributeList>
+        <attribute id="ent2.att1">
+          <attributeName>countrynum</attributeName>
+          <attributeLabel>Country Number</attributeLabel>
+          <attributeDefinition>The three digit identification code for country.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att2">
+          <attributeName>statenum</attributeName>
+          <attributeLabel>statenum</attributeLabel>
+          <attributeDefinition>The two digit numerical code that identifies the state, province or territory where the route was run.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att3">
+          <attributeName>Route</attributeName>
+          <attributeLabel>Route</attributeLabel>
+          <attributeDefinition>The three digit code that identifies the route - unique within states.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <textDomain>
+                  <definition>any text</definition>
+                </textDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att4">
+          <attributeName>RPID</attributeName>
+          <attributeLabel>Run Protocol ID</attributeLabel>
+          <attributeDefinition>Three digit run protocol identification number.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <enumeratedDomain enforced="yes">
+                  <codeDefinition>
+                    <code>101</code>
+                    <definition>Standard BBS</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>102</code>
+                    <definition>Standard BBS 1</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>103</code>
+                    <definition>Standard BBS 2</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>104</code>
+                    <definition>Standard BBS 3</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>105</code>
+                    <definition>Standard BBS 4</definition>
+                  </codeDefinition>
+                </enumeratedDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att5">
+          <attributeName>Year</attributeName>
+          <attributeLabel>YEAR</attributeLabel>
+          <attributeDefinition>Calendar year</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <dateTime>
+              <formatString>YYYY</formatString>
+              <dateTimePrecision>1</dateTimePrecision>
+            </dateTime>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att6">
+          <attributeName>Aou</attributeName>
+          <attributeLabel>AOU</attributeLabel>
+          <attributeDefinition>5 Digit species identification number</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">string</storageType>
+          <measurementScale>
+            <nominal>
+              <nonNumericDomain>
+                <enumeratedDomain enforced="yes">
+                  <codeDefinition>
+                    <code>03690</code>
+                    <definition>Strix occidentalis</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>03680</code>
+                    <definition>Strix varia</definition>
+                  </codeDefinition>
+                  <codeDefinition>
+                    <code>11980</code>
+                    <definition>Strix fulvescens</definition>
+                  </codeDefinition>
+                 <codeDefinition>
+                  <code>03700</code>
+                  <definition>Strix varia</definition>
+                </codeDefinition>
+                <codeDefinition>
+                  <code>03700</code>
+                  <definition>Strix nebulosa</definition>
+                </codeDefinition>
+                </enumeratedDomain>
+              </nonNumericDomain>
+            </nominal>
+          </measurementScale>
+        </attribute>
+        <attribute id="ent2.att7">
+          <attributeName>SpeciesTotal</attributeName>
+          <attributeLabel>SpeciesTotal</attributeLabel>
+          <attributeDefinition>Total individuals of the species recorded across all 50 stops.</attributeDefinition>
+          <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+          <measurementScale>
+            <ratio>
+              <unit>
+                <customUnit>number</customUnit>
+              </unit>
+              <precision>1</precision>
+              <numericDomain>
+                <numberType>real</numberType>
+                <bounds>
+                  <minimum exclusive="false">0</minimum>
+                  <maximum exclusive="false">1000</maximum>
+                </bounds>
+              </numericDomain>
+            </ratio>
+          </measurementScale>
+        </attribute>
+      </attributeList>
+    </dataTable>
     <otherEntity>
-      <entityName>collectionMethods</entityName>
-      <entityDescription>A data file in CSV format that contains a list of possible data collection method abbreviations.</entityDescription>
+      <entityName>Weather Information</entityName>
+      <entityDescription>This file contains weather information along the routes which the observations were made.</entityDescription>
       <physical>
-        <objectName>collectionMethods.csv</objectName>
-        <size unit="byte">775</size>
+        <objectName>WeatherInf.txt</objectName>
+        <size unit="byte">1933</size>
         <dataFormat>
           <externallyDefinedFormat>
-            <formatName>text/csv</formatName>
+            <formatName>text/plain</formatName>
           </externallyDefinedFormat>
         </dataFormat>
-        <distribution id="1430343425154">
+        <distribution>
           <online>
             <url function="download"></url>
           </online>
         </distribution>
       </physical>
-      <entityType>Other</entityType>
+      <entityType>other</entityType>
     </otherEntity>
   </dataset>
+  <additionalMetadata>
+  <metadata>
+    <stmml:unitList>
+      <stmml:unit abbreviation="cm" id="centimeter" multiplierToSI="0.01" name="centimeter" parentSI="meter">
+        <stmml:description>.01 meters</stmml:description>
+      </stmml:unit>
+      <stmml:unit id="number" name="number" unitType="dimensionless">
+        <stmml:description>a number</stmml:description>
+      </stmml:unit>
+    </stmml:unitList>
+  </metadata>
+</additionalMetadata>
 </eml:eml>
-
