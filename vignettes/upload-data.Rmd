@@ -21,7 +21,7 @@ Before uploading any data to a DataONE MN, it is necessary to obtain a DataONE u
 be provided with each request to upload or update data. The method that DataONE uses to achieve this is 
 known as *user identity authentication*, and 
 requires that an *authentication token*, which is a character string, be provided during upload. The process to obtain this
-token is described in the *dataone-overview* vignette, in the section **DataONE User Authentication**, which is viewable with the R command `vignette("dataone-overview")`. (Note: DataONE originally used X.509 certificates for authentication, which are still supported.)
+token is described in the *DataONE Federation* vignette, in the section **DataONE User Authentication With Tokens**, which is viewable with the R command `vignette("dataone-overview")`. (Note: DataONE originally used X.509 certificates for authentication, which are still supported.)
 
 ## Uploading A Package Using `uploadDataPackage`
 Datasets and metadata can be uploaded individually or as a collection. Such a collection, whether contained in local 
@@ -40,15 +40,15 @@ emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
 metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
 dp <- addMember(dp, metadataObj)
 
-sourceData <- system.file("extdata/sample.csv", package="dataone")
+sourceData <- system.file("extdata/OwlNightj.csv", package="dataone")
 sourceObj <- new("DataObject", format="text/csv", filename=sourceData) 
 dp <- addMember(dp, sourceObj, metadataObj)
 
-progFile <- system.file("extdata/filterSpecies.R", package="dataone")
+progFile <- system.file("extdata/filterObs.R", package="dataone")
 progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
 dp <- addMember(dp, progObj, metadataObj)
 
-outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
+outputData <- system.file("extdata/Strix-occidentalis-obs.csv", package="dataone")
 outputObj <- new("DataObject", format="text/csv", filename=outputData) 
 dp <- addMember(dp, outputObj, metadataObj)
 
@@ -60,9 +60,8 @@ d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 packageId <- uploadDataPackage(d1c, dp, public=TRUE, accessRules=myAccessRules, quiet=FALSE)
 ```
 
-This particular package contains the R script `filterSpecies.R`, the input file `sample.csv` that was read by
-the script and the output file `filteredSpecies.csv` that was created by the R script, which was run at a
-previous time.  
+This particular package contains the R script `filterObs.R`, the input file `OwlNightj.csv` that was read by
+the script and the output file `Strix-occidentalis-obs.csv` that was created by the R script, which was run at a previous time.  
 
 The following sections describe each line of the above script in detail.
 
@@ -159,7 +158,7 @@ Nodes it can be replicated to, etc.
 The example below creates a DataObject for a science dataset:
 
 ```{r}
-sourceData <- system.file("extdata/sample.csv", package="dataone")
+sourceData <- system.file("extdata/OwlNightj.csv", package="dataone")
 sourceObj <- new("DataObject", format="text/csv", filename=sourceData) 
 dp <- addMember(dp, sourceObj, metadataObj)
 ```
@@ -172,11 +171,11 @@ If *user* is not specified for a *DataObject*, then the submitter and rightshold
 Now DataObjects for an R script and for a file created by the R script will be created:
 
 ```{r}
-progFile <- system.file("extdata/filterSpecies.R", package="dataone")
+progFile <- system.file("extdata/filterObs.R", package="dataone")
 progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
 dp <- addMember(dp, progObj, mo=metadataObj)
 
-outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
+outputData <- system.file("extdata/Strix-occidentalis-obs.csv", package="dataone")
 outputObj <- new("DataObject", format="text/csv", filename=outputData) 
 dp <- addMember(dp, outputObj, mo=metadataObj)
 ```

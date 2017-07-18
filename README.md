@@ -40,8 +40,6 @@ library(dataone)
 
 The *dataone* R package should be available for use at this point.
 
-Note: if you wish to build the required *redland* package from source before installing *dataone*, please see the redland [installation instructions]( https://github.com/ropensci/redland-bindings/tree/master/R/redland).
-
 ### Installing on Ubuntu
 
 For ubuntu, install the required Redland C libraries by entering the following commands 
@@ -75,51 +73,51 @@ library(dataone)
 
 The *dataone* R package should be available for use at this point.
 
-Note: if you wish to build the required *redland* package from source before installing *dataone*, please see the redland [installation instructions]( https://github.com/ropensci/redland-bindings/tree/master/R/redland).
-
-
 ## Quick Start
 
-See the full manual for documentation, but once installed, the package can be run in R using:
-```
-library(dataone)
-help("dataone")
-```
+See the full manual (`help dataone`) for documentation.
 
 To search the DataONE Federation Member Node *Knowledge Network for Biocomplexity (KNB)* for a dataset:
 
 ```
+library(dataone)
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
-mySearchTerms <- list(q="id:doi*hstuar*+AND+abstract:Zostera+AND+keywords:Benthic", 
-                      fl="id,title,dateUploaded,abstract,datasource,size")
+mySearchTerms <- list(q="abstract:salmon+AND+keywords:spawn+AND+keywords:chinook",
+                      fl="id,title,dateUploaded,abstract,size",
+                      fq="dateUploaded:[2017-06-01T00:00:00.000Z TO 2017-07-01T00:00:00.000Z]",
+                      sort="dateUploaded+desc")
 result <- query(mn, solrQuery=mySearchTerms, as="data.frame")
-pid <- result[1,'id']
+result[1,c("id", "title")]
+id <- result[1,'id']
 ```
 
-A CSV data object can be downloaded from KNB with the commands:
+The metadata file that describes the located research can be downloaed and viewed in an XML viewer, text 
+editor after being written to disk, or in R via the commands below:
+```
+library(XML)
+metadata <- rawToChar(getObject(mn, id))
+doc = xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
+tf <- tempfile()
+saveXML(doc, tf)
+file.show(tf)
+```
+
+This metadata file describes a data file (CSV) in this data collection (package) that can be obtained using 
+the listed identifier, using the commands:
 
 ```
-cn <- CNode("PROD")
-mn <- getMNode(cn, "urn:node:KNB")
-dataRaw <- getObject(mn, "df35d.443.1")
+dataRaw <- getObject(mn, "urn:uuid:49d7a4bc-e4c9-4609-b9a7-9033faf575e0")
 dataChar <- rawToChar(dataRaw)
 theData <- textConnection(dataChar)
 df <- read.csv(theData, stringsAsFactors=FALSE)
+df[1,]
 ```
 
-Uploading a CSV file to a DataONE Member Node requires authentication, which is done by:
+Uploading a CSV file to a DataONE Member Node requires user authentication. DataONE user
+authentication is described in the vignette `dataone-federation`.
 
-- Login at DataONE: [Production](https://search.dataone.org) or [Staging](https://search-stage.test.dataone.org)
-- Navigate to the 'My profile' page
-- Then navigate to 'Settings | Authentication Token | Token for DataONE R'
-- Add the token to you environment, but be sure to not save the token in any scripts
-
-```
-options(dataone_test_token = "eyJh8YwQ12NNaqxuDsJSUzI1NiJ9.eyJzdWIi09awjd67rt7n1AC5vc...rest.of.long.token.here")
-```
-
-Once you have the token loaded, uploading is done with:
+Once the authentication steps have been followed, uploading is done with:
 ```
 library(datapack)
 library(uuid)
@@ -133,12 +131,16 @@ d1Object <- new("DataObject", id, format="text/csv", filename=csvfile)
 uploadDataObject(d1c, d1Object, public=TRUE)
 ```
 
-Note that this example uploads a data file to the DataONE test environment "STAGING" 
-and not the production environment ("PROD"), in order to avoid inserting a bunch of test data into the production
-network. Users should use "STAGING" for testing (https://search-stage.test.dataone.org), 
-and "PROD" (https://search.dataone.org) for real data submissions. When switching between STAGING
-and PROD, the token used must come from the appropriate environement, and be set with the appropriate name
-(`dataone_test_token` for STAGING, and `dataone_token` for PROD).
+In addition, a collection of science metadata and data can be downloaded with one
+command, for example:
+
+```
+d1c <- D1Client("PROD", "urn:node:KNB")
+pkg <- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383", quiet=FALSE)
+```
+
+See the R vignette [dataone R Package Overview](Overviewhttps://github.com/DataONEorg/rdataone/blob/master/vignettes/dataone-overview.Rmd) for
+more information.
 
 ## Acknowledgements
 Work on this package was supported by:

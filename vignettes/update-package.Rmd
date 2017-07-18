@@ -45,11 +45,11 @@ pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
 ```
 ```{r, message=FALSE}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
-zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
+objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
+zipfile <- system.file("extdata/Strix-occidentalis-obs.csv.zip", package="dataone")
 pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream")
-auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
-auxObj <- new("DataObject", format="text/csv", filename=auxFile) 
+auxFile <- system.file("extdata/WeatherInf.txt", package="dataone")
+auxObj <- new("DataObject", format="text/plain", filename=auxFile) 
 pkg <- addMember(pkg, auxObj, metadataId)
 
 ```
@@ -116,13 +116,13 @@ the output is condensed and more detail is required, set the R console width to 
 the window boarder.
 
 ### 3. Modify DataObjects in the package
-The original uploaded package included the file `filterSpecies.csv`. This file can be substituted
+The original uploaded package included the file `Strix-occidentalis-obs.csv`. This file can be substituted
 for a different file, as would be necessary if it was determined that the zipped form of the
 file should have been used instead.
 
 First, determine which DataObject in the DataPackage `pkg` contains the file to be replaced:
 ```{r}
-objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
+objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
 ```
 
 The `selectMember` method inspects every DataObject in the package `pkg` and checks 
@@ -133,11 +133,11 @@ The documentation for the DataObject R slots available can be viewed with the co
 `help("DataObject-class")`. As a *SystemMetadata* object is contained in each DataObject, the slots
 for SystemMetadata are available, with documentation viewable with `help("SystemMetadata-class")`
 
-Next, update the DataObject in `pkg` to replace the file `filteredSpecies.csv` with `filteredSpecies.csv.zip` 
+Next, update the DataObject in `pkg` to replace the file `Strix-occidentalis-obs.csv` with `Strix-occidentalis-obs.csv.zip` 
 using the `replaceMember` method:
 ```{r}
-objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv')
-zipfile <- system.file("extdata/filteredSpecies.csv.zip", package="dataone")
+objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
+zipfile <- system.file("extdata/Strix-occidentalis-obs.csv.zip", package="dataone")
 pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream")
 ```
 
@@ -145,7 +145,7 @@ The `replaceMember` method updates the DataPackage `pkg`, replacing the data con
 with identifier `objId`, and updating the relevant system metadata slots such as `size` and `checksum`, 
 to reflect the new contents of the DataObject. 
 
-In this example, the file `collectionMethods.csv` was mistakenly omitted from the original package upload,
+In this example, the file `WeatherInf.txt` was mistakenly omitted from the original package upload,
 so add it now:
 
 First, the identifier for the metadata DataObject that describes the package members will be retrieved 
@@ -171,7 +171,7 @@ and the values being the slot value.
 Next, add a new package member that was omitted from the original package:
 
 ```{r}
-auxFile <- system.file("extdata/collectionMethods.csv", package="dataone")
+auxFile <- system.file("extdata/WeatherInf.txt", package="dataone")
 auxObj <- new("DataObject", format="text/csv", filename=auxFile)
 pkg <- addMember(pkg, auxObj, metadataId)
 ```
@@ -202,13 +202,13 @@ As DataPackage members are modified, the DataObject that holds the metadata that
 package members may become outdated. 
 
 For example, it was shown above that a package member was updated to contain the
-file `filteredSpecies.csv.zip` instead of `filteredSpecies.csv`. After this change, the DataObject
+file `Strix-occidentalis-obs.csv.zip` instead of `Strix-occidentalis-obs.csv`. After this change, the DataObject
 holding the EML metadata should be updated so that the EML elemnt `objectName` for this 
 dataset matched the new filename:
 
 ```{r, eval=FALSE}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-nameXpath <- '//otherEntity/physical/objectName[text()="filteredSpecies.csv"]'
+nameXpath <- '//dataTable/physical/objectName[text()="Strix-occidentalis-obs.csv"]'
 newName <- basename(zipfile)
 pkg <- updateMetadata(pkg, metadataId, xpath=nameXpath, replacement=newName)
 ```
@@ -216,7 +216,7 @@ pkg <- updateMetadata(pkg, metadataId, xpath=nameXpath, replacement=newName)
 The `updateMetadata` method updates a DataObject containing XML, substituting the value located in the
 document specified with the `xpath` argument with the value provided in the `replacement` argument.
 In this example, the XML contained in the DataObject with identifier `metadataId` is an EML 
-metadata document. The EML elewent `objectName` is updated with the value `filteredSpecies.csv.zip`.
+metadata document. The EML elewent `objectName` is updated with the value `Strix-occidentalis-obs.csv.zip`.
 
 
 Note the the `xpath` argument uses the XPath query language, which is used to locate elements within an
@@ -228,16 +228,15 @@ from DataONE, which includes the DataONE identifier for the object. Because the 
 when the DataObject is created, the EML metadata is out of date and needs to be updated with the new 
 identifier value.
 
-In this example, the section of the metadata that describes the dataset `filteredSpecies.csv.zip` will be 
-updated. 
+In this example, the section of the metadata that describes the dataset `Strix-occidentalis-obs.csv.zip` will be updated. 
 
 A portion of the EML from our exmaple looks like this:
 ```
-    <otherEntity>
-      <entityName>filteredSpecies</entityName>
-      <entityDescription>A data file that was filtered from the input date to contain only the species MUSS</entityDescription>
+    <dataTable>
+      <entityName>Strix Occidentalis</entityName>
+      <entityDescription>A data file that contains only observations of Strix occidentalis</entityDescription>
       <physical>
-        <objectName>filteredSpecies.csv</objectName>
+        <objectName>Strix-occidentalis-obs.csv</objectName>
         <size unit="byte">6017</size>
         <dataFormat>
           <externallyDefinedFormat>
@@ -251,7 +250,7 @@ A portion of the EML from our exmaple looks like this:
         </distribution>
       </physical>
       <entityType>Other</entityType>
-    </otherEntity>
+    </dataTable>
 ```
 
 The following lines get the current identifier for the DataObject that contains the
@@ -259,7 +258,7 @@ correct file, and uses this identifier value to construct a standard DataONE acc
 URL, using the base URL of the DataONE coordinating node.
 
 ```{r}
-objId <- selectMember(pkg, name="sysmeta@fileName", value='filteredSpecies.csv.zip')
+objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv.zip')
 newURL <- sprintf("%s/%s/resolve/%s", d1c@cn@baseURL, d1c@cn@APIversion, objId)
 newURL
 ```
@@ -267,7 +266,7 @@ newURL
 The `selectMember` method checks slot specified in `name` argument, in this case `sysmeta@fileName`, 
 of each *DataObject* in the 
 *DataPackage* `pkg` and returns the identifier of any member that matches the specified 
-value. This package has only one *DataObject* with the name `filteredSpecies.csv.zip` so only
+value. This package has only one *DataObject* with the name `Strix-occidentalis-obs.csv.zip` so only
 one identifier is returned in `objId`.
 
 Next, the metadata element for the distribution url will be updated in the *DataObject* that contains
@@ -275,7 +274,7 @@ the EML metadata in the package `pkg`
 
 ```{r}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
-xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"sample.csv\"]/online/url"
+xpathToURL <- "//dataTable/physical/distribution[../objectName/text()=\"OwlNightj.csv\"]/online/url"
 pkg <- updateMetadata(pkg, do=metadataId, xpath=xpathToURL, replacement=newURL)
 ```
 

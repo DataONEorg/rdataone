@@ -1,0 +1,85 @@
+---
+title: "Known Issues"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Known Issues With dataone R Packge v2.0}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+## Known Issues With dataone R Package Version 2.0
+### Error Using X.509 Certificates 
+
+Using an X.509 certificate for DataONE authenticatin on certain versions of Mac OS X can cause the following error:
+
+```
+Error in curl::curl_fetch_memory(url, handle = handle) : 
+Problem with the local SSL certificate 
+```  
+
+Changes in the Mac OS X system libraries in OS X Mavericks have taken away support of these X.509 certificates.
+A workaround to make these certificates usable on Mac OS X with R is to install a version of the *curl* R package
+that supports these certificates. 
+
+On Mac OS X, the libcurl library can be installed with either [Mac Ports](https://www.macports.org) package manager
+or the [HomeBrew](http://brew.sh) package manager. The HomeBrew package manager can be significantly faster to install
+but either one will work provided the directions shown below are followed.
+
+You can check if you have MacPorts installed by entering the following command in a terminal window:
+
+```
+port version
+```
+
+#### Create new *curl* package using MacPorts
+If MacPorts is being used on your system, the following commands can be entered to install a *curl* package
+that can read the certificate and allow them to be used by the *dataone* package for authentication
+to a DataONE node. In a terminal window enter the commands:
+
+```
+sudo port install curl
+```
+
+```{r, eval=F}
+Sys.setenv(LIB_DIR="/opt/local/lib")
+Sys.setenv(INCLUDE_DIR="/opt/local/include")
+install.packages("curl", type="source")
+library(curl)
+library(dataone)
+
+# Remove the environment variables as they are no longer needed.
+Sys.setenv(LIB_DIR="")
+Sys.setenv(INCLUDE_DIR="")
+```
+
+At this point you should be able to use X.509 Certificates.
+
+#### Create new *curl* package using HomeBrew
+The HomeBrew software can be installed with the following command entered at a terminal window:
+
+```
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Once HomeBrew has been installed, you can get the required curl libraries by entering the command:
+
+```
+brew install curl --with-openssl
+brew link curl --force
+```
+
+In the R console enter the commands:
+
+```{r, eval=F}
+Sys.setenv(LIB_DIR="/usr/local/opt/curl/lib")
+Sys.setenv(INCLUDE_DIR="/usr/local/opt/curl/include")
+install.packages("curl", type="source")
+library(curl)
+library(dataone)
+
+# Remove the environment variables as they are no longer needed.
+Sys.setenv(LIB_DIR="")
+Sys.setenv(INCLUDE_DIR="")
+```
+At this point you should be able to use X.509 Certificates.

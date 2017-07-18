@@ -21,6 +21,8 @@ Before data can be downloaded from DataONE it is necessary to find the identifie
 are associated with the data. The DataONE search facility is used to find these identifiers that
 are used to download any metadata file or dataset.
 
+Note: In this R package documentation, *dataone* refers to the R package and *DataONE* refers to the Federation of Member Nodes and the computer infrastructure comprising these data repositories.
+
 The *dataone::query* method is used to send data searches from R to the DataONE search facility, and 
 is shown in the examples in the next section. A more complete description of using the query method to
 search DataONE is available in the *searching-dataone* vignette (`vignette("searching-dataone"`)).
