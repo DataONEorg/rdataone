@@ -493,7 +493,6 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   resMapBytes <- getObject(x@mn, pid=resmapId)
   resMap <- new("ResourceMap", id=resmapId)
   resMap <- parseRDF(resMap, rdf=rawToChar(resMapBytes), asText=TRUE)
-  if(!quiet) cat(sprintf("Setting resource map identifier %s\n", resmapId))
   # All identifiers from the package are needed for obtaining the triples, including
   # the identifiers for the metadata object and the resource map itself.
   allIds <- packageMembers
@@ -895,8 +894,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         
         # If this DataObject has never been uploaded before, then upload it now.
         if(is.na(do@sysmeta@dateUploaded)) {
-            cat(sprintf("Uploading object with id %s\n", do@sysmeta@identifier))
-            returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules, quiet=quiet)
+           returnId <- uploadDataObject(x, do, replicate, numberReplicas, preferredNodes, public, accessRules, quiet=quiet)
             if(is.na(returnId)) {
                warning(sprintf("Error uploading data object with id: %s", getIdentifier(do)))
             } else {
