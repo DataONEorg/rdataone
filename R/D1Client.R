@@ -401,33 +401,31 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   
   formatType <- result[[1]]$formatType[[1]]
   # Check if we have the metadata object, and if not, then get it. If a data object pid was specified, then it is possible that
-  # it can be contained in mulitple packages. For now, just use the first package returned. 
-  # TODO: follow the obsolesence chain up to the most current version.
+  # it can be contained in mulitple packages. 
   if(formatType == "METADATA") {
-    # We have the metadata object, which contains the list of package members in the 'documents' field
-    resmapId <- result[[1]]$resourceMap
-    metadataPid <- identifier
-    packageMembers <- as.list(result[[1]]$documents)
+      # We have the metadata object, which contains the list of package members in the 'documents' field
+      metadataPid <- identifier
+      packageMembers <- unlist(result[[1]]$documents)
+      resmapId <- unlist(result[[1]]$resourceMap)
+      # Might have multiple resmaps, this will be handled later.
   } else if(formatType == "RESOURCE") {
     resmapId <- identifier
     # Get the metadata object for this resource map
-    queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents,formatType')
+    queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents')
     result <- query(node, queryParamList, as="list")
     if (length(result) == 0) {
-      stop(sprintf("Unable to find metadata object for identifier: %s on node %s", identifier, node@identifier))
+      stop(sprintf("Unable to find unobsolted metadata object for identifier: %s on node %s", identifier, node@identifier))
     }
-    metadataPid <- result[[1]]$id
-    packageMembers <- as.list(result[[1]]$documents)
+    metadataPid <- unlist(result[[1]]$id)
+    packageMembers <- unlist(result[[1]]$documents)
+    if (length(packageMembers) == 0) {
+        packageMembers <- list()
+    }
   } else {
     # This must be a package member, so get the metadata pid for the package
-    metadataPid <- result[[1]]$isDocumentedBy
-    queryParamList <- list(q=sprintf('id:\"%s\"', metadataPid), fl='documents,formatType,resourceMap')
-    result <- query(node, queryParamList, as="list")
-    if (length(result) == 0) {
-      stop(sprintf("Unable to find metadata object with identifier: %s on node %", identifier, node@identifier))
-    }
-    resmapId <- result[[1]]$resourceMap
-    packageMembers <- as.list(result[[1]]$documents)
+    metadataPid <- unlist(result[[1]]$isDocumentedBy)
+    resmapId <- unlist(result[[1]]$resourceMap)
+    packageMembers <- unlist(result[[1]]$documents)
   }
   
   # The Solr index can contain multiple resource maps that refer to our metadata object. There should be only
@@ -443,17 +441,50 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     options(useFancyQuotes = quoteSetting)
     
     qStr <- sprintf("id:(%s)", paste(newIds, collapse=" OR "))
-    queryParamList <- list(q=qStr, fq="NOT obsoletedBy:* AND archived:false", fl="id")
+    queryParamList <- list(q=qStr, fq="-obsoletedBy:*", fl="id")
     result <- query(node, queryParamList, as="list")
     resmapId <- unlist(result)
     if(length(resmapId) == 0) {
-      stop("It appears that all resource maps that reference this package are obsolete or archived.")
+      stop(sprintf("It appears that all resource maps that reference pid %s are obsoleted.", identifier))
     }
-    if(length(resmapId) > 1) {
-      resmapStr <- paste(resmapId, collapse=", ")
-      stop(sprintf("The metadata identifier %s is referenced by more than one current resource map: %s", metadataPid, resmapStr))
+    if(!quiet) {
+        if(length(resmapId) > 1) {
+          resmapStr <- paste(resmapId, collapse=", ")
+          cat(sprintf("The metadata identifier %s is referenced by more than one current resource map: %s", metadataPid, resmapStr))
+        } else {
+            cat(sprintf("Using resource map with identifier: %s\n", resmapId))
+        }
     }
-    if(!quiet) cat(sprintf("Using resource map with identifier: %s\n", resmapId))
+  }
+  
+  # The Solr index can contain multiple metadata pdis that document a data pid, so filter out the
+  # obsoleted and archived ones and use the first one of the remaining pids.
+  if(length(metadataPid) > 1) {
+      if(!quiet) {
+          cat(sprintf("Multiple metadata pids that document this identifier, will filter out obsolete ones.\n"))
+      }
+      quoteSetting <- getOption("useFancyQuotes")
+      options(useFancyQuotes = FALSE)
+      newIds <- dQuote(unlist(metadataPid))
+      options(useFancyQuotes = quoteSetting)
+      
+      qStr <- sprintf("id:(%s)", paste(newIds, collapse=" OR "))
+      queryParamList <- list(q=qStr, fq="-obsoletedBy:*", fl="id,documents")
+      result <- query(node, queryParamList, as="list")
+      if(length(result) == 0) {
+          stop(sprintf("It appears that all metadata pids that document pid %s are obsoleted.", identifier))
+      }
+      
+      metadataPid <- unlist(result[[1]]$id)
+      packageMembers <- unlist(result[[1]]$documents)
+      if(!quiet) {
+          if(length(metadataPid) > 1) {
+              metadataPidStr <- paste(metadataPid, collapse=", ")
+              cat(sprintf("The specified identifier %s is documented by more than one current metadata pid: %s", metadataPid, metadataPidStr))
+          } else {
+              cat(sprintf("Using metadata object with identifier: %s\n", metadataPid))
+          }
+      }
   }
   
   if(!quiet) {
@@ -470,7 +501,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     for (iPid in 1:length(packageMembers)) {
       thisPid <- packageMembers[[iPid]]
       if(thisPid == metadataPid) {
-        cat(sprintf("Skipping metadata object, already downloaded\n"))
+        if(!quiete) cat(sprintf("Skipping metadata object, already downloaded\n"))
         next
       }
       obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet)
