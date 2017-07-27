@@ -411,7 +411,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   } else if(formatType == "RESOURCE") {
     resmapId <- identifier
     # Get the metadata object for this resource map
-    queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA', fl='id,documents')
+    queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA+AND+-obsoletedBy:*', fl='id,documents')
     result <- query(node, queryParamList, as="list")
     if (length(result) == 0) {
       stop(sprintf("Unable to find unobsolted metadata object for identifier: %s on node %s", identifier, node@identifier))
@@ -424,8 +424,17 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   } else {
     # This must be a package member, so get the metadata pid for the package
     metadataPid <- unlist(result[[1]]$isDocumentedBy)
-    resmapId <- unlist(result[[1]]$resourceMap)
+    queryParamList <- list(q=sprintf('id:\"%s\"', metadataPid), fq='-obsoletedBy:*', fl='id,resourceMap,documents')
+    result <- query(node, queryParamList, as="list")
+    if (length(result) == 0) {
+        stop(sprintf("Unable to find metadata object for identifier: %s on node %s", identifier, node@identifier))
+    }
     packageMembers <- unlist(result[[1]]$documents)
+    if (length(packageMembers) == 0) {
+        packageMembers <- list()
+    }
+    
+    resmapId <- unlist(result[[1]]$resourceMap)
   }
   
   # The Solr index can contain multiple resource maps that refer to our metadata object. There should be only
