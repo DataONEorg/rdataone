@@ -271,7 +271,8 @@ test_that("D1Client updateDataPackage works", {
     library(digest)
     # Create a csv file for the science object
     #d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-    d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
+    d1c <- D1Client("STAGING2", "urn:node:mnTestKNB")
+    #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
     expect_false(is.null(d1c))
     preferredNodes <- NA
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
@@ -283,7 +284,7 @@ test_that("D1Client updateDataPackage works", {
         
         # Create metadata object that describes science data
         emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile, suggestedFilename=basename(emlFile))
+        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
         metadataId <- getIdentifier(metadataObj)
         # Associate the metadata object with each data object using the 'insertRelationships' method.
         # Since a relationship type (the predicate argument) is not specified, the default relationship
@@ -292,7 +293,7 @@ test_that("D1Client updateDataPackage works", {
         dp <- addMember(dp, metadataObj)
         
         sourceData <- system.file("extdata/sample.csv", package="dataone")
-        sourceObj <- new("DataObject", format="text/csv", filename=sourceData, suggestedFilename=basename(sourceData))
+        sourceObj <- new("DataObject", format="text/csv", filename=sourceData)
         dp <- addMember(dp, sourceObj, metadataObj)
         
         resolveURL <- sprintf("%s/%s/object", d1c@mn@baseURL, d1c@mn@APIversion)
@@ -306,7 +307,7 @@ test_that("D1Client updateDataPackage works", {
         metadataObj <- getMember(dp, metadataId)
         
         progFile <- system.file("extdata/filterSpecies.R", package="dataone")
-        progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc", suggestedFilename=basename(progFile))
+        progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
         dp <- addMember(dp, progObj, metadataObj)
         
         xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filterSpecies.R\"]/online/url"
@@ -316,7 +317,7 @@ test_that("D1Client updateDataPackage works", {
         metadataObj <- getMember(dp, metadataId)
         
         outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
-        outputObj <- new("DataObject", format="text/csv", filename=outputData, suggestedFilename=basename(outputData))
+        outputObj <- new("DataObject", format="text/csv", filename=outputData)
         dp <- addMember(dp, outputObj, metadataObj)
         
         xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filteredSpecies.csv\"]/online/url"
@@ -530,7 +531,7 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
         
         # Create metadata object that describes science data
         emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
-        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile, suggestedFilename=basename(emlFile))
+        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
         metadataId <- getIdentifier(metadataObj)
         # Associate the metadata object with each data object using the 'insertRelationships' method.
         # Since a relationship type (the predicate argument) is not specified, the default relationship
