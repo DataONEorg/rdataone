@@ -281,7 +281,9 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     deferredDownload <- lazyLoad
     if(nrow(mntable) > 0) {
       for (i in 1:nrow(mntable)) { 
-        currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier)
+        suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
+        # If cn couldn't return the member node, then fallback to the D1Client@mn
+        if(is.null(currentMN)) currentMN <- x@mn
         if (!is.null(currentMN)) {
           sysmeta <- getSystemMetadata(currentMN, identifier)
           if(is.null(sysmeta)) next
@@ -943,7 +945,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                 # Reinsert the DataObject with a SystemMetadata containing the current date as the dateUploaded
                 dp <- setValue(dp, name="sysmeta@dateUploaded", value = datapack:::defaultUTCDate(), 
                                identifiers=getIdentifier(do))
-                removeMember(dp, doId, keepRelationships=TRUE)
+                removeMember(dp, doId, removeRelationships=FALSE)
                 dp <- addMember(dp, do)
                 uploadedMember <- TRUE
             }
@@ -971,7 +973,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                 dp <- setValue(dp, name="updated[['sysmeta']]", value=FALSE, identifiers=getIdentifier(do))
                 dp <- setValue(dp, name="updated[['data']]", value=FALSE, identifiers=getIdentifier(do))
                 # Replace the updated member in the DataPackage
-                dp <- removeMember(dp, doId, keepRelationships=TRUE)
+                dp <- removeMember(dp, doId, removeRelationships=FALSE)
                 dp <- addMember(dp, do)
                 # Now update the package relationships, substituting the old id for the new
                 dp <- updateRelationships(dp, pid, updateId)
