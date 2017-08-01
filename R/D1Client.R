@@ -510,7 +510,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     for (iPid in 1:length(packageMembers)) {
       thisPid <- packageMembers[[iPid]]
       if(thisPid == metadataPid) {
-        if(!quiete) cat(sprintf("Skipping metadata object, already downloaded\n"))
+        if(!quiet) cat(sprintf("Skipping metadata object, already downloaded\n"))
         next
       }
       obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet)
