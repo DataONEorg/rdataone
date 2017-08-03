@@ -191,14 +191,14 @@ test_that("D1Client uploadDataPackage works", {
     sciObj <- setPublicAccess(sciObj)
     accessRules <- data.frame(subject=c("uid=smith,ou=Account,dc=example,dc=com", "uid=slaughter,o=unaffiliated,dc=example,dc=org"), permission=c("write", "changePermission"))
     sciObj <- addAccessRule(sciObj, accessRules)
-    dp <- addData(dp, sciObj)
+    dp <- addMember(dp, sciObj)
     expect_true(is.element(sciObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Create metadata object that describes science data
     emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
     metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1c), filename=emlFile)
     expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
-    dp <- addData(dp, metadataObj)
+    dp <- addMember(dp, metadataObj)
     expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
     
     # Associate the metadata object with the science object it describes
@@ -207,18 +207,7 @@ test_that("D1Client uploadDataPackage works", {
     # Upload the data package to DataONE    
     resourceMapId <- uploadDataPackage(d1c, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE, accessRules=accessRules)
     expect_true(!is.null(resourceMapId))
-    
-        # Now test if the package members can be uploaded a second time. uploadDataObject should test the sysmeta@dataUploaded of each object
-    # and not let it be uploaded again.
-    ids <- getIdentifiers(dp)
-    for(idInd in 1:length(ids)) {
-      thisId <- ids[idInd]
-      thisObj <- getMember(dp, thisId)
-      # Suppress expected warning, e.g. "SystemMetadata indicates that the object with pid: urn:uuid:cd98ff3f-0cf1-4bf7-9f03-e4a2a092ce72 was already uploaded to DataONE on 2016-01-14T14:16:57Z.
-      # This object will not be uploaded."
-      suppressWarnings(testId <- uploadDataObject(d1c, thisObj))
-      expect_null(testId)
-    }
+
   } else {
       skip("This test requires valid authentication.")
   }
@@ -300,7 +289,7 @@ test_that("D1Client updateDataPackage works", {
         # Update the distribution URL in the metadata with the identifier that has been assigned to
         # this DataObject. This provides a direct link between the detailed information for this package
         # member and DataONE, which will assist DataONE in accessing and displaying this detailed information.
-        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"sample.csv\"]/online/url"
+        xpathToURL <- "//dataTable/physical/distribution[../objectName/text()=\"OwlNightj.csv\"]/online/url"
         newURL <- sprintf("%s/%s", resolveURL, getIdentifier(sourceObj))
         dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
         metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
@@ -310,7 +299,7 @@ test_that("D1Client updateDataPackage works", {
         progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
         dp <- addMember(dp, progObj, metadataObj)
         
-        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filterSpecies.R\"]/online/url"
+        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filterObs.R\"]/online/url"
         newURL <- sprintf("%s/%s", resolveURL, getIdentifier(progObj))
         dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
         metadataId <- selectMember(dp, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
@@ -320,12 +309,12 @@ test_that("D1Client updateDataPackage works", {
         outputObj <- new("DataObject", format="text/csv", filename=outputData)
         dp <- addMember(dp, outputObj, metadataObj)
         
-        xpathToURL <- "//otherEntity/physical/distribution[../objectName/text()=\"filteredSpecies.csv\"]/online/url"
+        xpathToURL <- "//dataTable/physical/distribution[../objectName/text()=\"Strix-occidentalis-obs.csv\"]/online/url"
         newURL <- sprintf("%s/%s", resolveURL, getIdentifier(outputObj))
         dp <- updateMetadata(dp, metadataId, xpath=xpathToURL, newURL)
         
         # Upload the data package to DataONE
-        newPkg <- uploadDataPackage(d1c, dp, public=TRUE, quiet=FALSE, as="DataPackage")
+        newPkg <- uploadDataPackage(d1c, dp, public=TRUE, quiet=TRUE, as="DataPackage")
         pkgId <- newPkg@resmapId
         expect_true(!is.na(pkgId))
         
@@ -479,7 +468,7 @@ test_that("D1Client createDataPackage works", {
     emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
     suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1c)))
     expect_match(metadataObj@dataObject@sysmeta@identifier, "urn:uuid")
-    suppressWarnings(addData(dp, metadataObj))
+    suppressWarnings(dp <- addData(dp, metadataObj))
     expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
     
     sdf <- read.csv(csvfile)
@@ -489,7 +478,7 @@ test_that("D1Client createDataPackage works", {
     suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1c)))
     # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
     expect_match(sciObj@dataObject@sysmeta@identifier, "urn:uuid")
-    suppressWarnings(addData(dp, sciObj, metadataObj))
+    suppressWarnings(dp <- addData(dp, sciObj, metadataObj))
     expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
     
     # Upload the data package to DataONE    
