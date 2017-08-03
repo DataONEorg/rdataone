@@ -1001,8 +1001,13 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                     newPid <- sprintf("resource_map_%s", metadataId)
                 }
             }
-            # Get the pid of the metadata object, if one is available
-            tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
+            # Get the pid of the metadata object, if one is available.
+            # Remove ':' from filename if on windows (only the pid might have these.)
+            if(.Platform$OS.type == "windows") {
+                tf <- tempfile(pattern=sprintf("%s.rdf", gsub(':', '_', newPid)))
+            } else {
+                tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
+            }
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             # Recreate the old resource map, so that it can be updated with a new pid
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
@@ -1060,7 +1065,12 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
                     }   
                 }
             }
-            tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
+            # Remove ':' from filename if on windows (only the pid might have these.)
+            if(.Platform$OS.type == "windows") {
+                tf <- tempfile(pattern=sprintf("%s.rdf", gsub(':', '_', newPid)))
+            } else {
+                tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
+            }
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             
             # Create a new resource map that will replace the old one.
