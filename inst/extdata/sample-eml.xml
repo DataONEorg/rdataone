@@ -1,0 +1,48 @@
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:ds="eml://ecoinformatics.org/dataset-2.1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:stmml="http://www.xml-cml.org/schema/stmml_1.1" packageId="urn:uuid:439c8d9d-f0ed-4f47-8cac-275d0d64bafd" system="uuid">
+  <dataset scope="document">
+    <title>Strix occidentalis Distribution in the Pacific Northwest.</title>
+    <creator>
+      <individualName>
+        <givenName>Connell</givenName>
+        <surName>Joseph</surName>
+      </individualName>
+      <electronicMailAddress>jconnell@example.com</electronicMailAddress>
+    </creator>
+    <pubDate>2015-12-14</pubDate>
+    <abstract>Strix occidentalis sightings in the Pacific Northwest.</abstract>
+    <intellectualRights>CC0, http://creativecommons.org/publicdomain/zero/1.0</intellectualRights>
+    <coverage>
+      <geographicCoverage>
+        <geographicDescription>Northwest Oregon</geographicDescription>
+        <boundingCoordinates>
+          <westBoundingCoordinate>-124.07</westBoundingCoordinate>
+          <eastBoundingCoordinate>-123.22</eastBoundingCoordinate>
+          <northBoundingCoordinate>45.53</northBoundingCoordinate>
+          <southBoundingCoordinate>44.47</southBoundingCoordinate>
+        </boundingCoordinates>
+      </geographicCoverage>
+      <temporalCoverage>
+        <rangeOfDates>
+          <beginDate>
+            <calendarDate>2015</calendarDate>
+          </beginDate>
+          <endDate>
+            <calendarDate>2015</calendarDate>
+          </endDate>
+        </rangeOfDates>
+      </temporalCoverage>
+    </coverage>
+    <contact>
+      <individualName>
+        <givenName>Connell</givenName>
+        <surName>Joseph</surName>
+      </individualName>
+      <electronicMailAddress>jconnell@example.com</electronicMailAddress>
+    </contact>
+    <methods>
+      <methodStep>
+        <description>This is the method description.</description>
+      </methodStep>
+    </methods>
+  </dataset>
+</eml:eml>
