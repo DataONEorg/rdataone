@@ -40,7 +40,8 @@
 #'  \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
 #'  \item{\code{\link{getDataObject}}}{: Download a single data object from a DataONE Federation member node.}
 #'  \item{\code{\link{getDataPackage}}}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
-#'  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node}
+#'  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node.}
+#'  \item{\code{\link{getMetadataMember}}}{: Get the DataObject containing package metadata.}
 #'  \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
 #'  \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
 #'  \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
