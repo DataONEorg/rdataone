@@ -2,8 +2,7 @@ Package: dataone
 Version: 2.1.0
 Date: 2017-08-03
 Title: R Interface to the DataONE REST API
-Authors@R: c( 
-  person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
+Authors@R: c( person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
   person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
   person("Rob", "Nahf", role = "aut", email = "rnahf@unm.edu"), 
   person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com"), 
