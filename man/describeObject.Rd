@@ -4,7 +4,7 @@
 \name{describeObject}
 \alias{describeObject}
 \alias{describeObject,D1Node-method}
-\title{Efficiently get systemmetadat for an object.}
+\title{Efficiently get systemmetadata for an object.}
 \usage{
 describeObject(x, ...)
 

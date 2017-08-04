@@ -16,7 +16,7 @@
 
 \item{mn}{The Member Node object to associate this D1Client with.}
 
-\item{env}{The DataONE environment to intialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"}
+\item{env}{The DataONE environment to initialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"}
 
 \item{mNodeid}{The node identifier of the Member Node to associate with this D1Client.}
 }

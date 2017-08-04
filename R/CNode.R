@@ -56,7 +56,7 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #########################
 
 #' Create a CNode object.
-#' @details For an explaination of DataONE Coordinatine Nodes, see the 
+#' @details For an explanation of DataONE Coordinating Nodes, see the 
 #' section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("dataone-overview")}.
 #' @param x The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
 #' @param ... (not yet used)
@@ -317,7 +317,7 @@ setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...
 
 #' Reserve a identifier that is unique in the DataONE network.
 #' @description The reserveIdentifier method contains the DataONE CN and reserves the specified
-#' identfier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
+#' identifier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
 #' @details This method requires a DataONE authentication token or X.509 Certificate. The reservation is made
 #' for the DataONE user identity that created the current authentication token or X.509 certificate.
 #' @rdname reserveIdentifier
@@ -340,7 +340,7 @@ setGeneric("reserveIdentifier", function(x, ...) {
 
 #' @rdname reserveIdentifier
 #' @param id The identifier that is to be reserved.
-#' @return The reserved pid if it was sucessfully reserved, otherwise NULL
+#' @return The reserved pid if it was successfully reserved, otherwise NULL
 setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
   url <- paste(x@endpoint, "reserve", sep="/")
   response <- auth_post(url, encode="multipart", body=list(pid=id), node=x)
@@ -361,7 +361,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
 })
 
 #' Checks to determine if the supplied subject is the owner of the reservation of id.
-#' @description The hasReservation method checks the reserveration of an identfier that has
+#' @description The hasReservation method checks the reservation of an identfier that has
 #' previously been reserved with the \code{reserveIdentifier} method. The identifier must have
 #' been reserved by the specified DataONE user identity (\code{subject}).
 #' @details To determine the DataONE identity that is currently being used for DataONE
@@ -410,7 +410,7 @@ setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.char
   # codes and their meaning are shown below:
   #     Status code      meaning
   #     200              A reservation for the pid and subject combination exists
-  #     401              Unauthorized - pid reservation exists, but subject doesn't have priviledge
+  #     401              Unauthorized - pid reservation exists, but subject doesn't have privilege
   #                      to access it
   #     404              A reservation for the pid does not exist
   # 
@@ -573,7 +573,7 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' Get a reference to a node based on its identifier
 #' @rdname getMNode
 #' @aliases getMNode
-#' @details For an explainatin of DataONE Coordinatine Nodes and Member Node
+#' @details For an explanation of DataONE Coordinatine Nodes and Member Node
 #' identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
 #' by entering the R command: \code{vignette("dataone-overview")}.
 #' @param x The coordinating node to query for its registered Member Nodes

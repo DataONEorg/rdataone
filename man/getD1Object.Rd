@@ -21,7 +21,7 @@ getD1Object(x, identifier, ...)
 A datapack:DataObject
 }
 \description{
-An objectd is download from the DataONE network for the identifier that is provided.
+An object is download from the DataONE network for the identifier that is provided.
 }
 \examples{
 \dontrun{ 

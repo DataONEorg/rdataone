@@ -131,7 +131,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' system. This certificate provides authentication credentials from 
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 #' For DataONE Version 2.0, an authentication token can also be used for authentication. 
-#' Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
+#' Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 #' @param x The MNode or CNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
 #' @param ... (Not yet used)
@@ -330,7 +330,7 @@ setGeneric("getSystemMetadata", function(x, ...) {
   standardGeneric("getSystemMetadata")
 })
 
-#' Efficiently get systemmetadat for an object.
+#' Efficiently get systemmetadata for an object.
 #' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
 #' determine basic properties of the referenced object. This operation requires read privileges for the
 #' object specified by \code{'pid'}, as is granted with a DataONE authentication token or X.509 certificate.
@@ -605,11 +605,11 @@ d1_errors <- function(x){
 #' @details
 #' The return types handled by this function are:
 #'   o An incorrect url is sent to DataONE and an error is returned by
-#'     the web server, not a specified DataOne service url. In this case,
+#'     the web server, not a specified DataONE service url. In this case,
 #'     a generic error message may be returned, e.g. status=404, URL not found
-#'   o A DataOne service was called, and retunred an error message. In this
-#'     case the DataONE response is parsed in an attemp to retrieve a
-#'     meaningfull error message.
+#'   o A DataONE service was called, and returned an error message. In this
+#'     case the DataONE response is parsed in an attempt to retrieve a
+#'     meaningful error message.
 #'
 #' @param response The httr response object to extract the error description from. 
 getErrorDescription <- function(response) {
@@ -687,7 +687,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' The \code{"parsed"} argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
 #' For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or 
 #' If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have 
-#' the result parseed to an R list, with each list element containing one Solr query result of the total result set.
+#' the result parsed to an R list, with each list element containing one Solr query result of the total result set.
 #' @param x The CNode or MNode instance to send the query to.
 #' @param ... (Not yet used.)
 #' @return search results as a list, data.frame or XML document
@@ -949,7 +949,7 @@ parseSolrField <- function(xNode, parse) {
 #' Check if an action is authorized for the specified identifier
 #' @description Test if the user identified by the provided token has 
 #' authorization for operation on the specified object.
-#' @details The identifer parameter may be either a DataONE persistant identifier (pid)
+#' @details The identifier parameter may be either a DataONE persistent identifier (pid)
 #' or series identifier (sid).
 #' @rdname isAuthorized
 #' @aliases isAuthorized

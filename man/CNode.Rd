@@ -25,7 +25,7 @@ the CNode object representing the DataONE environment
 Create a CNode object.
 }
 \details{
-For an explaination of DataONE Coordinatine Nodes, see the 
+For an explanation of DataONE Coordinating Nodes, see the 
 section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("dataone-overview")}.
 }
 \examples{

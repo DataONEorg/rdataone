@@ -14,9 +14,9 @@ getCertInfo(.Object)
 \item{.Object}{an Authentication Object.}
 }
 \value{
-A data.frame containing informoration about the X.509 certificate.
+A data.frame containing information about the X.509 certificate.
 }
 \description{
 The DataONE X.509 certificate is read, if it is present and the
-information contained in the certficate is returned as a data.frame.
+information contained in the certificate is returned as a data.frame.
 }

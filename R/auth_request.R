@@ -129,7 +129,7 @@ auth_head <- function(url, nconfig=config(), node) {
   
 #' POST, PUT, or DELETE a resource with authenticated credentials.
 #' @description POST, PUT, or DELETE data to a URL using an HTTP request using authentication credentials 
-#' provided in a client authentication, either via authentiction token or certificate.
+#' provided in a client authentication, either via authentication token or certificate.
 #' If the user does not have a valid token or certificate, request fails.
 #' @param method a string indicating which HTTP method to use (post, put, or delete)
 #' @param url The URL to be accessed via authenticated PUT

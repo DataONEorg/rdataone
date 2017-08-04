@@ -18,5 +18,5 @@ the AuthenticationManager object
 }
 \description{
 Construct an instance of AuthenticationManager to provide mechanisms to load, verify, and 
-display DataONE authenticatin information.
+display DataONE authentication information.
 }

@@ -76,7 +76,7 @@ setClass("AuthenticationManager", slots = c(
 
 #' Create an AuthenticationManager object
 #' @description Construct an instance of AuthenticationManager to provide mechanisms to load, verify, and 
-#' display DataONE authenticatin information.  
+#' display DataONE authentication information.  
 #' @param ... (Not yet used)
 #' @return the AuthenticationManager object
 #' @export
@@ -96,7 +96,7 @@ setMethod("AuthenticationManager", signature=character(), function() {
 #' @rdname isAuthValid
 #' @aliases isAuthValid
 #' @description The currently used DataONE client authentication method (either tokens or X.509 certificates)
-#' is checked and verified for the specified node (either CN or MN). If an authentication token is availalbe
+#' is checked and verified for the specified node (either CN or MN). If an authentication token is available
 #' via the R options facility, it will be used i.e. available via getOption("dataone_token").  However, 
 #' authentication tokens can only be used for DataONE v2 or higher nodes. X.509 certificates can be used 
 #' with DataONE v1 or higher nodes. 
@@ -237,7 +237,7 @@ setMethod("getAuthExpires", signature("AuthenticationManager"), function(.Object
 #' @param .Object An AuthenticationManager instance
 #' @param node A D1Node instance
 #' @param ... (Not yet used)
-#' @return A logical value: TRUE if authenentication has expired, FALSE if not.
+#' @return A logical value: TRUE if authentication has expired, FALSE if not.
 setGeneric("isAuthExpired", function(.Object, ...) { 
     standardGeneric("isAuthExpired")
 })
@@ -478,10 +478,10 @@ getTokenDetails <- function(tokenName) {
 
 #' Get X.509 Certificate information
 #' @description The DataONE X.509 certificate is read, if it is present and the
-#' information contained in the certficate is returned as a data.frame.
+#' information contained in the certificate is returned as a data.frame.
 #' @rdname getCertInfo
 #' @param .Object an Authentication Object.
-#' @return A data.frame containing informoration about the X.509 certificate.
+#' @return A data.frame containing information about the X.509 certificate.
 #' @export
 setGeneric("getCertInfo", function(.Object) { 
     standardGeneric("getCertInfo")

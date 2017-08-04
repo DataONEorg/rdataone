@@ -178,7 +178,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 
 #' Get the node capabilities description, and store the information in the MNode.
 #' @description Access the DataONE getCapabilities() service for the Member Node, which returns an XML
-#' decription of the repository and the services it offers.
+#' description of the repository and the services it offers.
 #' @rdname getCapabilities
 #' @aliases getCapabilities
 #' @param x The node identifier with which this node is registered in DataONE
@@ -512,7 +512,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
 #' Update the system metadata associated with an object.
 #' @description A modified SytemMetadata object can be sent to DataONE that contains
 #' updated information. This function allow updating of the system metadata without
-#' updating the object that it describes, so that mutable attribures such as accessPolicy
+#' updating the object that it describes, so that mutable attributes such as accessPolicy
 #' can be updated easily.
 #' @details In the version 2.0 library and higher, this operation can utilize an 
 #' 'dataone_token' option to provide credentials for write operations in DataONE.
@@ -523,7 +523,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
 #' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @param x The MNode instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
-#' @return A logical value, TRUE if the operation was sucessful, FALSE if there was an error.
+#' @return A logical value, TRUE if the operation was successful, FALSE if there was an error.
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.updateSystemMetadata}
 #' @import datapack
 #' @export

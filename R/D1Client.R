@@ -110,7 +110,7 @@ setMethod("D1Client", signature("CNode", "MNode"), function(x, y, ...) {
 #' @param .Object A D1client object.
 #' @param cn The Member Node object to associate this D1Client with.
 #' @param mn The Member Node object to associate this D1Client with.
-#' @param env The DataONE environment to intialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"
+#' @param env The DataONE environment to initialize this D1Client with, e.g. "PROD", "STAGING", "SANDBOX", "DEV"
 #' @param mNodeid The node identifier of the Member Node to associate with this D1Client.
 #' @rdname D1Client-initialize
 #' @aliases D1Client-initialize
@@ -176,7 +176,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 })
 
 #' Download a data object from the DataONE Federation.
-#' @description An objectd is download from the DataONE network for the identifier that is provided.
+#' @description An object is download from the DataONE network for the identifier that is provided.
 #' @param x A D1Client instance
 #' @param identifier The identifier of the object to download from DatONE
 #' @param ... (not yet used)
@@ -739,7 +739,7 @@ setMethod("getMNodeId", signature("D1Client"), function(x) {
 })
 
 #' Set the member node identifier to be associated with the D1Client object.
-#' @description The membor node identifier is the URN identifier used by
+#' @description The member node identifier is the URN identifier used by
 #' DataONE to uniquely identifier a node, for example "urn:node:KNB" specifies
 #' the "Knowledge Network for Biodiversity" member node.
 #' @details One Member Node can be associated with the client as the default to which
@@ -770,7 +770,7 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 
 #' Get a member node client based on its node identifier.
 #' @param x A D1Client object.
-#' @param nodeid The identifier of the node to retreive.
+#' @param nodeid The identifier of the node to retrieve.
 #' @param ... (Not yet used)
 #' @rdname getMN
 #' @aliases getMN
@@ -1359,7 +1359,7 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 })
 
 #' Encode the Input for a URL Query Segment.
-#' @description Encodes the characters of the input so they are not interpretted as reserved
+#' @description Encodes the characters of the input so they are not interpreted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param x A D1Client object.
 #' @param ... (Not yet used.)
@@ -1395,7 +1395,7 @@ setMethod("encodeUrlQuery", signature(x="D1Client"), function(x, querySegment, .
 })
 
 #' Encode the Input for a URL Path Segment.
-#' @description Encodes the characters of the input so they are not interpretted as reserved
+#' @description Encodes the characters of the input so they are not interpreted as reserved
 #' characters in url strings.  Will also encode non-ASCII unicode characters.
 #' @param x A D1Client object
 #' @param ... (Not yet used.)

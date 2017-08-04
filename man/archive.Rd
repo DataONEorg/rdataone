@@ -33,7 +33,7 @@ This operation requires an X.509 certificate to be present in the default locati
 system. This certificate provides authentication credentials from 
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
 For DataONE Version 2.0, an authentication token can also be used for authentication. 
-Also, administrator priviledge is required to run archive() on a DataONE Coordinating Node.
+Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 }
 \examples{
 library(dataone)

@@ -90,7 +90,7 @@ setGeneric("documented.entityNames", function(x, ...) {
 })
 
 #' Get DataONE identifiers
-#' @description Get the DataONE identiifer associated with each table
+#' @description Get the DataONE identifier associated with each table
 #' @rdname documented.d1Identifiers
 #' @param x the TableDescriber
 #' @param ... Additional parameters

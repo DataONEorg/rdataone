@@ -22,7 +22,7 @@ A logical value: TRUE if authentication is valid, false if not.
 }
 \description{
 The currently used DataONE client authentication method (either tokens or X.509 certificates)
-is checked and verified for the specified node (either CN or MN). If an authentication token is availalbe
+is checked and verified for the specified node (either CN or MN). If an authentication token is available
 via the R options facility, it will be used i.e. available via getOption("dataone_token").  However, 
 authentication tokens can only be used for DataONE v2 or higher nodes. X.509 certificates can be used 
 with DataONE v1 or higher nodes. 

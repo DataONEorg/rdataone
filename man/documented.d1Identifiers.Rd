@@ -20,7 +20,7 @@ documented.d1Identifiers(x, ...)
 vector of dataONE identifiers
 }
 \description{
-Get the DataONE identiifer associated with each table
+Get the DataONE identifier associated with each table
 }
 \author{
 rnahf

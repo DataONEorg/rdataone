@@ -16,7 +16,7 @@ setMNodeId(x, id)
 \item{id}{A DataONE member node identifier.}
 }
 \description{
-The membor node identifier is the URN identifier used by
+The member node identifier is the URN identifier used by
 DataONE to uniquely identifier a node, for example "urn:node:KNB" specifies
 the "Knowledge Network for Biodiversity" member node.
 }

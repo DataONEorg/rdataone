@@ -27,7 +27,7 @@ Test if the user identified by the provided token has
 authorization for operation on the specified object.
 }
 \details{
-The identifer parameter may be either a DataONE persistant identifier (pid)
+The identifier parameter may be either a DataONE persistent identifier (pid)
 or series identifier (sid).
 }
 \examples{

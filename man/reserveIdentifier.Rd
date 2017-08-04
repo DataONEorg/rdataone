@@ -21,11 +21,11 @@ reserveIdentifier(x, ...)
 \item{id}{The identifier that is to be reserved.}
 }
 \value{
-The reserved pid if it was sucessfully reserved, otherwise NULL
+The reserved pid if it was successfully reserved, otherwise NULL
 }
 \description{
 The reserveIdentifier method contains the DataONE CN and reserves the specified
-identfier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
+identifier that the user has provided. Once a an identifier has been reserved, it and can not be used by any other user.
 }
 \details{
 This method requires a DataONE authentication token or X.509 Certificate. The reservation is made

@@ -18,7 +18,7 @@ isAuthExpired(.Object, ...)
 \item{node}{A D1Node instance}
 }
 \value{
-A logical value: TRUE if authenentication has expired, FALSE if not.
+A logical value: TRUE if authentication has expired, FALSE if not.
 }
 \description{
 Check if the currently valid authentication method has reached the expiration time.

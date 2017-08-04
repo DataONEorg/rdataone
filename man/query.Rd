@@ -56,7 +56,7 @@ The \code{"as"} argument is used to specify the query result to be returned as: 
 The \code{"parsed"} argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
 For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or 
 If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have 
-the result parseed to an R list, with each list element containing one Solr query result of the total result set.
+the result parsed to an R list, with each list element containing one Solr query result of the total result set.
 }
 \examples{
 \dontrun{

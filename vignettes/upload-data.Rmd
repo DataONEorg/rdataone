@@ -163,7 +163,7 @@ sourceObj <- new("DataObject", format="text/csv", filename=sourceData)
 dp <- addMember(dp, sourceObj, metadataObj)
 ```
 
-An optional *user* argument can be specified when creating a DataObject, which will be used to set the DataONE *submitter* and *rightsholder* of the dataset when it is uploaded. The rightsholder is granted all access priviledges 
+An optional *user* argument can be specified when creating a DataObject, which will be used to set the DataONE *submitter* and *rightsholder* of the dataset when it is uploaded. The rightsholder is granted all access privileges 
 to the object.
 
 If *user* is not specified for a *DataObject*, then the submitter and rightsholder for an object will automatically be set, when the object is uploaded to DataONE, to the DataONE user that created the authentication token or X.509 certificate. 
@@ -239,7 +239,7 @@ message(sprintf("Uploaded package with identifier: %s", packageId))
 
 (Note that the example uses a DataONE test environment *STAGING*, and not the production environment.)
 
-After *uploadDataPackage* has been called sucessfully, the package can be viewed on the member node, searched for
+After *uploadDataPackage* has been called successfully, the package can be viewed on the member node, searched for
 using the DataONE search facility. Note that if objects in DataONE are not publicly readable, and the authenticated
 user performing the search isn't granted access in an object's access policy, then the objects will not be 
 viewable or discoverable via the search facility for that user.
