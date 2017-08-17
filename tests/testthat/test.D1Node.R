@@ -187,32 +187,33 @@ test_that("D1Node archive() works",{
   testdf <- data.frame(x=1:10,y=11:20)
   csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
   write.csv(testdf, csvfile, row.names=FALSE)
-  mnId <- "urn:node:mnStageUCSB2"
-  d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  #mnId <- "urn:node:mnStageUCSB2"
+  #d1c <- new("D1Client", env="STAGING", mNodeid=mnId)
+  d1cTest
   am <- AuthenticationManager()
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1c@mn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTest@mn))
   if (authValid) {
-    if(getAuthMethod(am, d1c@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(getAuthMethod(am, d1cTest@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
-    subject <- getAuthSubject(am, d1c@mn)
+    subject <- getAuthSubject(am, d1cTest@mn)
     # If subject isn't available from the current authentication method, then get from DataONE
     if (is.na(subject) || subject == "public") {
-      creds <- echoCredentials(d1c@cn)
+      creds <- echoCredentials(d1cTest@cn)
       subject <- creds$person$subject
       if(is.null(subject) || is.na(subject)) skip("This test requires a valid DataONE user identity>\")")
     }
     
-    do1 <- new("DataObject", format="text/csv", user=subject, mnNodeId=mnId, filename=csvfile)
+    do1 <- new("DataObject", format="text/csv", user=subject, filename=csvfile)
     # Set replication off, to prevent the bug of serialNumber increasing due to replication bug
-    uploadDataObject(d1c, do1, replicate=FALSE, public=TRUE)
+    uploadDataObject(d1cTest, do1, replicate=FALSE, public=TRUE)
     id1 <- getIdentifier(do1)
-    md1 <- getSystemMetadata(d1c@mn, id1)
+    md1 <- getSystemMetadata(d1cTest@mn, id1)
     # Run the archive test if both metadata objects sync'd
     if (!is.null(md1)) {
-      tstPid <- archive(d1c@mn, id1)
+      tstPid <- archive(d1cTest@mn, id1)
       expect_equal(tstPid, id1)
     }
-    tstMd1 <- getSystemMetadata(d1c@mn, id1)
+    tstMd1 <- getSystemMetadata(d1cTest@mn, id1)
     expect_true(tstMd1@archived, info=sprintf("Pid %s was not archived properly", id1))
   } else {
       skip("This test requires valid authentication.")
