@@ -3,7 +3,9 @@
 * macOS 10.12.6, R 3.4.1
 * Ubuntu 14.04.5, R 3.4.1
 * Windows 7, R 3.4.1
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.4.1 (2017-06-30)
 * Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2017-08-02 r73018)
+
 
 ## Changes since last release
 
