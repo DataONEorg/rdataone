@@ -42,10 +42,10 @@ test_that("D1Client constructors", {
         expect_match(class(cli), "D1Client")
         expect_match(cli@cn@baseURL, "https://cn-sandbox.test.dataone.org/cn")
         
-        cli <- D1Client("DEV")
-        expect_false(is.null(cli))
-        expect_match(class(cli), "D1Client")
-        expect_match(cli@cn@baseURL, "https://cn-dev.test.dataone.org/cn")
+        #cli <- D1Client("DEV")
+        #expect_false(is.null(cli))
+        #expect_match(class(cli), "D1Client")
+        #expect_match(cli@cn@baseURL, "https://cn-dev.test.dataone.org/cn")
 })
 
 test_that("D1Client methods", {  
@@ -58,9 +58,9 @@ test_that("D1Client methods", {
   # The remainder of this test uses development machines.
   skip_on_cran()
   # Test getEndPoint()
-  cli <- D1Client("DEV")
+  cli <- D1Client("STAGING")
   cnUrl <- getEndpoint(cli)
-  expect_match(cnUrl, "https://cn-dev.test.dataone.org/cn")
+  expect_match(cnUrl, "https://cn-stage.test.dataone.org/cn")
   # Test getMNodeId()
   cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
   expect_match(getMNodeId(cli), "urn:node:mnTestKNB")

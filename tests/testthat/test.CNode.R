@@ -13,8 +13,8 @@ test_that("CNode constructors", {
 	skip_on_cran()
 	cn <- CNode("STAGING2")
 	expect_match(cn@endpoint, "https://cn-stage-2.test.dataone.org/cn")
-	cn <- CNode("DEV")
-	expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
+	#cn <- CNode("DEV")
+	#expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
 })
 test_that("CNode listNodes()", {
   library(dataone)
