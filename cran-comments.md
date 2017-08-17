@@ -23,6 +23,8 @@
 
 * The resource map for a package is now sets the default name (sysmeta.fileName) based on the metadata pid (#195)
 
+* Unit tests have been modified to run faster.
+
 NEW FUNCTIONS
 
 * getMetadataMember() examines each DataObject in a DataPackage to determine if a metadata object has been added
