@@ -25,7 +25,13 @@ token is described in the *DataONE Federation* vignette, in the section **DataON
 
 ## Uploading A Package Using `uploadDataPackage`
 Datasets and metadata can be uploaded individually or as a collection. Such a collection, whether contained in local 
-R objects or existing on a DataONE repository, will be informally referred to as a `package`. The steps necessary to
+R objects or existing on a DataONE repository, will be informally referred to as a `package` or
+'data package'. Figure 1. is a diagram of a typical DataONE package showing a metadata file that
+describes, or `documents` the data granules that the package contains.
+
+![](package-diagram.png)
+
+The steps necessary to
 to prepare and upload a package to DataONE using the `uploadDataPackage` method 
 will be shown. A complete script that uses these steps is shown here: 
 
