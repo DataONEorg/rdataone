@@ -177,7 +177,7 @@ setGeneric("archive", function(x, ...) {
 setMethod("archive", signature("D1Node"), function(x, pid) {
     url <- paste(x@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
     response <- auth_put(url, node=x)
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         warning(sprintf("Error archiving %s\n", pid))
         return(NULL)
     } else {
@@ -265,7 +265,7 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEng
   url <- paste(x@endpoint, "query", queryEngineName, sep="/")
   # Send the request
   response<-GET(url)
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     warning(sprintf("Error getting query engine description %s\n", getErrorDescription(response)))
     return(list())
   }
@@ -360,7 +360,7 @@ setMethod("describeObject", signature("D1Node"), function(x, pid) {
   stopifnot(is.character(pid))
   url <- file.path(x@endpoint, "object", URLencode(pid, reserved=T))
   response <- auth_get(url, node=x)
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     d1_errors(response)
   } else { 
     return(unclass(response$headers))
@@ -576,7 +576,7 @@ setMethod("ping", signature("D1Node"), function(x) {
   # Send the request
   response<-GET(url)
 
-  if (response$status == 200) {
+  if (response$status_code == 200) {
     return(TRUE)
   } else {
     return(FALSE)
@@ -812,7 +812,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
   
   if(is.null(response)) return(NULL)
   
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     message(sprintf("Error accessing %s: %s\n", queryUrl, getErrorDescription(response)))
     return(NULL)
   }
@@ -986,9 +986,9 @@ setMethod("isAuthorized", signature("D1Node"), function(x, id, action) {
     response <- auth_get(url, node=x)
     # Status = 200 means that the action is authorized for the id.
     # Status = 401 means that the subject is not authorized for the action, not an error.
-    if(response$status == "401") {
+    if(response$status_code == "401") {
         return(FALSE)
-    } else if (response$status != "200") {
+    } else if (response$status_code != "200") {
         warning(sprintf("Error checking authorized for action \"%s\" on id:\" %s\": %s", action, id, getErrorDescription(response)))
         return(FALSE)
     } else {
