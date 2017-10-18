@@ -205,7 +205,7 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
   response <- GET(url, user_agent(get_user_agent()))
   # Use charset 'utf-8' if not specified in response headers
   charset <- "utf-8"
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     stop(sprintf("Error accessing %s: %s\n", x@endpoint, getErrorDescription(response)))
   } else {
     if("content-type" %in% names(response$headers)) {
@@ -243,7 +243,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     
     response <- auth_get(url, node=x)
     
-    if (response$status != "200") {
+    if (response$status_code != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
     }
     return(content(response, as = "raw"))
@@ -259,7 +259,7 @@ setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
     
     # Use charset 'utf-8' if not specified in response headers
     charset <- "utf-8"
-    if(response$status != "200") {
+    if(response$status_code != "200") {
       warning(sprintf("Error getting SystemMetadata: %s\n", getErrorDescription(response)))
         return(NULL)
     } else {
@@ -402,7 +402,7 @@ setMethod("createObject", signature("MNode"), function(x, pid, file=as.character
     
     # Use charset 'utf-8' if not specified in response headers
     charset <- "utf-8"
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         #d1_errors(response)
         stop(sprintf("Error creating %s: %s\n", pid, getErrorDescription(response)))
     } else {
@@ -489,7 +489,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
                 body=list(pid=pid, object=upload_file(file), 
                 newPid=newpid, sysmeta=upload_file(sm_file, type='text/xml')), node=x)
     
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         #d1_errors(response)
         stop(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
     } else {
@@ -561,7 +561,7 @@ setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) 
     sm_file <- tempfile()
     writeLines(sysmetaxml, sm_file)
     response <- auth_put(url, encode="multipart", body=list(pid=pid, sysmeta=upload_file(sm_file, type='text/xml')), node=x)
-    if(response$status != "200") {
+    if(response$status_code != "200") {
       warning(sprintf("Error updating %s: %s\n", pid, getErrorDescription(response)))
       return(FALSE)
     } else {
@@ -613,7 +613,7 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
     
     response <- auth_post(url=url,  encode="multipart", body=body, node=x)
     charset <- "utf-8"
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         stop(sprintf("Error generating ID of type %s: %s\n", scheme, getErrorDescription(response)))
     } else {
       if("content-type" %in% names(response$headers)) {
@@ -730,7 +730,7 @@ setMethod("getPackage", signature("MNode"), function(x, identifier, format="appl
     url <- sprintf("%s/packages/%s/%s", x@endpoint, URLencode(format, reserved=T), resmapId)
     response <- auth_get(url, node=x)
     
-    if (response$status == "200") {
+    if (response$status_code == "200") {
         packageFile <- tempfile(pattern=sprintf("%s-", UUIDgenerate()), fileext=".zip")
         packageBin <- content(response, as="raw")
         writeBin(packageBin, packageFile)

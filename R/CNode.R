@@ -112,7 +112,7 @@ setMethod("CNode", signature("character"), function(x) {
   # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
   # yet that is needed to construct the service URL.
   response <- GET(CN_URI)   
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     stop(sprintf("Error accessing %s: %s\n", CN_URI, getErrorDescription(response)))
   }
   # Search for the 'node' element. Have to search for local name in xpath, as DataONE v1 and v2 use different namespaces
@@ -225,7 +225,7 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
   url <- paste(x@endpoint,"formats", URLencode(formatId, reserved=T), sep="/")
   response <- GET(url, user_agent(get_user_agent()))
   
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     return(NULL)
   }
   
@@ -295,7 +295,7 @@ setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...
     }
     # Don't need authorized access, so call GET directly vs auth_get
     response <- GET(url)
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         return(NULL)
     }
     
@@ -346,7 +346,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
   response <- auth_post(url, encode="multipart", body=list(pid=id), node=x)
   # Note: the DataONE reserveIdentifier service uses the subject from the client certificate
   # as the subject to reserve the identifier for.
-  if(response$status != "200") {
+  if(response$status_code != "200") {
       warning(sprintf("Error reserving identifier %s: %s\n", id, getErrorDescription(response)))
     return(NULL)
   } else {
@@ -414,7 +414,7 @@ setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.char
   #                      to access it
   #     404              A reservation for the pid does not exist
   # 
-  if(response$status != "200") {
+  if(response$status_code != "200") {
       warning(sprintf("Error checking reservation for pid=%ssubject=%s: %s\n", 
                  pid, subject, getErrorDescription(response)))
     return(FALSE)
@@ -449,7 +449,7 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(x, pid, ob
   url <- paste(x@endpoint, "obsoletedBy", URLencode(pid, reserved=TRUE), sep="/")
   body=list(obsoletedByPid=URLencode(obsoletedByPid), serialVersion=serialVersion)
   response <- auth_put(url=url, body=body, node=x)
-  if(response$status != "200") {
+  if(response$status_code != "200") {
       warning(sprintf("Error obsoleting %s: %s\n", pid, getErrorDescription(response)))
     return(FALSE)
   } else {
@@ -462,7 +462,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
     url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
-    if(response$status != "200") {
+    if(response$status_code != "200") {
         warning(sprintf("Error getting pid: %s\n", getErrorDescription(response)))
         return(NULL)
     }
@@ -491,7 +491,7 @@ setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
     url <- paste(x@endpoint, "meta", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
-    if(response$status != "200") {
+    if(response$status_code != "200") {
       warning(sprintf("Error getting SystemMetadata: %s\n", getErrorDescription(response)))
         return(NULL)
     }
@@ -639,7 +639,7 @@ setGeneric("echoCredentials", function(x, ...) {
 setMethod("echoCredentials", signature(x = "CNode"), function(x) {
   url <- sprintf("%s/diag/subject", x@endpoint)
   response <- auth_get(url, node=x)
-  if(response$status != "200") {
+  if(response$status_code != "200") {
     warning(sprintf("Error checking credentails %s", getErrorDescription(response)))
     return(as.character(NA))
   }
