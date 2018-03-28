@@ -11,7 +11,7 @@ getObject(x, ...)
 
 \S4method{getObject}{CNode}(x, pid)
 
-\S4method{getObject}{MNode}(x, pid, check = as.logical(FALSE))
+\S4method{getObject}{MNode}(x, pid, check = as.logical(FALSE), path = NULL)
 }
 \arguments{
 \item{x}{The Node instance from which the pid will be downloaded}
@@ -21,6 +21,8 @@ getObject(x, ...)
 \item{pid}{The identifier of the object to be downloaded}
 
 \item{check}{A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.}
+
+\item{path}{(optional) Path to a folder to write object to}
 }
 \value{
 the bytes of the object

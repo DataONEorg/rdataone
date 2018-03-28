@@ -221,8 +221,9 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 })
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
+#' @param path (optional) Path to a folder to write object to
 #' @rdname getObject
-setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE)) {
+setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL) {
   
   stopifnot(is.character(pid))
     if(!class(check) == "logical") {
@@ -234,6 +235,10 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     
     # Check if the requested pid has been obsoleted by a newer version
     # and print a warning
+    if (!is.null(path)) {
+      check = as.logical(TRUE)
+    }
+    
     if (check) {
         sysmeta <- getSystemMetadata(x, pid)
         if (!is.na(sysmeta@obsoletedBy)) {
@@ -241,7 +246,22 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
         }
     }
     
-    response <- auth_get(url, node=x)
+    if(!is.null(path)){
+      stopifnot(is.character(path))
+      
+      if(!dir.exists(path)) {
+        stop("path is not a valid directory path")
+      }
+      
+      if (is.na(sysmeta@fileName)){
+        filename <- pid
+      } else {
+        filename <- sysmeta@fileName
+      }
+      path <- paste0(sub("\\/+$", "", path), "/", filename)
+    }
+    
+    response <- auth_get(url, node=x, path=path)
     
     if (response$status_code != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
