@@ -234,12 +234,9 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     
     # Check if the requested pid has been obsoleted by a newer version
-    # and print a warning
-    if (!is.null(path)) {
-      check = as.logical(TRUE)
-    }
-    
-    if (check) {
+    # and print a warning.
+    # Will run if a path is given to gather sysmeta.
+    if (check || !is.null(path)) {
         sysmeta <- getSystemMetadata(x, pid)
         if (!is.na(sysmeta@obsoletedBy)) {
             message(sprintf('Warning: pid "%s" is obsoleted by pid "%s"', pid, sysmeta@obsoletedBy))
