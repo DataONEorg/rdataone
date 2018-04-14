@@ -221,7 +221,7 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 })
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
-#' @param path (optional) Path to a folder to write object to
+#' @param path (optional) Path to a directory to write object to. The filename will be equivalent to the pid. The function will fail if a file with the same name already exists in the directory.
 #' @rdname getObject
 setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL) {
   
@@ -234,9 +234,8 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     
     # Check if the requested pid has been obsoleted by a newer version
-    # and print a warning.
-    # Will run if a path is given to gather sysmeta.
-    if (check || !is.null(path)) {
+    # and print a warning
+    if (check) {
         sysmeta <- getSystemMetadata(x, pid)
         if (!is.na(sysmeta@obsoletedBy)) {
             message(sprintf('Warning: pid "%s" is obsoleted by pid "%s"', pid, sysmeta@obsoletedBy))
@@ -250,12 +249,8 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
         stop("path is not a valid directory path")
       }
       
-      if (is.na(sysmeta@fileName)){
-        filename <- pid
-      } else {
-        filename <- sysmeta@fileName
-      }
-      path <- paste0(sub("\\/+$", "", path), "/", filename)
+      # Set file path to path/pid. 
+      path <- paste0(sub("\\/+$", "", path), "/", pid)
     }
     
     response <- auth_get(url, node=x, path=path)

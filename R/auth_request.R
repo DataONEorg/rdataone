@@ -37,7 +37,7 @@ auth_get <- function(url, nconfig=config(), node, path = NULL) {
   if (is.null(path)) {
     write_path <- NULL
   } else {
-    write_path <- httr::write_disk(path, overwrite = TRUE)
+    write_path <- httr::write_disk(path, overwrite = FALSE)
   }
   if (missing(url) || missing(node)) {
       stop("Error: url or node is missing. Please report this error.")
