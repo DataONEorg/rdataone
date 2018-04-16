@@ -22,7 +22,7 @@ getObject(x, ...)
 
 \item{check}{A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.}
 
-\item{path}{(optional) Path to a folder to write object to}
+\item{path}{(optional) Path to a directory to write object to. The filename will be equivalent to the pid with all special characters removed i.e. \code{filename <- gsub("[^a-zA-Z0-9\\\.\\\-]", "_", pid)}. The function will fail if a file with the same name already exists in the directory.}
 }
 \value{
 the bytes of the object
