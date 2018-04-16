@@ -251,7 +251,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
       
       # Set file path to path/filename 
       filename <- gsub("[^a-zA-Z0-9\\.\\-]", "_", pid)
-      path <- paste0(sub("\\/+$", "", path), "/", filename)
+      path <- file.path(path, filename)
     }
     
     response <- auth_get(url, node=x, path=path)
