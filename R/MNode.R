@@ -656,7 +656,8 @@ setGeneric("getPackage", function(x, ...) {
 #' @param identifier The identifier of the package to retrieve. The identifier can be for the
 #' resource map, metadata file, data file, or any other package member.
 #' @param format The format to send the package in.
-setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097") {
+#' @param dirPath The directory path to save the package to.
+setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097", dirPath=NULL) {
     
     # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
     # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
@@ -731,7 +732,19 @@ setMethod("getPackage", signature("MNode"), function(x, identifier, format="appl
     response <- auth_get(url, node=x)
     
     if (response$status_code == "200") {
+      if(!is.null(dirPath)){
+        stopifnot(is.character(dirPath))
+        stopifnot(dir.exists(dirPath))
+        
+        fileName <- paste0(gsub("[[:punct:]]", "_", identifier), ".zip")
+        packageFile <- file.path(dirPath, fileName)
+        
+        if(!file.exists(packageFile)){
+          file.create(packageFile)
+        }
+      } else {
         packageFile <- tempfile(pattern=sprintf("%s-", UUIDgenerate()), fileext=".zip")
+      }
         packageBin <- content(response, as="raw")
         writeBin(packageBin, packageFile)
         return(packageFile)
