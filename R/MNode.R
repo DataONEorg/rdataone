@@ -657,7 +657,8 @@ setGeneric("getPackage", function(x, ...) {
 #' resource map, metadata file, data file, or any other package member.
 #' @param format The format to send the package in.
 #' @param dirPath The directory path to save the package to.
-setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097", dirPath=NULL) {
+#' @param unzip (logical) If the dirPath is specified, the package can also be unzipped automatically (unzip=TRUE).
+setMethod("getPackage", signature("MNode"), function(x, identifier, format="application/bagit-097", dirPath=NULL, unzip=FALSE) {
   
   # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
   # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
@@ -742,12 +743,25 @@ setMethod("getPackage", signature("MNode"), function(x, identifier, format="appl
       if(!file.exists(packageFile)){
         file.create(packageFile)
       }
+      
+      packageBin <- content(response, as="raw")
+      writeBin(packageBin, packageFile)
+      
+      if(unzip == TRUE){
+        unzip(packageFile, exdir = dirPath)
+        file.remove(packageFile) #remove zip
+        return(gsub(".zip$", "", packageFile)) #unzipped directory path
+      } else {
+        return(packageFile)
+      }
+      
     } else {
       packageFile <- tempfile(pattern=sprintf("%s-", UUIDgenerate()), fileext=".zip")
+      packageBin <- content(response, as="raw")
+      writeBin(packageBin, packageFile)
+      return(packageFile)
     }
-    packageBin <- content(response, as="raw")
-    writeBin(packageBin, packageFile)
-    return(packageFile)
+
   } else {
     warning(sprintf("Error calling getPackage: %s\n", getErrorDescription(response)))
     return(NULL)
