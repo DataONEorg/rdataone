@@ -358,6 +358,12 @@ test_that("MNode getPackage() works", {
   suppressWarnings(bagitFile <- getPackage(mnKNB, id=resMapPid))
   expect_true(!is.null(bagitFile))
   expect_true(file.exists(bagitFile))
+  
+  td <- tempdir()
+  suppressWarnings(bagitFile <- getPackage(mnKNB, id=resMapPid, dirPath=td))
+  expect_true(!is.null(bagitFile))
+  expect_true(file.exists(bagitFile))
+  
   # Now check error handling
   # Can't be a valid pid because we just created the unique string.
   #notApid <- sprintf("urn:uuid:%s", UUIDgenerate())
