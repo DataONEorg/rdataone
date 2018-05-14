@@ -9,9 +9,13 @@
 \usage{
 getObject(x, ...)
 
-\S4method{getObject}{CNode}(x, pid)
+\S4method{getObject}{CNode}(x, pid, as = "raw")
 
+<<<<<<< 9947be00e9eb310d1d3d65e1dcc6b0e174aed4b2
 \S4method{getObject}{MNode}(x, pid, check = as.logical(FALSE), path = NULL)
+=======
+\S4method{getObject}{MNode}(x, pid, check = as.logical(FALSE), as = "raw")
+>>>>>>> Added `as` argument to getObject to allow users to specify what to pass to httr::content.
 }
 \arguments{
 \item{x}{The Node instance from which the pid will be downloaded}
@@ -19,6 +23,8 @@ getObject(x, ...)
 \item{...}{(Not yet used).}
 
 \item{pid}{The identifier of the object to be downloaded}
+
+\item{as}{The desired type of output: \code{raw}, \code{text}, or \code{parsed}. Passed to \link[httr]{content}.}
 
 \item{check}{A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.}
 

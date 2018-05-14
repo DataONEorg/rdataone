@@ -222,9 +222,10 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
 #' @param path (optional) Path to a directory to write object to. The filename will be equivalent to the pid with all special characters removed i.e. \code{filename <- gsub("[^a-zA-Z0-9\\\.\\\-]", "_", pid)}. The function will fail if a file with the same name already exists in the directory.
+#' @param as The desired type of output: \code{raw}, \code{text}, or \code{parsed}. Passed to \link[httr]{content}.
 #' @rdname getObject
-setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL) {
-  
+setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL, as = "raw") {
+
   stopifnot(is.character(pid))
     if(!class(check) == "logical") {
       stop("Invalid argument: 'check' must be specified as a logical.")
@@ -259,7 +260,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     if (response$status_code != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
     }
-    return(content(response, as = "raw"))
+    return(content(response, as = as))
 })
 
 #' @import datapack
