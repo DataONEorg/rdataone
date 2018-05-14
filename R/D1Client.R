@@ -1238,8 +1238,6 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         # set these values on upload/update.
         do@sysmeta@obsoletes <- as.character(NA)
         do@sysmeta@obsoletedBy <- as.character(NA)
-        do@sysmeta@dateUploaded <- as.character(NA)
-        do@sysmeta@dateSysMetadataModified <- as.character(NA)
         do@sysmeta@archived <- as.logical(NA)
         # Set sysmeta values if passed in and not already set in sysmeta for each data object
         if (!is.na(replicate)) {
