@@ -458,7 +458,7 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(x, pid, ob
 })
 
 #' @rdname getObject
-setMethod("getObject", signature("CNode"), function(x, pid) {
+setMethod("getObject", signature("CNode"), function(x, pid, as = "raw") {
     url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
@@ -467,7 +467,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
         return(NULL)
     }
     
-    return(content(response, as="raw"))
+    return(content(response, as = as))
 })
 
 #' Get the metadata describing system properties associated with an object on a Coordinating Node.
