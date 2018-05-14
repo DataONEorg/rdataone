@@ -1071,9 +1071,12 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             }
             # Remove ':' from filename if on windows (only the pid might have these.)
             if(.Platform$OS.type == "windows") {
-                tf <- tempfile(pattern=sprintf("%s.rdf", gsub(':', '_', newPid)))
+                cleanedPid <- gsub(':', '_', newPid)
+                cleanedPid <- gsub('/', '_', cleanedPid)
+                tf <- sprintf("%s/%s.rdf", tempdir(), cleanedPid)
             } else {
-                tf <- tempfile(pattern=sprintf("%s.rdf", newPid))
+                cleanedPid <- gsub('/', '_', newPid)
+                tf <- sprintf("%s/%s.rdf", tempdir(), cleanedPid)
             }
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             
