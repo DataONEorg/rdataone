@@ -8,7 +8,8 @@
 \usage{
 getPackage(x, ...)
 
-\S4method{getPackage}{MNode}(x, identifier, format = "application/bagit-097")
+\S4method{getPackage}{MNode}(x, identifier, format = "application/bagit-097",
+  dirPath = NULL, unzip = FALSE)
 }
 \arguments{
 \item{x}{A MNode instance representing a DataONE Member Node repository.}
@@ -19,6 +20,10 @@ getPackage(x, ...)
 resource map, metadata file, data file, or any other package member.}
 
 \item{format}{The format to send the package in.}
+
+\item{dirPath}{The directory path to save the package to.}
+
+\item{unzip}{(logical) If the dirPath is specified, the package can also be unzipped automatically (unzip=TRUE).}
 }
 \value{
 The location of the package file downloaded from the member node.
