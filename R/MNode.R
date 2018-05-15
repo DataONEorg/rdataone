@@ -227,6 +227,7 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL, as = "raw") {
 
   stopifnot(is.character(pid))
+  stopifnot(is.character(as))
     if(!class(check) == "logical") {
       stop("Invalid argument: 'check' must be specified as a logical.")
     }
@@ -260,7 +261,15 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
     if (response$status_code != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
     }
-    return(content(response, as = as))
+    
+    output <- tryCatch({content(response, as = as)},
+                       error = function(e){
+                         message(gsub("Error: ", "", e),
+                                 "The raw output has been returned.")
+                         return(content(response, as = "raw"))
+                       })
+    
+    return(output)
 })
 
 #' @import datapack
