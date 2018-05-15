@@ -463,7 +463,8 @@ setMethod("getObject", signature("CNode"), function(x, pid, as = "raw") {
     response <- auth_get(url, node=x)
     
     if(response$status_code != "200") {
-        warning(sprintf("Error getting pid: %s\n", getErrorDescription(response)))
+        warning(sprintf("Error getting pid: %s\n", getErrorDescription(response),
+                        "To get a data object, use dataone::resolve() to get its URL and member node."))
         return(NULL)
     }
     
