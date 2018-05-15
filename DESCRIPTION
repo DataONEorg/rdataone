@@ -40,7 +40,8 @@ Imports:
     parsedate,
     uuid,
     base64enc,
-    jsonlite
+    jsonlite,
+    readr
 License: Apache License 2.0
 URL: https://github.com/DataONEorg/rdataone
 BugReports: https://github.com/DataONEorg/rdataone/issues
