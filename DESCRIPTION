@@ -28,7 +28,8 @@ Suggests:
     rmarkdown,
     testthat,
     digest,
-    openssl (>= 0.9.3)
+    openssl (>= 0.9.3),
+    xml2
 Imports:
     XML (>= 3.95-0.1),
     hash,
