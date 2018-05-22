@@ -557,11 +557,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   
   # Reset the 'update' status flag on the relations (resourceMap) as this downloaded package
   # has not been updated by the user (after download).
-  if(repair) {
-    dpkg@relations[['updated']] <- TRUE
-  } else {
-    dpkg@relations[['updated']] <- FALSE 
-  }
+  dpkg@relations[['updated']] <- FALSE 
   
   return(dpkg)
 })
