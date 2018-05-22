@@ -42,6 +42,17 @@ test_that("MNode getObject(), getChecksum()", {
     chksum <- getChecksum(mn, pid)
     expect_that(chksum, is_a("character"))
     expect_false(is.null(chksum))
+    
+    cn <- CNode("PROD")
+    mn <- getMNode(cn, "urn:node:ARCTIC")
+    pid <- "urn:uuid:6ab57f10-f45a-42b2-9422-20aa75cadce5" #cdf file
+    expect_equal(getObject(mn, pid, as = "parsed"),
+                 getObject(mn, pid)) #raw
+    expect_message(getObject(mn, pid, as = "parsed"))
+    
+    pid <- "urn:uuid:9e123f84-ce0d-4094-b898-c9e73680eafa" #csv
+    expect_is(getObject(mn, pid, as = "parsed"),
+              "data.frame")
 })
 test_that("MNode getSystemMetadata()", {
     library(dataone)

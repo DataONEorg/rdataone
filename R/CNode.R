@@ -458,16 +458,17 @@ setMethod("setObsoletedBy", signature("CNode", "character"), function(x, pid, ob
 })
 
 #' @rdname getObject
-setMethod("getObject", signature("CNode"), function(x, pid) {
+setMethod("getObject", signature("CNode"), function(x, pid, as = "raw") {
     url <- paste(x@endpoint, "object", URLencode(pid, reserved=T), sep="/")
     response <- auth_get(url, node=x)
     
     if(response$status_code != "200") {
-        warning(sprintf("Error getting pid: %s\n", getErrorDescription(response)))
+        warning(sprintf("Error getting pid: %s\n", getErrorDescription(response),
+                        "To get a data object, use dataone::resolve() to get its URL and member node."))
         return(NULL)
     }
     
-    return(content(response, as="raw"))
+    return(content(response, as = as))
 })
 
 #' Get the metadata describing system properties associated with an object on a Coordinating Node.
