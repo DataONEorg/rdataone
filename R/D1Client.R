@@ -1612,7 +1612,7 @@ setMethod("downloadObject", "D1Client", function(x, identifier, path = getwd(), 
     
     # If filename is not in sysmeta use the identifier with an extension determined by the formatID
   } else {
-    fileName <- gsub("[^a-zA-Z0-9\\.\\-]", "_", identifier)
+    fileName <- gsub("[^a-zA-Z0-9\\.\\-]+", "_", identifier)
     
     if (sysmeta@formatId != "application/octet-stream") {
       formatIDs <- listFormats(x@cn)
