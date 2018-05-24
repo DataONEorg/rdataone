@@ -29,10 +29,16 @@
 #' @param url The URL to be accessed via authenticated GET.
 #' @param nconfig HTTP configuration options as used by curl, defaults to empty list
 #' @param node The D1Node object that the request will be made to.
+#' @param path Path to a file to write object to
 #' @return the response object from the method
 #' @import httr
-auth_get <- function(url, nconfig=config(), node) {
+auth_get <- function(url, nconfig=config(), node, path = NULL) {
   response <- NULL
+  if (is.null(path)) {
+    write_path <- NULL
+  } else {
+    write_path <- httr::write_disk(path, overwrite = FALSE)
+  }
   if (missing(url) || missing(node)) {
       stop("Error: url or node is missing. Please report this error.")
   }
@@ -41,12 +47,12 @@ auth_get <- function(url, nconfig=config(), node) {
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
       authToken <- getToken(am, node)
-      response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
+      response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)), write_path)
     } else {
       # Authentication will use a certificate.
       cert <- getCert(am)
       new_config <- c(nconfig, config(sslcert = cert))
-      response <- GET(url, config = new_config, user_agent(get_user_agent()))
+      response <- GET(url, config = new_config, user_agent(get_user_agent()), write_path)
     }
   } else {
     # Send request as the public user
@@ -77,8 +83,8 @@ auth_get <- function(url, nconfig=config(), node) {
         }
       }
     }
-      
-    response <- GET(url, config=nconfig, user_agent(get_user_agent()))   # the anonymous access case
+    
+    response <- GET(url, config=nconfig, user_agent(get_user_agent()), write_path)   # the anonymous access case
   }
   rm(am)
   

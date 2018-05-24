@@ -530,4 +530,26 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
     }
 })
 
+test_that("D1Client downloadObject", {
+  library(dataone)
+  #cli <- D1Client("PROD", "urn:node:KNB")
+  expect_false(is.null(d1cKNB))
+  expect_match(class(d1cKNB), "D1Client")
+  expect_match(d1cKNB@cn@baseURL, "https://cn.dataone.org/cn")
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cKNB@mn))
+  if(authValid) {
+    # Skip if Mac OS and X.509 Certificate
+    if(dataone:::getAuthMethod(am, d1cKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+  }
+  
+  # Try downloading a known object from the PROD environment
+  pid <- "solson.5.1"
+  path <- tempdir()
+  file <- downloadObject(d1cKNB, pid, path)
+  expect_match(class(file), "path")
+  expect_true(file.exists(file))
+  unlink(file)
+})
+
 
