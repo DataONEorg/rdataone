@@ -4,7 +4,7 @@
 \alias{auth_get}
 \title{GET a resource with authenticated credentials if available.}
 \usage{
-auth_get(url, nconfig = config(), node)
+auth_get(url, nconfig = config(), node, path = NULL)
 }
 \arguments{
 \item{url}{The URL to be accessed via authenticated GET.}
@@ -12,6 +12,8 @@ auth_get(url, nconfig = config(), node)
 \item{nconfig}{HTTP configuration options as used by curl, defaults to empty list}
 
 \item{node}{The D1Node object that the request will be made to.}
+
+\item{path}{Path to a file to write object to}
 }
 \value{
 the response object from the method

@@ -1519,3 +1519,115 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
     # Didn't find the metadata format
     return(as.character(NA))
 })
+
+#' Download an object from the DataONE Federation to Disk.
+#' @description A convenience method to download an object to disk.
+#' @details This method performs multiple underlying calls to the DataONE repository network. 
+#' CN.resolve() is called to locate the object on one or more repositories, and then each of these
+#' is accessed until success at downloading the associated SystemMetadata for the object. 
+#' The SystemMetadata is used to assign a name to the file that is output to disk. If a fileName is specified in
+#' the SystemMetadata, then the file output to disk will be named according to the SystemMetadata fileName. 
+#' If there is not a specified SystemMetadata fileName, the identifier will be used as the file name output to disk.
+#' If the indentifier is used as the file name, a file name extesion will be determined using the SystemMetadata
+#' formatID along with information from CNCore.listFormats(). If the SystemMetadata formatID is
+#' "application/octet-stream" no extension will be written.
+#' @param x A D1Client object.
+#' @param identifier The identifier of the object to get.
+#' @param path (optional) Path to a directory to write object to. The name of the file will be determined from the
+#' SystemMetada of the object (see details for more information).
+#' The function will fail if a file with the same name already exists in the directory.
+#' @param check (optional) A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
+#' @rdname downloadObject
+#' @aliases downloadObject
+#' @return A path where the ouput file is written to.
+#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @export
+#' @examples \dontrun{
+#' library(dataone)
+#' d1c <- D1Client("PROD", "urn:node:KNB")
+#' pid <- "solson.5.1"
+#' path <- downloadObject(d1c, pid)
+#' }
+setGeneric("downloadObject", function(x, identifier, ...) { 
+  standardGeneric("downloadObject")
+})
+
+#' @rdname downloadObject
+#' @export
+setMethod("downloadObject", "D1Client", function(x, identifier, path = getwd(), check = as.logical(TRUE)) {
+  
+  stopifnot(is.character(identifier))
+  stopifnot(is.character(path))
+  if(!dir.exists(path)) {
+    stop("path is not a valid directory path")
+  }
+  
+  suppressMessages(result <- resolve(x@cn, identifier))
+  if(is.null(result)) {
+    # If the object isn't resolved from the CN, then try the member node directly. Fill out the
+    # mntable as if the member node had returned the object.
+    mntable <- data.frame(nodeIdentifier=x@mn@identifier, 
+                          baseURL=x@mn@baseURL,
+                          url=sprintf("%s/%s/object/%s", x@mn@baseURL, x@mn@APIversion, 
+                                      URLencode(identifier, reserved=TRUE)), 
+                          row.names=NULL, stringsAsFactors=FALSE)
+  } else {
+    mntable <- result$data
+  }
+  
+  # Get the SystemMetadata and dataURL from one of the MNs
+  # Process them in order, until we get non-NULL responses from a node
+  sysmeta <- NA
+  success <- FALSE
+  dataURL <- as.character(NA)
+  for (i in seq_along(mntable)) { 
+    suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
+    # If cn couldn't return the member node, then fallback to the D1Client@mn
+    if(is.null(currentMN)) currentMN <- x@mn
+    if (!is.null(currentMN)) {
+      sysmeta <- getSystemMetadata(currentMN, identifier)
+      success <- TRUE
+      dataURL <- mntable[i,]$url
+      break
+    }
+  }
+  
+  if(!success) {
+    message(sprintf("Unable to download object with identifier: %s\n", identifier))
+    return(NULL)
+  }
+  
+  # Check if the requested identifier has been obsoleted by a newer version
+  # and print a warning
+  if (check) {
+    if (!is.na(sysmeta@obsoletedBy)) {
+      message(sprintf('Warning: identifier "%s" is obsoleted by identifier "%s"', identifier, sysmeta@obsoletedBy))
+    }
+  }
+  
+  # Get filename if it exists in sysmeta
+  if (!is.na(sysmeta@fileName)) {
+    fileName <- sysmeta@fileName
+    
+    # If filename is not in sysmeta use the identifier with an extension determined by the formatID
+  } else {
+    fileName <- gsub("[^a-zA-Z0-9\\.\\-]", "_", identifier)
+    
+    if (sysmeta@formatId != "application/octet-stream") {
+      formatIDs <- listFormats(x@cn)
+      Extension <- formatIDs$Extension[which(formatIDs$ID == sysmeta@formatId)]
+      fileName <- paste0(fileName, ".", Extension)
+    }
+    
+  }
+  
+  path <- file.path(path, fileName)
+  response <- auth_get(dataURL, node = currentMN, path = path)
+  
+  if (response$status_code != "200") {
+    stop(sprintf("get() error: %s\n", getErrorDescription(response)))
+  }
+  
+  return(response$content)
+})
+
