@@ -221,9 +221,8 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 })
 
 #' @param check A logical value, if TRUE check if this object has been obsoleted by another object in DataONE.
-#' @param path (optional) Path to a directory to write object to. The filename will be equivalent to the pid with all special characters removed i.e. \code{filename <- gsub("[^a-zA-Z0-9\\\.\\\-]", "_", pid)}. The function will fail if a file with the same name already exists in the directory.
 #' @rdname getObject
-setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE), path = NULL) {
+setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE)) {
   
   stopifnot(is.character(pid))
     if(!class(check) == "logical") {
@@ -242,19 +241,7 @@ setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FAL
         }
     }
     
-    if(!is.null(path)){
-      stopifnot(is.character(path))
-      
-      if(!dir.exists(path)) {
-        stop("path is not a valid directory path")
-      }
-      
-      # Set file path to path/filename 
-      filename <- gsub("[^a-zA-Z0-9\\.\\-]", "_", pid)
-      path <- file.path(path, filename)
-    }
-    
-    response <- auth_get(url, node=x, path=path)
+    response <- auth_get(url, node=x)
     
     if (response$status_code != "200") {
         stop(sprintf("get() error: %s\n", getErrorDescription(response)))
