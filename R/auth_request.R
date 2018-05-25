@@ -83,7 +83,7 @@ auth_get <- function(url, nconfig=config(), node, path = NULL) {
         }
       }
     }
-      
+    
     response <- GET(url, config=nconfig, user_agent(get_user_agent()), write_path)   # the anonymous access case
   }
   rm(am)
