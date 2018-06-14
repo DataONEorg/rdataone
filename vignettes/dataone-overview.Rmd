@@ -13,8 +13,8 @@ vignette: >
 
 The *dataone* R package enables R scripts to search, download and upload science data and metadata
 to the [DataONE Federation](https://www.dataone.org). This package calls DataONE 
-web services that allow client programs to interact with [Member Nodes (MN)](current-member-nodes#uploads) 
-and [DataONE Coordinating Nodes (CN)](coordinating-nodes).
+web services that allow client programs to interact with [Member Nodes (MN)](https://www.dataone.org/current-member-nodes) 
+and DataONE Coordinating Nodes (CN).
 
 ## Quick Start
 
