@@ -1,3 +1,16 @@
+# Version 2.1.1
+
+## Bug Fixes
+
+* Resolve temporary directory problem on Windows (#204)
+* Fixed broken links in the 'dataone-overview' vignette (#205)
+* Declare 'xml2' package to resolve CRAN build errors (#218)
+
+## New Features and functions
+
+* Added a destination file path argument to getPackage() (#211)
+* downloadObject() provides an easy way to download files from DataONE to disk (#217)
+
 # Version 2.1.0
 
 ## Bug Fixes
