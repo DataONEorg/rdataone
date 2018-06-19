@@ -40,15 +40,19 @@ This operation acts as the 'public' anonymous user unless an X.509 certificate i
 present in the default location of the file system, in which case the access will be authenticated.
 }
 \examples{
+\dontrun{ 
 library(dataone)
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 pid <- "doi:10.5063/F1QN64NZ"
 sysmeta <- getSystemMetadata(mn, pid)
+}
+\dontrun{
 library(dataone)
 cn <- CNode()
 pid <- "aceasdata.3.2"
 sysmeta <- getSystemMetadata(cn, pid)
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

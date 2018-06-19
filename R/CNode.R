@@ -240,11 +240,12 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
 
 #' @rdname getChecksum
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' cn <- CNode()
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(cn, pid)
+#' }
 setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
   url <- paste(x@endpoint, "checksum", URLencode(pid, reserved=T), sep="/")
   response <- GET(url, user_agent(get_user_agent()))
@@ -480,11 +481,12 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 #' @import datapack
 #' @export
 #' @rdname getSystemMetadata
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' pid <- "aceasdata.3.2"
 #' sysmeta <- getSystemMetadata(cn, pid)
+#' }
 setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
   stopifnot(is.character(pid))
     # TODO: need to properly URL-escape the PID

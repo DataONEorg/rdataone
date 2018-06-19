@@ -31,15 +31,19 @@ is submitted with the object's system metadata. The \code{'getChecksum'} method 
 the checksum from the specified coordinating node
 }
 \examples{
+\dontrun{ 
 library(dataone)
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 pid <- "doi:10.5063/F1QN64NZ"
 chksum <- getChecksum(mn, pid)
+}
+\dontrun{
 pid <- "doi:10.5063/F1QN64NZ"
 cn <- CNode()
 pid <- "doi:10.5063/F1QN64NZ"
 chksum <- getChecksum(cn, pid)
+}
 }
 \seealso{
 \code{\link{D1Node-class}{D1Node}}{ class description.}

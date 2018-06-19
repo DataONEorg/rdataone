@@ -37,6 +37,10 @@ test_that("CNode getObject()", {
   #cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   obj <- getObject(cnProd, pid)
+  if(is.null(obj) || class(obj) != "raw") {
+      skip_on_cra()
+      skip(sprintf("Unable to retrieve pid %s from production CN, skipping test\n", pid))
+  }
   xml <- xmlParseDoc(rawToChar(obj), asText=TRUE)
   cname <- class(xml)[1]
   expect_match(cname, "XML")

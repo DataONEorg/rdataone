@@ -228,12 +228,13 @@ setGeneric("getObject", function(x, ...) {
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
 #' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
-#' @examples 
+#' @examples \dontrun{ 
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' chksum <- getChecksum(mn, pid)
+#' }
 setGeneric("getChecksum", function(x, ...) {
   standardGeneric("getChecksum")
 })
@@ -320,12 +321,13 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEng
 #' @return SystemMetadata for the object
 #' @import datapack
 #' @export
-#' @examples 
+#' @examples \dontrun{ 
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' sysmeta <- getSystemMetadata(mn, pid)
+#' }
 setGeneric("getSystemMetadata", function(x, ...) {
   standardGeneric("getSystemMetadata")
 })
