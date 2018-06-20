@@ -33,7 +33,7 @@ This operation acts as the 'public' anonymous user unless an X.509 certificate i
 present in the default location of the file system, in which case the access will be authenticated.
 }
 \examples{
-\dontrun{
+\donttest{
 library(dataone)
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")

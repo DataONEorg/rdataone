@@ -21,7 +21,7 @@ One Member Node can be associated with the client as the default to which
 data and metadata are written.
 }
 \examples{
-\dontrun{
+\donttest{
 cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
 mn <- getMNodeId(cli)
 }

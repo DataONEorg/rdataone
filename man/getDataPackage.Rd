@@ -39,7 +39,7 @@ A 'data package' that resides on a DataONE member node is defined as a collectio
 digital objects that are described by a metadata document. The
 }
 \examples{
-\dontrun{
+\donttest{
 library(dataone)
 d1c <- D1Client("PROD", "urn:node:KNB")
 pid <- "solson.5.1"

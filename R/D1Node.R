@@ -204,7 +204,7 @@ setMethod("archive", signature("D1Node"), function(x, pid) {
 #' @return the bytes of the object
 #' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
@@ -228,7 +228,7 @@ setGeneric("getObject", function(x, ...) {
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
 #' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
 #' @export
-#' @examples \dontrun{ 
+#' @examples \donttest{ 
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
@@ -321,7 +321,7 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEng
 #' @return SystemMetadata for the object
 #' @import datapack
 #' @export
-#' @examples \dontrun{ 
+#' @examples \donttest{ 
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
@@ -697,7 +697,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' @aliases query
 ## Need plyr for rbind.fill in query()
 #' @import plyr
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(dataone)
 #' cn <- CNode("PROD")
 #' queryParams <- list(q="id:doi*", rows="5", 
@@ -960,7 +960,7 @@ parseSolrField <- function(xNode, parse) {
 #' @return a logical, TRUE if the action is authorized, false if not.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' # Send an authorization check to the D1 production CN.
 #' cn <- CNode("PROD")
 #' pid <- "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d"

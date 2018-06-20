@@ -59,7 +59,7 @@ If \code{'parsed = FALSE'} then a character variable with the XML string is retu
 the result parsed to an R list, with each list element containing one Solr query result of the total result set.
 }
 \examples{
-\dontrun{
+\donttest{
 library(dataone)
 cn <- CNode("PROD")
 queryParams <- list(q="id:doi*", rows="5", 

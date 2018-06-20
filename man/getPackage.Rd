@@ -38,8 +38,7 @@ The downloaded package file is compressed using the ZIP format and will be locat
 file. Other packaging formats can be requested if they have been implemented by the requested member node.
 }
 \examples{
-\dontrun{
-mn <- getMNode(cn, "urn:node:KNB")
+\donttest{
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")

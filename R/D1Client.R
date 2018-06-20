@@ -226,7 +226,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @return A DataObject or NULL if the object was not found in DataONE
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"
@@ -357,7 +357,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' @return A DataPackage or NULL if the package was not found in DataONE
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"
@@ -697,7 +697,7 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @aliases getEndpoint
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
 #' cnUrl <- getEndpoint(cli)
 #' }
@@ -719,7 +719,7 @@ setMethod("getEndpoint", "D1Client", function(x) {
 #' @aliases getMNodeId
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
 #' mn <- getMNodeId(cli)
 #' }
@@ -1124,7 +1124,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @import datapack
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' library(datapack)
 #' testdf <- data.frame(x=1:10,y=11:20)
@@ -1133,7 +1133,6 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
 #' # Upload a single DataObject to DataONE (requires authentication)
-#' \dontrun{
 #' newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
 #' }
 setGeneric("uploadDataObject", function(x, ...) {

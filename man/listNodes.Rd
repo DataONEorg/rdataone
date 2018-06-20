@@ -24,7 +24,7 @@ the list of nodes in the DataONE CN environment
 Get the list of nodes associated with a CN
 }
 \examples{
-\dontrun{
+\donttest{
 cn <- CNode()
 nodelist <- listNodes(cn)
 nodeid <- nodelist[[2]]@identifier

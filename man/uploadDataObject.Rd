@@ -38,6 +38,7 @@ id The id of the DataObject that was uploaded
 Upload a DataObject to a DataONE member node.
 }
 \examples{
+\dontrun{
 library(dataone)
 library(datapack)
 testdf <- data.frame(x=1:10,y=11:20)
@@ -46,7 +47,6 @@ write.csv(testdf, csvfile, row.names=FALSE)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 do <- new("DataObject", format="text/csv", mnNodeId=getMNodeId(d1c), filename=csvfile)
 # Upload a single DataObject to DataONE (requires authentication)
-\dontrun{
 newId <- uploadDataObject(d1c, do, replicate=FALSE, preferredNodes=NA ,  public=TRUE)
 }
 }

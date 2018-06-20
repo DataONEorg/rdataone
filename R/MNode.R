@@ -642,8 +642,7 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
 #' @import uuid
 #' @export
 #' @examples 
-#' \dontrun{
-#' mn <- getMNode(cn, "urn:node:KNB")
+#' \donttest{
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")

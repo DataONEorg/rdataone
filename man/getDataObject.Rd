@@ -43,7 +43,7 @@ the maximum size of data object that will be downloaded. IF \code{lazyLoad} is F
 is ignored.
 }
 \examples{
-\dontrun{
+\donttest{
 library(dataone)
 d1c <- D1Client("PROD", "urn:node:KNB")
 pid <- "solson.5.1"
