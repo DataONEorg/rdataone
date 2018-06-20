@@ -23,5 +23,7 @@ NEW FUNCTIONS
 
 ## Downstream dependencies
 
-* The downstream dependency (nesRdata) has been checked with devtools::revdep_check(), which passed
-  with 0 errors, 0 warnings, 0 notes.
+* The downstream dependency (nesRdata) has been checked with revdepcheck::revdep_check(), which passed
+  with 0 errors, 0 warnings, and 1 note. After reviewing the 'nesRdata' source and issues, it appears that
+  this is a problem with 'nesRdata' and not 'dataone', and was resolved in this commit in the 'nesRdata'
+  github repository: https://github.com/jsta/nesRdata/commit/7fcf99be892e06253219ca7f95603fea968a8f72
