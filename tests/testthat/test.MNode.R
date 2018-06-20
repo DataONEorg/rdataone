@@ -11,44 +11,43 @@ test_that("MNode constructors", {
 test_that("MNode getCapabilities()", {
 	library(dataone)
 	library(XML)
-	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
-	mn <- MNode(mn_uri)
-    xml <- getCapabilities(mn)
+	#mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
+	#mn <- MNode(mn_uri)
+    xml <- getCapabilities(mnKNB)
 	val <- xmlName(xmlRoot(xml))
 	expect_match(val, "node")
-	expect_match(mn@identifier, "urn:node")
+	expect_match(mnKNB@identifier, "urn:node")
 })
 test_that("MNode getObject(), getChecksum()", {
     library(dataone)
-    mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
-    mn <- MNode(mn_uri)
+    #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
+    #mn <- MNode(mn_uri)
     pid <- "doi:10.5063/F1QN64NZ"
-    bytes <- getObject(mn, pid)
+    bytes <- getObject(mnKNB, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
     expect_match(cname, "XML")
     pid <- "solson.5.1"
-    obj <- getObject(mn, pid)
+    obj <- getObject(mnKNB, pid)
     df <- read.csv(text=rawToChar(obj))
     cname <- class(df)[1]
     expect_match(cname, "data.frame")
-    cn <- CNode()
-    knb <- getMNode(cn, "urn:node:KNB")
+    # 'cn' is defined in 'helper-base.R' for all tests
+    knb <- getMNode(cnProd, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
-    bytes <- getObject(mn, pid)
+    bytes <- getObject(mnKNB, pid)
     xml <- xmlParseDoc(rawToChar(bytes), asText=TRUE)
     cname <- class(xml)[1]
     expect_match(cname, "XML")
-    chksum <- getChecksum(mn, pid)
+    chksum <- getChecksum(mnKNB, pid)
     expect_that(chksum, is_a("character"))
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
     library(dataone)
-    cn <- CNode()
-    mn <- getMNode(cn, "urn:node:KNB")
+    #mn <- getMNode(cnProd, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
-    sysmeta <- getSystemMetadata(mn, pid)
+    sysmeta <- getSystemMetadata(mnKNB, pid)
     cname <- class(sysmeta)[1]
     expect_match(cname, "SystemMetadata")
     expect_match(sysmeta@identifier, "doi:10.5063/F1QN64NZ")
@@ -99,9 +98,9 @@ test_that("MNode generateIdentifier() on API v1 node", {
 
 test_that("MNode describeObject()", {
   library(dataone)
-  mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
-  mn <- MNode(mn_uri)
-  res <- describeObject(mn, "knb.473.1")
+  #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
+  #mn <- MNode(mn_uri)
+  res <- describeObject(mnKNB, "knb.473.1")
   expect_is(res, "list")
   expect_equal(res$`content-type`, "text/xml")
 })
@@ -112,8 +111,6 @@ test_that("MNode describeObject() with authentication", {
   library(dataone)
   library(uuid)
   library(digest)
-  #cn <- CNode("STAGING")
-  #mn <- getMNode(cn, "urn:node:mnStageUCSB2")
   # Suppress openssl, cert missing warnings
   am <- AuthenticationManager()
   suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
@@ -296,8 +293,6 @@ test_that("MNode createObject() works for large files", {
     library(dataone)
     library(digest)
     library(httr)
-    #cn <- CNode("STAGING")
-    #mn <- getMNode(cn, "urn:node:mnStageUCSB2")
     newid <- generateIdentifier(mnTest, "UUID")
     cname <- class(newid)
     expect_match(cname, "character")
@@ -346,8 +341,6 @@ test_that("MNode getPackage() works", {
   library(uuid)
   # This test can exceed the CRAN test running time limits
   skip_on_cran()
-  #cn <- CNode("PROD")
-  #mn <- getMNode(cn, "urn:node:KNB")
   resMapPid <- "resourceMap_lrw.3.5"
   am <- AuthenticationManager()
   suppressWarnings(authValid <- dataone:::isAuthValid(am, mnKNB))

@@ -5,20 +5,16 @@ test_that("dataone library loads", {
 test_that("CNode constructors", {
 	library(dataone)
     # If not specified, "PROD" environment is used.
-	#cn <- CNode()
 	expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
-	#cn <- CNode("PROD")
 	expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
 	# Skip unstable test environments.
 	skip_on_cran()
-	cn <- CNode("STAGING2")
-	expect_match(cn@endpoint, "https://cn-stage-2.test.dataone.org/cn")
+	expect_match(cnStaging2@endpoint, "https://cn-stage-2.test.dataone.org/cn")
 	#cn <- CNode("DEV")
 	#expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
 })
 test_that("CNode listNodes()", {
   library(dataone)
-  #cn <- CNode("PROD")
   nodelist <- listNodes(cnProd)
   expect_that(length(nodelist) > 0, is_true())
   expect_match(class(nodelist[[1]]), "Node")
@@ -34,7 +30,6 @@ test_that("CNode listNodes()", {
 test_that("CNode getObject()", {
   library(dataone)
   library(XML)
-  #cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   obj <- getObject(cnProd, pid)
   if(is.null(obj) || class(obj) != "raw") {
@@ -51,7 +46,6 @@ test_that("CNode getObject()", {
 
 test_that("CNode getSystemMetadata()", {
   library(dataone)
-  #cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   sysmeta <- getSystemMetadata(cnProd, pid)
   expect_match(sysmeta@identifier, pid)
@@ -59,7 +53,6 @@ test_that("CNode getSystemMetadata()", {
 
 test_that("CNode describeObject()", {
   library(dataone)
-  #cn <- CNode("PROD")
   pid <- "aceasdata.3.2"
   res <- dataone::describeObject(cnProd, pid)
   expect_is(res, "list")
@@ -69,7 +62,6 @@ test_that("CNode describeObject()", {
 test_that("CNode getMNode()", {
   library(dataone)
   skip_on_cran()
-  #cn <- CNode("PROD")
   nodelist <- listNodes(cnProd)
   nodeid <- nodelist[[length(nodelist)]]@identifier
   newnode <- getMNode(cnProd, nodeid)
@@ -84,7 +76,6 @@ test_that("CNode getMNode()", {
 
 test_that("CNode resolve()",{
   library(dataone) 
-  #cn <- CNode("PROD")
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cnProd,id)
   expect_match(res$id, id)
@@ -96,27 +87,26 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   skip_on_cran()
   library(dataone)
   library(uuid)
-  cn <- CNode("STAGING2")
    
   # For hasReservation(), we have to use the same subject that is in the authorization token or X.509 certificate.
   # Until the dataone package can decrypt auth tokens, we have to manually provide same subject
   # used by reserveIdentifier.  
   am <- AuthenticationManager()
   # Suppress openssl, cert missing warnings
-  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cnStaging2))
   # First check if authentication is available and if not, skip this test
   if (authValid) {
     # TODO: remove this check when Mac OS X can be used with certificates
-    if(dataone:::getAuthMethod(am, cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, cnStaging2) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so this userId can check a reservation that it made
-    subject <- dataone:::getAuthSubject(am, cn)
+    subject <- dataone:::getAuthSubject(am, cnStaging2)
     myId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # researveIdentifier will create the reservation using only the client subject from
     # the current authentication method - either auth token or certificate. 
-    newId <- reserveIdentifier(cn, myId)
+    newId <- reserveIdentifier(cnStaging2, myId)
     expect_match(myId, newId)
     # Have to specify the subject for hasReservation
-    hasRes <- hasReservation(cn, newId, subject=subject)
+    hasRes <- hasReservation(cnProd, newId, subject=subject)
     expect_true(hasRes, info=sprintf("Didn't find reserved identifier %s", myId))
   } else {
       skip("This test requires valid authentication.")

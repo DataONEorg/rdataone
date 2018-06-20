@@ -1,6 +1,7 @@
 # Reduce redundant calls to the same service - this only needs to be made
 # once per test 
 cnProd <- CNode()
+cnStaging2 <- CNode("STAGING2")
 d1cKNB <- D1Client("PROD", "urn:node:KNB")
 mnKNB <- d1cKNB@mn
 d1cProd <- D1Client("PROD")
