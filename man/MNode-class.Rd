@@ -42,6 +42,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.
 }
 
 \examples{
+\donttest{
 library(dataone)
 library(uuid)
 library(digest)
@@ -65,6 +66,7 @@ sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size,
 # Upload data to DataONE (requires authentication)
 \dontrun{
 response <- createObject(mn, newid, csvfile, sysmeta)
+}
 }
 }
 \seealso{

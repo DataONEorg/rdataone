@@ -41,6 +41,7 @@ system can also be used. This certificate provides authentication credentials fr
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
 \examples{
+\donttest{
 # Create an object in the DataONE "STAGING" environment
 library(dataone)
 library(uuid)
@@ -65,6 +66,7 @@ sysmeta <- addAccessRule(sysmeta, "public", "read")
 # Upload the data to DataONE (requires authentication)
 \dontrun{
 createObject(mn, newid, csvfile, sysmeta)
+}
 }
 }
 \seealso{

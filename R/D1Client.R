@@ -67,12 +67,12 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' @return the D1Client object representing the DataONE environment
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples 
+#' @examples \donttest{
 #' cli <- D1Client("PROD", "urn:node:KNB")
-#' 
 #' cn <- CNode('STAGING2')
 #' mn <- getMNode(cn,'urn:node:mnTestKNB')
 #' cli <- D1Client(cn,mn)
+#' }
 setGeneric("D1Client", function(x, y, ...) {
     standardGeneric("D1Client")
 })
@@ -115,9 +115,10 @@ setMethod("D1Client", signature("CNode", "MNode"), function(x, y, ...) {
 #' @rdname D1Client-initialize
 #' @aliases D1Client-initialize
 #' @export
-#' @examples 
+#' @examples \donttest{
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
+#' }
 #' @seealso \code{\link[=D1Client-class]{dataone}}{ class description.}
 setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
     # defaults here
@@ -1312,7 +1313,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
 #' @aliases listMemberNodes
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples {
+#' @examples \donttest{
 #' d1c <- D1Client("PROD")
 #' nodelist <- listMemberNodes(d1c)
 #' }
@@ -1542,7 +1543,7 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
 #' @return A path where the ouput file is written to.
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' pid <- "solson.5.1"

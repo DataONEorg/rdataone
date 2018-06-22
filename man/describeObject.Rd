@@ -27,12 +27,14 @@ determine basic properties of the referenced object. This operation requires rea
 object specified by \code{'pid'}, as is granted with a DataONE authentication token or X.509 certificate.
 }
 \examples{
+\donttest{
 library(dataone)
 mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 mn <- MNode(mn_uri)
 pid <- "knb.473.1"
 describeObject(mn, pid)
 describeObject(mn, "adfadf") # warning message when wrong pid
+}
 }
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe}

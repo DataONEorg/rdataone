@@ -24,8 +24,10 @@
 Initialize a D1Client object
 }
 \examples{
+\donttest{
 library(dataone)
 d1c <- D1Client("PROD", "urn:node:KNB")
+}
 }
 \seealso{
 \code{\link[=D1Client-class]{dataone}}{ class description.}

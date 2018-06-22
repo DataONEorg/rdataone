@@ -53,7 +53,7 @@
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
-#' @examples
+#' @examples \donttest{
 #' library(dataone)
 #' library(uuid)
 #' library(digest)
@@ -77,6 +77,7 @@
 #' # Upload data to DataONE (requires authentication)
 #' \dontrun{
 #' response <- createObject(mn, newid, csvfile, sysmeta)
+#' }
 #' }
 setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 
@@ -188,11 +189,12 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @import XML
 #' @import httr
 #' @export
-#' @examples
+#' @examples \donttest{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' xml <- getCapabilities(mn)
+#' }
 setGeneric("getCapabilities", function(x, ...) {
     standardGeneric("getCapabilities")
 })
@@ -324,7 +326,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
 #' @import datapack
 #' @export
-#' @examples
+#' @examples \donttest{
 #' # Create an object in the DataONE "STAGING" environment
 #' library(dataone)
 #' library(uuid)
@@ -349,6 +351,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' # Upload the data to DataONE (requires authentication)
 #' \dontrun{
 #' createObject(mn, newid, csvfile, sysmeta)
+#' }
 #' }
 setGeneric("createObject", function(x, ...) {
     standardGeneric("createObject")

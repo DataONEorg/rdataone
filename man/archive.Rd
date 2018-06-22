@@ -36,6 +36,7 @@ For DataONE Version 2.0, an authentication token can also be used for authentica
 Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 }
 \examples{
+\donttest{
 library(dataone)
 library(uuid)
 library(digest)
@@ -62,6 +63,7 @@ create(mn, newid, csvfile, sysmeta)
 # Now for demonstration purposes, archive the object
 # Archive the object (requires authentication)
 archivedId <- archive(mn, newid)
+}
 }
 }
 \seealso{

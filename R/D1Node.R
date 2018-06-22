@@ -140,7 +140,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' @aliases archive
 #' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
 #' @export
-#' @examples
+#' @examples \donttest{
 #' library(dataone)
 #' library(uuid)
 #' library(digest)
@@ -168,6 +168,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' # Now for demonstration purposes, archive the object
 #' # Archive the object (requires authentication)
 #' archivedId <- archive(mn, newid)
+#' }
 #' }
 setGeneric("archive", function(x, ...) {
   standardGeneric("archive")
@@ -344,13 +345,14 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' @aliases describeObject
 #' @return A list of header elements
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe}
-#' @examples
+#' @examples \donttest{
 #' library(dataone)
 #' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
 #' mn <- MNode(mn_uri)
 #' pid <- "knb.473.1"
 #' describeObject(mn, pid)
 #' describeObject(mn, "adfadf") # warning message when wrong pid
+#' }
 #' @export
 setGeneric("describeObject", function(x, ...) {
   standardGeneric("describeObject")
@@ -562,10 +564,11 @@ setMethod("parseCapabilities", signature("D1Node"), function(x, xml) {
 #' @aliases ping
 #' @return logical A logical value set to TRUE if the node is up and FALSE if it is not
 #' @export
-#' @examples 
+#' @examples \donttest{
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' isAlive <- ping(mn)
+#' }
 setGeneric("ping", function(x, ...) {
   standardGeneric("ping")
 })
