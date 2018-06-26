@@ -35,7 +35,7 @@ the D1Client object representing the DataONE environment
 The DataONE client class used to download, update and search for data in the DataONE network.
 }
 \examples{
-\donttest{
+\dontrun{
 cli <- D1Client("PROD", "urn:node:KNB")
 cn <- CNode('STAGING2')
 mn <- getMNode(cn,'urn:node:mnTestKNB')

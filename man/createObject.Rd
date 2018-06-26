@@ -41,7 +41,7 @@ system can also be used. This certificate provides authentication credentials fr
 CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 }
 \examples{
-\donttest{
+\dontrun{
 # Create an object in the DataONE "STAGING" environment
 library(dataone)
 library(uuid)

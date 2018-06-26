@@ -24,7 +24,7 @@ A list of URLs that the object can be downloaded from, or NULL if the object is 
 Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by id.
 }
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 cn <- CNode("STAGING")
 id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"

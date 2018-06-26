@@ -240,7 +240,7 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
 
 #' @rdname getChecksum
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' pid <- "doi:10.5063/F1QN64NZ"
 #' cn <- CNode()
 #' pid <- "doi:10.5063/F1QN64NZ"
@@ -274,8 +274,7 @@ setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
 #' @return the list of nodes in the DataONE CN environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @examples 
-#' \donttest{
+#' @examples \dontrun{
 #' cn <- CNode()
 #' nodelist <- listNodes(cn)
 #' nodeid <- nodelist[[2]]@identifier
@@ -481,7 +480,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 #' @import datapack
 #' @export
 #' @rdname getSystemMetadata
-#' @examples \donttest{
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' pid <- "aceasdata.3.2"
@@ -512,8 +511,7 @@ setMethod("getSystemMetadata", signature("CNode"), function(x, pid) {
 #' @rdname resolve
 #' @aliases resolve
 #' @return A list of URLs that the object can be downloaded from, or NULL if the object is not found.
-#' @examples
-#' \donttest{
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode("STAGING")
 #' id <- "doi:10.6073/pasta/9a27a1615e8e4c366ad09fefbfa2fced"

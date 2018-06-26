@@ -53,7 +53,7 @@
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' library(dataone)
 #' library(uuid)
 #' library(digest)
@@ -189,7 +189,7 @@ setMethod("MNode", signature("D1Node"), function(x) {
 #' @import XML
 #' @import httr
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
@@ -326,7 +326,7 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.create}
 #' @import datapack
 #' @export
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # Create an object in the DataONE "STAGING" environment
 #' library(dataone)
 #' library(uuid)
@@ -644,8 +644,7 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @import uuid
 #' @export
-#' @examples 
-#' \donttest{
+#' @examples \dontrun{
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
 #' packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")

@@ -36,7 +36,7 @@ For DataONE Version 2.0, an authentication token can also be used for authentica
 Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 }
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 library(uuid)
 library(digest)

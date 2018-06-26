@@ -31,7 +31,7 @@ The identifier parameter may be either a DataONE persistent identifier (pid)
 or series identifier (sid).
 }
 \examples{
-\donttest{
+\dontrun{
 # Send an authorization check to the D1 production CN.
 cn <- CNode("PROD")
 pid <- "doi:10.6073/pasta/7fcb8fea57843fae65f63094472f502d"

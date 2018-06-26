@@ -42,7 +42,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.
 }
 
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 library(uuid)
 library(digest)

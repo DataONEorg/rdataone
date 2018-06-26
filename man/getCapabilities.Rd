@@ -23,7 +23,7 @@ Access the DataONE getCapabilities() service for the Member Node, which returns 
 description of the repository and the services it offers.
 }
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")

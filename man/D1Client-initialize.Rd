@@ -24,7 +24,7 @@
 Initialize a D1Client object
 }
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 d1c <- D1Client("PROD", "urn:node:KNB")
 }

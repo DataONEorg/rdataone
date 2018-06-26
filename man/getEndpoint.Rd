@@ -25,7 +25,7 @@ of the development environments ("STAGING", "SANDBOX", "DEV"). The base URL for 
 is returned.
 }
 \examples{
-\donttest{
+\dontrun{
 cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
 cnUrl <- getEndpoint(cli)
 }

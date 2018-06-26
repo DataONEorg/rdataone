@@ -18,7 +18,7 @@ A D1Client object is associated with a DataONE Coordinating Node. The
 \code{listMemberNodes} method lists all member nodes associated with a CN.
 }
 \examples{
-\donttest{
+\dontrun{
 d1c <- D1Client("PROD")
 nodelist <- listMemberNodes(d1c)
 }

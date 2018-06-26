@@ -42,7 +42,7 @@ formatID along with information from CNCore.listFormats(). If the SystemMetadata
 "application/octet-stream" no extension will be written.
 }
 \examples{
-\donttest{
+\dontrun{
 library(dataone)
 d1c <- D1Client("PROD", "urn:node:KNB")
 pid <- "solson.5.1"
