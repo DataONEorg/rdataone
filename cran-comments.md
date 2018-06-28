@@ -4,7 +4,7 @@
 * Ubuntu 16.04.4, R 3.4.4
 * Windows 7, R 3.5.0
 * Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.0 (2018-04-23)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit),R Under development (unstable) (2018-06-13 r74894)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2018-06-13 r74894, 2018-06-26 r74934)
 
 ## Changes since last release
 
