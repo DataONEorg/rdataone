@@ -64,23 +64,24 @@ test_that("D1Client methods", {
   cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
   expect_match(getMNodeId(cli), "urn:node:mnTestKNB")
   # Test setMNodeId
-  cli <- new("D1Client", env="SANDBOX2")
-  cli <- setMNodeId(cli, "urn:node:mnDemo2")
-  expect_match(cli@mn@identifier, "urn:node:mnDemo2")
+  cli <- new("D1Client", env="STAGING2")
+  cli <- setMNodeId(cli, "urn:node:mnTestKNB")
+  expect_match(cli@mn@identifier, "urn:node:mnTestKNB")
   
   # Test getMN (deprecated)
   suppressWarnings(testMN <- getMN(cli))
-  expect_match(testMN@identifier, "urn:node:mnDemo2")
-  suppressWarnings(testMN <- getMN(cli, nodeid="urn:node:mnDemo2"))
-  expect_match(testMN@identifier, "urn:node:mnDemo2")
+  expect_match(testMN@identifier, "urn:node:mnTestKNB")
+  suppressWarnings(testMN <- getMN(cli, nodeid="urn:node:mnTestKNB"))
+  expect_match(testMN@identifier, "urn:node:mnTestKNB")
   
   # Test getCN (deprecated)
   suppressWarnings(testCN <- getCN(cli))
-  expect_match(testCN@baseURL, "test.dataone")
+  expect_match(testCN@baseURL, "cn-stage-2.test.dataone.org")
   
 })
 
 test_that("D1Client getDataObject", {
+    skip_on_cran()
     library(dataone)
     library(digest)
     #cli <- D1Client("PROD", "urn:node:KNB")
