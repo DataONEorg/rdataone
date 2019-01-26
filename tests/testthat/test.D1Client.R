@@ -272,7 +272,7 @@ test_that("D1Client updateDataPackage works", {
         # Associate the metadata object with each data object using the 'insertRelationships' method.
         # Since a relationship type (the predicate argument) is not specified, the default relationship
         # of 'cito:documents' is used, to indicate the the metadata object documents each data object.
-        # See "http://vocab.ox.ac.uk/cito", for further information about the "Citation Type Ontology".
+        # See "http://purl.org/spar/cito", for further information about the "Citation Type Ontology".
         dp <- addMember(dp, metadataObj)
         
         sourceData <- system.file("extdata/sample.csv", package="dataone")
@@ -519,7 +519,7 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
         # Associate the metadata object with each data object using the 'insertRelationships' method.
         # Since a relationship type (the predicate argument) is not specified, the default relationship
         # of 'cito:documents' is used, to indicate the the metadata object documents each data object.
-        # See "http://vocab.ox.ac.uk/cito", for further information about the "Citation Type Ontology".
+        # See "http://purl.org/spar/cito", for further information about the "Citation Type Ontology".
         dp <- addMember(dp, metadataObj)
         
         pkgId <- uploadDataPackage(d1cTest, dp, public=TRUE, quiet=TRUE)
@@ -531,6 +531,7 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
 })
 
 test_that("D1Client downloadObject", {
+  skip_on_cran()
   library(dataone)
   #cli <- D1Client("PROD", "urn:node:KNB")
   expect_false(is.null(d1cKNB))
