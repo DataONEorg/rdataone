@@ -1593,7 +1593,7 @@ setMethod("downloadObject", "D1Client", function(x, identifier, path = getwd(), 
     }
   }
   
-  if(!success) {
+  if(!success || is.null(sysmeta)) {
     message(sprintf("Unable to download object with identifier: %s\n", identifier))
     return(NULL)
   }
