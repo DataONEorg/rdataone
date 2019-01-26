@@ -3,7 +3,7 @@ title: "Known Issues"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Known Issues With dataone R Packge v2.0}
+  %\VignetteIndexEntry{Known Issues}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

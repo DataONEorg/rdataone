@@ -1,5 +1,5 @@
 ---
-title: "dataone R package overview"
+title: "dataone R Package Overview"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 <!-- output: pdf_document -->
