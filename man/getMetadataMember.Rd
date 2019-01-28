@@ -8,8 +8,8 @@
 \usage{
 getMetadataMember(x, dp, ...)
 
-\S4method{getMetadataMember}{D1Client,DataPackage}(x, dp, as = "character",
-  ...)
+\S4method{getMetadataMember}{D1Client,DataPackage}(x, dp,
+  as = "character", ...)
 }
 \arguments{
 \item{x}{A D1Client object}

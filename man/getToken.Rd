@@ -8,7 +8,8 @@
 \usage{
 getToken(.Object, ...)
 
-\S4method{getToken}{AuthenticationManager}(.Object, node = as.character(NA))
+\S4method{getToken}{AuthenticationManager}(.Object,
+  node = as.character(NA))
 }
 \arguments{
 \item{.Object}{an AuthenticationManager instance}

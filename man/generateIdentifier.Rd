@@ -9,7 +9,8 @@
 \usage{
 generateIdentifier(x, ...)
 
-\S4method{generateIdentifier}{MNode}(x, scheme = "UUID", fragment = NULL)
+\S4method{generateIdentifier}{MNode}(x, scheme = "UUID",
+  fragment = NULL)
 }
 \arguments{
 \item{x}{The MNode instance on which the object will be created}

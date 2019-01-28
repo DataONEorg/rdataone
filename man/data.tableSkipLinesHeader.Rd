@@ -4,7 +4,6 @@
 \name{data.tableSkipLinesHeader}
 \alias{data.tableSkipLinesHeader}
 \alias{data.tableSkipLinesHeader,EMLParser,numeric-method}
-\alias{data.tableSkipLinesHeader}
 \title{Number of lines to skip before reading data}
 \usage{
 data.tableSkipLinesHeader(x, index, ...)

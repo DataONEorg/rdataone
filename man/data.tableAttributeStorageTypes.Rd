@@ -4,7 +4,6 @@
 \name{data.tableAttributeStorageTypes}
 \alias{data.tableAttributeStorageTypes}
 \alias{data.tableAttributeStorageTypes,EMLParser,numeric-method}
-\alias{data.tableAttributeStorageTypes}
 \title{returns the attributes' data storage types}
 \usage{
 data.tableAttributeStorageTypes(x, index, ...)

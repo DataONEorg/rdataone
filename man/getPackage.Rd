@@ -8,8 +8,8 @@
 \usage{
 getPackage(x, ...)
 
-\S4method{getPackage}{MNode}(x, identifier, format = "application/bagit-097",
-  dirPath = NULL, unzip = FALSE)
+\S4method{getPackage}{MNode}(x, identifier,
+  format = "application/bagit-097", dirPath = NULL, unzip = FALSE)
 }
 \arguments{
 \item{x}{A MNode instance representing a DataONE Member Node repository.}

@@ -8,9 +8,10 @@
 \usage{
 uploadDataObject(x, ...)
 
-\S4method{uploadDataObject}{D1Client}(x, do, replicate = as.logical(FALSE),
-  numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
-  accessRules = NA, quiet = TRUE, ...)
+\S4method{uploadDataObject}{D1Client}(x, do,
+  replicate = as.logical(FALSE), numberReplicas = NA,
+  preferredNodes = NA, public = as.logical(FALSE), accessRules = NA,
+  quiet = TRUE, ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}

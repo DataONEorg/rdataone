@@ -8,9 +8,9 @@
 \usage{
 query(x, ...)
 
-\S4method{query}{D1Node}(x, solrQuery = as.character(NA), encode = TRUE,
-  as = "list", parse = TRUE, searchTerms = as.character(NA),
-  encodeReserved = FALSE, ...)
+\S4method{query}{D1Node}(x, solrQuery = as.character(NA),
+  encode = TRUE, as = "list", parse = TRUE,
+  searchTerms = as.character(NA), encodeReserved = FALSE, ...)
 }
 \arguments{
 \item{x}{The CNode or MNode instance to send the query to.}

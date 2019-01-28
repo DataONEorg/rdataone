@@ -4,7 +4,6 @@
 \name{data.tableAttributeOrientation}
 \alias{data.tableAttributeOrientation}
 \alias{data.tableAttributeOrientation,EMLParser,numeric-method}
-\alias{data.tableAttributeOrientation}
 \title{The Attribute (Header) Orientation}
 \usage{
 data.tableAttributeOrientation(x, index, ...)

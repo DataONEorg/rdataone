@@ -4,7 +4,6 @@
 \name{data.characterEncoding}
 \alias{data.characterEncoding}
 \alias{data.characterEncoding,EMLParser,numeric-method}
-\alias{data.characterEncoding}
 \title{CharacterEncoding}
 \usage{
 data.characterEncoding(x, index, ...)

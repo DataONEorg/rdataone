@@ -4,7 +4,6 @@
 \name{documented.sizes}
 \alias{documented.sizes}
 \alias{documented.sizes,EMLParser-method}
-\alias{documented.sizes}
 \title{Get the sizes of the described data tables.}
 \usage{
 documented.sizes(x, ...)

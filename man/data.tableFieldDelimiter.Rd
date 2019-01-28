@@ -4,7 +4,6 @@
 \name{data.tableFieldDelimiter}
 \alias{data.tableFieldDelimiter}
 \alias{data.tableFieldDelimiter,EMLParser,numeric-method}
-\alias{data.tableFieldDelimiter}
 \title{Field Delimiter}
 \usage{
 data.tableFieldDelimiter(x, index, ...)

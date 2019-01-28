@@ -9,10 +9,10 @@
 uploadDataPackage(x, ...)
 
 \S4method{uploadDataPackage}{D1Client}(x, dp, replicate = NA,
-  numberReplicas = NA, preferredNodes = NA, public = as.logical(FALSE),
-  accessRules = NA, quiet = as.logical(TRUE),
-  resolveURI = as.character(NA), packageId = as.character(NA),
-  as = "character", ...)
+  numberReplicas = NA, preferredNodes = NA,
+  public = as.logical(FALSE), accessRules = NA,
+  quiet = as.logical(TRUE), resolveURI = as.character(NA),
+  packageId = as.character(NA), as = "character", ...)
 }
 \arguments{
 \item{x}{A D1Client instance.}

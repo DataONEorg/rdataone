@@ -4,7 +4,6 @@
 \name{data.tableQuoteCharacter}
 \alias{data.tableQuoteCharacter}
 \alias{data.tableQuoteCharacter,EMLParser,numeric-method}
-\alias{data.tableQuoteCharacter}
 \title{Quote Character}
 \usage{
 data.tableQuoteCharacter(x, index, ...)

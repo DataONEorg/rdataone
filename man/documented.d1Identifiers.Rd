@@ -4,7 +4,6 @@
 \name{documented.d1Identifiers}
 \alias{documented.d1Identifiers}
 \alias{documented.d1Identifiers,EMLParser-method}
-\alias{documented.d1Identifiers}
 \title{Get DataONE identifiers}
 \usage{
 documented.d1Identifiers(x, ...)
