@@ -13,7 +13,7 @@ getD1Object(x, identifier, ...)
 \arguments{
 \item{x}{A D1Client instance}
 
-\item{identifier}{The identifier of the object to download from DatONE}
+\item{identifier}{The identifier of the object to download from DataONE}
 
 \item{...}{(not yet used)}
 }
