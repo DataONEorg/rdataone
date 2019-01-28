@@ -59,4 +59,5 @@ Collate:
     'dataone-package.R'
     'yyy.R'
     'zzz.R'
+Encoding: UTF-8
 RoxygenNote: 6.1.1
