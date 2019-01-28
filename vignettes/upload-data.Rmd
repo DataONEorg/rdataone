@@ -125,7 +125,7 @@ Files are considered members of a package when they are enumerated and described
 metadata file, and a relationship between the metadata and data object is explicitly stated. 
   
 DataONE (and the `dataone` R package) has adopted the package guidelines detailed by the [DataONE package](https://purl.dataone.org/architecture/design/DataPackage.html) implementation. In this specification,
-the relationship that links a metadata object and a science object is [CITO](https://purl.org/spar/cito) *documents*. 
+the relationship that links a metadata object and a science object is CiTO (Citation Typing Ontology) *documents*. 
 
 This relationship between the science metadata and data objects will be added to the DataPackage automatically for each 
 data object as it is added to the DataPackage, if the metadata object is first added, then referenced as the
@@ -137,7 +137,7 @@ As the metadata object has already been added, it can be refernced as each DataO
 dp <- addMember(dp, sourceObj, metadataObj)
 ```
 
-Since `metadataObj` is included as the third argument here, the [CITO](https://purl.org/spar/cito) *documents*
+Since `metadataObj` is included as the third argument here, the CiTO *documents*
 relationship will automatically be added between `metadataObj` and `sourceObj`.
 
 Alternatively, this relationship between the metadata and science objects can be made explictly using
@@ -149,7 +149,7 @@ dp <- addMember(dp, sourceObj)
 dp <- insertRelationship(dp, getIdentifier(metadataObj), getIdentifier(sourceObj))
 ```
 
-Note that the relationship type, using the `insertRelationship()` `predicate` argument does not have to be specified in this case, as the [CITO](https://purl.org/spar/cito) *documents* relationship is the default value for `insertRelationship`.
+Note that the relationship type, using the `insertRelationship()` `predicate` argument does not have to be specified in this case, as the CiTO *documents* relationship is the default value for `insertRelationship`.
 
 ### 3. Create and add a DataObject for each data file
 A DataObject must be created for each metadata file, data file or any other type of file that will be
