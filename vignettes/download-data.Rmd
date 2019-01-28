@@ -66,8 +66,8 @@ mnId <- locations$data[2, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
 ```
 
-Multiple MNs may hold the data, depending on the DataONE replication policy that is in effect for the dataset and which member nodes are currenctly available. (DataONE copies or 'replicates' datasets from one MN to other MNs, depending on what was requested by the user
-when a dataset was first uploaded to DatqONE). In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
+Multiple MNs may hold the data, depending on the DataONE replication policy that is in effect for the dataset and which member nodes are currently available. (DataONE copies or 'replicates' datasets from one MN to other MNs, depending on what was requested by the user
+when a dataset was first uploaded to DataONE). In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
 ```{r, warning=FALSE,eval=FALSE}
 obj <- getObject(mn, pid)
 ```

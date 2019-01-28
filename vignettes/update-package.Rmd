@@ -128,7 +128,7 @@ objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-ob
 
 The `selectMember` method inspects every DataObject in the package `pkg` and checks 
 for a match in the R S4 slot specified by the `name` argument for the value specified with 
-the `value` argument. The identifer for any matching DataObject is returned. 
+the `value` argument. The identifier for any matching DataObject is returned. 
 
 The documentation for the DataObject R slots available can be viewed with the command
 `help("DataObject-class")`. As a *SystemMetadata* object is contained in each DataObject, the slots
@@ -204,7 +204,7 @@ package members may become outdated.
 
 For example, it was shown above that a package member was updated to contain the
 file `Strix-occidentalis-obs.csv.zip` instead of `Strix-occidentalis-obs.csv`. After this change, the DataObject
-holding the EML metadata should be updated so that the EML elemnt `objectName` for this 
+holding the EML metadata should be updated so that the EML element `objectName` for this 
 dataset matched the new filename:
 
 ```{r, eval=FALSE}
@@ -217,13 +217,13 @@ pkg <- updateMetadata(pkg, metadataId, xpath=nameXpath, replacement=newName)
 The `updateMetadata` method updates a DataObject containing XML, substituting the value located in the
 document specified with the `xpath` argument with the value provided in the `replacement` argument.
 In this example, the XML contained in the DataObject with identifier `metadataId` is an EML 
-metadata document. The EML elewent `objectName` is updated with the value `Strix-occidentalis-obs.csv.zip`.
+metadata document. The EML element `objectName` is updated with the value `Strix-occidentalis-obs.csv.zip`.
 
 
 Note the the `xpath` argument uses the XPath query language, which is used to locate elements within an
 XML document.
 
-For EML metadata, another element that may need to be updated, if it is present in the origianl
+For EML metadata, another element that may need to be updated, if it is present in the original
 EML file, is the distribution url. This element contains the link that can be used to download the file 
 from DataONE, which includes the DataONE identifier for the object. Because the identifier value is set 
 when the DataObject is created, the EML metadata is out of date and needs to be updated with the new 
@@ -231,7 +231,7 @@ identifier value.
 
 In this example, the section of the metadata that describes the dataset `Strix-occidentalis-obs.csv.zip` will be updated. 
 
-A portion of the EML from our exmaple looks like this:
+A portion of the EML from our example looks like this:
 ```
     <dataTable>
       <entityName>Strix Occidentalis</entityName>

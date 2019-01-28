@@ -10,7 +10,7 @@ vignette: >
 
 The primary method to locate data in the DataONE network is to use the web based search tool located at https://search.dataone.org.
 
-Data can also be discovered programatically from R using the *dataone* R package method `query`. Both the web page and the R method
+Data can also be discovered programmatically from R using the *dataone* R package method `query`. Both the web page and the R method
 access the same
 underlying search mechanism, the Apache Foundation Solr search engine that runs on the 
 [DataONE Coordinating Node](https://www.dataone.org/coordinating-nodes). The DataONE Solr index, similar to a catalog or database, contains 
@@ -28,7 +28,7 @@ Additional information about searching DataONE can be viewed at [Content Discove
 
 Some familiarity with Solr is helpful when using the `query` method
 effectively, however basic queries can be very powerful and the examples in this document can provide a starting point. As an alternative to
-composing queries using Solr syntax, a simplier search mechanism is available with the `query` method that uses name, value pairs (See the section: *A Simplied Search").
+composing queries using Solr syntax, a simpler search mechanism is available with the `query` method that uses name, value pairs (See the section: *A Simplified Search").
 
 Additional information about the `query` method can be obtained from the R help facility, e.g. `?query` from the R command line.
 
@@ -105,7 +105,7 @@ result[,'id']
 
 ### Using a Simplified Search.
 A search may be performed by just specifying query fields and values using the *searchTerms* parameter.
-For example, to search for datasets that mention 'kelp' in the abstract and have an attribute discription that contains the word 'biomass', the following query could be used:
+For example, to search for datasets that mention 'kelp' in the abstract and have an attribute description that contains the word 'biomass', the following query could be used:
 ```{r, eval=F}
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
@@ -123,7 +123,7 @@ using a web browser to view https://cn.dataone.org/cn/v2/query/solr.
 ### Search just a member node
 If it is known which Member Node holds the data of interest, then a search can be limited to just that
 MN by sending the search directly to that MN instead of the CN. For example, if the dataset of interest
-is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statments:
+is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statements:
     
 ```{r, eval=F}
 # Query the data holdings on a member node

@@ -24,7 +24,7 @@ an identifier for an existing object}
 A logical value where TRUE means a reservation exists for the specified pid by the subject.
 }
 \description{
-The hasReservation method checks the reservation of an identfier that has
+The hasReservation method checks the reservation of an identifier that has
 previously been reserved with the \code{reserveIdentifier} method. The identifier must have
 been reserved by the specified DataONE user identity (\code{subject}).
 }

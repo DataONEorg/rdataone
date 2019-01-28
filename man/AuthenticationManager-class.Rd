@@ -48,7 +48,7 @@ of their existing accounts. For more information about the CILogon service, see
  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
  \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
  \item{\code{\link{isAuthExpired}}}{: Check if the currently valid authentication method has reached the expiration time.}
- \item{\code{\link{obscureAuth}}}{: Temporarity disable DataONE authentication.}
+ \item{\code{\link{obscureAuth}}}{: Temporarily disable DataONE authentication.}
  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
  \item{\code{\link{showAuth}}}{: Display all authentication information.}
  \item{\code{\link{getTokenInfo}}}{: Display all authentication token information.}

@@ -92,7 +92,7 @@ result[1,c("id", "title")]
 id <- result[1,'id']
 ```
 
-The metadata file that describes the located research can be downloaed and viewed in an XML viewer, text 
+The metadata file that describes the located research can be downloaded and viewed in an XML viewer, text 
 editor after being written to disk, or in R via the commands below:
 ```
 library(XML)
@@ -141,7 +141,7 @@ pkg <- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383", q
 See the R vignette [dataone R Package ](https://github.com/DataONEorg/rdataone/blob/master/vignettes/dataone-overview.Rmd) for
 more information.
 
-## Acknowledgements
+## Acknowledgments
 Work on this package was supported by:
 
 - NSF-ABI grant #1262458 to C. Gries, M. B. Jones, and S. Collins.

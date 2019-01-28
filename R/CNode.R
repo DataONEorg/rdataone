@@ -284,7 +284,7 @@ setGeneric("listNodes", function(x, ...) {
 })
 
 #' @rdname listNodes
-#' @param url Optianal - the url of the CN.
+#' @param url Optional - the url of the CN.
 #' @export
 setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...) {
     # If an optional url argument is specified, use that. This might be used if
@@ -361,7 +361,7 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
 })
 
 #' Checks to determine if the supplied subject is the owner of the reservation of id.
-#' @description The hasReservation method checks the reservation of an identfier that has
+#' @description The hasReservation method checks the reservation of an identifier that has
 #' previously been reserved with the \code{reserveIdentifier} method. The identifier must have
 #' been reserved by the specified DataONE user identity (\code{subject}).
 #' @details To determine the DataONE identity that is currently being used for DataONE
@@ -573,7 +573,7 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' Get a reference to a node based on its identifier
 #' @rdname getMNode
 #' @aliases getMNode
-#' @details For an explanation of DataONE Coordinatine Nodes and Member Node
+#' @details For an explanation of DataONE Coordinating Nodes and Member Node
 #' identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
 #' by entering the R command: \code{vignette("dataone-overview")}.
 #' @param x The coordinating node to query for its registered Member Nodes

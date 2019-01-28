@@ -36,7 +36,7 @@ For additional overview information about the DataONE Federation, please https:/
 The following features are available via the `dataone` package, for member nodes that have implemented the DataONE version 2.0 API. 
 
 ### 1. Series Identifiers
-Each data, metadata, and resource map object in DataONE has a unique identifier, refered to in DataONE documentation as a Persistent
+Each data, metadata, and resource map object in DataONE has a unique identifier, referred to in DataONE documentation as a Persistent
 Identifier (PID). A PID is associated with one object in DataONE and always refers to the same object, the same set of bytes that are 
 stored on the DataONE network. 
 
@@ -58,7 +58,7 @@ can be sent to DataONE services to prove a user's identity.
 
 Authentication tokens can be used with Member Nodes that have been upgraded to the DataONE Version 2.0 Member Node API
 
-The process of providing user identity information either via an X.509 certificate or via an authentication token is refered to as *authentication*.
+The process of providing user identity information either via an X.509 certificate or via an authentication token is referred to as *authentication*.
 
 Authentication tokens can be obtained from a user's DataONE account settings web page. To create an authentication token:
 
@@ -71,7 +71,7 @@ Authentication tokens can be obtained from a user's DataONE account settings web
 - Click "Renew authentication token" if the token you have been using has expired.
 - Click on the "Copy" button below the text window to copy the authentication string to the paste buffer.
 - Note the identity string and expiration date of the token.
-- In the R console, paste the string which is similiar to this example:
+- In the R console, paste the string which is similar to this example:
 ```
   options(dataone_token = "eyJhbGciOiJSUzI1NiJ9...")
 ```
@@ -165,7 +165,7 @@ dev                 | DEV                              |
 dev2                | DEV2                             | 
 
 Each DataONE environment has a CN that maintains a registry of all MNs in that network. The CN can be queried for a list of 
-all MNs in a network, for example, to see the MNs that are currently in the production environmemt:
+all MNs in a network, for example, to see the MNs that are currently in the production environment:
 ```{r, eval=F}
 cn <- CNode("PROD")
 unlist(lapply(listNodes(cn), function(x) x@name))
@@ -177,7 +177,7 @@ To see the URL service endpoint for a CN, you can view the `endpoint` slot:
 cn@endpoint
 ```
 
-To see the member nodes that are currenly in the STAGE2 environment:
+To see the member nodes that are currently in the STAGE2 environment:
 ```{r, eval=F}
 cn <- CNode("STAGING2")
 unlist(lapply(listNodes(cn), function(x) x@name))

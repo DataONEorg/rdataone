@@ -76,7 +76,7 @@ uploadDataObject(d1c, d1Object, public=TRUE)
 
 ## Additional Resources
 
-The `dataone` R package vignettes can be viewed using the R `vignette` comand,
+The `dataone` R package vignettes can be viewed using the R `vignette` command,
 for example `vignette("dataone-overview")`.
 
 The `dataone` vignettes describe these topics:

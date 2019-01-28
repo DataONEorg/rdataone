@@ -67,7 +67,7 @@ if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
 ## @param x the TableDescriber
 ## @param ... 
 ## @returnType character
-## @return vector of dataONE formatIds
+## @return vector of DataONE formatIds
 ## 
 ## @author rnahf
 ## @export

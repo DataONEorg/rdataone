@@ -37,7 +37,7 @@ is accessed until success at downloading the associated SystemMetadata for the o
 The SystemMetadata is used to assign a name to the file that is output to disk. If a fileName is specified in
 the SystemMetadata, then the file output to disk will be named according to the SystemMetadata fileName. 
 If there is not a specified SystemMetadata fileName, the identifier will be used as the file name output to disk.
-If the indentifier is used as the file name, a file name extesion will be determined using the SystemMetadata
+If the identifier is used as the file name, a file name extension will be determined using the SystemMetadata
 formatID along with information from CNCore.listFormats(). If the SystemMetadata formatID is
 "application/octet-stream" no extension will be written.
 }

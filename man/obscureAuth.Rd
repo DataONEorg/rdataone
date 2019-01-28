@@ -4,7 +4,7 @@
 \name{obscureAuth}
 \alias{obscureAuth}
 \alias{obscureAuth,AuthenticationManager-method}
-\title{Temporarity disable DataONE authentication.}
+\title{Temporarily disable DataONE authentication.}
 \usage{
 obscureAuth(.Object)
 

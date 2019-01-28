@@ -15,7 +15,7 @@ listNodes(x, ...)
 
 \item{...}{(Not yet used)}
 
-\item{url}{Optianal - the url of the CN.}
+\item{url}{Optional - the url of the CN.}
 }
 \value{
 the list of nodes in the DataONE CN environment

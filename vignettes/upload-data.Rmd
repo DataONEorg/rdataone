@@ -96,7 +96,7 @@ in a DataPackage.
 ### 2. Prepare a metadata file that will describe the files in the package
 The next step is to prepare a metadata file that will describe the science datasets and other files in the
 package. The most common metadata format used in the DataONE network is the
-[Ecological Metadata Langauage](https://knb.ecoinformatics.org/#external//emlparser/docs/index.html) (EML). Other supported formats include FGDC, ISO 19115 and others.
+[Ecological Metadata Langauge](https://knb.ecoinformatics.org/#external//emlparser/docs/index.html) (EML). Other supported formats include FGDC, ISO 19115 and others.
 Additional information about EML is available at https://knb.ecoinformatics.org/#external//emlparser/docs/index.html.
 
 Detailed directions regarding authoring metadata documents are outside the scope of this document.
@@ -131,7 +131,7 @@ This relationship between the science metadata and data objects will be added to
 data object as it is added to the DataPackage, if the metadata object is first added, then referenced as the
 DataObjects are added. 
 
-As the metadata object has already been added, it can be refernced as each DataObject is added.
+As the metadata object has already been added, it can be referenced as each DataObject is added.
 
 ```{r, eval=FALSE}
 dp <- addMember(dp, sourceObj, metadataObj)
@@ -140,7 +140,7 @@ dp <- addMember(dp, sourceObj, metadataObj)
 Since `metadataObj` is included as the third argument here, the CiTO *documents*
 relationship will automatically be added between `metadataObj` and `sourceObj`.
 
-Alternatively, this relationship between the metadata and science objects can be made explictly using
+Alternatively, this relationship between the metadata and science objects can be made explicitly using
 the `insertRelationship()` method:
 
 ```{r, eval=FALSE}
@@ -189,21 +189,21 @@ dp <- addMember(dp, outputObj, mo=metadataObj)
 ### 4. Determine what access your data and metadata should have 
 DataONE provides a mechanism that allows data submitters to control access to their data.
 
-The levels of access available to objects in DataOne are "read", "write", and "changePermission".
+The levels of access available to objects in DataONE are "read", "write", and "changePermission".
 
 The "read" permission allows a user the ability to view the content of a DataONE object.
 The "write" permission allows a user the ability to change the content of an object via update services. 
 The "changePermission" permission allows the ability to change the access policy for an object and includes 
 both read and write permissions.
 
-The access rules that are added to DataObjects in a DataPackage will determine the acces that is granted
+The access rules that are added to DataObjects in a DataPackage will determine the access that is granted
 to users accessing the package after it is uploaded to DataONE.
 
 Each of these permissions can be granted to a single user, a group of users, or the special *public* user
 which means all users.
 
 Each object in DataONE can have one or more access rules that control the access of that object. The
-complete set of access rules for an object is refered to as its *access policy*.
+complete set of access rules for an object is referred to as its *access policy*.
 
 Access rules can be added to each *DataObject* individually after it has been created.
 
@@ -251,7 +251,7 @@ user performing the search isn't granted access in an object's access policy, th
 viewable or discoverable via the search facility for that user.
 
 ## Using a Digital Object Identifier with a package.
-A Digital Object Identfier (DOI) may be assigned to the metadata *DataObject*, using the *generateIdentifier* method:
+A Digital Object Identifier (DOI) may be assigned to the metadata *DataObject*, using the *generateIdentifier* method:
 
 ```{r, eval=FALSE}
 cn <- CNode("STAGING")
@@ -325,7 +325,7 @@ The system metadata can be updated for an object in DataONE without updating the
 example, if an object was only readable by the data submitter, the access policy for an object can be updated to enable 
 public access. System metadata is updated for an object using the *updateSystemMetadata* method:
 
-The following exmaple first downloads the current system metadata for the pid from the previous example, then updates 
+The following example first downloads the current system metadata for the pid from the previous example, then updates 
 the access policy that will be applied to the object and uploads the new system metadata to DataONE so that the changes will be applied: 
 
 ```{r, eval=F}

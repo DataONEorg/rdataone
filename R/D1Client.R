@@ -179,7 +179,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' Download a data object from the DataONE Federation.
 #' @description An object is download from the DataONE network for the identifier that is provided.
 #' @param x A D1Client instance
-#' @param identifier The identifier of the object to download from DatONE
+#' @param identifier The identifier of the object to download from DataONE
 #' @param ... (not yet used)
 #' @rdname getD1Object
 #' @aliases getD1Object
@@ -835,7 +835,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' @details The DataPackage describes the collection of data object and their associated 
 #' metadata object, with the relationships and members serialized into a document
 #' stored under, and retrievable with, the packageId as it's own distinct object.
-#' Any objects in the data map that have a dataUploaded value are assumed to be 
+#' Any objects in the data map that have a dateUploaded value are assumed to be 
 #' pre-existing in the system, and skipped.
 #' @note Member objects are created serially, and most errors in creating one object will 
 #' interrupt the create process for the whole, with the result that some members will 
@@ -1528,7 +1528,7 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
 #' The SystemMetadata is used to assign a name to the file that is output to disk. If a fileName is specified in
 #' the SystemMetadata, then the file output to disk will be named according to the SystemMetadata fileName. 
 #' If there is not a specified SystemMetadata fileName, the identifier will be used as the file name output to disk.
-#' If the indentifier is used as the file name, a file name extesion will be determined using the SystemMetadata
+#' If the identifier is used as the file name, a file name extension will be determined using the SystemMetadata
 #' formatID along with information from CNCore.listFormats(). If the SystemMetadata formatID is
 #' "application/octet-stream" no extension will be written.
 #' @param x A D1Client object.

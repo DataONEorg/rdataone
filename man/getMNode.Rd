@@ -24,7 +24,7 @@ the Member Node as an MNode reference, or NULL if not found
 Get a reference to a node based on its identifier
 }
 \details{
-For an explanation of DataONE Coordinatine Nodes and Member Node
+For an explanation of DataONE Coordinating Nodes and Member Node
 identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
 by entering the R command: \code{vignette("dataone-overview")}.
 }

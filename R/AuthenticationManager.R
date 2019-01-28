@@ -56,7 +56,7 @@
 #'  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
 #'  \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
 #'  \item{\code{\link{isAuthExpired}}}{: Check if the currently valid authentication method has reached the expiration time.}
-#'  \item{\code{\link{obscureAuth}}}{: Temporarity disable DataONE authentication.}
+#'  \item{\code{\link{obscureAuth}}}{: Temporarily disable DataONE authentication.}
 #'  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
 #'  \item{\code{\link{showAuth}}}{: Display all authentication information.}
 #'  \item{\code{\link{getTokenInfo}}}{: Display all authentication token information.}
@@ -216,7 +216,7 @@ setMethod("getAuthSubject", signature("AuthenticationManager"), function(.Object
 
 #' Get the expiration date of the current authentication method.
 #' @description The expiration date of the current authentication method, either
-#' authentication token or X.509 certificate, is returned as a Greenich Mean Time (GMT) value.
+#' authentication token or X.509 certificate, is returned as a Greenwich Mean Time (GMT) value.
 #' @rdname getAuthExpires
 #' @aliases getAuthExpires
 #' @param .Object An AuthenticationManager instance
@@ -248,7 +248,7 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(.Object,
     return(authInfo$expired)
 })
 
-#' Temporarity disable DataONE authentication.
+#' Temporarily disable DataONE authentication.
 #' @description Calling \code{obscureAuth} temporarily disables authentication so that
 #' @details This method is intended to be used for authentication testing.
 #' \code{isAuthValid} will return FALSE. Authentication can be re-enabled by calling
