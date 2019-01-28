@@ -1,21 +1,17 @@
 ## Test environments
 
-* macOS 10.13.4, R 3.5.0
-* Ubuntu 16.04.4, R 3.4.4
-* Windows 7, R 3.5.0
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.0 (2018-04-23)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2018-06-13 r74894, 2018-06-26 r74934)
+* macOS 10.l4 R 3.5.0, R 3.5.2
+* Ubuntu 18.10, R 3.5.1
+* Debian 9.4, R 3.5.1
+* Windows 7, R 3.5.2
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.2 (2018-12-20)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2019-01-27 r76018)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.4.4 (2018-03-15)
 
 ## Changes since last release
 
-* Resolve temporary directory problem on Windows (#204)
-* Fixed broken links in the 'dataone-overview' vignette (#205)
-* Added a destination file path argument to getPackage() (#211)
-* Add R package 'xml2' to DESCRIPTION (suggest) to resolve 'unstated dependencies' warning (#218)
-
-NEW FUNCTIONS
-
-* The new method `downloadObject()` provides a way to easily download a file from DataONE to disk (#217)
+* Improve error handling for services that call DataONE 'resolve' service (#232)
+* Eliminate duplicate entries for package vignettes (#232)
 
 ## R CMD check results
 
@@ -23,7 +19,4 @@ NEW FUNCTIONS
 
 ## Downstream dependencies
 
-* The downstream dependency (nesRdata) has been checked with revdepcheck::revdep_check(), which passed
-  with 0 errors, 0 warnings, and 1 note. After reviewing the 'nesRdata' source and issues, it appears that
-  this is a problem with 'nesRdata' and not 'dataone', and was resolved in this commit in the 'nesRdata'
-  github repository: https://github.com/jsta/nesRdata/commit/7fcf99be892e06253219ca7f95603fea968a8f72
+* The downstream dependencies have been checked with revdepcheck::revdep_check(), without any problems being reported.
