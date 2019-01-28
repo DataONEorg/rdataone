@@ -1,3 +1,10 @@
+# Version 2.1.2
+
+## Bug Fixes
+
+* Improve error handling for services that call DataONE 'resolve' service (#232)
+* Eliminate duplicate entries for package vignettes (#232)
+
 # Version 2.1.1
 
 ## Bug Fixes
