@@ -226,7 +226,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
       expect_match(response, newid)
       newsysmeta <- getSystemMetadata(mnTest, newid)
       expect_match(class(newsysmeta)[1], "SystemMetadata")
-      expect_that(newsysmeta@archived, is_true())
+      expect_that(newsysmeta@archived, expect_true())
     } else {
       skip("This test requires valid authentication.")
     }

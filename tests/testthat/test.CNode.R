@@ -16,7 +16,7 @@ test_that("CNode constructors", {
 test_that("CNode listNodes()", {
   library(dataone)
   nodelist <- listNodes(cnProd)
-  expect_that(length(nodelist) > 0, is_true())
+  expect_true(length(nodelist) > 0)
   expect_match(class(nodelist[[1]]), "Node")
   expect_match(nodelist[[1]]@identifier, "urn:node:")
   expect_match(nodelist[[1]]@type, "cn|mn")
@@ -118,7 +118,7 @@ test_that("CNode listFormats, getFormat",{
   library(dataone) 
   #cn <- CNode("PROD")
   fmts <- listFormats(cnProd)
-  expect_that(is.data.frame(fmts),is_true())
+  expect_true(is.data.frame(fmts))
   expect_gt(length(grep("eml", fmts$ID)), 0)
   # CHeck that the name returned by getFormat matches the name
   # requested, and in the data.frame from listFormats

@@ -20,7 +20,7 @@ test_that("AuthenticationManager isAuthValid() for v2 node works", {
 
 test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   am <- AuthenticationManager()
-  expect_that(is.null(cm), is_false())
+  expect_false(is.null(cm))
   expect_false(is.null(am))
   skip_on_cran()
   cn <- CNode("STAGING")
@@ -41,7 +41,7 @@ test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
 test_that("getAuthExpires() works", {
   skip_on_cran()
   am <- AuthenticationManager()
-  expect_that(is.null(cm), is_false())
+  expect_false(is.null(cm))
   expect_false(is.null(am))
   cn <- CNode("STAGING")
   mn <- getMNode(cn, "urn:node:mnStageUCSB2")
@@ -93,7 +93,7 @@ test_that("getAuthSubject() works", {
     expect_match(result, "public")
   } else {
     # Testing normal case
-    expect_that(length(result) > 0, is_true())
+    expect_true(length(result) > 0)
   }
 })
 

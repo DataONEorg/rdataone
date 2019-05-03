@@ -12,6 +12,6 @@ test_that("auth_get", {
   cname <- class(format_list)[1]
   expect_match(cname, "XML")
   xml <- XML::saveXML(format_list)
-  expect_that(grep("METADATA", xml) > 0, is_true())
-  expect_that(grep("Ecological Metadata", xml) > 0, is_true())
+  expect_true(grep("METADATA", xml) > 0)
+  expect_true(grep("Ecological Metadata", xml) > 0)
 })

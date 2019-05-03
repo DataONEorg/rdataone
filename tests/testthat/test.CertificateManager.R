@@ -5,7 +5,7 @@ test_that("CertificateManager getCertLocation()", {
   if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   suppressWarnings(cm <- CertificateManager())
-  expect_that(is.null(cm), is_false())
+  expect_false(is.null(cm))
   suppressWarnings(location <- getCertLocation(cm))
   # No cert found so skip rest of test
   if(!is.null(location)) {
@@ -20,7 +20,7 @@ test_that("CertificateManager loads", {
   if(!suppressWarnings(require("openssl", quietly=TRUE))) skip("This test requires the openssl package")
   #if(grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
   suppressWarnings(cm <- CertificateManager())
-  expect_that(is.null(cm), is_false())
+  expect_false(is.null(cm))
 })
 
 test_that("getCertExpires", {
@@ -48,10 +48,10 @@ test_that("isCertExpired", {
     # BTW: isCertExpires works correctly for expired certs.
     #if (is.null(getCertExpires(cm))) {
     #    ## if no certificate is installed, then should equal TRUE
-    #    expect_that(isExpired, is_true())
+    #    expect_that(isExpired, expect_true())
     #} else {
     #    ## if a valid certificate is installed, then it should be FALSE
-    ##    expect_that(isExpired, is_false())
+    ##    expect_that(isExpired, expect_false())
     #}
 })
 
@@ -70,7 +70,7 @@ test_that("showClientSubject", {
         expect_match(result, "public")
     } else {
         # Testing normal case
-        expect_that(length(result) > 0, is_true())
+        expect_that(length(result) > 0, expect_true())
     }
 })
 
