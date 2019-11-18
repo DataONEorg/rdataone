@@ -75,7 +75,7 @@ The *dataone* R package should be available for use at this point.
 
 ## Quick Start
 
-See the full manual (`help dataone`) for documentation.
+See the full manual (`help(dataone)`) for documentation.
 
 To search the DataONE Federation Member Node *Knowledge Network for Biocomplexity (KNB)* for a dataset:
 
