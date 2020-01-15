@@ -29,7 +29,9 @@ For an explanation of DataONE Coordinating Nodes, see the
 section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("dataone-overview")}.
 }
 \examples{
+\dontrun{
 cn <- CNode("PROD")
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

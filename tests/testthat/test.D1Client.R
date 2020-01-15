@@ -3,6 +3,7 @@ test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
 test_that("D1Client constructors", {
+  if(servicesDown) skip_on_cran()
         library(dataone)
         #cli <- new("D1Client")
         expect_false(is.null(d1cProd))
@@ -48,6 +49,7 @@ test_that("D1Client constructors", {
 })
 
 test_that("D1Client methods", {  
+  if(servicesDown) skip_on_cran()
   # Test listMemberNodes
   #cli <- D1Client("PROD")
   nodes <- listMemberNodes(d1cProd)
@@ -361,6 +363,7 @@ test_that("D1Client createD1Object works", {
 })
 
 test_that("D1Client getD1Object works", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   library(digest)
   
@@ -389,6 +392,7 @@ test_that("D1Client getD1Object works", {
 
 
 test_that("D1Client d1SolrQuery works", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   library(XML)
   #d1c <- D1Client("PROD")
@@ -408,6 +412,7 @@ test_that("D1Client d1SolrQuery works", {
 })
 
 test_that("D1Client listMemberNodes() works", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   #d1c <- D1Client("PROD")
   nodelist <- listMemberNodes(d1cProd)
@@ -423,6 +428,7 @@ test_that("D1Client listMemberNodes() works", {
 })
 
 test_that("D1Client d1IdentifierSearch works", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   am <- AuthenticationManager()
   #d1c <- D1Client("PROD")

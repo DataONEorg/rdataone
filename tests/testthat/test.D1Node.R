@@ -4,6 +4,7 @@ test_that("dataone library loads", {
 })
 
 test_that("CNode ping", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   # 'cnProd' is defined in 'helper-base.R' for all tests
   alive <- ping(cnProd)
@@ -11,6 +12,7 @@ test_that("CNode ping", {
 })
 
 test_that("CNode object index query works with query list param", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   # Test query of CN object index using query string
   queryParams <- "q=id:doi*&rows=2&wt=xml"
@@ -59,6 +61,7 @@ test_that("CNode object index query works with query list param", {
 })
 
 test_that("Object listing works for CNode, MNode", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   
   # Note: this test assumes that there are at least 5 EML 2.1.0 documents in DataONE
@@ -96,6 +99,7 @@ test_that("Object listing works for CNode, MNode", {
 })
 
 test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   
   # Get list of query engines for a CN, and get description for each engine
@@ -122,6 +126,7 @@ test_that("listQueryEngines, getQueryEngineDescription works for CNode, MNode", 
 })
 
 test_that("CNode object index query works with query string param", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   
   am <- AuthenticationManager()
@@ -140,6 +145,7 @@ test_that("CNode object index query works with query string param", {
 })
 
 test_that("MNode object index query works", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   queryParams <- "q=id:doi*&rows=2&wt=xml"
   #queryParams <- 'q=attribute:"net primary production" AND (abstract:"above ground" OR title:"above ground")'

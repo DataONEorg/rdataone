@@ -23,9 +23,11 @@ The \link{listFormats} method queries a DataONE Coordinating Node for a
 list of all entries in the Object Format Vocabulary.
 }
 \examples{
+\dontrun{
 library(dataone)
 cn <- CNode()
 formats <- listFormats(cn)
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

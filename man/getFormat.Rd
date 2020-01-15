@@ -24,12 +24,14 @@ A dataframe of all object formats registered in the DataONE Object Format Vocabu
 Get information for a single DataONE object format
 }
 \examples{
+\dontrun{
 library(dataone)
 cn <- CNode()
 fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
 cat(sprintf("format name: \%s\\n", fmt$name))
 cat(sprintf("format type: \%s\\n", fmt$type))
 cat(sprintf("format Id: \%s\\n", fmt$id))
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

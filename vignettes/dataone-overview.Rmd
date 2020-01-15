@@ -22,7 +22,7 @@ See the full manual (`help dataone`) for documentation.
 
 To search the DataONE Federation Member Node *Knowledge Network for Biocomplexity (KNB)* for a dataset:
 
-```{r}
+```{r, warning=FALSE, eval=FALSE}
 library(dataone)
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
@@ -38,7 +38,7 @@ pid <- result[1,'id']
 
 The metadata file located in the above search can be downloaded with the commands:
 
-```{r}
+```{r,  warning=FALSE, eval=FALSE}
 library(XML)
 metadata <- rawToChar(getObject(mn, pid))
 ```
@@ -47,7 +47,7 @@ The metadata file that describes the located research can be viewed in an XML vi
 it is written to a disk file. This file details a data file (CSV) that can be obtained using the listed 
 identifier, using the commands:
 
-```{r}
+```{r, warning=FALSE, eval=FALSE}
 dataRaw <- getObject(mn, "df35d.443.1")
 dataChar <- rawToChar(dataRaw)
 theData <- textConnection(dataChar)
@@ -59,7 +59,7 @@ Uploading a CSV file to a DataONE Member Node requires user authentication. Data
 authentication is described in the vignette `DataONE-Federation`.
 
 Once the authentication steps have been followed, uploading is done with:
-```{r}
+```{r, warning=FALSE,eval=FALSE}
 library(datapack)
 library(uuid)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
@@ -70,7 +70,7 @@ write.csv(testdf, csvfile, row.names=FALSE)
 # Build a DataObject containing the csv, and upload it to the Member Node
 d1Object <- new("DataObject", id, format="text/csv", filename=csvfile)
 ```
-```{r, eval=FALSE}
+```{r, warning=FALSE, eval=FALSE}
 uploadDataObject(d1c, d1Object, public=TRUE)
 ```
 

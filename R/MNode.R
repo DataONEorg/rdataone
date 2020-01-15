@@ -97,8 +97,9 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @return the MNode object-
 #' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
+#' }
 setGeneric("MNode", function(x) {
     standardGeneric("MNode")
 })

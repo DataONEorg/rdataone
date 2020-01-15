@@ -1,21 +1,22 @@
 ## Test environments
 
-* macOS 10.l4 R 3.5.0, R 3.5.2
-* Ubuntu 18.10, R 3.5.1
-* Debian 9.4, R 3.5.1
-* Windows 7, R 3.5.2
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.2 (2018-12-20)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2019-01-27 r76018)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.4.4 (2018-03-15)
+* macOS 10.l4.5 R 3.6.1
+* Ubuntu 18.04 R 3.5
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.3 (2019-03-11)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2020-01-07 r77633)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.6.2 (2019-12-12)
 
 ## Changes since last release
 
-* Improve error handling for services that call DataONE 'resolve' service (#232)
-* Eliminate duplicate entries for package vignettes (#232)
+* Ensure that DataONE service outages don't cause package tests to fail during CRAN testing.
 
 ## R CMD check results
 
-* There were no ERRORs, WARNINGs or NOTEs.
+* There was one note:
+  Possibly mis-spelled words in DESCRIPTION:
+     DataONE (4:27, 42:9, 43:10)
+  - this is the correct spelling for the name of our organization. 
+* There were no ERRORs, or WARNINGs.
 
 ## Downstream dependencies
 

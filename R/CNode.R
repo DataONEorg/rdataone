@@ -65,8 +65,9 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @return the CNode object representing the DataONE environment
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' cn <- CNode("PROD")
+#' }
 setGeneric("CNode", function(x, ...) {
   standardGeneric("CNode")
 })
@@ -146,10 +147,11 @@ setMethod("CNode", signature("character"), function(x) {
 #' @aliases listFormats 
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' formats <- listFormats(cn)
+#' }
 #' @export
 setGeneric("listFormats", function(x, ...) {
   standardGeneric("listFormats")
@@ -206,13 +208,14 @@ setMethod("listFormats", signature("CNode"), function(x) {
 #' @param ... (Not yet used)
 #' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
 #' fmt <- getFormat(cn, "eml://ecoinformatics.org/eml-2.1.0")
 #' cat(sprintf("format name: %s\n", fmt$name))
 #' cat(sprintf("format type: %s\n", fmt$type))
 #' cat(sprintf("format Id: %s\n", fmt$id))
+#' }
 #' @export
 setGeneric("getFormat", function(x, ...) {
   standardGeneric("getFormat")
@@ -582,9 +585,10 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' @return the Member Node as an MNode reference, or NULL if not found
 #' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' cn <- CNode()
 #' mn <- getMNode(cn, "urn:node:KNB")
+#' }
 setGeneric("getMNode", function(x, ...) {
   standardGeneric("getMNode")
 })

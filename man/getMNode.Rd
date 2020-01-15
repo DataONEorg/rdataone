@@ -29,8 +29,10 @@ identifiers, see the section \emph{"DataONE Environments"} in the overview vigne
 by entering the R command: \code{vignette("dataone-overview")}.
 }
 \examples{
+\dontrun{
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
+}
 }
 \seealso{
 \code{\link[=CNode-class]{CNode}}{ class description.}

@@ -248,7 +248,7 @@ setGeneric("getChecksum", function(x, ...) {
 #' @rdname getQueryEngineDescription
 #' @aliases getQueryEngineDescription
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode("PROD")
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
@@ -256,6 +256,7 @@ setGeneric("getChecksum", function(x, ...) {
 #' cat(sprintf("Query engine name: %s\n", engineDesc$name))
 #' engineDesc <- getQueryEngineDescription(cn, "solr")
 #' head(engineDesc$queryFields, n=3L)
+#' }
 setGeneric("getQueryEngineDescription", function(x, ...) {
   standardGeneric("getQueryEngineDescription")
 })
@@ -380,7 +381,7 @@ setMethod("describeObject", signature("D1Node"), function(x, pid) {
 #' @aliases listObjects
 #' @return list Objects that met the search criteria
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode("STAGING")
 #' fromDate <- "2013-01-01T01:01:01.000+00:00"
@@ -392,6 +393,7 @@ setMethod("describeObject", signature("D1Node"), function(x, pid) {
 #'     formatId=formatId, start=start, count=count)
 #' # Inspect id of first object 
 #' objects[1]$objectInfo$identifier
+#' }
 setGeneric("listObjects", function(x, ...) {
   standardGeneric("listObjects")
 })
@@ -464,9 +466,10 @@ setMethod("listObjects", signature("D1Node"), function(x,
 #' @rdname listQueryEngines
 #' @aliases listQueryEngines
 #' @export
-#' @examples
+#' @examples \dontrun{
 #' cn <- CNode("STAGING")
 #' engines <- listQueryEngines(cn)
+#' }
 setGeneric("listQueryEngines", function(x, ...) {
   standardGeneric("listQueryEngines")
 })

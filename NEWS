@@ -1,5 +1,11 @@
 # Version 2.1.2
 
+## New Features and functions
+
+* Ensure that DataONE network errors don't cause the package checks to fail (#238).
+
+# Version 2.1.2
+
 ## Bug Fixes
 
 * Improve error handling for services that call DataONE 'resolve' service (#232)

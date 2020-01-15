@@ -4,6 +4,7 @@ test_that("dataone library loads", {
 })
 
 test_that("auth_get", {
+  if(servicesDown) skip_on_cran()
   library(dataone)
   library(httr)
   library(XML)

@@ -30,7 +30,9 @@ instance.  This typically is used from the getMNode() function from the CNode cl
 way to retrieve an instance of an MNode.
 }
 \examples{
+\dontrun{
 mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
+}
 }
 \seealso{
 \code{\link[=MNode-class]{MNode}}{ class description.}
