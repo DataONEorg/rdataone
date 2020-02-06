@@ -56,8 +56,8 @@ Collate:
     'MNode.R'
     'D1Client.R'
     'EMLParser.R'
+    'dataone-defunct.R'
+    'dataone-deprecated.R'
     'dataone-package.R'
-    'yyy.R'
-    'zzz.R'
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2.9000
