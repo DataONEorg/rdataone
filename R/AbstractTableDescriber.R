@@ -85,7 +85,7 @@ if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
 #' @author rnahf
 #' @export
 setGeneric("documented.entityNames", function(x, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("documented.entityNames")
 })
 
@@ -98,7 +98,7 @@ setGeneric("documented.entityNames", function(x, ...) {
 #' @author rnahf
 #' @export
 setGeneric("documented.d1Identifiers", function(x, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("documented.d1Identifiers")
 })
 
@@ -111,7 +111,7 @@ setGeneric("documented.d1Identifiers", function(x, ...) {
 #' @author rnahf
 #' @export
 setGeneric("documented.sizes", function(x, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("documented.sizes")
 })
 
@@ -125,7 +125,7 @@ setGeneric("documented.sizes", function(x, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.formatFamily", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.formatFamily")
 })
 
@@ -139,7 +139,7 @@ setGeneric("data.formatFamily", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableFieldDelimiter", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableFieldDelimiter")
 })
 
@@ -153,7 +153,7 @@ setGeneric("data.tableFieldDelimiter", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableQuoteCharacter", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableQuoteCharacter")
 })
 
@@ -167,7 +167,7 @@ setGeneric("data.tableQuoteCharacter", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.characterEncoding", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.characterEncoding")
 })
 
@@ -184,7 +184,7 @@ setGeneric("data.characterEncoding", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableAttributeOrientation", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableAttributeOrientation")
 })
 
@@ -199,7 +199,7 @@ setGeneric("data.tableAttributeOrientation", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableSkipLinesHeader", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableSkipLinesHeader")
 })
 
@@ -216,7 +216,7 @@ setGeneric("data.tableSkipLinesHeader", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableMissingValueCodes", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableMissingValueCodes")
 })
 
@@ -231,7 +231,7 @@ setGeneric("data.tableMissingValueCodes", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableAttributeNames", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableAttributeNames")
 })
 
@@ -246,7 +246,7 @@ setGeneric("data.tableAttributeNames", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableAttributeTypes", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableAttributeTypes")
 })
 
@@ -261,6 +261,6 @@ setGeneric("data.tableAttributeTypes", function(x, index, ...) {
 #' @author rnahf
 #' @export
 setGeneric("data.tableAttributeStorageTypes", function(x, index, ...) {
-  .Deprecated("eml_get", "EML")
+  .Defunct("eml_get", "EML")
     standardGeneric("data.tableAttributeStorageTypes")
 })

@@ -18,8 +18,8 @@
 #   limitations under the License.
 #
 
-#' D1Object (Deprecated) is a representation of a DataObject.
-#' @description D1Object has been deprecated in favor of datapack::DataObject, which provides
+#' D1Object (Defunct) is a representation of a DataObject.
+#' @description D1Object has been defunct in favor of datapack::DataObject, which provides
 #' a wrapper for data and associated SystemMetadata. 
 #' @slot dataObject A backing instance of a DataObject, to which all methods and state are proxied
 #' @rdname D1Object-class
@@ -54,6 +54,8 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @export
 setGeneric("D1Object", function(...) { 
+  msg <- sprintf("'D1Object' is defunct.\nUse 'datapack:DataPackage' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("DataPackage", "datapack", msg)
   standardGeneric("D1Object") 
 })
 
@@ -67,21 +69,6 @@ setGeneric("D1Object", function(...) {
 #' @seealso \code{\link[=D1Object-class]{D1Object}}{ class description.}
 #' @aliases D1Object-initialize
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId=as.character(NA)) {
-  # Write the incoming data to disk and create the DataObject with this file
-  
-  if(format == "text/csv") {
-    dataChar <- rawToChar(data)
-    theData <- textConnection(dataChar)
-    df <- read.csv(theData, stringsAsFactors=FALSE)
-    tfile <- tempfile()
-    write.csv(df, tfile)
-  } else {
-    dataChar <- rawToChar(data)
-    tfile <- tempfile()
-    writeLines(dataChar, tfile)
-  }
-  
-  .Object@dataObject <- new("DataObject", id = id, format = format, mnNodeId = mnNodeId, filename=tfile)
   return(.Object)
 })
 
@@ -100,13 +87,11 @@ setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId
 #' @rdname getData
 #' @export
 setMethod("getData", signature("D1Object"), function(x) {
-  # We have to include all args for .Deprecated, because we are deprecating just this 
-  # implementation (method) and not the generic. When .Deprecated is called from the method,
-  # it doesn't properly identify the generic/method name (msg says ".local is deprecated)
-  msg <- sprintf("'getData' is deprecated.\nUse 'datapack:getData' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("getData(x)")
-  .Deprecated("getData", package="datapack", msg, methodSig)
-  data <- rawToChar(getData(x@dataObject))
+  # We have to include all args for .Defunct, because we are deprecating just this 
+  # implementation (method) and not the generic. When .Defunct is called from the method,
+  # it doesn't properly identify the generic/method name (msg says ".local is defunct)
+  msg <- sprintf("'getData' is defunct.\nUse 'datapack:getData' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("getData", package="datapack")
 })
 
 #' Get the Identifier of the D1Object
@@ -115,10 +100,8 @@ setMethod("getData", signature("D1Object"), function(x) {
 #' @return the identifier
 #' @export
 setMethod("getIdentifier", signature("D1Object"), function(x) {
-  msg <- sprintf("'getIdentifier' is deprecated.\nUse 'datapack:getIdentifier' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("getIdentifier(x)")
-  .Deprecated("getIdentifier", package="datapack", msg, methodSig)
-  getIdentifier(x@dataObject)
+  msg <- sprintf("'getIdentifier' is defunct.\nUse 'datapack:getIdentifier' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("getIdentifier", package="datapack", msg)
 })
 
 #' Get the FormatId of the D1Object
@@ -127,10 +110,8 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 #' @rdname getFormatId
 #' @export
 setMethod("getFormatId", signature("D1Object"), function(x) {
-  msg <- sprintf("'getFormatId' is deprecated.\nUse 'datapack:getFormatId' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("getFormatId(x)")
-  .Deprecated("getFormatId", package="datapack", msg, methodSig)
-  getFormatId(x@dataObject)
+  msg <- sprintf("'getFormatId' is defunct.\nUse 'datapack:getFormatId' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("getFormatId", package="datapack")
 })
 
 #' Make the object publicly readable.
@@ -146,11 +127,8 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' @rdname setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
-  msg <- sprintf("'setPublicAccess' is deprecated.\nUse 'datapack:setPublicAccess' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("setPublicAccess(x)")
-  .Deprecated("setPublicAccess", package="datapack", msg, methodSig) 
-  x@dataObject <- setPublicAccess(x@dataObject)
-  return(x)
+  msg <- sprintf("'setPublicAccess' is defunct.\nUse 'datapack:setPublicAccess' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("setPublicAccess", package="datapack") 
 })
 
 #' Test whether the provided subject can read an object.
@@ -169,10 +147,8 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' @rdname canRead
 #' @export
 setMethod("canRead", signature("D1Object"), function(x, subject) {
-  msg <- sprintf("'canRead' is deprecated.\nUse 'datapack:canRead' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("canRead(x)")
-  .Deprecated("canRead", package="datapack", msg, methodSig) 
-  canRead(x@dataObject, subject)
+  msg <- sprintf("'canRead' is defunct.\nUse 'datapack:canRead' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("canRead", package="datapack") 
 })
 
 #' @title return the D1Object data as a data.frame.
@@ -187,7 +163,8 @@ setMethod("canRead", signature("D1Object"), function(x, subject) {
 #' @aliases asDataFrame
 #' @export
 setGeneric("asDataFrame", function(x, reference, ...) { 
-  .Deprecated("read.csv", "base")
+  msg <- sprintf("'asDataFrame' is defunct.\nUse 'base:read.csv' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("read.csv", "base", msg)
   standardGeneric("asDataFrame")
 })
 
@@ -271,18 +248,4 @@ setMethod("asDataFrame", signature("D1Object", "AbstractTableDescriber"), functi
             df <- asDataFrame(x, skip=skip, header=TRUE, sep=fieldSeparator, quote=quoteChar, 
                     na.strings=missingValues, encoding=encoding)
             return(df)
-        })
-
-#' @rdname asDataFrame
-#' @export
-setMethod("asDataFrame", signature("D1Object"), function(x, ...) {
-    ## Load the data into a dataframe
-    # Prevent .Deprecated warnings (in code called internally)
-    suppressWarnings(dataBytes <- getData(x))
-    theData <- textConnection(dataBytes)
-    message("theData is ", class(theData))
-    ## using read.csv instead of read.table, because it exposes the defaults we want
-    ## while also allowing them to be overriden
-    df <- read.csv(theData, ...)
-    return(df)
 })

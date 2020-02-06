@@ -161,7 +161,8 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
 #' uploaded <- createD1Object(d1c, d1o)
 #' }
 setGeneric("createD1Object", function(x, d1Object, ...) {
-  .Deprecated("uploadDataObject", "datapack")
+  msg <- sprintf("'createD1Object' is defunct.\nUse 'datapack:uploadDataObject' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("uploadDataObject", "datapack", msg)
   standardGeneric("createD1Object")
 })
 
@@ -194,7 +195,8 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' data <- getData(dataObj)
 #' }
 setGeneric("getD1Object", function(x, identifier, ...) {
-  .Deprecated("getDataObject", "dataone")
+  msg <- sprintf("'getD1Object' is defunct.\nUse 'dataone:getDataObject' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("getDataObject", "dataone", msg)
   standardGeneric("getD1Object")
 })
 
@@ -583,7 +585,8 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
 #' }
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
-  .Deprecated("query", "dataone")
+  msg <- sprintf("'d1SolrQuewry' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("query", "dataone", msg)
     standardGeneric("d1SolrQuery")
 })
 
@@ -616,7 +619,8 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
 #' @export
 setGeneric("d1IdentifierSearch", function(x, ...) {
-  .Deprecated("query", "dataone")
+  msg <- sprintf("'d1IdentifierSearch' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("query", "dataone", msg)
     standardGeneric("d1IdentifierSearch")    
 })
 
@@ -671,7 +675,8 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' resourceMapId <- createDataPackage(d1c, dp, replicate=TRUE, public=TRUE)
 #' }
 setGeneric("createDataPackage", function(x, dataPackage, ...) { 
-  .Deprecated("uploadDataPackage", "dataone")
+  msg <- sprintf("'createDataPackage' is defunct.\nUse 'dataone:uploadDataPackage' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("uploadDataPackage", "dataone", msg)
     standardGeneric("createDataPackage")
 })
 
@@ -783,7 +788,8 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 #' testMN <- getMN(cli)
 #' }
 setGeneric("getMN", function(x, nodeid, ...) { 
-    .Deprecated("getMNodeId", "dataone", "getMN(x, nodeid) is deprecated and no longer returns a Java object, use getMNode() instead.", "getMN(x, nodeid")
+    msg <- sprintf("'getMN' is defunct.\nUse 'dataone:getMNodeId' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+    .Defunct("getMNodeId", "dataone", msg)
     standardGeneric("getMN")
 })
 
@@ -818,7 +824,6 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 #' testCN <- getCN(cli)
 #' }
 setGeneric("getCN", function(x) { 
-    .Deprecated("getCN(x)", "dataone", "The getCN(x) function no longer returns a Java object. This new function returns a CNode object", "getMN(x, ...)")
     standardGeneric("getCN")
 })
 
@@ -1347,7 +1352,8 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' sdf <- convert.csv(d1c, testdf)  
 #' }
 setGeneric("convert.csv", function(x, ...) {
-    .Deprecated("write.csv", "utils")
+    msg <- sprintf("'convert.csv' is defunct.\nUse 'utils:write.csv' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+    .Defunct("write.csv", "utils", msg)
     standardGeneric("convert.csv")
 })
 
@@ -1451,22 +1457,8 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 setMethod("addData", signature("DataPackage", "D1Object"), function(x, do, mo=as.character(NA)) {
   
   # Add deprecated here instead of in the generic function, as the generic function is the datapack R package.
-  msg <- sprintf("'addData' is deprecated.\nUse 'datapack:addMember' instead.\nSee help(\"Deprecated\") and help(\"dataone-deprecated\").")
-  methodSig <- sprintf("addMember(x, do, mo)")
-  .Deprecated("DataObject", package="datapack", msg, methodSig)
-  x@objects[[do@dataObject@sysmeta@identifier]] <- do@dataObject
-  # If a metadata object identifier is specified on the command line, then add the relationship to this package
-  # that associates this science object with the metadata object.
-  if (!missing(mo)) {
-    # CHeck that the metadata object has already been added to the DataPackage. If it has not
-    # been added, then add it now.
-    if (!containsId(x, getIdentifier(mo@dataObject))) {
-      moId <- addMember(x, mo@dataObject)
-    }
-    # Now add the CITO "documents" and "isDocumentedBy" relationships
-    insertRelationship(x, getIdentifier(mo@dataObject), getIdentifier(do@dataObject))
-  }
-  return(x)
+  msg <- sprintf("'addData' is defunct.\nUse 'datapack:addMember' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
+  .Defunct("DataObject", package="datapack", msg)
 })
 
 

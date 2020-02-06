@@ -55,7 +55,7 @@ tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
 #' @param ... Additional parameters
 #' @export
 setGeneric("EMLParser", function(d1Object, ...) { 
-  .Deprecated("eml_read", "EML")
+  .Defunct("eml_read", "EML", msg = "'setPublicAccess' has been removed from this package")
   standardGeneric("EMLParser")} )
 
 #' @rdname EMLParser
