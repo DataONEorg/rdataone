@@ -111,7 +111,6 @@ setMethod("getData", signature("D1Object"), function(x) {
 
 #' Get the Identifier of the D1Object
 #' @param x D1Object
-#' @param ... (not yet used)
 #' @rdname getIdentifier
 #' @return the identifier
 #' @export
@@ -124,7 +123,6 @@ setMethod("getIdentifier", signature("D1Object"), function(x) {
 
 #' Get the FormatId of the D1Object
 #' @param x D1Object
-#' @param ... (not yet used)
 #' @return the formatId
 #' @rdname getFormatId
 #' @export
@@ -143,7 +141,6 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' metadata locally, and will not have any effect on remotely uploaded copies of
 #' the D1Object. 
 #' @param x D1Object
-#' @param ... (not yet used)
 #' @return D1Object with modified access rules
 #' @seealso \code{\link[=DataObject-class]{DataObject}}{ class description.}
 #' @rdname setPublicAccess
@@ -168,7 +165,6 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' name formatted according to RFC 2253.
 #' @param x D1Object
 #' @param subject : the subject name of the person/system to check for read permissions
-#' @param ... Additional arguments
 #' @return logical TRUE if the subject has read permission, or FALSE otherwise
 #' @rdname canRead
 #' @export
