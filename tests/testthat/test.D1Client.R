@@ -69,17 +69,6 @@ test_that("D1Client methods", {
   cli <- new("D1Client", env="STAGING2")
   cli <- setMNodeId(cli, "urn:node:mnTestKNB")
   expect_match(cli@mn@identifier, "urn:node:mnTestKNB")
-  
-  # Test getMN (deprecated)
-  suppressWarnings(testMN <- getMN(cli))
-  expect_match(testMN@identifier, "urn:node:mnTestKNB")
-  suppressWarnings(testMN <- getMN(cli, nodeid="urn:node:mnTestKNB"))
-  expect_match(testMN@identifier, "urn:node:mnTestKNB")
-  
-  # Test getCN (deprecated)
-  suppressWarnings(testCN <- getCN(cli))
-  expect_match(testCN@baseURL, "cn-stage-2.test.dataone.org")
-  
 })
 
 test_that("D1Client getDataObject", {
@@ -322,95 +311,6 @@ test_that("D1Client updateDataPackage works", {
     }
 })
 
-test_that("D1Client createD1Object works", {
-  skip_on_cran()
-  library(dataone)
-  library(datapack)
-  library(uuid)
-  # Create a csv file for the science object
-  testdf <- data.frame(x=1:10,y=11:20)
-  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
-  write.csv(testdf, csvfile, row.names=FALSE)
-  #d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
-  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
-  expect_false(is.null(d1cTestKNB))
-  #preferredNodes <- c("urn:node:mnDemo9")
-  preferredNodes <- NA
-  am <- AuthenticationManager()
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTestKNB@mn))
-  if (authValid) {
-    if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    sdf <- read.csv(csvfile)
-    # Create DataObject for the science data 
-    suppressWarnings(stf <- charToRaw(convert.csv(d1cTestKNB, sdf)))
-    sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
-    # Create D1Object for the science data 
-    # Suppress .Deprecated warnings
-    id <- sprintf("urn:uuid:%s", UUIDgenerate())
-    suppressWarnings(stf <- charToRaw(convert.csv(d1cTestKNB, testdf)))
-    suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1cTestKNB)))
-    # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_match(sciObj@dataObject@sysmeta@identifier, "urn:uuid")
-    suppressWarnings(sciObj <- setPublicAccess(sciObj))
-    # Upload the data object to DataONE
-    suppressWarnings(success <- createD1Object(d1cTestKNB, sciObj))
-    expect_true(success)
-    # Now see if we can download the object from DataONE
-  } else {
-    skip("This test requires valid authentication.")
-  }
-})
-
-test_that("D1Client getD1Object works", {
-  if(servicesDown) skip_on_cran()
-  library(dataone)
-  library(digest)
-  
-  am <- AuthenticationManager()
-  #d1c <- D1Client("PROD", "urn:node:KNB")
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cKNB@cn))
-  # Skip if Mac OS X and certificate.
-  if (authValid) {
-    if(dataone:::getAuthMethod(am, d1cKNB@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-  }
-  expect_false(is.null(d1cKNB))
-  expect_match(class(d1cKNB), "D1Client")
-  expect_match(d1cKNB@cn@baseURL, "https://cn.dataone.org/cn")
-    
-  # Try retrieving a known object from the PROD environment
-  pid <- "solson.5.1"
-  suppressWarnings(dataObj <- getD1Object(d1cKNB, pid))
-  expect_match(class(dataObj)[1], "DataObject")
-  expect_match(class(dataObj@sysmeta), "SystemMetadata")
-  expect_match(getIdentifier(dataObj), pid)
-  expect_match(getFormatId(dataObj), "text/csv")
-  data <- getData(dataObj)
-  sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-  expect_match(sha1, dataObj@sysmeta@checksum)
-})
-
-
-test_that("D1Client d1SolrQuery works", {
-  if(servicesDown) skip_on_cran()
-  library(dataone)
-  library(XML)
-  #d1c <- D1Client("PROD")
-  am <- AuthenticationManager()
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cProd@cn))
-  # Skip if Mac OS X and certificate.
-  if (authValid) {
-    if(dataone:::getAuthMethod(am, d1cProd@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-  }
-  queryParams <- list(q="id:doi*", fq="abstract:hydrocarbon", rows="2", wt="xml")
-  suppressWarnings(result <- d1SolrQuery(d1cProd, queryParams))
-  # Skip if null returned - this can happy if the CN is under heavy load.
-  if(is.null(result) || length(result) == 0) skip("DataONE CN is busy")
-  expect_match(class(result)[1], "XMLInternalDocument")
-  resList <- xmlToList(result)
-  expect_true(length(resList) > 0)
-})
-
 test_that("D1Client listMemberNodes() works", {
   if(servicesDown) skip_on_cran()
   library(dataone)
@@ -425,72 +325,6 @@ test_that("D1Client listMemberNodes() works", {
   expect_match(nodelist[[length(nodelist)]]@baseURL, "http")
   expect_match(nodelist[[length(nodelist)]]@subject, "urn:node:")
   expect_match(nodelist[[length(nodelist)]]@type, "cn|mn")
-})
-
-test_that("D1Client d1IdentifierSearch works", {
-  if(servicesDown) skip_on_cran()
-  library(dataone)
-  am <- AuthenticationManager()
-  #d1c <- D1Client("PROD")
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cProd@cn))
-  # Skip if Mac OS X and certificate.
-  if (authValid) {
-    if(dataone:::getAuthMethod(am, d1cProd@cn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-  }
-  queryParams <- "q=id:doi*&fq=abstract:kelp&rows=2" 
-  suppressWarnings(result <- d1IdentifierSearch(d1cProd, queryParams))
-  expect_match(class(result), "character")
-  expect_equal(length(result), 2)
-})
-
-test_that("D1Client createDataPackage works", {
-  skip_on_cran()
-  library(dataone)
-  library(datapack)
-  library(uuid)
-  
-  testdf <- data.frame(x=1:10,y=11:20)
-  csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
-  write.csv(testdf, csvfile, row.names=FALSE)
-  #d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-  #d1c <- D1Client("SANDBOX2", "urn:node:mnDemo2")
-  #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB2")
-  expect_false(is.null(d1cTest))
-  #preferredNodes <- c("urn:node:mnDemo9")
-  preferredNodes <- NA
-  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
-  am <- AuthenticationManager()
-  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTest@mn))
-  if (authValid) {
-    if(dataone:::getAuthMethod(am, d1cTest@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    dp <- new("DataPackage")
-    # Create metadata object that describes science data
-    emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
-    emlChar <- readLines(emlFile)
-    emlRaw <- charToRaw(paste(emlChar, collapse="\n"))
-    emlId <- sprintf("urn:uuid:%s", UUIDgenerate())
-    suppressWarnings(metadataObj <- new("D1Object", id=emlId, format="eml://ecoinformatics.org/eml-2.1.1", data=emlRaw, mnNodeId=getMNodeId(d1cTest)))
-    expect_match(metadataObj@dataObject@sysmeta@identifier, "urn:uuid")
-    suppressWarnings(dp <- addData(dp, metadataObj))
-    expect_true(is.element(metadataObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
-    
-    sdf <- read.csv(csvfile)
-    # Create DataObject for the science data 
-    suppressWarnings(stf <- charToRaw(convert.csv(d1cTest, sdf)))
-    sciId <- sprintf("urn:uuid:%s", UUIDgenerate())
-    suppressWarnings(sciObj <- new("D1Object", id=sciId, format="text/csv", data=stf, mnNodeId=getMNodeId(d1cTest)))
-    # It's possible to set access rules for DataObject now, or for all DataObjects when they are uploaded to DataONE via uploadDataPackage
-    expect_match(sciObj@dataObject@sysmeta@identifier, "urn:uuid")
-    suppressWarnings(dp <- addData(dp, sciObj, metadataObj))
-    expect_true(is.element(sciObj@dataObject@sysmeta@identifier, getIdentifiers(dp)))
-    
-    # Upload the data package to DataONE    
-    suppressWarnings(resourceMapId <- createDataPackage(d1cTest, dp, replicate=TRUE, public=TRUE))
-    expect_true(!is.null(resourceMapId))
-    
-  } else {
-    skip("This test requires valid authentication.")
-  }
 })
 
 test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
