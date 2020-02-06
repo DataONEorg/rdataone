@@ -36,7 +36,7 @@ search term in the query sent to the CN, or by just sending the query to a speci
 
 The following query shows how to query the entire DataONE network and locate and download data from 
 any MN that has the desired data:
-```{r,warning=FALSE,autodep=T,message=FALSE}
+```{r,warning=FALSE,eval=FALSE,message=FALSE}
 library(dataone)
 cn <- CNode("PROD")
 # Ask for the id, title and abstract
@@ -53,7 +53,7 @@ Each object in DataONE is uniquely identified by a Persistent Identifier (PID) t
 (As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at http://search.dataone.org to find the identifiers of data to download.)
 
 In the R example, after inspecting the *result* data, we will use the first matching dataset:
-```{r}
+```{r,eval=FALSE}
  pid <- result[1,'id']
 ```
 

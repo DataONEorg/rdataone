@@ -33,18 +33,10 @@ library(dataone)
 d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 packageId <- "resource_map_urn:uuid:a9aeefcf-228c-4534-b4ad-b480a937be7d"
 ```
-<!-- The user sees the 'd1c' init above, but read the saved object so we don't incure a network access. -->
-```{r, echo=FALSE}
-d1c <- readRDS(system.file("./extdata/d1c.rds", package="dataone"))
-```
 ```{r, eval=FALSE}
 pkg <- getDataPackage(d1c, identifier=packageId, lazyLoad=TRUE, limit="0MB", quiet=FALSE)
 ```
-<!-- Read a saved object so we don't incure a network access. -->
-```{r, echo=FALSE}
-pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
-```
-```{r, message=FALSE}
+```{r, eval=FALSE,message=FALSE}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
 objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
 zipfile <- system.file("extdata/Strix-occidentalis-obs.csv.zip", package="dataone")
@@ -80,11 +72,6 @@ d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 ```{r, eval=FALSE}
 pkg <- getDataPackage(d1c, identifier=packageId, lazyLoad=TRUE, limit="0MB", quiet=FALSE)
 ```
-<!-- Get a fresh copy of the saved package. -->
-```{r, echo=FALSE}
-pkg <- readRDS(system.file("./extdata/pkg.rds", package="dataone"))
-```
-
 Because packages might contain large files or a large number of files, it is
 possible to `lazyLoad` the package. This means that the metadata describing the files is downloaded 
 downloaded, but the file contents, the data bytes,  are not. An upper size limit can be specified 
@@ -105,7 +92,7 @@ R `show` method for the object:
 saveWidth <- getOption("width")
 options(width=100)
 ```
-```{r}
+```{r, eval=FALSE}
 pkg
 ```
 ```{r, echo=FALSE}
@@ -122,7 +109,7 @@ for a different file, as would be necessary if it was determined that the zipped
 file should have been used instead.
 
 First, determine which DataObject in the DataPackage `pkg` contains the file to be replaced:
-```{r}
+```{r, eval=FALSE}
 objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
 ```
 
@@ -136,7 +123,7 @@ for SystemMetadata are available, with documentation viewable with `help("System
 
 Next, update the DataObject in `pkg` to replace the file `Strix-occidentalis-obs.csv` with `Strix-occidentalis-obs.csv.zip` 
 using the `replaceMember` method:
-```{r}
+```{r,eval=FALSE}
 objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv')
 zipfile <- system.file("extdata/Strix-occidentalis-obs.csv.zip", package="dataone")
 pkg <- replaceMember(pkg, objId, replacement=zipfile, formatId="application/octet-stream")
@@ -152,7 +139,7 @@ so add it now:
 First, the identifier for the metadata DataObject that describes the package members will be retrieved 
 from the DataPackage:
 
-```{r}
+```{r, eval=FALSE}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
 ```
 
@@ -162,7 +149,7 @@ particular package, there is only one DataPackage that has `formatId` of `eml://
 
 Note that the `getValue` method can be used to retrieve the values for DataObject slots, for example:
 
-```{r}
+```{r,eval=FALSE}
 getValue(pkg, name="sysmeta@formatId")
 ```
 
@@ -171,7 +158,7 @@ and the values being the slot value.
 
 Next, add a new package member that was omitted from the original package:
 
-```{r}
+```{r,eval=FALSE}
 auxFile <- system.file("extdata/WeatherInf.txt", package="dataone")
 auxObj <- new("DataObject", format="text/csv", filename=auxFile)
 pkg <- addMember(pkg, auxObj, metadataId)
@@ -181,9 +168,6 @@ The modified package can be reviewed before updating to DataONE:
 ```{r, echo=FALSE}
 saveWidth <- getOption("width")
 options(width=100)
-```
-```{r}
-pkg
 ```
 ```{r, echo=FALSE}
 options(width=saveWidth)
@@ -258,7 +242,7 @@ The following lines get the current identifier for the DataObject that contains 
 correct file, and uses this identifier value to construct a standard DataONE access
 URL, using the base URL of the DataONE coordinating node.
 
-```{r}
+```{r, eval=FALSE}
 objId <- selectMember(pkg, name="sysmeta@fileName", value='Strix-occidentalis-obs.csv.zip')
 newURL <- sprintf("%s/%s/resolve/%s", d1c@cn@baseURL, d1c@cn@APIversion, objId)
 newURL
@@ -273,7 +257,7 @@ one identifier is returned in `objId`.
 Next, the metadata element for the distribution url will be updated in the *DataObject* that contains
 the EML metadata in the package `pkg`
 
-```{r}
+```{r, eval=FALSE}
 metadataId <- selectMember(pkg, name="sysmeta@formatId", value="eml://ecoinformatics.org/eml-2.1.1")
 xpathToURL <- "//dataTable/physical/distribution[../objectName/text()=\"OwlNightj.csv\"]/online/url"
 pkg <- updateMetadata(pkg, do=metadataId, xpath=xpathToURL, replacement=newURL)
