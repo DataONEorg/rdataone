@@ -3,7 +3,6 @@
 \docType{package}
 \name{dataone}
 \alias{dataone}
-\alias{dataone-package}
 \title{Search, download and upload data to the DataONE network.}
 \description{
 The R package \emph{dataone} provides read/write access to data and metadata from the 

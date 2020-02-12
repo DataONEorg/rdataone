@@ -3,9 +3,9 @@
 \docType{class}
 \name{D1Object-class}
 \alias{D1Object-class}
-\title{D1Object (Deprecated) is a representation of a DataObject.}
+\title{D1Object (Defunct) is a representation of a DataObject.}
 \description{
-D1Object has been deprecated in favor of datapack::DataObject, which provides
+D1Object has been defunct in favor of datapack::DataObject, which provides
 a wrapper for data and associated SystemMetadata.
 }
 \section{Slots}{

@@ -4,8 +4,13 @@
 \alias{auth_put_post_delete}
 \title{POST, PUT, or DELETE a resource with authenticated credentials.}
 \usage{
-auth_put_post_delete(method, url, encode = "multipart",
-  body = as.list(NA), node)
+auth_put_post_delete(
+  method,
+  url,
+  encode = "multipart",
+  body = as.list(NA),
+  node
+)
 }
 \arguments{
 \item{method}{a string indicating which HTTP method to use (post, put, or delete)}
