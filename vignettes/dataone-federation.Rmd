@@ -107,7 +107,7 @@ Detailed, technical information about user identities and authentication in Data
 [DataONE Authentication](https://purl.dataone.org/architecture/design/Authentication.html)
 
 You can check your token by entering the following R commands:
-```{r, eval=F}
+```{r, eval=F, cache=F}
 libary(dataone)
 am <- AuthenticationManager()
 getTokenInfo(am)

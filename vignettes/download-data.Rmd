@@ -36,7 +36,7 @@ search term in the query sent to the CN, or by just sending the query to a speci
 
 The following query shows how to query the entire DataONE network and locate and download data from 
 any MN that has the desired data:
-```{r,warning=FALSE,eval=FALSE,message=FALSE}
+```{r,warning=FALSE,eval=FALSE,message=FALSE,cache=F}
 library(dataone)
 cn <- CNode("PROD")
 # Ask for the id, title and abstract
@@ -53,14 +53,14 @@ Each object in DataONE is uniquely identified by a Persistent Identifier (PID) t
 (As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at http://search.dataone.org to find the identifiers of data to download.)
 
 In the R example, after inspecting the *result* data, we will use the first matching dataset:
-```{r,eval=FALSE}
+```{r,eval=FALSE, cache=F}
  pid <- result[1,'id']
 ```
 
 Now that the PID is determined, the MN that holds the data must be located. For this, the *resolve*
 method is used to find an MN that holds the data and that is currently available: 
 
-```{r, warning=FALSE, eval=FALSE}
+```{r, warning=FALSE, eval=FALSE, cache=F}
 locations <- resolve(cn, pid)
 mnId <- locations$data[2, "nodeIdentifier"]
 mn <- getMNode(cn, mnId)
@@ -68,13 +68,13 @@ mn <- getMNode(cn, mnId)
 
 Multiple MNs may hold the data, depending on the DataONE replication policy that is in effect for the dataset and which member nodes are currently available. (DataONE copies or 'replicates' datasets from one MN to other MNs, depending on what was requested by the user
 when a dataset was first uploaded to DataONE). In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:
-```{r, warning=FALSE,eval=FALSE}
+```{r, warning=FALSE,eval=FALSE,cache=F}
 obj <- getObject(mn, pid)
 ```
 
 If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statements:
     
-```{r, warning=FALSE, eval=FALSE, message=FALSE}
+```{r, warning=FALSE, eval=FALSE, message=FALSE, cache=F}
 # Query the data holdings on a member node
 cn <- CNode("PROD")
 mn <- getMNode(cn, "urn:node:KNB")
@@ -91,7 +91,7 @@ This approach uses the *getDataObject* method from the R package.  The *getDataO
 member node in DataONE holds the data item and downloads it into a datapack::DataObject. The DataObject R object is 
 a wrapper that contains the data bytes for the DataONE dataset requested as well as the DataONE system metadata for the object. 
 
-```{r, warning=FALSE, eval=FALSE, message=FALSE}
+```{r, warning=FALSE, eval=FALSE, message=FALSE, cache=F}
 d1c <- D1Client("PROD", "urn:node:KNB")
 # Ask for the id, title and abstract
 queryParams <- list(q="abstract:\"biogenic hydrocarbon\"", fq="id:doi*", 
@@ -109,14 +109,14 @@ The following functions are available to extract information from the DataObject
 - getData(obj) : Get the data contents of the DataObject
 
 For example, to extract the data byes from the DataObject:
-```{r, eval=FALSE}
+```{r, eval=FALSE, cache=F}
 dataBytes <- getData(dataObj)
 ```
 
 In addition to the DataObject functions, the complete set of information from the DataONE system metadata is available from the 
 object's slot:
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, cache=F}
 str(dataObj@sysmeta)
 ```
 ### Download a data package
@@ -131,7 +131,7 @@ Note: to use the *getPackage* method, the *id* parameter must be the package ide
 If the pid of the metadata object or science data object is known, then the package identifier can be discovered
 using a query such as:
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, cache=F}
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 queryParamList <- list(q="id:Blandy.77.1", fl="resourceMap")
@@ -141,7 +141,7 @@ packagePid <- result[1,1]
 
 Once the package identifier is determined, the entire data package can be downloaded using the *getPackage* method: 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, cache=F}
 cn <- CNode()
 mn <- getMNode(cn, "urn:node:KNB")
 bagitFileName <- getPackage(mn, id=packagePid)
