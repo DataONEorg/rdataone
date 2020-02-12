@@ -1,14 +1,15 @@
 ---
 title: "dataone R Package Overview"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-<!-- output: pdf_document -->
+output:
+  rmarkdown::html_vignette:
+    keep_md: true
 vignette: >
   %\VignetteIndexEntry{dataone R Package Overview}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
-
+      
 ## *dataone* R Package Overview
 
 The *dataone* R package enables R scripts to search, download and upload science data and metadata

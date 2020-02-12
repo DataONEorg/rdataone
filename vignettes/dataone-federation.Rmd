@@ -8,7 +8,6 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-
 DataONE is a community driven project providing access to data across multiple member repositories, supporting enhanced search and discovery of Earth and environmental data.
 
 DataONE comprises a distributed network of data centers, science networks or organizations. These organizations can expose their data within the DataONE network through the implementation of the DataONE Member Node service interface. In addition to scientific data, Member Nodes can provide computing resources, or services such as data replication, to the DataONE community.
@@ -24,8 +23,8 @@ The `dataone` R package is one of the tools in the ITK.
 
 If more detailed information about the DataONE Federation services is required than is provided by the *dataone* R package help, then in-depth documentation for the DataONE web services can be found at:
 
-- Detailed overview [DataONE CN API](https://purl.dataone.org/architecture/apis/CN_APIs.html)
-- Detailed overview [DataONE MN API](https://purl.dataone.org/architecture/apis/MN_APIs.html)
+- [DataONE Coordinating Node API](https://purl.dataone.org/architecture/apis/CN_APIs.html)
+- [DataONE Member Node API](https://purl.dataone.org/architecture/apis/MN_APIs.html)
 
 Please see the [DataONE Glossary](https://purl.dataone.org/architecture/glossary.html) for definitions of 
 some terms used in this document that are used to describe DataONE services and architecture.

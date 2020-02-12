@@ -18,6 +18,8 @@ Error in curl::curl_fetch_memory(url, handle = handle) :
 Problem with the local SSL certificate 
 ```  
 
+(Note that it is recommended that you use DataONE authentication tokens instead of an X.509 certificate if possible.)
+
 Changes in the Mac OS X system libraries in OS X Mavericks have taken away support of these X.509 certificates.
 A workaround to make these certificates usable on Mac OS X with R is to install a version of the *curl* R package
 that supports these certificates. 
