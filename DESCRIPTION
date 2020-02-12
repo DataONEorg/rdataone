@@ -1,6 +1,6 @@
 Package: dataone
-Version: 2.1.3.9000
-Date: 2020-01-15
+Version: 2.1.4
+Date: 2020-02-14
 Title: R Interface to the DataONE REST API
 Authors@R: c( person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
   person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
@@ -60,4 +60,4 @@ Collate:
     'dataone-deprecated.R'
     'dataone-package.R'
 Encoding: UTF-8
-RoxygenNote: 7.0.2.9000
+RoxygenNote: 7.0.2
