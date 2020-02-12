@@ -10,18 +10,18 @@ test_that("MNode constructors", {
 	expect_match(mn@endpoint, mn_uri)
 })
 test_that("MNode getCapabilities()", {
-  if(servicesDown) skip_on_cran()
-	library(dataone)
-	library(XML)
-	#mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
-	#mn <- MNode(mn_uri)
+    if(servicesDown) skip_on_cran()
+    library(dataone)
+    library(XML)
+    #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
+    #mn <- MNode(mn_uri)
     xml <- getCapabilities(mnKNB)
-	val <- xmlName(xmlRoot(xml))
-	expect_match(val, "node")
-	expect_match(mnKNB@identifier, "urn:node")
+    val <- xmlName(xmlRoot(xml))
+    expect_match(val, "node")
+    expect_match(mnKNB@identifier, "urn:node")
 })
 test_that("MNode getObject(), getChecksum()", {
-  if(servicesDown) skip_on_cran()
+    if(servicesDown) skip_on_cran()
     library(dataone)
     #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
     #mn <- MNode(mn_uri)
@@ -47,7 +47,7 @@ test_that("MNode getObject(), getChecksum()", {
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
-  if(servicesDown) skip_on_cran()
+    if(servicesDown) skip_on_cran()
     library(dataone)
     #mn <- getMNode(cnProd, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
@@ -67,13 +67,13 @@ test_that("MNode generateIdentifier()", {
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
     if(authValid) {
-      if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      newid <- generateIdentifier(mnTest, "UUID")
-      cname <- class(newid)
-      expect_match(cname, "character")
-      expect_match(newid, "urn:uuid:")
+        if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        newid <- generateIdentifier(mnTest, "UUID")
+        cname <- class(newid)
+        expect_match(cname, "character")
+        expect_match(newid, "urn:uuid:")
     } else {
-      skip("This test requires valid authentication.")
+        skip("This test requires valid authentication.")
     }
 })
 
@@ -90,63 +90,63 @@ test_that("MNode generateIdentifier() on API v1 node", {
     am <- AuthenticationManager()
     suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
     if(authValid) {
-      if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      newid <- generateIdentifier(mnTest, "UUID")
-      cname <- class(newid)
-      expect_match(cname, "character")
-      expect_match(newid, "urn:uuid:")
+        if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        newid <- generateIdentifier(mnTest, "UUID")
+        cname <- class(newid)
+        expect_match(cname, "character")
+        expect_match(newid, "urn:uuid:")
     } else {
-      skip("This test requires valid authentication.")
+        skip("This test requires valid authentication.")
     }
 })
 
 test_that("MNode describeObject()", {
-  if(servicesDown) skip_on_cran()
-  library(dataone)
-  #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
-  #mn <- MNode(mn_uri)
-  res <- describeObject(mnKNB, "knb.473.1")
-  expect_is(res, "list")
-  expect_equal(res$`content-type`, "text/xml")
+    if(servicesDown) skip_on_cran()
+    library(dataone)
+    #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
+    #mn <- MNode(mn_uri)
+    res <- describeObject(mnKNB, "knb.473.1")
+    expect_is(res, "list")
+    expect_equal(res$`content-type`, "text/xml")
 })
 
 test_that("MNode describeObject() with authentication", {
-  # This test requires valid DataONE user authentication and writes to unstable development machines
-  skip_on_cran()
-  library(dataone)
-  library(uuid)
-  library(digest)
-  # Suppress openssl, cert missing warnings
-  am <- AuthenticationManager()
-  suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
-  if(authValid) {
-    if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    user <- dataone:::getAuthSubject(am, mnTest)
-    newid <- generateIdentifier(mnTest, "UUID")
-    cname <- class(newid)
-    testdf <- data.frame(x=1:10,y=11:20)
-    csvfile <- paste(tempfile(), ".csv", sep="")
-    write.csv(testdf, csvfile, row.names=FALSE)
-    # Create SystemMetadata for the object
-    format <- "text/csv"
-    size <- file.info(csvfile)$size
-    sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-    # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
-    sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
-                     originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
-    # sysmeta <- addAccessRule(sysmeta, "public", "read")
-    # Upload the data to the MN using createObject(), checking for success and a returned identifier
-    # The object is not created with public read access so that we can test that an authenticated
-    # describeObject, i.e. can't read the object unless you have read access, in this case via
-    # being the rightsholder.
-    createdId <- createObject(mnTest, newid, csvfile, sysmeta)
-    expect_false(is.null(createdId))
-    res <- describeObject(mnTest, newid)
-    expect_is(res, "list")
-    expect_equal(res$`content-type`, "text/csv")
-  } else {
-    skip("This test requires valid authentication.")
-  }
+    # This test requires valid DataONE user authentication and writes to unstable development machines
+    skip_on_cran()
+    library(dataone)
+    library(uuid)
+    library(digest)
+    # Suppress openssl, cert missing warnings
+    am <- AuthenticationManager()
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
+    if(authValid) {
+        if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        user <- dataone:::getAuthSubject(am, mnTest)
+        newid <- generateIdentifier(mnTest, "UUID")
+        cname <- class(newid)
+        testdf <- data.frame(x=1:10,y=11:20)
+        csvfile <- paste(tempfile(), ".csv", sep="")
+        write.csv(testdf, csvfile, row.names=FALSE)
+        # Create SystemMetadata for the object
+        format <- "text/csv"
+        size <- file.info(csvfile)$size
+        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
+                       originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
+        # sysmeta <- addAccessRule(sysmeta, "public", "read")
+        # Upload the data to the MN using createObject(), checking for success and a returned identifier
+        # The object is not created with public read access so that we can test that an authenticated
+        # describeObject, i.e. can't read the object unless you have read access, in this case via
+        # being the rightsholder.
+        createdId <- createObject(mnTest, newid, csvfile, sysmeta)
+        expect_false(is.null(createdId))
+        res <- describeObject(mnTest, newid)
+        expect_is(res, "list")
+        expect_equal(res$`content-type`, "text/csv")
+    } else {
+        skip("This test requires valid authentication.")
+    }
 })
 
 test_that("MNode createObject(), updateObject(), archive()", {
@@ -171,69 +171,69 @@ test_that("MNode createObject(), updateObject(), archive()", {
     # Suppress openssl, cert missing warnings
     suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
     if (authValid) {
-      if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-      user <- dataone:::getAuthSubject(am, mnTest)
-      newid <- generateIdentifier(mnTest, "UUID")
-      cname <- class(newid)
-      expect_match(cname, "character")
-      expect_match(newid, "urn:uuid:")
-      expect_match(user, "cilogon|dataone|orcid")
-      # Create a data object, and convert it to csv format
-      testdf <- data.frame(x=1:10,y=11:20)
-      csvfile <- paste(tempfile(), ".csv", sep="")
-      write.csv(testdf, csvfile, row.names=FALSE)
-      
-      # Create SystemMetadata for the object
-      format <- "text/csv"
-      size <- file.info(csvfile)$size
-      sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-      # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
-      seriesId <- UUIDgenerate()
-      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
-                     originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
-      sysmeta <- addAccessRule(sysmeta, "public", "read")
-      expect_that(sysmeta@checksum, equals(sha1))
-      expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
-      expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
-      
-      # Upload the data to the MN using createObject(), checking for success and a returned identifier
-      createdId <- createObject(mnTest, newid, csvfile, sysmeta)
-      expect_false(is.null(createdId))
-      expect_match(createdId, newid)
-      
-      # Update the object with a new version
-      updateid <- generateIdentifier(mnTest, "UUID")
-      testdf <- data.frame(x=1:20,y=11:30)
-      csvfile <- paste(tempfile(), ".csv", sep="")
-      write.csv(testdf, csvfile, row.names=FALSE)
-      size <- file.info(csvfile)$size
-      sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-      sysmeta@identifier <- updateid
-      sysmeta@size <- size
-      sysmeta@checksum <- sha1
-      sysmeta@obsoletes <- newid
-      newId <- updateObject(mnTest, newid, csvfile, updateid, sysmeta)
-      expect_false(is.null(newId))
-      expect_match(newId, updateid)
-      updsysmeta <- getSystemMetadata(mnTest, updateid)
-      expect_match(class(updsysmeta)[1], "SystemMetadata")
-      expect_match(updsysmeta@obsoletes, newid)
-      
-      # Now get the sysmeta using the seriesId, if supported
-      if(mnTest@APIversion >= "v2") {
-        headSysmeta <- getSystemMetadata(mnTest, seriesId)
-        expect_match(class(headSysmeta)[1], "SystemMetadata")
-        expect_match(updsysmeta@identifier, headSysmeta@identifier)
-      }
-      
-      # Archive the object
-      response <- archive(mnTest, newid)
-      expect_match(response, newid)
-      newsysmeta <- getSystemMetadata(mnTest, newid)
-      expect_match(class(newsysmeta)[1], "SystemMetadata")
-      expect_that(newsysmeta@archived, expect_true())
+        if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        user <- dataone:::getAuthSubject(am, mnTest)
+        newid <- generateIdentifier(mnTest, "UUID")
+        cname <- class(newid)
+        expect_match(cname, "character")
+        expect_match(newid, "urn:uuid:")
+        expect_match(user, "cilogon|dataone|orcid")
+        # Create a data object, and convert it to csv format
+        testdf <- data.frame(x=1:10,y=11:20)
+        csvfile <- paste(tempfile(), ".csv", sep="")
+        write.csv(testdf, csvfile, row.names=FALSE)
+        
+        # Create SystemMetadata for the object
+        format <- "text/csv"
+        size <- file.info(csvfile)$size
+        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+        seriesId <- UUIDgenerate()
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
+                       originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
+        sysmeta <- addAccessRule(sysmeta, "public", "read")
+        expect_that(sysmeta@checksum, equals(sha1))
+        expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
+        expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
+        
+        # Upload the data to the MN using createObject(), checking for success and a returned identifier
+        createdId <- createObject(mnTest, newid, csvfile, sysmeta)
+        expect_false(is.null(createdId))
+        expect_match(createdId, newid)
+        
+        # Update the object with a new version
+        updateid <- generateIdentifier(mnTest, "UUID")
+        testdf <- data.frame(x=1:20,y=11:30)
+        csvfile <- paste(tempfile(), ".csv", sep="")
+        write.csv(testdf, csvfile, row.names=FALSE)
+        size <- file.info(csvfile)$size
+        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        sysmeta@identifier <- updateid
+        sysmeta@size <- size
+        sysmeta@checksum <- sha1
+        sysmeta@obsoletes <- newid
+        newId <- updateObject(mnTest, newid, csvfile, updateid, sysmeta)
+        expect_false(is.null(newId))
+        expect_match(newId, updateid)
+        updsysmeta <- getSystemMetadata(mnTest, updateid)
+        expect_match(class(updsysmeta)[1], "SystemMetadata")
+        expect_match(updsysmeta@obsoletes, newid)
+        
+        # Now get the sysmeta using the seriesId, if supported
+        if(mnTest@APIversion >= "v2") {
+            headSysmeta <- getSystemMetadata(mnTest, seriesId)
+            expect_match(class(headSysmeta)[1], "SystemMetadata")
+            expect_match(updsysmeta@identifier, headSysmeta@identifier)
+        }
+        
+        # Archive the object
+        response <- archive(mnTest, newid)
+        expect_match(response, newid)
+        newsysmeta <- getSystemMetadata(mnTest, newid)
+        expect_match(class(newsysmeta)[1], "SystemMetadata")
+        expect_true(newsysmeta@archived)
     } else {
-      skip("This test requires valid authentication.")
+        skip("This test requires valid authentication.")
     }
 })
 

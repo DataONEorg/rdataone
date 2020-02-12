@@ -24,9 +24,9 @@ tryCatch({
     d1cTest <- d1cTestKNB
     mnTest <- d1cTestKNB@mn
 }, warning = function(wrn) {
-  servicesDown <<- TRUE
+    servicesDown <<- TRUE
 }, error = function(err) {
-  servicesDown <<- TRUE
+    servicesDown <<- TRUE
 })
 
 if(is.null(cnProd)) servicesDown <- TRUE
