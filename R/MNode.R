@@ -420,7 +420,13 @@ setMethod("createObject", signature("MNode"), function(x, pid, file=as.character
       # Return the identifier, ignoring the namespace (in case it changes in the future).
       # xml is similiar to:
       #     <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">urn:uuid:6b36a8eb-75c8-4651-b6b6-b954786933f2</d1:identifier>
-      return(xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]]))
+      returnPid <- ""
+      tryCatch({
+          returnPid <- xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]])
+      }, error = function(err) {
+          returnPid <- pid
+      })
+      return(returnPid)
     }
 })
 
@@ -509,8 +515,14 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
         # Return the identifier, ignoring the namespace (in case it changes in the future).
         # xml is similiar to:
         #     <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">urn:uuid:6b36a8eb-75c8-4651-b6b6-b954786933f2</d1:identifier>
-        return(xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]]))
+        returnPid <- ""
+        tryCatch({
+          returnPid <- xmlValue(getNodeSet(xml, "/*[local-name()='identifier']")[[1]])
+        }, error = function(err) {
+          returnPid <- pid
+        })
     }
+    return(returnPid)
 })
 
 #' Update the system metadata associated with an object.
