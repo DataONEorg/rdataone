@@ -5,7 +5,7 @@
 #' @keywords internal
 #' @section These S4 methods are defunct:
 #' \itemize{
-#'  \item{\code{\link{From D1Object}}}{: A representation of a DataObject}
+#'  \item{\code{\link{D1Object}}}{: A representation of a DataObject}
 #'  \itemize{
 #'    \item{\code{\link{D1Object-initialize}}}{: Initialize a D1Object}
 #'    \item{\code{\link{getData}}}{: Get the data content of a specified D1Object.}
@@ -16,7 +16,7 @@
 #'    \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
 #'    \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid.}
 #'  } 
-#' \item{\code{\link{From D1Client}}}{: The DataONE client class used to download, update and search for data in the DataONE network}
+#' \item{\code{\link{D1Client}}}{: The DataONE client class used to download, update and search for data in the DataONE network}
 #'  \itemize{
 #'    \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
 #'    \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
@@ -27,13 +27,13 @@
 #'    \item{\code{\link{createD1Object}}}{: Create the Object in the DataONE System}
 #'    \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
 #'  }
-#' \item{\code{From EMLParser}}{: A representation of a DataObject}
+#' \item{\code{EMLParser}}{: A representation of a DataObject}
 #'  \itemize{
 #'    \item{\code{\link{documented.entityNames}}}{: The entity names associated with each table are returned.}
 #'    \item{\code{\link{documented.d1Identifiers}}}{: Get the DataONE identifier associated with each table.}
 #'    \item{\code{\link{documented.sizes}}}{: Get the table size.}
 #'  }
-#' \item{\code{From AbstractTableDescriber}}{: Base Class for Specific Metadata Parsers}
+#' \item{\code{AbstractTableDescriber}}{: Base Class for Specific Metadata Parsers}
 #'  \itemize{
 #'    \item{\code{\link{data.formatFamily}}}{: Get the table format family.}
 #'    \item{\code{\link{data.tableFieldDelimiter}}}{: Get the table field delimiter.}
