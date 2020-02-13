@@ -83,8 +83,12 @@ ids <- lapply(result, function(x) {
 })
 ```
   
-The complete list of possible searchable values stored for a dataset can be viewed at [DataONE Solr Engine Description](https://cn.dataone.org/cn/v2/query/solr). However,
-the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
+The complete list of possible searchable values stored for a dataset can be viewed using the *getQueryEngineDescription* function:
+```{r, eval=FALSE}
+cn <- CNode()
+getQueryEngineDescription(cn, "solr")
+```
+However, the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.
 
 The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network.
 As the above example shows, sending a query to the CN may find matching datasets located on potentially any Member Node in the network.
@@ -117,8 +121,7 @@ Using the *searchTerms* parameter causes the *query* method to construct a Solr 
 based on the list, that is passed on to the DataONE node specified.
 
 The names in the *searchTerm* list are the query field names available from the Solr query engine
-being used. These names can be determined using the *queryEngineDescription* method, or simply
-using a web browser to view https://cn.dataone.org/cn/v2/query/solr.
+being used. These names can be determined using the *getQueryEngineDescription* function.
 
 ### Search just a member node
 If it is known which Member Node holds the data of interest, then a search can be limited to just that
