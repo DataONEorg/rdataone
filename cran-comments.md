@@ -1,14 +1,21 @@
 ## Test environments
 
-* macOS 10.l4.5 R 3.6.1
+* macOS 10.l4.5 R 3.6.2
 * Ubuntu 18.04 R 3.5
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.3 (2019-03-11)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable) (2020-01-07 r77633)
-* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.6.2 (2019-12-12)
+* Debian 9.4 R Under development (unstable) (2020-02-04 r7777
+* Windows 10 R Under development
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.3
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R Under development (unstable)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.6.2 
 
 ## Changes since last release
 
-* Ensure that DataONE service outages don't cause package tests to fail during CRAN testing.
+* Fix CRAN check warnings for dataone 2.1.3 (#241)
+* Mark deprecated function as defunct (#240)
+* Fix roxygen2 errors related to function arguments (#241)
+* remove knitr/RDS dependency on R 3.5
+* Fix getDataPackage() failing with "subscript out of bounds" (#243)
+
 
 ## R CMD check results
 
