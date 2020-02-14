@@ -83,7 +83,7 @@ ids <- lapply(result, function(x) {
 })
 ```
   
-The complete list of possible searchable values stored for a dataset can be viewed using the *getQueryEngineDescription* function:
+The complete list of possible searchable values stored for a dataset can be viewed using *getQueryEngineDescription()*:
 ```{r, eval=FALSE}
 cn <- CNode()
 getQueryEngineDescription(cn, "solr")
