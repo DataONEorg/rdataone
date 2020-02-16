@@ -19,6 +19,7 @@ test_that("AuthenticationManager isAuthValid() for v2 node works", {
 })
 
 test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
+  skip_on_cran()
   am <- AuthenticationManager()
   expect_false(is.null(cm))
   expect_false(is.null(am))

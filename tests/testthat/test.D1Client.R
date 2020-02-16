@@ -3,7 +3,7 @@ test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
 test_that("D1Client constructors", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
         library(dataone)
         #cli <- new("D1Client")
         expect_false(is.null(d1cProd))
@@ -49,7 +49,7 @@ test_that("D1Client constructors", {
 })
 
 test_that("D1Client methods", {  
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   # Test listMemberNodes
   #cli <- D1Client("PROD")
   nodes <- listMemberNodes(d1cProd)
@@ -312,7 +312,7 @@ test_that("D1Client updateDataPackage works", {
 })
 
 test_that("D1Client listMemberNodes() works", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone)
   #d1c <- D1Client("PROD")
   nodelist <- listMemberNodes(d1cProd)

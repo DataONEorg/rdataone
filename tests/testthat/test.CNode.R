@@ -3,19 +3,18 @@ test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
 test_that("CNode constructors", {
-  if(servicesDown) skip_on_cran()
-	library(dataone)
-    # If not specified, "PROD" environment is used.
-	expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
-	expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
-	# Skip unstable test environments.
-	skip_on_cran()
-	expect_match(cnStaging2@endpoint, "https://cn-stage-2.test.dataone.org/cn")
-	#cn <- CNode("DEV")
-	#expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
+  skip_on_cran()
+  library(dataone)
+  # If not specified, "PROD" environment is used.
+  expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
+  expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
+  # Skip unstable test environments.
+  expect_match(cnStaging2@endpoint, "https://cn-stage-2.test.dataone.org/cn")
+  #cn <- CNode("DEV")
+  #expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
 })
 test_that("CNode listNodes()", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone)
   nodelist <- listNodes(cnProd)
   expect_true(length(nodelist) > 0)
@@ -30,7 +29,7 @@ test_that("CNode listNodes()", {
 })
 
 test_that("CNode getObject()", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone)
   library(XML)
   pid <- "aceasdata.3.2"
@@ -48,7 +47,7 @@ test_that("CNode getObject()", {
 })
 
 test_that("CNode getSystemMetadata()", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone)
   pid <- "aceasdata.3.2"
   sysmeta <- getSystemMetadata(cnProd, pid)
@@ -56,7 +55,7 @@ test_that("CNode getSystemMetadata()", {
 })
 
 test_that("CNode describeObject()", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone)
   pid <- "aceasdata.3.2"
   res <- dataone::describeObject(cnProd, pid)
@@ -65,8 +64,8 @@ test_that("CNode describeObject()", {
 })
 
 test_that("CNode getMNode()", {
-  library(dataone)
   skip_on_cran()
+  library(dataone)
   nodelist <- listNodes(cnProd)
   nodeid <- nodelist[[length(nodelist)]]@identifier
   newnode <- getMNode(cnProd, nodeid)
@@ -80,7 +79,7 @@ test_that("CNode getMNode()", {
 })
 
 test_that("CNode resolve()",{
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
   library(dataone) 
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cnProd,id)

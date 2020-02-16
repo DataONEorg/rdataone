@@ -3,14 +3,14 @@ test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
 test_that("MNode constructors", {
-  if(servicesDown) skip_on_cran()
+  skip_on_cran()
 	library(dataone)
 	mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
 	mn <- MNode(mn_uri)
 	expect_match(mn@endpoint, mn_uri)
 })
 test_that("MNode getCapabilities()", {
-    if(servicesDown) skip_on_cran()
+    skip_on_cran()
     library(dataone)
     library(XML)
     #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
@@ -21,7 +21,7 @@ test_that("MNode getCapabilities()", {
     expect_match(mnKNB@identifier, "urn:node")
 })
 test_that("MNode getObject(), getChecksum()", {
-    if(servicesDown) skip_on_cran()
+    skip_on_cran()
     library(dataone)
     #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
     #mn <- MNode(mn_uri)
@@ -47,7 +47,7 @@ test_that("MNode getObject(), getChecksum()", {
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
-    if(servicesDown) skip_on_cran()
+    skip_on_cran()
     library(dataone)
     #mn <- getMNode(cnProd, "urn:node:KNB")
     pid <- "doi:10.5063/F1QN64NZ"
@@ -101,7 +101,7 @@ test_that("MNode generateIdentifier() on API v1 node", {
 })
 
 test_that("MNode describeObject()", {
-    if(servicesDown) skip_on_cran()
+    skip_on_cran()
     library(dataone)
     #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
     #mn <- MNode(mn_uri)
@@ -343,9 +343,9 @@ test_that("MNode createObject() works for large files", {
 })
 
 test_that("MNode getPackage() works", {
+  skip_on_cran()
   library(uuid)
   # This test can exceed the CRAN test running time limits
-  skip_on_cran()
   resMapPid <- "resourceMap_lrw.3.5"
   am <- AuthenticationManager()
   suppressWarnings(authValid <- dataone:::isAuthValid(am, mnKNB))
