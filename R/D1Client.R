@@ -134,7 +134,21 @@ setMethod("initialize", signature = "D1Client", definition = function(.Object, c
         .Object@cn <- CNode(env)
     }
     if (!missing(mNodeid) && !is.na(mNodeid) && !is.null(mNodeid) && (nchar(mNodeid) > 0)) {
-      .Object@mn <- getMNode(.Object@cn, mNodeid)
+        err <- FALSE
+        tryCatch({
+          mn <- NULL
+          mn <- getMNode(.Object@cn, mNodeid)
+        }, warning = function(wrn) {
+            err <- TRUE
+        }, error = function(err) {
+            err <- TRUE
+        })
+        if(identical(err, TRUE) || is.null(mn)) {
+            stop(sprintf("The member node identifier '%s' was not found in the '%s' environment.\n Note: the 'listNodes' function can be used to list member node identifiers for a DataONE environment.", 
+                     mNodeid, toupper(.Object@cn@env)))   
+        } else {
+            .Object@mn <- mn
+        }
     }
     return(.Object)
 })
