@@ -1,17 +1,46 @@
 Package: dataone
-Version: 2.1.4
-Date: 2020-02-15
+Version: 2.1.5
+Date: 2020-02-25
 Title: R Interface to the DataONE REST API
-Authors@R: c( person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu"), 
-  person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu"),
-  person("Rob", "Nahf", role = "aut", email = "rnahf@unm.edu"), 
-  person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com"), 
-  person("Chris", "Jones", role = "aut", email = "cjones@nceas.ucsb.edu"), 
-  person("Jordan", "Read", role = "aut", email = "jread@usgs.gov"),
-  person("Lauren", "Walker", role = "aut", email = "walker@nceas.ucsb.edu"), 
-  person("Edmund", "Hart", role = "aut", email = "edmund.m.hart@gmail.com"), 
-  person("Scott", "Chamberlain", role = "aut", email = "myrmecocystus@gmail.com"),
-  person("Regents of the University of California", role = c("cph"))) 
+Authors@R: 
+    c(person(given = "Matthew B.",
+             family = "Jones",
+             role = c("aut", "cre"),
+             email = "slaughter@nceas.ucsb.edu"),
+      person(given = "Peter",
+             family = "Slaughter",
+             role = "aut",
+             email = "slaughter@nceas.ucsb.edu"),
+      person(given = "Rob",
+             family = "Nahf",
+             role = "aut",
+             email = "rnahf@unm.edu"),
+      person(given = "Carl",
+             family = "Boettiger",
+             role = "aut",
+             email = "cboettig@gmail.com"),
+      person(given = "Chris",
+             family = "Jones",
+             role = "aut",
+             email = "cjones@nceas.ucsb.edu"),
+      person(given = "Jordan",
+             family = "Read",
+             role = "aut",
+             email = "jread@usgs.gov"),
+      person(given = "Lauren",
+             family = "Walker",
+             role = "aut",
+             email = "walker@nceas.ucsb.edu"),
+      person(given = "Edmund",
+             family = "Hart",
+             role = "aut",
+             email = "edmund.m.hart@gmail.com"),
+      person(given = "Scott",
+             family = "Chamberlain",
+             role = "aut",
+             email = "myrmecocystus@gmail.com"),
+      person(given = "Regents of the University of California",
+             role = "cph"))
 VignetteBuilder: knitr
 Description: Provides read and write access to data and metadata from
     the DataONE network <https://www.dataone.org> of data repositories.  
