@@ -35,6 +35,7 @@ Imports:
     hash,
     httr,
     methods,
+    stringi,
     stringr,
     datapack (>= 1.3.0),
     plyr,
