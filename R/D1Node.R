@@ -860,7 +860,9 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
         simplified <- lapply(res, function(r) {
             # Simplify multi-valued fields into space-separted character vectors
             for (n in names(r)) {
-                r[[n]] <- paste(r[[n]], collapse = " ")
+                if(typeof(r[[n]]) == "list") {
+                   r[[n]] <- paste(r[[n]], collapse = ",")
+                }
             }
             
             as.data.frame(r, stringsAsFactors = FALSE)
