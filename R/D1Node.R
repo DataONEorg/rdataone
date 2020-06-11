@@ -861,7 +861,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
             # Simplify multi-valued fields into space-separted character vectors
             for (n in names(r)) {
                 if(typeof(r[[n]]) == "list") {
-                   r[[n]] <- paste(r[[n]], collapse = ",")
+                   r[[n]] <- paste(r[[n]], collapse = "|")
                 }
             }
             
