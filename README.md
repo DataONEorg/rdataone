@@ -96,7 +96,7 @@ editor after being written to disk, or in R via the commands below:
 ```
 library(XML)
 metadata <- rawToChar(getObject(mn, id))
-doc = xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
+doc <- xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
 tf <- tempfile()
 saveXML(doc, tf)
 file.show(tf)
