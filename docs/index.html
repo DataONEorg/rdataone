@@ -170,7 +170,7 @@ id &lt;- result[1,'id']</a></code></pre>
 <p>The metadata file that describes the located research can be downloaded and viewed in an XML viewer, text editor after being written to disk, or in R via the commands below:</p>
 <pre><code><a href="https://rdrr.io/pkg/XML/man">library(XML)
 metadata &lt;- rawToChar(getObject(mn, id))
-doc = xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
+doc &lt;- xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
 tf &lt;- tempfile()
 saveXML(doc, tf)
 file.show(tf)</a></code></pre>
@@ -209,6 +209,7 @@ pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383"
 </ul>
 <p>Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.</p>
 <p><a href="http://www.nceas.ucsb.edu"><img src="https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png" alt="nceas_footer"></a></p>
+<p><a href="http://dataone.org"><img src="https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg" alt="dataone_footer"></a></p>
 <p><a href="http://ropensci.org"><img src="http://ropensci.org/public_images/github_footer.png" alt="ropensci_footer"></a></p>
 </div>
 </div>
