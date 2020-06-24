@@ -1,11 +1,11 @@
 ---
-title: "dataone R Package Overview"
+title: "R Package Overview"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     keep_md: true
 vignette: >
-  %\VignetteIndexEntry{dataone R Package Overview}
+  %\VignetteIndexEntry{R Package Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
