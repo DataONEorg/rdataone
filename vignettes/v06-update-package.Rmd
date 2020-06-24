@@ -1,9 +1,9 @@
 ---
-title: "Updating Packages on DataONE"
+title: "Updating Datasets on DataONE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Updating Packages on DataONE}
+  %\VignetteIndexEntry{Updating Datasets on DataONE}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

@@ -1,12 +1,13 @@
 ---
-title: "Uploading Data to DataONE"
+title: "Uploading Datasets to DataONE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Uploading Data to DataONE}
+  %\VignetteIndexEntry{Uploading DaDatasetsta to DataONE}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
+
 
 ## Introduction
   
@@ -29,11 +30,12 @@ R objects or existing on a DataONE repository, will be informally referred to as
 'data package'. Figure 1. is a diagram of a typical DataONE package showing a metadata file that
 describes, or `documents` the data granules that the package contains.
 
-![](package-diagram.png)
+![](https://raw.githubusercontent.com/DataONEorg/rdataone/master/vignettes/package-diagram.png)
 
 The steps necessary to
 to prepare and upload a package to DataONE using the `uploadDataPackage` method 
-will be shown. A complete script that uses these steps is shown here: 
+will be shown. A complete script that uses these steps is shown here, with
+detailed explanations of the steps following.
 
 ```{r}
 library(dataone)

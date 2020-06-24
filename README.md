@@ -1,4 +1,3 @@
-#
 # dataone: R interface to the DataONE network of data repositories
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
 [![Build Status](https://travis-ci.org/DataONEorg/rdataone.png?branch=master)](https://travis-ci.org/DataONEorg/rdataone)
@@ -97,7 +96,7 @@ editor after being written to disk, or in R via the commands below:
 ```
 library(XML)
 metadata <- rawToChar(getObject(mn, id))
-doc = xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
+doc <- xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
 tf <- tempfile()
 saveXML(doc, tf)
 file.show(tf)
@@ -151,6 +150,9 @@ Work on this package was supported by:
 
 Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
-[![nceas_footer](https://www.nceas.ucsb.edu/files/newLogo_0.png)](http://www.nceas.ucsb.edu)
+[![nceas_footer](https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png)](http://www.nceas.ucsb.edu)
+
+[![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](http://dataone.org)
+
 
 [![ropensci_footer](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)

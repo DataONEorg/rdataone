@@ -7,3 +7,6 @@ cran-comments.md
 docker*
 docker/*
 docs
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
