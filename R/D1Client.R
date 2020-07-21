@@ -1042,7 +1042,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             if(!is.na(returnId)) {
                 if(!quiet) cat(sprintf("Uploaded resource map with id: %s\n", returnId))
                 dp@resmapId <- returnId
-                dp@relations[['update']] <- FALSE
+                dp@relations[['updated']] <- FALSE
             } else {
                 cat(sprintf("Error uploading resource map %s.", getIdentifier(resMapObj)))
             }
@@ -1114,7 +1114,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             returnId <- uploadDataObject(x, do=resMapObj, replicate=replicate, numberReplicas=numberReplicas, 
                                          preferredNodes=preferredNodes, public=public, accessRules=accessRules,
                                          quiet=quiet) 
-            dp@relations[['update']] <- FALSE
+            dp@relations[['updated']] <- FALSE
             if(!is.na(returnId)) {
                 if(!quiet) cat(sprintf("Updated resource map wth new id: %s, obsoleting id: %s\n", newPid, resMapObj@oldId))
                 dp@resmapId <- returnId
