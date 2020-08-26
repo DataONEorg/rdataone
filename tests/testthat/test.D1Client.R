@@ -95,8 +95,8 @@ test_that("D1Client getDataObject", {
     expect_match(getIdentifier(obj), pid)
     expect_match(getFormatId(obj), "text/csv")
     data <- getData(obj)
-    sha1 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
-    expect_match(sha1, obj@sysmeta@checksum)
+    sha256 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
+    expect_match(sha256, obj@sysmeta@checksum)
 })
 
 test_that("D1Client uploadDataObject with raw data works", {

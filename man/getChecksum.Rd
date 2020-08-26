@@ -10,7 +10,7 @@ getChecksum(x, ...)
 
 \S4method{getChecksum}{CNode}(x, pid, ...)
 
-\S4method{getChecksum}{MNode}(x, pid, checksumAlgorithm = "SHA-1")
+\S4method{getChecksum}{MNode}(x, pid, checksumAlgorithm = "SHA-256")
 }
 \arguments{
 \item{x}{The CNode instance from which the checksum will be retrieved}
@@ -19,7 +19,7 @@ getChecksum(x, ...)
 
 \item{pid}{The identifier of the object}
 
-\item{checksumAlgorithm}{The algorithm used to calculate the checksum. Default="SHA-1"}
+\item{checksumAlgorithm}{The algorithm used to calculate the checksum. Default="SHA-256"}
 }
 \value{
 character the checksum value, with the checksum algorithm as the attribute "algorithm"

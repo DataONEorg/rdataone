@@ -53,8 +53,8 @@ newid <- generateIdentifier(mn, "UUID")
 newid <- paste("urn:uuid:", UUIDgenerate(), sep="") 
 format <- "text/csv"
 size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
+sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 # Create (upload) the object to DataONE (requires authentication)
 \dontrun{

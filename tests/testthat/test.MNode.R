@@ -130,9 +130,9 @@ test_that("MNode describeObject() with authentication", {
         # Create SystemMetadata for the object
         format <- "text/csv"
         size <- file.info(csvfile)$size
-        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
         # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
-        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256,
                        originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
         # sysmeta <- addAccessRule(sysmeta, "public", "read")
         # Upload the data to the MN using createObject(), checking for success and a returned identifier
@@ -186,13 +186,13 @@ test_that("MNode createObject(), updateObject(), archive()", {
         # Create SystemMetadata for the object
         format <- "text/csv"
         size <- file.info(csvfile)$size
-        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
         # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
         seriesId <- UUIDgenerate()
-        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1,
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256,
                        originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_that(sysmeta@checksum, equals(sha1))
+        expect_that(sysmeta@checksum, equals(sha256))
         expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
         expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
         
@@ -207,10 +207,10 @@ test_that("MNode createObject(), updateObject(), archive()", {
         csvfile <- paste(tempfile(), ".csv", sep="")
         write.csv(testdf, csvfile, row.names=FALSE)
         size <- file.info(csvfile)$size
-        sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+        sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
         sysmeta@identifier <- updateid
         sysmeta@size <- size
-        sysmeta@checksum <- sha1
+        sysmeta@checksum <- sha256
         sysmeta@obsoletes <- newid
         newId <- updateObject(mnTest, newid, csvfile, updateid, sysmeta)
         expect_false(is.null(newId))
@@ -270,12 +270,12 @@ test_that("MNode createObject() with in-memory object", {
         # Create SystemMetadata for the object
         format <- "text/csv"
         size <- length(csvdata)
-        sha1 <- digest(csvdata, algo="sha1", serialize=FALSE, file=FALSE)
+        sha256 <- digest(csvdata, algo="sha256", serialize=FALSE, file=FALSE)
         # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
         
-        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1)
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_that(sysmeta@checksum, equals(sha1))
+        expect_that(sysmeta@checksum, equals(sha256))
         
         # Upload the data to the MN using createObject(), checking for success and a returned identifier
         createdId <- createObject(mnTest, newid, sysmeta = sysmeta, dataobj=csvdata)
@@ -322,10 +322,10 @@ test_that("MNode createObject() works for large files", {
       # Create SystemMetadata for the object
       format <- "text/csv"
       size <- file.info(csvfile)$size
-      sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
-      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha1, originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
+      sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
+      sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256, originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
       sysmeta <- addAccessRule(sysmeta, "public", "read")
-      expect_that(sysmeta@checksum, equals(sha1))
+      expect_that(sysmeta@checksum, equals(sha256))
       expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
       expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
       

@@ -60,9 +60,9 @@ csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
 f <- "text/csv"
 size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
 sysmeta <- new("SystemMetadata", identifier=newid, formatId=f, size=size,
-    checksum=sha1, originMemberNode=mnid, authoritativeMemberNode=mnid)
+    checksum=sha256, originMemberNode=mnid, authoritativeMemberNode=mnid)
 # Upload data to DataONE (requires authentication)
 \dontrun{
 response <- createObject(mn, newid, csvfile, sysmeta)
