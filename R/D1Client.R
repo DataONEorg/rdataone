@@ -551,7 +551,8 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   # Download the resource map, parse it and load the relationships into the DataPackage
   # Currently we only use the first resource map
   if(!quiet) cat(sprintf("Getting resource map with id: %s\n", dpkg@resmapId))
-  resMapBytes <- getObject(x@mn, pid=resmapId)
+  resMapObj <- getDataObject(x, id=resmapId)
+  resMapBytes <- getData(resMapObj)
   resMap <- new("ResourceMap", id=resmapId)
   resMap <- parseRDF(resMap, rdf=rawToChar(resMapBytes), asText=TRUE)
   # All identifiers from the package are needed for obtaining the triples, including
