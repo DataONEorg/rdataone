@@ -298,10 +298,10 @@ csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
 format <- "text/csv"
 size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
 # Generate a unique identifier for the dataset
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
-sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1)
+sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha256)
 sysmeta <- addAccessRule(sysmeta, "public", "read")
 ```
 
@@ -317,12 +317,12 @@ csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
 format <- "text/csv"
 size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
 # Generate a unique identifier for the dataset
 pid <- sprintf("urn:uuid:%s", UUIDgenerate())
 # The seriesId can be any unique character string.
 seriesId <- sprintf("urn:uuid:%s", UUIDgenerate())
-sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha1,  seriesId=seriesId)
+sysmeta <- new("SystemMetadata", identifier=pid, formatId=format, size=size, checksum=sha256,  seriesId=seriesId)
 ```
 A unique identifier must be specified for each system metadata, whether or not a seriesId is used.
 
@@ -371,13 +371,13 @@ testdf <- data.frame(x=1:20,y=11:30)
 csvfile <- paste(tempfile(), ".csv", sep="")
 write.csv(testdf, csvfile, row.names=FALSE)
 size <- file.info(csvfile)$size
-sha1 <- digest(csvfile, algo="sha1", serialize=FALSE, file=TRUE)
+sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
 # Start with the old object's sysmeta, then modify it to match
 # the new object. We could have also created a sysmeta from scratch.
 sysmeta <- getSystemMetadata(mn, pid)
 sysmeta@identifier <- updateid
 sysmeta@size <- size
-sysmeta@checksum <- sha1
+sysmeta@checksum <- sha256
 sysmeta@obsoletes <- pid
 # Now update the object on the member node.
 response <- updateObject(mn, pid, csvfile, updateid, sysmeta)
