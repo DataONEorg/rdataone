@@ -188,6 +188,8 @@ outputObj <- new("DataObject", format="text/csv", filename=outputData)
 dp <- addMember(dp, outputObj, mo=metadataObj)
 ```
 
+*Important Note*: files previously uploaded to DataONE can be added to the DataPackage, for more information see the section "Adding Existing DataONE Files To A Package". 
+
 ### 4. Determine what access your data and metadata should have 
 DataONE provides a mechanism that allows data submitters to control access to their data.
 
@@ -263,6 +265,20 @@ metadataObj <- new("DataObject", id=doi, format="eml://ecoinformatics.org/eml-2.
 ``` 
 
 The `generateIdentifier` method requests that the DataONE MN generate a properly formatted DOI. 
+
+## Adding Existing DataONE Files To A Package
+
+Files that have previously been uploaded to DataONE can be added to a new DataPackage. New DataObjects can be
+created by downloading an existing DataONE item:
+```{r, eval=FALSE}
+dataObj <- getDataObject(d1c, id="urn:uuid:1234", lazyLoad=T, limit="1TB")
+dp <- addMember(dp, dataObj, mo=metadatqObj)
+```
+
+The above example creates a new DataObject by downloading the existing item from DataONE that has the identifier  "urn:uuid:1234" and using the 'd1c` variable previously defined. This DataObject is then added to the package. 
+In this example, the optional "lazyLoad" and "limit" parameters are used. These parameters cause *getDataObject* to only download the system information (i.e. acces rules, format information) and not the data bytes associated with this identifier.  Using these parameters can be helpful if the file associated with this identifier is very large. For the purpose of adding this DataONE identifier to a DataPackage, the data bytes are not required.
+
+Reusing DataONE items this way results in one copy of the item existing in DataONE but being included in multiple DataONE packages.
 
 ## Uploading Individual Data And Metadata Files
 

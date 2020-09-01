@@ -913,21 +913,24 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
       stop("Please set the DataONE Member Node to upload to using setMNodeId()")
     }
     
-    # First check if any members of this DataPackage have been previously uploaded. If a package
-    # was first downloaded from a repository and then at least one member was modified, then this 
-    # is considered a package update.
     downloadedPkg <- FALSE
-    dates <- getValue(dp, name="sysmeta@dateUploaded")
-    for (thisDate in dates) {
-        if(!is.na(thisDate)) downloadedPkg <- TRUE
-    }
-    if(!quiet) {
-      if(downloadedPkg) {
-          cat(sprintf("Updating a modified package to member node %s\n", x@mn@endpoint))
-      } else {
-          cat(sprintf("Uploading a new package to member node %s.\n", x@mn@endpoint))
+    # If the package was downloaded from DataONE, then the resource map object will have
+    # a sysmeta upload datetime defined. If this is the case, then this upload is considered
+    # a package update, and the current resource map will be updated (obsoleted by a new PID)
+    # Note that this package can be modified by removing or replacing members, or adding
+    # new DataObjects or DataObjects created using the  # 'lazyload=T' parameter. 
+    if (!is.na(dp@sysmeta@dateUploaded)) {
+      downloadedPkg <- TRUE
+      if (!quiet) {
+        cat(sprintf("Updating a modified package to member node %s\n", x@mn@endpoint))
+      }
+    } else {
+      downloadedPkg <- FALSE
+      if (!quiet) {
+        cat(sprintf("Uploading a new package to member node %s\n", x@mn@endpoint))
       }
     }
+    
     # Use the CN resolve URI from the D1Client object, if it was not specified on the command line.
     if(is.na(resolveURI)) {
         resolveURI <- paste0(x@cn@endpoint, "/resolve")
@@ -1008,7 +1011,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     returnId <- as.character(NA)
     # This is a new package, so potentially we need to upload a resource map
     if(!downloadedPkg) {
-        # Only upplad a resource map if a DataObjects was uploaded, i.e. not all uploads failed.
+        # Only upload a resource map if a DataObjects was uploaded, i.e. not all uploads failed.
         if (uploadedMember) {
             if(!is.na(packageId)) {
                 newPid <- packageId
