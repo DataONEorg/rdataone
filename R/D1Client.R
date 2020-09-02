@@ -390,7 +390,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' \tabular{lllll}{
 #' \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
 #' \tab ---------- \tab ------- \tab ------ \tab --------------------- \cr
-#' \tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter ignored \cr
+#' \tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter is ignored \cr
 #' \tab FALSE \tab Not specified \tab Data bytes are download if less than 1MB \tab The default 'limit' of 1MB is used \cr
 #' \tab FALSE \tab 10MB \tab Data bytes are downloaded if less than 10MB \tab The specified 'limit' values is used \cr
 #' }
