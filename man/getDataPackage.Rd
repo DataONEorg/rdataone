@@ -16,11 +16,11 @@ getDataPackage(x, identifier, ...)
 
 \item{...}{(not yet used)}
 
-\item{lazyLoad}{A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data. 
+\item{lazyLoad}{A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
 The default is \code{FALSE}.}
 
 \item{limit}{A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
-for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".}
+for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 }
@@ -34,7 +34,19 @@ member.
 }
 \details{
 A 'data package' that resides on a DataONE member node is defined as a collection of
-digital objects that are described by a metadata document. The
+digital objects that are described by a metadata document. \cr\cr
+The \code{lazyLoad} parameter controls whether the data bytes for a DataONE package member are downloaded (the system
+metadata is always downloaded). When \code{lazyLoad}=FALSE, the \code{limit} parameter can be used to specify
+the maximum size of a data file that will be downloaded. If \code{lazyLoad} is TRUE, then \code{limit}
+is ignored. The \code{lazyLoad} and \code{limit} parameters can be used together in the following ways:
+
+\tabular{lllll}{
+\tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
+\tab ---------- \tab ------- \tab ------ \tab --------------------- \cr
+\tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter ignored \cr
+\tab FALSE \tab Not specified \tab Data bytes are download if less than 1MB \tab The default 'limit' of 1MB is used \cr
+\tab FALSE \tab 10MB \tab Data bytes are downloaded if less than 10MB \tab The specified 'limit' values is used \cr
+}
 }
 \examples{
 \dontrun{

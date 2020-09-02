@@ -221,22 +221,36 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
   return(getDataObject(x, identifier))
 })
 
-#' Download a from the DataONE Federation as a DataObject.
+#' Download a file (and it's associated system metadata) from the DataONE Federation as a DataObject.
 #' @description A convenience method to download a data object and its associated SystemMetadata, wrapped
 #' in a DataObject class.
 #' @details This method performs multiple underlying calls to the DataONE repository network. 
 #' CN.resolve() is called to locate the object on one or more repositories, and then each of these
-#' is accessed until success at downloading the associated SystemMetadata and data bytes, which are 
-#' finally wrapped in a DataObject and returned. Replaces previous getD1Object() method in the version 1
-#' dataone library. The \code{lazyLoad} parameter specifies that only sysmeta metadata is downloaded and
-#' not the data itself. This argument is used together with the \code{limit} parameter, which specifies 
-#' the maximum size of data object that will be downloaded. IF \code{lazyLoad} is FALSE, then \code{limit}
-#' is ignored.
+#' is accessed until the associated SystemMetadata and data bytes are sucessfully downloaded. This 
+#' data is then used to construct the returned DataObject. This function replaces the previous 
+#' getD1Object() method in the version 1
+#' dataone library. \cr\cr
+#' The \code{lazyLoad} parameter controls whether the data byes for a DataONE item are downloaded (the system
+#' metadata is always downloaded). When \code{lazyLoad}=FALSE,the \code{limit} parameter can be used to specify
+#' the maximum size of a data file that will be downloaded. If \code{lazyLoad} is TRUE, then \code{limit}
+#' is ignored. The \code{lazyLoad} and \code{limit} can be used together in the following ways:
+#' 
+#' \tabular{lllll}{
+#' \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
+#' \tab ---------- \tab ------- \tab ------ \tab --------------------- \cr
+#' \tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter is ignored \cr
+#' \tab FALSE \tab Not specified \tab Data bytes are download if less than 1MB \tab The default 'limit' of 1MB is used \cr
+#' \tab FALSE \tab 10MB \tab Data bytes are downloaded if less than 10MB \tab The specified 'limit' values is used \cr
+#' }
+#' 
+#' Note that DataONE system metadata is always downloaded and populated into the resulting DataObject, regardless
+#' of the 'lazyLoad' and 'limit' values specified in the call to 'getDataObject()'.
+#' 
 #' @param x A D1Client object.
 #' @param identifier The identifier of the object to get.
 #' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
-#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".
+#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param ... (not yet used)
 #' @rdname getDataObject
@@ -306,16 +320,15 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
         if (!is.null(currentMN)) {
           sysmeta <- getSystemMetadata(currentMN, identifier)
           if(is.null(sysmeta)) next
-          # If lazy loading, check if the object size is larger that the specified
+          # If lazyLoad is true, don't download data bytes, regardless of limit setting.
+          # If lazyLoad is false, check if the object size is larger that the specified
           # download threshold for loading now.
-          if(!lazyLoad) { 
-            deferredDownload <- FALSE
-            bytes <- getObject(currentMN, identifier)
-            if (!is.null(sysmeta) & !is.null(bytes)) {
-              success <- TRUE
-              dataURL <- mntable[i,]$url
-              break
-            }
+          if(lazyLoad) { 
+            deferredDownload <- TRUE
+            bytes <- NA
+            success <- TRUE
+            dataURL <- mntable[i,]$url
+            break
           } else {
             if(as.numeric(sysmeta@size) <= limitBytes) {
               deferredDownload <- FALSE
@@ -368,7 +381,19 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' and insert them into a DataPackage, including associated SystemMetadata for each package
 #' member.
 #' @details A 'data package' that resides on a DataONE member node is defined as a collection of
-#' digital objects that are described by a metadata document. The 
+#' digital objects that are described by a metadata document. \cr\cr
+#' The \code{lazyLoad} parameter controls whether the data bytes for a DataONE package member are downloaded (the system
+#' metadata is always downloaded). When \code{lazyLoad}=FALSE, the \code{limit} parameter can be used to specify
+#' the maximum size of a data file that will be downloaded. If \code{lazyLoad} is TRUE, then \code{limit}
+#' is ignored. The \code{lazyLoad} and \code{limit} parameters can be used together in the following ways:
+#' 
+#' \tabular{lllll}{
+#' \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
+#' \tab ---------- \tab ------- \tab ------ \tab --------------------- \cr
+#' \tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter ignored \cr
+#' \tab FALSE \tab Not specified \tab Data bytes are download if less than 1MB \tab The default 'limit' of 1MB is used \cr
+#' \tab FALSE \tab 10MB \tab Data bytes are downloaded if less than 10MB \tab The specified 'limit' values is used \cr
+#' }
 #' @param x A D1Client object.
 #' @rdname getDataPackage
 #' @aliases getDataPackage
@@ -387,10 +412,10 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 
 #' @rdname getDataPackage
 #' @param identifier The identifier of a package, package metadata or other package member
-#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data. 
+#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
 #' The default is \code{FALSE}.
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
-#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB".
+#'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
 #' @param ... (not yet used)
 #' @export
