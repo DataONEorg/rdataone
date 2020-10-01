@@ -1,4 +1,3 @@
-context("auth_request tests")
 test_that("dataone library loads", {
 	expect_true(require(dataone))
 })

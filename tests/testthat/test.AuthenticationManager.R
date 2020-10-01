@@ -1,5 +1,3 @@
-context("AuthenticationManager tests")
-
 test_that("AuthenticationManager isAuthValid() for v2 node works", {
   skip_on_cran()
   library(dataone)

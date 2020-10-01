@@ -1,4 +1,3 @@
-context("MNode tests")
 test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
@@ -43,7 +42,7 @@ test_that("MNode getObject(), getChecksum()", {
     cname <- class(xml)[1]
     expect_match(cname, "XML")
     chksum <- getChecksum(mnKNB, pid)
-    expect_that(chksum, is_a("character"))
+    expect_type(chksum, "character")
     expect_false(is.null(chksum))
 })
 test_that("MNode getSystemMetadata()", {
@@ -106,7 +105,7 @@ test_that("MNode describeObject()", {
     #mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v2"
     #mn <- MNode(mn_uri)
     res <- describeObject(mnKNB, "knb.473.1")
-    expect_is(res, "list")
+    expect_type(res, "list")
     expect_equal(res$`content-type`, "text/xml")
 })
 
@@ -142,7 +141,7 @@ test_that("MNode describeObject() with authentication", {
         createdId <- createObject(mnTest, newid, csvfile, sysmeta)
         expect_false(is.null(createdId))
         res <- describeObject(mnTest, newid)
-        expect_is(res, "list")
+        expect_type(res, "list")
         expect_equal(res$`content-type`, "text/csv")
     } else {
         skip("This test requires valid authentication.")
@@ -192,9 +191,9 @@ test_that("MNode createObject(), updateObject(), archive()", {
         sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256,
                        originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_that(sysmeta@checksum, equals(sha256))
-        expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
-        expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
+        expect_equql(sysmeta@checksum, sha256)
+        expect_equal(sysmeta@originMemberNode, mnTest@identifier)
+        expect_equal(sysmeta@authoritativeMemberNode, mnTest@identifier)
         
         # Upload the data to the MN using createObject(), checking for success and a returned identifier
         createdId <- createObject(mnTest, newid, csvfile, sysmeta)
@@ -275,7 +274,7 @@ test_that("MNode createObject() with in-memory object", {
         
         sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_that(sysmeta@checksum, equals(sha256))
+        expect_equqls(sysmeta@checksum, sha256)
         
         # Upload the data to the MN using createObject(), checking for success and a returned identifier
         createdId <- createObject(mnTest, newid, sysmeta = sysmeta, dataobj=csvdata)
@@ -325,9 +324,9 @@ test_that("MNode createObject() works for large files", {
       sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
       sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256, originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier)
       sysmeta <- addAccessRule(sysmeta, "public", "read")
-      expect_that(sysmeta@checksum, equals(sha256))
-      expect_that(sysmeta@originMemberNode, equals(mnTest@identifier))
-      expect_that(sysmeta@authoritativeMemberNode, equals(mnTest@identifier))
+      expect_equal(sysmeta@checksum, sha256)
+      expect_equal(sysmeta@originMemberNode, mnTest@identifier)
+      expect_equal(sysmeta@authoritativeMemberNode, mnTest@identifier)
       
       # Upload the data to the MN using createObject(), checking for success and a returned identifier
       # Note: createObject() will ensure that sysmeta@submitter, sysmeta@rightsHolder are set

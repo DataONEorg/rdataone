@@ -1,4 +1,3 @@
-context("CNode tests")
 test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
@@ -42,7 +41,7 @@ test_that("CNode getObject()", {
   cname <- class(xml)[1]
   expect_match(cname, "XML")
   chksum <- getChecksum(cnProd, pid)
-  expect_that(chksum, is_a("character"))
+  expect_equal(typeof(chksum), "character")
   expect_false(is.null(chksum))
 })
 
@@ -59,7 +58,7 @@ test_that("CNode describeObject()", {
   library(dataone)
   pid <- "aceasdata.3.2"
   res <- dataone::describeObject(cnProd, pid)
-  expect_is(res, "list")
+  expect_type(res, "list")
   expect_match(res$`content-type`, "text/xml")
 })
 
@@ -75,7 +74,7 @@ test_that("CNode getMNode()", {
   expect_match(newnode@baseURL, "http")
   expect_match(newnode@subject, "urn:node:")
   suppressWarnings(newnode <- getMNode(cnProd, "NOT_A_NODE_ID"))
-  expect_that(newnode, is_a("NULL"))
+  expect_null(newnode)
 })
 
 test_that("CNode resolve()",{
