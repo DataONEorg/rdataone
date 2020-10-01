@@ -1,4 +1,3 @@
-context("D1Client tests")
 test_that("dataone library loads", {
 	expect_true(require(dataone))
 })
@@ -95,7 +94,7 @@ test_that("D1Client getDataObject", {
     expect_match(getIdentifier(obj), pid)
     expect_match(getFormatId(obj), "text/csv")
     data <- getData(obj)
-    sha256 <- digest(data, algo="md5", serialize=FALSE, file=FALSE)
+    sha256 <- digest(data, algo="sha256", serialize=FALSE, file=FALSE)
     expect_match(sha256, obj@sysmeta@checksum)
 })
 
@@ -310,6 +309,69 @@ test_that("D1Client updateDataPackage works", {
         skip("This test requires valid authentication.")
     }
 })
+
+test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
+  
+  # Test that a DataPackage with only one member (metadata in this case) and not
+  # user defined relationships is created and uploaded correctly.
+  skip_on_cran()
+  library(dataone)
+  library(datapack)
+  library(xml2)
+  library(digest)
+  # Create a csv file for the science object
+  expect_false(is.null(d1cTestKNB))
+  preferredNodes <- NA
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTestKNB@mn))
+  if (authValid) {
+    if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    sha256="SHA-256"
+    md5="MD5"
+    dp <- new("DataPackage")
+    
+    # Create metadata object that describes science data
+    emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile, checksum=checksumAlgorithm)
+    metadataId <- getIdentifier(metadataObj)
+    
+    dp <- addMember(dp, metadataObj)
+    
+    sourceData <- system.file("extdata/sample.csv", package="dataone")
+    sourceObj <- new("DataObject", format="text/csv", filename=sourceData, checksum=checksumAlgorithm)
+    dp <- addMember(dp, sourceObj, metadataObj)
+    
+    progFile <- system.file("extdata/filterSpecies.R", package="dataone")
+    progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc", checksum=checksumAlgorithm)
+    dp <- addMember(dp, progObj, metadataObj)
+    
+    outputData <- system.file("extdata/filteredSpecies.csv", package="dataone")
+    outputObj <- new("DataObject", format="text/csv", filename=outputData, checksum=checksumAlgorithm)
+    dp <- addMember(dp, outputObj, metadataObj)
+    
+    # Upload the data package to DataONE
+    pkgId <- uploadDataPackage(d1cTestKNB, dp, public=TRUE, quiet=TRUE)
+    expect_true(!is.na(pkgId))
+    
+    # Now download the package that was just created, and ensure that the checksums are all the
+    # requested type.
+    pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=sha256)
+    algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
+    expect_true(all(algorithms==sha256))
+    
+    # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
+    # new type.
+    pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=md5)
+    algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
+    expect_true(all(algorithms==md5))
+    
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
+
 
 test_that("D1Client listMemberNodes() works", {
   skip_on_cran()
