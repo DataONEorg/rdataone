@@ -3,7 +3,7 @@ title: "Uploading Datasets to DataONE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Uploading DaDatasetsta to DataONE}
+  %\VignetteIndexEntry{Uploading Datasets to DataONE}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
