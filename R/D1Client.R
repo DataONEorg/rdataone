@@ -252,6 +252,8 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to calculate the system metadata check 
+#'              for the object's data bytes for example: "SHA-256"
 #' @param ... (not yet used)
 #' @rdname getDataObject
 #' @aliases getDataObject
@@ -271,7 +273,8 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 
 #' @rdname getDataObject
 #' @export
-setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
+setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE,
+                                                checksumAlgorithm="SHA-256") {
     
     # Resolve the object location
     # This service is too chatty if any of the locations aren't available
@@ -312,6 +315,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     success <- FALSE
     dataURL <- as.character(NA)
     deferredDownload <- lazyLoad
+    currentMN = NULL
     if(nrow(mntable) > 0) {
       for (i in 1:nrow(mntable)) { 
         suppressWarnings(currentMN <- getMNode(x@cn, mntable[i,]$nodeIdentifier))
@@ -332,7 +336,8 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
           } else {
             if(as.numeric(sysmeta@size) <= limitBytes) {
               deferredDownload <- FALSE
-              bytes <- getObject(currentMN, identifier)
+              bytes <- NULL
+              try(bytes <- getObject(currentMN, identifier), silent=TRUE)
               if (!is.null(sysmeta) & !is.null(bytes)) {
                 success <- TRUE
                 dataURL <- mntable[i,]$url
@@ -366,10 +371,25 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
       }
     }
     
+    # If the checksum for current object does not match the requested checksum algorithm, then calculate
+    # it if the object's data is local, otherwise ask DataONE to calculate it.
+    if(tolower(sysmeta@checksumAlgorithm) != tolower(checksumAlgorithm)) {
+      # Bytes were not downloaded into the DataObject
+      if (deferredDownload) {
+        checksum = getChecksum(currentMN, pid=identifier, checksumAlgorithm=checksumAlgorithm)
+        sysmeta@checksum = checksum
+        sysmeta@checksumAlgorithm <- checksumAlgorithm
+        cat(sprintf("got new %s checksum from dataone for id %s: %s\n", checksumAlgorithm, identifier, checksum))
+      }
+    } 
+    
     # Construct and return a DataObject
     # Notice that we are passing the existing sysmeta for this object via the 'id' parameter,
-    # which will cause the DataObject to use this sysmeta and not generate a new one.
-    do <- new("DataObject", id=sysmeta, dataobj=bytes, dataURL=dataURL)
+    # which will cause the DataObject to use this sysmeta and not generate a new one. However, if the
+    # sysmeta checksum algorithm is different thatn the pecified algorithm, then the checksum will
+    # be recalculated. 
+    do <- new("DataObject", id=sysmeta, dataobj=bytes, dataURL=dataURL, checksumAlgorithm=checksumAlgorithm)
+    
     # Save the identifier that this object had on the repository. If this update is to be updated,
     # the old identifier is needed for the update processing on the repo.
     do@oldId <- getIdentifier(do)
@@ -417,9 +437,12 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to calculate the system metadata check 
+#'              for the object's data bytes for example: "SHA-256"
 #' @param ... (not yet used)
 #' @export
-setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE) {
+setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE,
+                                                 checksumAlgorithm="SHA-256") {
     
   # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
   # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
@@ -551,7 +574,8 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   resmapId <- unlist(resmapId)[[1]]
   dpkg@resmapId <- resmapId
   # Don't lazyload the metadata
-  metadataObj <- getDataObject(x, identifier=metadataPid, lazyLoad=FALSE, quiet=quiet)
+  metadataObj <- getDataObject(x, identifier=metadataPid, lazyLoad=FALSE, quiet=quiet, 
+                               checksumAlgorithm=checksumAlgorithm)
   if(length(packageMembers) > 0) {
     for (iPid in 1:length(packageMembers)) {
       thisPid <- packageMembers[[iPid]]
@@ -559,7 +583,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
         if(!quiet) cat(sprintf("Skipping metadata object, already downloaded\n"))
         next
       }
-      obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet)
+      obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet, checksumAlgorithm)
       # The metadata object will be added this first time addMember is called.
       # Note that the 'cito:documents' relationship should already be in the package
       # resource map, so don't add this relationship now.
@@ -576,7 +600,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   # Download the resource map, parse it and load the relationships into the DataPackage
   # Currently we only use the first resource map
   if(!quiet) cat(sprintf("Getting resource map with id: %s\n", dpkg@resmapId))
-  resMapObj <- getDataObject(x, id=resmapId)
+  resMapObj <- getDataObject(x, identifier=resmapId, lazyLoad=FALSE, checksumAlgorithm=checksumAlgorithm)
   resMapBytes <- getData(resMapObj)
   resMap <- new("ResourceMap", id=resmapId)
   resMap <- parseRDF(resMap, rdf=rawToChar(resMapBytes), asText=TRUE)
