@@ -493,7 +493,7 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
         stop("Both 'file' and 'dataobj' arguments have been specified")
       }
       file <- tempfile()
-      writeBin(file, dataobj)
+      writeBin(dataobj, file)
     }
     response <- auth_put(url, encode="multipart", 
                 body=list(pid=pid, object=upload_file(file), 
