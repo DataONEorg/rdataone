@@ -191,7 +191,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
         sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256,
                        originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_equql(sysmeta@checksum, sha256)
+        expect_equal(sysmeta@checksum, sha256)
         expect_equal(sysmeta@originMemberNode, mnTest@identifier)
         expect_equal(sysmeta@authoritativeMemberNode, mnTest@identifier)
         
@@ -274,7 +274,7 @@ test_that("MNode createObject() with in-memory object", {
         
         sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256)
         sysmeta <- addAccessRule(sysmeta, "public", "read")
-        expect_equqls(sysmeta@checksum, sha256)
+        expect_equal(sysmeta@checksum, sha256)
         
         # Upload the data to the MN using createObject(), checking for success and a returned identifier
         createdId <- createObject(mnTest, newid, sysmeta = sysmeta, dataobj=csvdata)
