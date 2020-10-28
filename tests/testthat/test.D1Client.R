@@ -329,6 +329,7 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
     if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     sha256="SHA-256"
     md5="MD5"
+    checksumAlgorithm <- sha256
     dp <- new("DataPackage")
     
     # Create metadata object that describes science data
