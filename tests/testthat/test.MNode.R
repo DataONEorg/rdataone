@@ -401,3 +401,70 @@ test_that("updateSystemMetadata() works",{
       skip("This test requires valid authentication.")
   }
 })
+
+test_that("MNode updateObject() using dataobj argument", {
+    # This test requires valid DataONE user authentication and writes to unstable development machines
+    skip_on_cran()
+    library(dataone)
+    library(digest)
+    library(datapack)
+    library(uuid)
+    library(XML)
+    #cn <- CNode("SANDBOX")
+    #cn <- CNode("DEV2")
+    #cn <- CNode("STAGING")
+    # mnDemo1 is api v1 on 20151208, but that could change
+    # Use this v1 node to test with both a current token available
+    # and a certificate.
+    #mnId <- "urn:node:mnSandboxUCSB2"
+    #mnId <- "urn:node:mnDevUCSB2"
+    #mnId <- "urn:node:mnStageUCSB2"
+    #mn <- getMNode(cn, mnId)
+    am <- AuthenticationManager()
+    # Suppress openssl, cert missing warnings
+    suppressMessages(authValid <- dataone:::isAuthValid(am, mnTest))
+    if (authValid) {
+        if(dataone:::getAuthMethod(am, mnTest) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        user <- dataone:::getAuthSubject(am, mnTest)
+        newid <- generateIdentifier(mnTest, "UUID")
+
+        # Create a data object, and convert it to csv format
+        testdf <- data.frame(x=1:10,y=11:20)
+        csvfile <- paste(tempfile(), ".csv", sep="")
+        write.csv(testdf, csvfile, row.names=FALSE)
+        
+        # Create SystemMetadata for the object
+        format <- "text/csv"
+        size <- file.info(csvfile)$size
+        sha256 <- digest(csvfile, algo="sha256", serialize=FALSE, file=TRUE)
+        # specify series id for this sysmeta. This will only be used if uploading to a DataONE v2 node
+        seriesId <- UUIDgenerate()
+        sysmeta <- new("SystemMetadata", identifier=newid, formatId=format, size=size, checksum=sha256,
+                       originMemberNode=mnTest@identifier, authoritativeMemberNode=mnTest@identifier, seriesId=seriesId)
+        sysmeta <- addAccessRule(sysmeta, "public", "read")
+        
+        
+        # Upload the data to the MN using createObject()
+        createdId <- createObject(mnTest, newid, csvfile, sysmeta)
+        
+        # Update the object with a new version
+        updateid <- generateIdentifier(mnTest, "UUID")
+        d1test <- D1Client(cn, mnTest)
+        dataObject <- getDataObject(d1test, createdId)
+        dataObject@sysmeta@identifier <- updateid
+        
+        newId <- updateObject(mnTest, 
+                              pid = createdId, 
+                              newpid = updateid,
+                              sysmeta = dataObject@sysmeta,
+                              dataobj = dataObject@data)
+        expect_false(is.null(newId))
+        expect_match(newId, updateid)
+        updsysmeta <- getSystemMetadata(mnTest, updateid)
+        expect_match(class(updsysmeta)[1], "SystemMetadata")
+        expect_match(updsysmeta@obsoletes, newid)
+    }    
+    else {
+        skip("This test requires valid authentication.")
+    }
+})
