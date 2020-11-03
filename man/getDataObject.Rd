@@ -7,7 +7,14 @@
 \usage{
 getDataObject(x, identifier, ...)
 
-\S4method{getDataObject}{D1Client}(x, identifier, lazyLoad = FALSE, limit = "1MB", quiet = TRUE)
+\S4method{getDataObject}{D1Client}(
+  x,
+  identifier,
+  lazyLoad = FALSE,
+  limit = "1MB",
+  quiet = TRUE,
+  checksumAlgorithm = "SHA-256"
+)
 }
 \arguments{
 \item{x}{A D1Client object.}
@@ -22,6 +29,9 @@ getDataObject(x, identifier, ...)
 for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
+
+\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to calculate the system metadata check 
+for the object's data bytes for example: "SHA-256"}
 }
 \value{
 A DataObject or NULL if the object was not found in DataONE

@@ -7,7 +7,14 @@
 \usage{
 getDataPackage(x, identifier, ...)
 
-\S4method{getDataPackage}{D1Client}(x, identifier, lazyLoad = FALSE, limit = "1MB", quiet = TRUE)
+\S4method{getDataPackage}{D1Client}(
+  x,
+  identifier,
+  lazyLoad = FALSE,
+  limit = "1MB",
+  quiet = TRUE,
+  checksumAlgorithm = "SHA-256"
+)
 }
 \arguments{
 \item{x}{A D1Client object.}
@@ -23,6 +30,9 @@ The default is \code{FALSE}.}
 for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.}
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
+
+\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to calculate the system metadata check 
+for the object's data bytes for example: "SHA-256"}
 }
 \value{
 A DataPackage or NULL if the package was not found in DataONE
@@ -43,7 +53,7 @@ is ignored. The \code{lazyLoad} and \code{limit} parameters can be used together
 \tabular{lllll}{
 \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
 \tab ---------- \tab ------- \tab ------ \tab --------------------- \cr
-\tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter ignored \cr
+\tab TRUE \tab Any value \tab Data bytes are not downloaded \tab The 'limit' parameter is ignored \cr
 \tab FALSE \tab Not specified \tab Data bytes are download if less than 1MB \tab The default 'limit' of 1MB is used \cr
 \tab FALSE \tab 10MB \tab Data bytes are downloaded if less than 10MB \tab The specified 'limit' values is used \cr
 }
