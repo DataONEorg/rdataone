@@ -91,7 +91,11 @@ auth_get <- function(url, nconfig=config(), node, path = NULL) {
     return(response)
   },
   error = function(cond){
-    content <- paste0("<error><description>",cond,"</description></error>")
+    node <- newXMLNode("error")
+    newXMLNode("description", parent = node, text = as.character(cond))
+    xmlAttrs(node)["name"] <- "InternalServerError"
+    xmlAttrs(node)["errorCode"] <- "500"
+    content <- saveXML(node)
     response <- structure(list(url = url,
                                status_code = "500",
                                headers = list("content-type" = "text/xml"),
