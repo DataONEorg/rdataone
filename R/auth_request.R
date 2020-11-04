@@ -34,61 +34,75 @@
 #' @import httr
 auth_get <- function(url, nconfig=config(), node, path = NULL) {
   response <- NULL
-  if (is.null(path)) {
-    write_path <- NULL
-  } else {
-    write_path <- httr::write_disk(path, overwrite = FALSE)
-  }
-  if (missing(url) || missing(node)) {
-      stop("Error: url or node is missing. Please report this error.")
-  }
-  am <- AuthenticationManager()
-  if(isAuthValid(am, node)) {
-    if(getAuthMethod(am, node) == "token") {
-      # Authentication will use an authentication token.
-      authToken <- getToken(am, node)
-      response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)), write_path)
+  tryCatch({
+    if (is.null(path)) {
+      write_path <- NULL
     } else {
-      # Authentication will use a certificate.
-      cert <- getCert(am)
-      new_config <- c(nconfig, config(sslcert = cert))
-      response <- GET(url, config = new_config, user_agent(get_user_agent()), write_path)
+      write_path <- httr::write_disk(path, overwrite = FALSE)
     }
-  } else {
-    # Send request as the public user
-    # Warn the user if their auth token or certificate has expired. The regular auth checks
-    # are designed to check for and return whatever valid auth mechanism is used, and are not
-    # designed to find an invalid, i.e. expired one, so we have to perform these checks manually.
-    # First check if a token is present, for the appropriate D1 environment, i.e. v1 vs v2, production
-    # vs development.
-    authToken <- getToken(am, node)
-    if(!is.null(authToken)) {
-      tokenInfo <- getTokenDetails(attr(authToken, "name"))
-      if(tokenInfo$expired) {
-        msg <- "You attempted this operation with an expired token, so you were not authenticated."
-        msg <- paste0(msg, "\nYou may wish to try again with a valid token.")
-        msg <- paste0(msg, "\nAttempting to perform this operation as the public user without being authenticated.")
-        message(msg)
+    if (missing(url) || missing(node)) {
+      stop("Error: url or node is missing. Please report this error.")
+    }
+    am <- AuthenticationManager()
+    if(isAuthValid(am, node)) {
+      if(getAuthMethod(am, node) == "token") {
+        # Authentication will use an authentication token.
+        authToken <- getToken(am, node)
+        response <- GET(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)), write_path)
+      } else {
+        # Authentication will use a certificate.
+        cert <- getCert(am)
+        new_config <- c(nconfig, config(sslcert = cert))
+        response <- GET(url, config = new_config, user_agent(get_user_agent()), write_path)
       }
     } else {
-      # If no token, then check for a certificate
-      certInfo <- getCertInfo(am)
-      # A certificate exists
-      if(!is.na(certInfo$file)) {
-        if(certInfo$expired) {
-          msg <- sprintf("You attempted this operation with an expired certificate located at %s", certInfo$file)
-          msg <- paste0(msg, sprintf("\nso you were not authenticated. You may wish to try again with a valid certificate."))
-          msg <- paste0(msg, sprintf("\nAttempting to perform this operation as the public user without being authenticated."))
+      # Send request as the public user
+      # Warn the user if their auth token or certificate has expired. The regular auth checks
+      # are designed to check for and return whatever valid auth mechanism is used, and are not
+      # designed to find an invalid, i.e. expired one, so we have to perform these checks manually.
+      # First check if a token is present, for the appropriate D1 environment, i.e. v1 vs v2, production
+      # vs development.
+      authToken <- getToken(am, node)
+      if(!is.null(authToken)) {
+        tokenInfo <- getTokenDetails(attr(authToken, "name"))
+        if(tokenInfo$expired) {
+          msg <- "You attempted this operation with an expired token, so you were not authenticated."
+          msg <- paste0(msg, "\nYou may wish to try again with a valid token.")
+          msg <- paste0(msg, "\nAttempting to perform this operation as the public user without being authenticated.")
           message(msg)
         }
+      } else {
+        # If no token, then check for a certificate
+        certInfo <- getCertInfo(am)
+        # A certificate exists
+        if(!is.na(certInfo$file)) {
+          if(certInfo$expired) {
+            msg <- sprintf("You attempted this operation with an expired certificate located at %s", certInfo$file)
+            msg <- paste0(msg, sprintf("\nso you were not authenticated. You may wish to try again with a valid certificate."))
+            msg <- paste0(msg, sprintf("\nAttempting to perform this operation as the public user without being authenticated."))
+            message(msg)
+          }
+        }
       }
+      
+      response <- GET(url, config=nconfig, user_agent(get_user_agent()), write_path)   # the anonymous access case
     }
-    
-    response <- GET(url, config=nconfig, user_agent(get_user_agent()), write_path)   # the anonymous access case
-  }
-  rm(am)
-  
-  return(response)
+    rm(am)
+    return(response)
+  },
+  error = function(cond){
+    node <- newXMLNode("error")
+    newXMLNode("description", parent = node, text = as.character(cond))
+    xmlAttrs(node)["name"] <- "InternalServerError"
+    xmlAttrs(node)["errorCode"] <- "500"
+    content <- saveXML(node)
+    response <- structure(list(url = url,
+                               status_code = "500",
+                               headers = list("content-type" = "text/xml"),
+                               content = charToRaw(content)),
+                          class = "response") 
+    return(response)
+  })
 }
 
 #' Send a http HEAD request for a resource with authenticated credentials if available.
