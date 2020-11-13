@@ -856,18 +856,28 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
     res <- parseSolrResult(xmlDoc, parse)
     dfAll <- data.frame()
     if (length(res) > 0) {
-        # Simplify each result and cast to a data.frame
+        # Simplify each result and cast to a data.frame, returning a list of
+        # data.frames that will be combined by rbind.fill
         simplified <- lapply(res, function(r) {
-            # Simplify multi-valued fields into space-separted character vectors
+            # Simplify multi-valued fields into space-separated character vectors
             for (n in names(r)) {
                 if(typeof(r[[n]]) == "list") {
-                   r[[n]] <- paste(r[[n]], collapse = "|")
+                   # Get R type from result set
+                   c1 <- class(r[[n]][[1]])
+                   # flatten list, then reassign R type, as unlist removes attributes
+                   u1 <- unlist(r[[n]])
+                   # Reassign type to values
+                   class(u1) <- c1
+                   # Wrap value vector in a list so as.data.frame to appease as.data.frame, other
+                   # will get error "arguments imply differing number of rows: 1, 2, 3 "
+                   r[[n]] <- I(list(u1))
                 }
             }
-            
+          
             as.data.frame(r, stringsAsFactors = FALSE)
         })
         
+        # rbind.file combines a list of data.frames into one
         dfAll <- do.call(rbind.fill, simplified)
     }
     res <- dfAll
