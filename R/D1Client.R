@@ -226,7 +226,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' in a DataObject class.
 #' @details This method performs multiple underlying calls to the DataONE repository network. 
 #' CN.resolve() is called to locate the object on one or more repositories, and then each of these
-#' is accessed until the associated SystemMetadata and data bytes are sucessfully downloaded. This 
+#' is accessed until the associated SystemMetadata and data bytes are successfully downloaded. This 
 #' data is then used to construct the returned DataObject. This function replaces the previous 
 #' getD1Object() method in the version 1
 #' dataone library. \cr\cr
@@ -493,7 +493,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
     queryParamList <- list(q=sprintf('resourceMap:\"%s\"', identifier), fq='formatType:METADATA+AND+-obsoletedBy:*', fl='id,documents')
     result <- query(node, queryParamList, as="list")
     if (length(result) == 0) {
-      stop(sprintf("Unable to find unobsolted metadata object for identifier: %s on node %s", identifier, node@identifier))
+      stop(sprintf("Unable to find unobsoleted metadata object for identifier: %s on node %s", identifier, node@identifier))
     }
     metadataPid <- unlist(result[[1]]$id)
     packageMembers <- unlist(result[[1]]$documents)

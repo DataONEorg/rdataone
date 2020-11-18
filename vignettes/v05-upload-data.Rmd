@@ -276,7 +276,7 @@ dp <- addMember(dp, dataObj, mo=metadatqObj)
 ```
 
 The above example creates a new DataObject by downloading the existing item from DataONE that has the identifier  "urn:uuid:1234" and using the 'd1c` variable previously defined. This DataObject is then added to the package. 
-In this example, the optional "lazyLoad" and "limit" parameters are used. These parameters cause *getDataObject* to only download the system information (i.e. acces rules, format information) and not the data bytes associated with this identifier.  Using these parameters can be helpful if the file associated with this identifier is very large. For the purpose of adding this DataONE identifier to a DataPackage, the data bytes are not required.
+In this example, the optional "lazyLoad" and "limit" parameters are used. These parameters cause *getDataObject* to only download the system information (i.e. access rules, format information) and not the data bytes associated with this identifier.  Using these parameters can be helpful if the file associated with this identifier is very large. For the purpose of adding this DataONE identifier to a DataPackage, the data bytes are not required.
 
 Reusing DataONE items this way results in one copy of the item existing in DataONE but being included in multiple DataONE packages.
 

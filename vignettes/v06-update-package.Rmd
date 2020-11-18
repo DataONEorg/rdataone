@@ -20,7 +20,7 @@ interested parties that the package needs to be updated, for example to add a mi
 with another, or remove a package member from the package.
 
 These types of modifications can be accomplished by downloading the package from DataONE using the 
-`getDataPackage` method to create a local copy of the package in R, modifying the package contents locally,
+`getDataPackage()` method to create a local copy of the package in R, modifying the package contents locally,
 then uploading the modified package to DataONE. 
 
 The complete example script used to perform a package update is shown below:
@@ -63,7 +63,7 @@ can  be modified locally using methods in the `dataone` package. Modifications c
 the package such as adding  or removing members from the package, or changing the contents of 
 a package member, as would be the case if the wrong file was initially uploaded.
 
-The `getDataPackage` method downloads all files belonging to the package specified by
+The `getDataPackage()` method downloads all files belonging to the package specified by
 the `identifier` parameter. 
 
 ```{r, eval=FALSE}
@@ -75,7 +75,7 @@ pkg <- getDataPackage(d1c, identifier=packageId, lazyLoad=TRUE, quiet=FALSE)
 Because packages might contain large files or a large number of files, it is
 possible to `lazy load` the package. This means that the metadata describing the files is downloaded 
 downloaded, but the file contents, the data bytes,  are not. For more information on using the 
-'lazyLoad' parameter, see the R console help for the 'getDataPackage' function.
+'lazyLoad' parameter, see the R console help for the 'getDataPackage()' function.
 
 For the package update that will be shown, it is not necessary to download the data bytes of each
 package member, so `lazy loading` is acceptable. An example when lazy loading would not be appropriate is when the files in a package will be used for local computational processing.
