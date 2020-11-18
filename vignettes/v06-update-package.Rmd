@@ -5,6 +5,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Updating Datasets on DataONE}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
 
