@@ -13,7 +13,7 @@ getDataObject(x, identifier, ...)
   lazyLoad = FALSE,
   limit = "1MB",
   quiet = TRUE,
-  checksumAlgorithm = "SHA-256"
+  checksumAlgorithm = as.character(NA)
 )
 }
 \arguments{
@@ -30,8 +30,9 @@ for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes ef
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to calculate the system metadata check 
-for the object's data bytes for example: "SHA-256"}
+\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this 
+re-calculation will not be performed.}
 }
 \value{
 A DataObject or NULL if the object was not found in DataONE

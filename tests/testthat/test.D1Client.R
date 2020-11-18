@@ -87,7 +87,7 @@ test_that("D1Client getDataObject", {
       
       # Try retrieving a known object from the PROD environment
     pid <- "solson.5.1"
-    obj <- getDataObject(d1cKNB, pid)
+    obj <- getDataObject(d1cKNB, pid, checksumAlgorithm="SHA-256")
     cname <- class(obj)[1]
     expect_match(cname, "DataObject")
     expect_match(class(obj@sysmeta), "SystemMetadata")

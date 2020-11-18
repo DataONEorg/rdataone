@@ -252,8 +252,9 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to calculate the system metadata check 
-#'              for the object's data bytes for example: "SHA-256"
+#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+#'              for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this 
+#'              re-calculation will not be performed.
 #' @param ... (not yet used)
 #' @rdname getDataObject
 #' @aliases getDataObject
@@ -274,7 +275,7 @@ setGeneric("getDataObject", function(x, identifier, ...) {
 #' @rdname getDataObject
 #' @export
 setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE,
-                                                checksumAlgorithm="SHA-256") {
+                                                checksumAlgorithm=as.character(NA)) {
     
     # Resolve the object location
     # This service is too chatty if any of the locations aren't available
@@ -373,20 +374,29 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     
     # If the checksum for current object does not match the requested checksum algorithm, then calculate
     # it if the object's data is local, otherwise ask DataONE to calculate it.
-    if(tolower(sysmeta@checksumAlgorithm) != tolower(checksumAlgorithm)) {
-      # Bytes were not downloaded into the DataObject
-      if (deferredDownload) {
-        checksum = getChecksum(currentMN, pid=identifier, checksumAlgorithm=checksumAlgorithm)
-        sysmeta@checksum = checksum
-        sysmeta@checksumAlgorithm <- checksumAlgorithm
-        cat(sprintf("got new %s checksum from dataone for id %s: %s\n", checksumAlgorithm, identifier, checksum))
-      }
-    } 
+    if(!is.na(checksumAlgorithm)) {
+      if(tolower(sysmeta@checksumAlgorithm) != tolower(checksumAlgorithm)) {
+        # Bytes were not downloaded into the DataObject
+        if (deferredDownload) {
+          checksum = getChecksum(currentMN, pid=identifier, checksumAlgorithm=checksumAlgorithm)
+          sysmeta@checksum = checksum
+          sysmeta@checksumAlgorithm <- checksumAlgorithm
+        }
+        if(!quiet) {
+            cat(sprintf("Fetched recalculated checksum from DataONE using %s for id %s: %s\n", checksumAlgorithm, identifier, checksum))
+        }
+      } 
+    } else {
+      # The checksum algorithm was set to NA, meaning don't re-calculate the checksum after download. Since the
+      # DataObject constructor requires an algorithm to be specified, use the algorithm specified in the
+      # system metadata that was just downloaded for this object.
+      checksumAlgorithm <- sysmeta@checksumAlgorithm
+    }
     
     # Construct and return a DataObject
     # Notice that we are passing the existing sysmeta for this object via the 'id' parameter,
     # which will cause the DataObject to use this sysmeta and not generate a new one. However, if the
-    # sysmeta checksum algorithm is different thatn the pecified algorithm, then the checksum will
+    # sysmeta checksum algorithm is different than the specified algorithm, then the checksum will
     # be recalculated. 
     do <- new("DataObject", id=sysmeta, dataobj=bytes, dataURL=dataURL, checksumAlgorithm=checksumAlgorithm)
     
@@ -437,12 +447,12 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 #' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
 #' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to calculate the system metadata check 
-#'              for the object's data bytes for example: "SHA-256"
+#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+#'              for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this re-calculation will not be performed.
 #' @param ... (not yet used)
 #' @export
 setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, limit="1MB", quiet=TRUE,
-                                                 checksumAlgorithm="SHA-256") {
+                                                 checksumAlgorithm=as.character(NA)) {
     
   # The identifier provided could be the package id (resource map), the metadata id or a package member (data, etc)
   # The solr queries attempt to determine which id was specified and may issue additional queries to get all the
