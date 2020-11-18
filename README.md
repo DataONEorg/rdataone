@@ -137,7 +137,7 @@ command, for example:
 d1c <- D1Client("PROD", "urn:node:KNB")
 pkg <- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383", quiet=FALSE)
 ```
-See the R vignette [dataone R Package ](https://github.com/DataONEorg/rdataone/blob/master/vignettes/dataone-overview.Rmd) for
+See the R vignette [dataone R Package ](https://github.com/DataONEorg/rdataone/blob/master/vignettes/v01-dataone-overview.Rmd) for
 more information.
 
 ## Acknowledgments
