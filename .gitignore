@@ -5,3 +5,5 @@ doc
 .RData
 dataone/dataone.Rproj
 dataone_*.tar.gz
+vignettes/*.R
+vignettes/*.html
