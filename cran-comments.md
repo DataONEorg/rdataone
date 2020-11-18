@@ -16,11 +16,13 @@
 
 ## Changes since last release
 
-* Fix CRAN check warnings for dataone 2.1.3 (#241)
-* Mark deprecated function as defunct (#240)
-* Fix roxygen2 errors related to function arguments (#241)
-* remove knitr/RDS dependency on R 3.5
-* Fix getDataPackage() failing with "subscript out of bounds" (#243)
+* The 'lazyLoad' behavior for 'getDataObject()', 'getDataPackage()' has changed (#258)
+* Use 'SHA-256' checksum for sysmeta/object uploads (#257)
+* Fixed bug where uploading modified 'metadata-only' package caused error (#256)
+* UploadDataPackage now supports 'common' objects (#251)
+* Create packages with uniform checksum (#261)
+* Update tests for compatibility with testthat 3e (#260)
+* Query results returned 'as=data.frame' now contain Solr multi-valued fields as R lists (#250)
 
 ## R CMD check results
 
