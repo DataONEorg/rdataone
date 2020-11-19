@@ -310,6 +310,86 @@ test_that("D1Client updateDataPackage works", {
     }
 })
 
+test_that("D1Client updateDataPackage with new package using previously uploaded objects works", {
+  
+  # Test the typical workflow of creating a DataONE package by first uploading all data objects for the package,
+  # then creating a package from the already uploaded objects. 
+  skip_on_cran()
+  library(dataone)
+  library(datapack)
+  library(xml2)
+  library(digest)
+  expect_false(is.null(d1cTestKNB))
+  preferredNodes <- NA
+  # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+  am <- AuthenticationManager()
+  suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTestKNB@mn))
+  if (authValid) {
+    if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    
+    # First upload objects to DataONE that will be collected into a package
+    sourceData <- system.file("extdata/OwlNightj.csv", package="dataone")
+    sourceObj <- new("DataObject", format="text/csv", filename=sourceData)
+    sourceObj <- addAccessRule(sourceObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
+    sourceId <- uploadDataObject(d1cTestKNB, sourceObj, public=T, quiet=T)
+    expect_true(!is.na(sourceId))
+    
+    progFile <- system.file("extdata/filterObs.R", package="dataone")
+    progObj <- new("DataObject", format="application/R", filename=progFile, mediaType="text/x-rsrc")
+    progObj <- addAccessRule(progObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
+    progId <- uploadDataObject(d1cTestKNB, progObj, public=T, quiet=T)
+    expect_true(!is.na(progId))
+    
+    outputData <- system.file("extdata/Strix-occidentalis-obs.csv", package="dataone")
+    outputObj <- new("DataObject", format="text/csv", filename=outputData)
+    outputObj <- addAccessRule(outputObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
+    outputId <- uploadDataObject(d1cTestKNB, outputObj, public=T, quiet=T)
+    expect_true(!is.na(outputId))
+    
+    # Create a new package, and download each member (lazyLoaded) that was just uploaded, then add them
+    # to the package and upload. This workflow does not require that package members are downloaded with
+    # lazyLoad, this is done here just for efficiency. If a package member is downloaded without lazyLoad,
+    # it will not be-reuploaded when the package is uploaded, unless it has been updated (i.e. updated contents,
+    # or sysmeta).
+    pkg <- new("DataPackage")
+    # Create metadata object that describes the package
+    emlFile <- system.file("extdata/strix-pacific-northwest.xml", package="dataone")
+    metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", filename=emlFile)
+    metadataObj <- addAccessRule(metadataObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
+    pkg <- addMember(pkg, metadataObj)
+    metadataId <- getIdentifier(metadataObj)
+    
+    newSourceObj <- getDataObject(d1cTestKNB, sourceId, lazyLoad=T, quiet=T)
+    pkg  <- addMember(pkg, newSourceObj, metadataObj)
+    
+    newProgObj <- getDataObject(d1cTestKNB, progId, lazyLoad=T, quiet=T)
+    pkg <- addMember(pkg, newProgObj, metadataObj)
+    
+    newOutputObj <- getDataObject(d1cTestKNB, outputId, lazyLoad=T, quiet=T)
+    pkg <- addMember(pkg, newOutputObj, metadataObj)
+    
+    resourceMapId <- uploadDataPackage(d1cTestKNB, pkg, public=TRUE, quiet=T)
+    expect_false(is.na(resourceMapId))
+    
+    # Now test that we can download the newly created package and add an existing object
+    # Now add a new package member that was omitted from the original package
+    auxFile <- system.file("extdata/WeatherInf.txt", package="dataone")
+    auxObj <- new("DataObject", format="text/plain", file=auxFile)
+    auxObj <- addAccessRule(auxObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
+    auxId <- uploadDataObject(d1cTestKNB, auxObj, public=T, quiet=T)
+    
+    newAuxObj <- getDataObject(d1cTestKNB, auxId, lazyLoad=T, quiet=T)
+    editPkg <- getDataPackage(d1cTestKNB, identifier=resourceMapId, lazyLoad=TRUE, quiet=TRUE)
+    editPkg <- addMember(editPkg, newAuxObj, metadataObj)
+    
+    newResmapId <- uploadDataPackage(d1cTestKNB, editPkg, public=TRUE, quiet=T)
+    expect_false(is.na(newResmapId))
+    expect_false(resourceMapId == newResmapId)
+  } else {
+    skip("This test requires valid authentication.")
+  }
+})
+
 test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
   
   # Test that a DataPackage with only one member (metadata in this case) and not
@@ -371,8 +451,6 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
     skip("This test requires valid authentication.")
   }
 })
-
-
 
 test_that("D1Client listMemberNodes() works", {
   skip_on_cran()
