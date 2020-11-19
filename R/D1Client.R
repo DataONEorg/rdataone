@@ -611,6 +611,11 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   # Currently we only use the first resource map
   if(!quiet) cat(sprintf("Getting resource map with id: %s\n", dpkg@resmapId))
   resMapObj <- getDataObject(x, identifier=resmapId, lazyLoad=FALSE, checksumAlgorithm=checksumAlgorithm)
+  # The resource map is not a 'member' of the package, but the sysmeta for it must be retained so that 
+  # the state and 'history' of the package can be inspected, so save the resmap sysmeta to the corresponding
+  # DataPackage R slot. An example case for inspecting the sysmeta is to determine if the package was newly
+  # created locally or downloaded from DataONE.
+  dpkg@sysmeta <- resMapObj@sysmeta
   resMapBytes <- getData(resMapObj)
   resMap <- new("ResourceMap", id=resmapId)
   resMap <- parseRDF(resMap, rdf=rawToChar(resMapBytes), asText=TRUE)
