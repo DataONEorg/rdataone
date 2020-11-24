@@ -377,11 +377,33 @@ test_that("D1Client updateDataPackage with new package using previously uploaded
     auxObj <- new("DataObject", format="text/plain", file=auxFile)
     auxObj <- addAccessRule(auxObj, "http://orcid.org/0000-0002-2192-403X", "changePermission")
     auxId <- uploadDataObject(d1cTestKNB, auxObj, public=T, quiet=T)
+    expect_true(!is.na(auxId))
     
-    newAuxObj <- getDataObject(d1cTestKNB, auxId, lazyLoad=T, quiet=T)
-    editPkg <- getDataPackage(d1cTestKNB, identifier=resourceMapId, lazyLoad=TRUE, quiet=TRUE)
+    # Have to sleep just a bit, as indexing can take awhile to complete
+    # Keep trying for ten seconds for the package to be indexed
+    done <- FALSE
+    trys <- 0
+    while(!done) {
+      if(trys > 10) break
+      Sys.sleep(1)
+      queryParams <- sprintf('q=id:"%s"', resourceMapId)
+      result <- query(d1cTestKNB@mn, queryParams, as="list")
+      # Now download the package that was just created, and ensure that the checksums are all the
+      # requested type.
+      if(length(result) == 0) {
+        trys <- trys + 1
+        next
+      } else {
+        done <- TRUE
+      }
+    
+      newAuxObj <- getDataObject(d1cTestKNB, auxId, lazyLoad=T, quiet=T)
+      editPkg <- getDataPackage(d1cTestKNB, identifier=resourceMapId, lazyLoad=TRUE, quiet=TRUE)
+    }
+    
+    expect_true(done)
+    
     editPkg <- addMember(editPkg, newAuxObj, metadataObj)
-    
     newResmapId <- uploadDataPackage(d1cTestKNB, editPkg, public=TRUE, quiet=T)
     expect_false(is.na(newResmapId))
     expect_false(resourceMapId == newResmapId)
@@ -435,17 +457,35 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
     pkgId <- uploadDataPackage(d1cTestKNB, dp, public=TRUE, quiet=TRUE)
     expect_true(!is.na(pkgId))
     
-    # Now download the package that was just created, and ensure that the checksums are all the
-    # requested type.
-    pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=sha256)
-    algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
-    expect_true(all(algorithms==sha256))
+    # Have to sleep just a bit, as indexing can take awhile to complete
+    # Keep trying for ten seconds for the package to be indexed
+    done <- FALSE
+    trys <- 0
+    while(!done) {
+      if(trys > 10) break
+      Sys.sleep(1)
+      queryParams <- sprintf('q=id:"%s"', pkgId)
+      result <- query(d1cTestKNB@mn, queryParams, as="list")
+      # Now download the package that was just created, and ensure that the checksums are all the
+      # requested type.
+      if(length(result) == 0) {
+        trys <- trys + 1
+        next
+      } else {
+        done <- TRUE
+      }
+      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=sha256)
+      algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
+      expect_true(all(algorithms==sha256))
     
-    # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
-    # new type.
-    pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=md5)
-    algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
-    expect_true(all(algorithms==md5))
+      # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
+      # new type.
+      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=md5)
+      algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
+      expect_true(all(algorithms==md5))
+    }
+    
+    expect_true(done)
     
   } else {
     skip("This test requires valid authentication.")
@@ -481,12 +521,6 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
     library(xml2)
     library(digest)
     # Create a csv file for the science object
-    #d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
-    #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
-    #d1c <- D1Client("STAGING2", "urn:node:mnTestKNB")
-    #d1c <- D1Client("SANDBOX", "urn:node:mnSandboxUCSB1")
-    #d1c <- D1Client("DEV", "urn:node:mnDemo6")
-    #d1c <- D1Client("DEV2", "urn:node:mnDevUCSB1")
     expect_false(is.null(d1cTest))
     preferredNodes <- NA
     # Set 'subject' to authentication subject, if available, so we will have permission to change this object
@@ -509,6 +543,29 @@ test_that("D1Client updateDataPackage works for a metadata only DataPackage", {
         pkgId <- uploadDataPackage(d1cTest, dp, public=TRUE, quiet=TRUE)
         expect_true(!is.na(pkgId))
         
+        done <- FALSE
+        trys <- 0
+        while(!done) {
+          if(trys > 10) break
+          Sys.sleep(1)
+          queryParams <- sprintf('q=id:"%s"', pkgId)
+          result <- query(d1cTest@mn, queryParams, as="list")
+          # Now download the package that was just created, and ensure that the checksums are all the
+          # requested type.
+          if(length(result) == 0) {
+            trys <- trys + 1
+            next
+          } else {
+            done <- TRUE
+          }
+        
+          # Test the download by specifying the metadata id of the package. The 'getDataPackage()' function
+          # should be able determine the package id based on the metadata id.
+          testPkg <- getDataPackage(d1cTest, metadataId, quiet=T)
+          expect_equal(pkgId, testPkg@resmapId)
+        }
+        
+        expect_true(done)
     } else {
         skip("This test requires valid authentication.")
     }

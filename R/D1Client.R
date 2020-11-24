@@ -383,7 +383,8 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
           sysmeta@checksumAlgorithm <- checksumAlgorithm
         }
         if(!quiet) {
-            cat(sprintf("Fetched recalculated checksum from DataONE using %s for id %s: %s\n", checksumAlgorithm, identifier, checksum))
+            cat(sprintf("Fetched recalculated checksum from DataONE using %s for id %s: %s\n",  sysmeta@checksumAlgorithm, 
+                        sysmeta@identifier, sysmeta@checksum))
         }
       } 
     } else {
@@ -1074,9 +1075,33 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
     
     # Now upload or update the resource map if necessary.
     returnId <- as.character(NA)
+    
+    # Check if a 'documents' relationship has been included for the metadata object.
+    # See https://github.com/DataONEorg/rdataone/issues/269
+    metadataId <- getMetadataMember(x, dp)
+    relationships <- getRelationships(dp)
+    if(nrow(relationships) > 0 ) {
+      subject <- relationships[relationships[,"subject"]==metadataId
+                    & relationships[,"predicate"]==datapack:::citoDocuments 
+                    & relationships[,"object"]==metadataId,
+                    "subject"]
+    } else {
+      # Same result that would be returned from the above subset, if no self-documenting 
+      # metadata relationship found.
+      subject <- character(0)
+    }
+    
+    # If a 'documents' relationship hasn't been included for the metadata object, add it now.
+    # The 'documents' and 'isDocumentedBy' relationships are added by default by 'insertRelationships', if
+    # no relation is specified. Note that this self-referring relationship should be inserted by datapack 1.4.1+
+    # so if using a lower version, it will be installed now.
+    if(length(subject) == 0) {
+      dp <- insertRelationship(dp, metadataId, metadataId)
+    } 
+    
     # This is a new package, so potentially we need to upload a resource map
     if(!downloadedPkg) {
-        # Only upload a resource map if a DataObjects was uploaded, i.e. not all uploads failed.
+        # Only upload a resource map if a DataObject was uploaded, i.e. not all uploads failed.
         if (uploadedMember) {
             if(!is.na(packageId)) {
                 newPid <- packageId
