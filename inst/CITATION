@@ -18,5 +18,5 @@ bibentry(bibtype = "Manual",
          author = authors,
          year = year,
          note = note,
-         url = "http://github.com/DataONEorg/rdataone",
+         url = "https://github.com/DataONEorg/rdataone",
          doi = "10.5063/F1M61H5X")

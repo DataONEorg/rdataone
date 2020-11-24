@@ -1,16 +1,16 @@
 # dataone: R interface to the DataONE network of data repositories
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
 [![Build Status](https://travis-ci.org/DataONEorg/rdataone.png?branch=master)](https://travis-ci.org/DataONEorg/rdataone)
 
-- **Authors**: Matthew B. Jones ([NCEAS](http://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain
-- [doi:10.5063/F1M61H5X](http://doi.org/10.5063/F1M61H5X)
-- **License**: [Apache 2](http://opensource.org/licenses/Apache-2.0)
+- **Authors**: Matthew B. Jones ([NCEAS](https://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain
+- [doi:10.5063/F1M61H5X](https://doi.org/10.5063/F1M61H5X)
+- **License**: [Apache 2](https://opensource.org/licenses/Apache-2.0)
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
 
 Provides read and write access to data and metadata from the [DataONE network 
     of data repositories](https://www.dataone.org/current-member-nodes), including the
-    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](http://datadryad.org),
+    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org),
     and the NSF [Arctic Data Center](https://arcticdata.io).
     Each DataONE repository implements a consistent repository application 
     programming interface. Users call methods in R to access these remote 
@@ -150,9 +150,9 @@ Work on this package was supported by:
 
 Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
-[![nceas_footer](https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png)](http://www.nceas.ucsb.edu)
+[![nceas_footer](https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png)](https://www.nceas.ucsb.edu)
 
-[![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](http://dataone.org)
+[![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](https://dataone.org)
 
 
-[![ropensci_footer](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)
+[![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
