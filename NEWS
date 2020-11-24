@@ -12,6 +12,7 @@
 ## Bug Fixes
 
 * Fixed bug where uploading modified 'metadata-only' package causes error (#256)
+* Fixed bug where private content could not be accessed with `getChecksum()1 (#262)
 
 # Version 2.1.5
 
