@@ -1,18 +1,15 @@
 ## Test environments
 
- * macOS 10.14: R 3.6.2
- * Ubuntu 18.10 R 3.6.2
- * Debian 9.4: R Under development (unstable) (2020-02-04 r77771)
- * Windows 10: R Under development
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 3.6.2
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) Under development (unstable)
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit), R version 3.5.3
+ * macOS 10.14: R 4.0.2
+ * Ubuntu 18.04 R 3.4.4
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.0.3 (2020-10-10)
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2020-11-27 r79522) 
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 3.6.3 (2020-02-29)
  * rhub::check_for_cran()
-   * Fedora Linux, R-devel, clang, gfortran
-   * Windows Server 2012, R-devel, Rtools4.0, 32/64 bit (experimental)
-   * Fedora Linux, R-devel, GCC
-   * Fedora Linux, R-devel, clang, gfortran
-   * macOS 10.11 El Capitan, R-release (experimental)
+   * Debian Linux, R-devel, GCC: debian-gcc-devel
+   * Fedora Linux, R-devel, GCC: fedora-gcc-devel
+   * Fedora Linux, R-devel, clang, gfortran: fedora-clang-devel
+   * macOS 10.13.6 High Sierra, R-release, CRAN's setup: macos-highsierra-release-cran
 
 ## Changes since last release
 
