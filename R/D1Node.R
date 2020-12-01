@@ -1,7 +1,7 @@
 #
 #   This work was created by participants in the DataONE project, and is
 #   jointly copyrighted by participating institutions in DataONE. For
-#   more information on DataONE, see our web site at http://dataone.org.
+#   more information on DataONE, see our web site at https://dataone.org.
 #
 #     Copyright 2011-2013
 #
@@ -9,7 +9,7 @@
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
@@ -185,7 +185,7 @@ setMethod("archive", signature("D1Node"), function(x, pid) {
         # Comment out body handling because httr::PUT is not returning a response body at all
         #resultText <- content(response, as="text")
         #doc <- xmlInternalTreeParse(resultText)
-        # XML doc is similiar to: <d1:identifier xmlns:d1="http://ns.dataone.org/service/types/v1">WedSep91341002015-ub14</d1:identifier>
+        # XML doc is similiar to: <d1:identifier xmlns:d1="https://ns.dataone.org/service/types/v1">WedSep91341002015-ub14</d1:identifier>
         #nodes <- getNodeSet(doc, "/d1:identifier")
         #id <- xmlValue(nodes[[1]])
         # Return the identifier as a character value
@@ -676,7 +676,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' Search DataONE for data and metadata objects
 #' @description The DataONE search index is searched for data that matches the specified query parameters. 
 #' @details The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search 
-#' engine \url{http://lucene.apache.org/solr/}. This same Solr search engine is the underlying mechanism used by the
+#' engine \url{https://lucene.apache.org/solr/}. This same Solr search engine is the underlying mechanism used by the
 #' DataONE online search tool available at \url{https://search.dataone.org/}.
 #' 
 #' The \code{"solrQuery"} argument is used to specify search terms that data of interest must match. This parameter uses

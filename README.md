@@ -10,7 +10,7 @@
 
 Provides read and write access to data and metadata from the [DataONE network 
     of data repositories](https://www.dataone.org/current-member-nodes), including the
-    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org),
+    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org/stash),
     and the NSF [Arctic Data Center](https://arcticdata.io).
     Each DataONE repository implements a consistent repository application 
     programming interface. Users call methods in R to access these remote 
@@ -152,7 +152,7 @@ Additional support was provided for working group collaboration by the National 
 
 [![nceas_footer](https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png)](https://www.nceas.ucsb.edu)
 
-[![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](https://dataone.org)
+[![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](https://www.dataone.org)
 
 
 [![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
