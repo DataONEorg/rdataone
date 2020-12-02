@@ -474,13 +474,13 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
       } else {
         done <- TRUE
       }
-      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=sha256)
+      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=TRUE, checksumAlgorithm=sha256)
       algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
       expect_true(all(algorithms==sha256))
     
       # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
       # new type.
-      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=FALSE, checksumAlgorithm=md5)
+      pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=TRUE, checksumAlgorithm=md5)
       algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
       expect_true(all(algorithms==md5))
     }
