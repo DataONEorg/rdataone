@@ -61,7 +61,7 @@ outputData <- system.file("extdata/Strix-occidentalis-obs.csv", package="dataone
 outputObj <- new("DataObject", format="text/csv", filename=outputData) 
 dp <- addMember(dp, outputObj, metadataObj)
 
-myAccessRules <- data.frame(subject="http://orcid.org/0000-0002-2192-403X", permission="changePermission") 
+myAccessRules <- data.frame(subject="https://orcid.org/0000-0002-2192-403X", permission="changePermission") 
 
 ```
 ```{r, eval=FALSE}
@@ -224,10 +224,10 @@ sourceObj <- setPublicAccess(sourceObj)
 Individual access rules to be added for a DataONE user identity can also be added to the access policy. 
 
 Access rules are added to a *DataObject* using the `addAccessRule` method. The following access rule will grant the 
-user with the ORCID `http://orcid.org/0000-0002-2192-403X` `changePermission` access to the dataset:
+user with the ORCID `https://orcid.org/0000-0002-2192-403X` `changePermission` access to the dataset:
 
 ```{r}
-myAccessRules <- data.frame(subject="http://orcid.org/0000-0002-2192-403X", permission="changePermission") 
+myAccessRules <- data.frame(subject="https://orcid.org/0000-0002-2192-403X", permission="changePermission") 
 sourceObj <- addAccessRule(sourceObj, myAccessRules)
 ```
 DataONE user identities and user authentication are described in  section *DataONE User Authentication*  in the vignette *dataone-overview* (to view this vignette, type this command in the R console: `vignette("dataone-overview")`)
