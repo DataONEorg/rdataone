@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -94,12 +94,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="v06-update-package_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="v06-update-package_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="v06-update-package_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Updating Datasets on DataONE</h1>
             
-            <h4 class="date">2020-06-24</h4>
+            <h4 class="date">2020-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v06-update-package.Rmd"><code>vignettes/v06-update-package.Rmd</code></a></small>
       <div class="hidden name"><code>v06-update-package.Rmd</code></div>
@@ -114,40 +115,48 @@
 <p>A DataONE package is a collection of datasets and other files that are described by a metadata file.</p>
 <p>A <em>DataPackage</em> is a <code>dataone</code> R object that can contain a DataONE package that is either downloaded from DataONE or newly created locally in R and then uploaded to DataONE.</p>
 <p>After a package has been uploaded to a DataONE Member Node, it may be determined by the package submitter or other interested parties that the package needs to be updated, for example to add a missing file, replace one file with another, or remove a package member from the package.</p>
-<p>These types of modifications can be accomplished by downloading the package from DataONE using the <code>getDataPackage</code> method to create a local copy of the package in R, modifying the package contents locally, then uploading the modified package to DataONE.</p>
+<p>These types of modifications can be accomplished by downloading the package from DataONE using the <code><a href="../reference/getDataPackage.html">getDataPackage()</a></code> method to create a local copy of the package in R, modifying the package contents locally, then uploading the modified package to DataONE.</p>
 <p>The complete example script used to perform a package update is shown below:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">datapack</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dataone</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">d1c</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span>(<span class="st">"STAGING"</span>, <span class="st">"urn:node:mnStageUCSB2"</span>)
-<span class="no">packageId</span> <span class="kw">&lt;-</span> <span class="st">"resource_map_urn:uuid:a9aeefcf-228c-4534-b4ad-b480a937be7d"</span></pre></body></html></div>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getDataPackage.html">getDataPackage</a></span>(<span class="no">d1c</span>, <span class="kw">identifier</span><span class="kw">=</span><span class="no">packageId</span>, <span class="kw">lazyLoad</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">limit</span><span class="kw">=</span><span class="st">"0MB"</span>, <span class="kw">quiet</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">metadataId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@formatId"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span>)
-<span class="no">objId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@fileName"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">'Strix-occidentalis-obs.csv'</span>)
-<span class="no">zipfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/Strix-occidentalis-obs.csv.zip"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"dataone"</span>)
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/replaceMember.html">replaceMember</a></span>(<span class="no">pkg</span>, <span class="no">objId</span>, <span class="kw">replacement</span><span class="kw">=</span><span class="no">zipfile</span>, <span class="kw">formatId</span><span class="kw">=</span><span class="st">"application/octet-stream"</span>)
-<span class="no">auxFile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/WeatherInf.txt"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"dataone"</span>)
-<span class="no">auxObj</span> <span class="kw">&lt;-</span> <span class="fu">new</span>(<span class="st">"DataObject"</span>, <span class="kw">format</span><span class="kw">=</span><span class="st">"text/plain"</span>, <span class="kw">filename</span><span class="kw">=</span><span class="no">auxFile</span>)
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/addMember.html">addMember</a></span>(<span class="no">pkg</span>, <span class="no">auxObj</span>, <span class="no">metadataId</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/datapack/">datapack</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d1c</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span><span class="op">(</span><span class="st">"STAGING"</span>, <span class="st">"urn:node:mnStageUCSB2"</span><span class="op">)</span>
+<span class="va">packageId</span> <span class="op">&lt;-</span> <span class="st">"resource_map_urn:uuid:a9aeefcf-228c-4534-b4ad-b480a937be7d"</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getDataPackage.html">getDataPackage</a></span><span class="op">(</span><span class="va">d1c</span>, identifier<span class="op">=</span><span class="va">packageId</span>, lazyLoad<span class="op">=</span><span class="cn">TRUE</span>, quiet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">metadataId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@formatId"</span>, value<span class="op">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span><span class="op">)</span>
+<span class="va">objId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@fileName"</span>, value<span class="op">=</span><span class="st">'Strix-occidentalis-obs.csv'</span><span class="op">)</span>
+<span class="va">zipfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/Strix-occidentalis-obs.csv.zip"</span>, package<span class="op">=</span><span class="st">"dataone"</span><span class="op">)</span>
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/replaceMember.html">replaceMember</a></span><span class="op">(</span><span class="va">pkg</span>, <span class="va">objId</span>, replacement<span class="op">=</span><span class="va">zipfile</span>, formatId<span class="op">=</span><span class="st">"application/octet-stream"</span><span class="op">)</span>
+<span class="va">auxFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/WeatherInf.txt"</span>, package<span class="op">=</span><span class="st">"dataone"</span><span class="op">)</span>
+<span class="va">auxObj</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="st">"DataObject"</span>, format<span class="op">=</span><span class="st">"text/plain"</span>, filename<span class="op">=</span><span class="va">auxFile</span><span class="op">)</span> 
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/addMember.html">addMember</a></span><span class="op">(</span><span class="va">pkg</span>, <span class="va">auxObj</span>, <span class="va">metadataId</span><span class="op">)</span></code></pre></div>
 <!-- Need authentication, so can't upload from a vignette. -->
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">newPackageId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/uploadDataPackage.html">uploadDataPackage</a></span>(<span class="no">d1c</span>, <span class="no">pkg</span>, <span class="kw">public</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">quiet</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">newPackageId</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uploadDataPackage.html">uploadDataPackage</a></span><span class="op">(</span><span class="va">d1c</span>, <span class="va">pkg</span>, public<span class="op">=</span><span class="cn">TRUE</span>, quiet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>This example script downloads the example package that was created and uploaded to DataONE in the vignette <code>upload-data</code>.</p>
 <p>Each line of this script will be described in the following sections.</p>
 <div id="download-the-package-from-dataone" class="section level3">
 <h3 class="hasAnchor">
 <a href="#download-the-package-from-dataone" class="anchor"></a>1. Download the package from DataONE</h3>
 <p>The first step in updating a package is to download the package from DataONE into R, so that it can be modified locally using methods in the <code>dataone</code> package. Modifications can be made to the package such as adding or removing members from the package, or changing the contents of a package member, as would be the case if the wrong file was initially uploaded.</p>
-<p>The <code>getDataPackage</code> method downloads all files belonging to the package specified by the <code>identifier</code> parameter.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">d1c</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span>(<span class="st">"STAGING"</span>, <span class="st">"urn:node:mnStageUCSB2"</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getDataPackage.html">getDataPackage</a></span>(<span class="no">d1c</span>, <span class="kw">identifier</span><span class="kw">=</span><span class="no">packageId</span>, <span class="kw">lazyLoad</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">limit</span><span class="kw">=</span><span class="st">"0MB"</span>, <span class="kw">quiet</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
-<p>Because packages might contain large files or a large number of files, it is possible to <code>lazyLoad</code> the package. This means that the metadata describing the files is downloaded downloaded, but the file contents, the data bytes, are not. An upper size limit can be specified when using <code>lazyLoad</code> by also specifying the <code>limit</code> parameter. Files that are larger than the <code>limit</code> value are not downloaded, only system metadata.</p>
-<p>For the package update that will be shown, it is not necessary to download the data bytes of each package member, so <code>lazyLoading</code> is acceptable. An example when lazyloading would not be appropriate is when the files in a package will be used for local computational processing.</p>
+<p>The <code><a href="../reference/getDataPackage.html">getDataPackage()</a></code> method downloads all files belonging to the package specified by the <code>identifier</code> parameter.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d1c</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span><span class="op">(</span><span class="st">"STAGING"</span>, <span class="st">"urn:node:mnStageUCSB2"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getDataPackage.html">getDataPackage</a></span><span class="op">(</span><span class="va">d1c</span>, identifier<span class="op">=</span><span class="va">packageId</span>, lazyLoad<span class="op">=</span><span class="cn">TRUE</span>, quiet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<p>Because packages might contain large files or a large number of files, it is possible to <code>lazy load</code> the package. This means that the metadata describing the files is downloaded downloaded, but the file contents, the data bytes, are not. For more information on using the ‘lazyLoad’ parameter, see the R console help for the ‘getDataPackage()’ function.</p>
+<p>For the package update that will be shown, it is not necessary to download the data bytes of each package member, so <code>lazy loading</code> is acceptable. An example when lazy loading would not be appropriate is when the files in a package will be used for local computational processing.</p>
 <p>Note that metadata files, such as the EML in this example, are always downloaded regardless of the <code>lazyLoad</code> parameter value.</p>
 </div>
 <div id="review-package-contents-" class="section level3">
 <h3 class="hasAnchor">
 <a href="#review-package-contents-" class="anchor"></a>2. Review package contents.</h3>
 <p>The downloaded package can be viewed by typing the DataPackage object name at the console, which invokes the R <code>show</code> method for the object:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">pkg</span></pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pkg</span></code></pre></div>
 <p>Note that the <code>show</code> output for a DataPackage is condensed to fit the width of the current R console. If the output is condensed and more detail is required, set the R console width to a larger value, for example, <code><a href="https://rdrr.io/r/base/options.html">options(width=120)</a></code>, or if using <code>Rstudio</code>, widen the console window by clicking and dragging on the window boarder.</p>
 </div>
 <div id="modify-dataobjects-in-the-package" class="section level3">
@@ -155,32 +164,38 @@
 <a href="#modify-dataobjects-in-the-package" class="anchor"></a>3. Modify DataObjects in the package</h3>
 <p>The original uploaded package included the file <code>Strix-occidentalis-obs.csv</code>. This file can be substituted for a different file, as would be necessary if it was determined that the zipped form of the file should have been used instead.</p>
 <p>First, determine which DataObject in the DataPackage <code>pkg</code> contains the file to be replaced:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">objId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@fileName"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">'Strix-occidentalis-obs.csv'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">objId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@fileName"</span>, value<span class="op">=</span><span class="st">'Strix-occidentalis-obs.csv'</span><span class="op">)</span></code></pre></div>
 <p>The <code>selectMember</code> method inspects every DataObject in the package <code>pkg</code> and checks for a match in the R S4 slot specified by the <code>name</code> argument for the value specified with the <code>value</code> argument. The identifier for any matching DataObject is returned.</p>
-<p>The documentation for the DataObject R slots available can be viewed with the command <code><a href="https://rdrr.io/pkg/datapack/man/DataObject-class.html">help("DataObject-class")</a></code>. As a <em>SystemMetadata</em> object is contained in each DataObject, the slots for SystemMetadata are available, with documentation viewable with <code><a href="https://rdrr.io/pkg/datapack/man/SystemMetadata-class.html">help("SystemMetadata-class")</a></code></p>
+<p>The documentation for the DataObject R slots available can be viewed with the command <code><a href="https://docs.ropensci.org/datapack/reference/DataObject-class.html">help("DataObject-class")</a></code>. As a <em>SystemMetadata</em> object is contained in each DataObject, the slots for SystemMetadata are available, with documentation viewable with <code><a href="https://docs.ropensci.org/datapack/reference/SystemMetadata-class.html">help("SystemMetadata-class")</a></code></p>
 <p>Next, update the DataObject in <code>pkg</code> to replace the file <code>Strix-occidentalis-obs.csv</code> with <code>Strix-occidentalis-obs.csv.zip</code> using the <code>replaceMember</code> method:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">objId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@fileName"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">'Strix-occidentalis-obs.csv'</span>)
-<span class="no">zipfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/Strix-occidentalis-obs.csv.zip"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"dataone"</span>)
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/replaceMember.html">replaceMember</a></span>(<span class="no">pkg</span>, <span class="no">objId</span>, <span class="kw">replacement</span><span class="kw">=</span><span class="no">zipfile</span>, <span class="kw">formatId</span><span class="kw">=</span><span class="st">"application/octet-stream"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">objId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@fileName"</span>, value<span class="op">=</span><span class="st">'Strix-occidentalis-obs.csv'</span><span class="op">)</span>
+<span class="va">zipfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/Strix-occidentalis-obs.csv.zip"</span>, package<span class="op">=</span><span class="st">"dataone"</span><span class="op">)</span>
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/replaceMember.html">replaceMember</a></span><span class="op">(</span><span class="va">pkg</span>, <span class="va">objId</span>, replacement<span class="op">=</span><span class="va">zipfile</span>, formatId<span class="op">=</span><span class="st">"application/octet-stream"</span><span class="op">)</span></code></pre></div>
 <p>The <code>replaceMember</code> method updates the DataPackage <code>pkg</code>, replacing the data content of the DataObject with identifier <code>objId</code>, and updating the relevant system metadata slots such as <code>size</code> and <code>checksum</code>, to reflect the new contents of the DataObject.</p>
 <p>In this example, the file <code>WeatherInf.txt</code> was mistakenly omitted from the original package upload, so add it now:</p>
 <p>First, the identifier for the metadata DataObject that describes the package members will be retrieved from the DataPackage:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">metadataId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@formatId"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">metadataId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@formatId"</span>, value<span class="op">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span><span class="op">)</span></code></pre></div>
 <p>The <code>selectMember</code> method returns the identifier of any DataObject in the package with an R slot name specified in the parameter <code>name</code> that matches the value specified in the argument <code>value</code>. In this particular package, there is only one DataPackage that has <code>formatId</code> of <code>eml://ecoinformatics.org/eml-2.1.1</code>, so only that identifier is returned.</p>
 <p>Note that the <code>getValue</code> method can be used to retrieve the values for DataObject slots, for example:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/datapack/man/getValue.html">getValue</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@formatId"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://docs.ropensci.org/datapack/reference/getValue.html">getValue</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@formatId"</span><span class="op">)</span></code></pre></div>
 <p>An R named list is returned, with the names being the identifiers of each DataPackage in the DataPackage and the values being the slot value.</p>
 <p>Next, add a new package member that was omitted from the original package:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">auxFile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/WeatherInf.txt"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"dataone"</span>)
-<span class="no">auxObj</span> <span class="kw">&lt;-</span> <span class="fu">new</span>(<span class="st">"DataObject"</span>, <span class="kw">format</span><span class="kw">=</span><span class="st">"text/csv"</span>, <span class="kw">filename</span><span class="kw">=</span><span class="no">auxFile</span>)
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/addMember.html">addMember</a></span>(<span class="no">pkg</span>, <span class="no">auxObj</span>, <span class="no">metadataId</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">auxFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/WeatherInf.txt"</span>, package<span class="op">=</span><span class="st">"dataone"</span><span class="op">)</span>
+<span class="va">auxObj</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="st">"DataObject"</span>, format<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="va">auxFile</span><span class="op">)</span>
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/addMember.html">addMember</a></span><span class="op">(</span><span class="va">pkg</span>, <span class="va">auxObj</span>, <span class="va">metadataId</span><span class="op">)</span></code></pre></div>
 <p>The modified package can be reviewed before updating to DataONE:</p>
 </div>
 <div id="upload-the-modified-datapackage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#upload-the-modified-datapackage" class="anchor"></a>4. Upload the modified DataPackage</h3>
 <p>Now upload the modified package to DataONE. Each DataObject in the DataPackage will be inspected by <code>uploadDataPackage</code> and DataObjects that have been modified will be updated and DataObjects that have been added to the DataPackage will be uploaded.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">newPackageId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/uploadDataPackage.html">uploadDataPackage</a></span>(<span class="no">d1c</span>, <span class="no">pkg</span>, <span class="kw">public</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">quiet</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">newPackageId</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uploadDataPackage.html">uploadDataPackage</a></span><span class="op">(</span><span class="va">d1c</span>, <span class="va">pkg</span>, public<span class="op">=</span><span class="cn">TRUE</span>, quiet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="updating-metadata-for-a-datapackage" class="section level2">
@@ -188,10 +203,11 @@
 <a href="#updating-metadata-for-a-datapackage" class="anchor"></a>Updating Metadata For A DataPackage</h2>
 <p>As DataPackage members are modified, the DataObject that holds the metadata that describes the package members may become outdated.</p>
 <p>For example, it was shown above that a package member was updated to contain the file <code>Strix-occidentalis-obs.csv.zip</code> instead of <code>Strix-occidentalis-obs.csv</code>. After this change, the DataObject holding the EML metadata should be updated so that the EML element <code>objectName</code> for this dataset matched the new filename:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">metadataId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@formatId"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span>)
-<span class="no">nameXpath</span> <span class="kw">&lt;-</span> <span class="st">'//dataTable/physical/objectName[text()="Strix-occidentalis-obs.csv"]'</span>
-<span class="no">newName</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span>(<span class="no">zipfile</span>)
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/updateMetadata.html">updateMetadata</a></span>(<span class="no">pkg</span>, <span class="no">metadataId</span>, <span class="kw">xpath</span><span class="kw">=</span><span class="no">nameXpath</span>, <span class="kw">replacement</span><span class="kw">=</span><span class="no">newName</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">metadataId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@formatId"</span>, value<span class="op">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span><span class="op">)</span>
+<span class="va">nameXpath</span> <span class="op">&lt;-</span> <span class="st">'//dataTable/physical/objectName[text()="Strix-occidentalis-obs.csv"]'</span>
+<span class="va">newName</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">zipfile</span><span class="op">)</span>
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/updateMetadata.html">updateMetadata</a></span><span class="op">(</span><span class="va">pkg</span>, <span class="va">metadataId</span>, xpath<span class="op">=</span><span class="va">nameXpath</span>, replacement<span class="op">=</span><span class="va">newName</span><span class="op">)</span></code></pre></div>
 <p>The <code>updateMetadata</code> method updates a DataObject containing XML, substituting the value located in the document specified with the <code>xpath</code> argument with the value provided in the <code>replacement</code> argument. In this example, the XML contained in the DataObject with identifier <code>metadataId</code> is an EML metadata document. The EML element <code>objectName</code> is updated with the value <code>Strix-occidentalis-obs.csv.zip</code>.</p>
 <p>Note the the <code>xpath</code> argument uses the XPath query language, which is used to locate elements within an XML document.</p>
 <p>For EML metadata, another element that may need to be updated, if it is present in the original EML file, is the distribution url. This element contains the link that can be used to download the file from DataONE, which includes the DataONE identifier for the object. Because the identifier value is set when the DataObject is created, the EML metadata is out of date and needs to be updated with the new identifier value.</p>
@@ -217,14 +233,16 @@
       &lt;entityType&gt;Other&lt;/entityType&gt;
     &lt;/dataTable&gt;</code></pre>
 <p>The following lines get the current identifier for the DataObject that contains the correct file, and uses this identifier value to construct a standard DataONE access URL, using the base URL of the DataONE coordinating node.</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">objId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@fileName"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">'Strix-occidentalis-obs.csv.zip'</span>)
-<span class="no">newURL</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"%s/%s/resolve/%s"</span>, <span class="no">d1c</span>@<span class="kw">cn</span>@<span class="kw">baseURL</span>, <span class="no">d1c</span>@<span class="kw">cn</span>@<span class="kw">APIversion</span>, <span class="no">objId</span>)
-<span class="no">newURL</span></pre></body></html></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">objId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@fileName"</span>, value<span class="op">=</span><span class="st">'Strix-occidentalis-obs.csv.zip'</span><span class="op">)</span>
+<span class="va">newURL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s/%s/resolve/%s"</span>, <span class="va">d1c</span><span class="op">@</span><span class="va">cn</span><span class="op">@</span><span class="va">baseURL</span>, <span class="va">d1c</span><span class="op">@</span><span class="va">cn</span><span class="op">@</span><span class="va">APIversion</span>, <span class="va">objId</span><span class="op">)</span>
+<span class="va">newURL</span></code></pre></div>
 <p>The <code>selectMember</code> method checks slot specified in <code>name</code> argument, in this case <code>sysmeta@fileName</code>, of each <em>DataObject</em> in the <em>DataPackage</em> <code>pkg</code> and returns the identifier of any member that matches the specified value. This package has only one <em>DataObject</em> with the name <code>Strix-occidentalis-obs.csv.zip</code> so only one identifier is returned in <code>objId</code>.</p>
 <p>Next, the metadata element for the distribution url will be updated in the <em>DataObject</em> that contains the EML metadata in the package <code>pkg</code></p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">metadataId</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/selectMember.html">selectMember</a></span>(<span class="no">pkg</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"sysmeta@formatId"</span>, <span class="kw">value</span><span class="kw">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span>)
-<span class="no">xpathToURL</span> <span class="kw">&lt;-</span> <span class="st">"//dataTable/physical/distribution[../objectName/text()=\"OwlNightj.csv\"]/online/url"</span>
-<span class="no">pkg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/datapack/man/updateMetadata.html">updateMetadata</a></span>(<span class="no">pkg</span>, <span class="kw">do</span><span class="kw">=</span><span class="no">metadataId</span>, <span class="kw">xpath</span><span class="kw">=</span><span class="no">xpathToURL</span>, <span class="kw">replacement</span><span class="kw">=</span><span class="no">newURL</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">metadataId</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/selectMember.html">selectMember</a></span><span class="op">(</span><span class="va">pkg</span>, name<span class="op">=</span><span class="st">"sysmeta@formatId"</span>, value<span class="op">=</span><span class="st">"eml://ecoinformatics.org/eml-2.1.1"</span><span class="op">)</span>
+<span class="va">xpathToURL</span> <span class="op">&lt;-</span> <span class="st">"//dataTable/physical/distribution[../objectName/text()=\"OwlNightj.csv\"]/online/url"</span>
+<span class="va">pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/updateMetadata.html">updateMetadata</a></span><span class="op">(</span><span class="va">pkg</span>, do<span class="op">=</span><span class="va">metadataId</span>, xpath<span class="op">=</span><span class="va">xpathToURL</span>, replacement<span class="op">=</span><span class="va">newURL</span><span class="op">)</span></code></pre></div>
 <p>When the modified metadata file is updated to DataONE, a new identifier is required, as the modified metadata will replace the old one by created a new object in DataONE, and marking the old one as <code>obsoleted</code> by the new one. For this reason, the call to <code>updateMetadata</code> will assign a new identifier to the metadata <em>DataObject</em> in the DataPackage <code>pkg</code>, if necessary.</p>
 </div>
   </div>
@@ -240,11 +258,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

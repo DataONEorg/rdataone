@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
       </span>
     </div>
 
@@ -61,7 +61,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -109,15 +109,15 @@
 
 <ul>
 <li>
-<strong>Authors</strong>: Matthew B. Jones (<a href="http://www.nceas.ucsb.edu">NCEAS</a>), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain</li>
-<li><a href="http://doi.org/10.5063/F1M61H5X">doi:10.5063/F1M61H5X</a></li>
+<strong>Authors</strong>: Matthew B. Jones (<a href="https://www.nceas.ucsb.edu">NCEAS</a>), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain</li>
+<li><a href="https://doi.org/10.5063/F1M61H5X">doi:10.5063/F1M61H5X</a></li>
 <li>
-<strong>License</strong>: <a href="http://opensource.org/licenses/Apache-2.0">Apache 2</a>
+<strong>License</strong>: <a href="https://opensource.org/licenses/Apache-2.0">Apache 2</a>
 </li>
 <li><a href="https://github.com/DataONEorg/rdataone">Package source code on Github</a></li>
 <li><a href="https://github.com/DataONEorg/rdataone/issues"><strong>Submit Bugs and feature requests</strong></a></li>
 </ul>
-<p>Provides read and write access to data and metadata from the <a href="https://www.dataone.org/current-member-nodes">DataONE network of data repositories</a>, including the <a href="https://knb.ecoinformatics.org">KNB Data Repository</a>, <a href="http://datadryad.org">Dryad</a>, and the NSF <a href="https://arcticdata.io">Arctic Data Center</a>. Each DataONE repository implements a consistent repository application programming interface. Users call methods in R to access these remote repository functions, such as methods to query the metadata catalog, get access to metadata for particular data packages, and read the data objects from the data repository using the global identifier for each data object. Users can also insert and update data objects on repositories that support these methods. For more details, see the vignettes.</p>
+<p>Provides read and write access to data and metadata from the <a href="https://www.dataone.org/current-member-nodes">DataONE network of data repositories</a>, including the <a href="https://knb.ecoinformatics.org">KNB Data Repository</a>, <a href="https://datadryad.org/stash">Dryad</a>, and the NSF <a href="https://arcticdata.io">Arctic Data Center</a>. Each DataONE repository implements a consistent repository application programming interface. Users call methods in R to access these remote repository functions, such as methods to query the metadata catalog, get access to metadata for particular data packages, and read the data objects from the data repository using the global identifier for each data object. Users can also insert and update data objects on repositories that support these methods. For more details, see the vignettes.</p>
 <div id="installation-notes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-notes" class="anchor"></a>Installation Notes</h2>
@@ -157,7 +157,7 @@ library(dataone)</a></code></pre>
 <a href="#quick-start" class="anchor"></a>Quick Start</h2>
 <p>See the full manual (<code><a href="reference/dataone.html">help(dataone)</a></code>) for documentation.</p>
 <p>To search the DataONE Federation Member Node <em>Knowledge Network for Biocomplexity (KNB)</em> for a dataset:</p>
-<pre><code><a href="https://rdrr.io/pkg/dataone/man">library(dataone)
+<pre><code><a href="https://github.com/DataONEorg/rdataone">library(dataone)
 cn &lt;- CNode("PROD")
 mn &lt;- getMNode(cn, "urn:node:KNB")
 mySearchTerms &lt;- list(q="abstract:salmon+AND+keywords:spawn+AND+keywords:chinook",
@@ -168,7 +168,7 @@ result &lt;- query(mn, solrQuery=mySearchTerms, as="data.frame")
 result[1,c("id", "title")]
 id &lt;- result[1,'id']</a></code></pre>
 <p>The metadata file that describes the located research can be downloaded and viewed in an XML viewer, text editor after being written to disk, or in R via the commands below:</p>
-<pre><code><a href="https://rdrr.io/pkg/XML/man">library(XML)
+<pre><code><a href="http://www.omegahat.net/RSXML">library(XML)
 metadata &lt;- rawToChar(getObject(mn, id))
 doc &lt;- xmlRoot(xmlTreeParse(metadata, asText=TRUE, trim = TRUE, ignoreBlanks = TRUE))
 tf &lt;- tempfile()
@@ -182,7 +182,7 @@ df &lt;- read.csv(theData, stringsAsFactors=FALSE)
 df[1,]</code></pre>
 <p>Uploading a CSV file to a DataONE Member Node requires user authentication. DataONE user authentication is described in the vignette <code>dataone-federation</code>.</p>
 <p>Once the authentication steps have been followed, uploading is done with:</p>
-<pre><code><a href="https://rdrr.io/pkg/datapack/man">library(datapack)
+<pre><code><a href="https://docs.ropensci.org/datapack/">library(datapack)
 library(uuid)
 d1c &lt;- D1Client("STAGING", "urn:node:mnStageUCSB2")
 id &lt;- paste("urn:uuid:", UUIDgenerate(), sep="")
@@ -195,7 +195,7 @@ uploadDataObject(d1c, d1Object, public=TRUE)</a></code></pre>
 <p>In addition, a collection of science metadata and data can be downloaded with one command, for example:</p>
 <pre><code>d1c &lt;- D1Client("PROD", "urn:node:KNB")
 pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383", quiet=FALSE)</code></pre>
-<p>See the R vignette <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/dataone-overview.Rmd">dataone R Package</a> for more information.</p>
+<p>See the R vignette <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v01-dataone-overview.Rmd">dataone R Package</a> for more information.</p>
 </div>
 <div id="acknowledgments" class="section level2">
 <h2 class="hasAnchor">
@@ -208,9 +208,9 @@ pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383"
 <li>NSF-PLR grant #1546024 to M. B. Jones, S. Baker-Yeboah, J. Dozier, M. Schildhauer, and A. Budden</li>
 </ul>
 <p>Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.</p>
-<p><a href="http://www.nceas.ucsb.edu"><img src="https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png" alt="nceas_footer"></a></p>
-<p><a href="http://dataone.org"><img src="https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg" alt="dataone_footer"></a></p>
-<p><a href="http://ropensci.org"><img src="http://ropensci.org/public_images/github_footer.png" alt="ropensci_footer"></a></p>
+<p><a href="https://www.nceas.ucsb.edu"><img src="https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png" alt="nceas_footer"></a></p>
+<p><a href="https://www.dataone.org"><img src="https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg" alt="dataone_footer"></a></p>
+<p><a href="https://ropensci.org"><img src="https://ropensci.org/public_images/github_footer.png" alt="ropensci_footer"></a></p>
 </div>
 </div>
   </div>
@@ -242,15 +242,14 @@ pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383"
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Matthew B. Jones <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Peter Slaughter <br><small class="roles"> Author </small>  </li>
+<li>Matthew B. Jones <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0077-4738" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Peter Slaughter <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2192-403X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Rob Nahf <br><small class="roles"> Author </small>  </li>
 <li>Carl Boettiger <br><small class="roles"> Author </small>  </li>
 <li>Chris Jones <br><small class="roles"> Author </small>  </li>
-<li>Jordan Read <br><small class="roles"> Author </small>  </li>
+<li>Bryce Mecum <br><small class="roles"> Author </small>  </li>
+<li>Jeanette Clark <br><small class="roles"> Author </small>  </li>
 <li>Lauren Walker <br><small class="roles"> Author </small>  </li>
-<li>Edmund Hart <br><small class="roles"> Author </small>  </li>
-<li>Scott Chamberlain <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -258,7 +257,7 @@ pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383"
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=dataone"><img src="http://www.r-pkg.org/badges/version/dataone" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.r-project.org/package=dataone"><img src="https://www.r-pkg.org/badges/version/dataone" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://travis-ci.org/DataONEorg/rdataone"><img src="https://travis-ci.org/DataONEorg/rdataone.png?branch=master" alt="Build Status"></a></li>
 </ul>
 </div>
@@ -267,11 +266,11 @@ pkg &lt;- getDataPackage(d1c, id="urn:uuid:04cd34fd-25d4-447f-ab6e-73a572c5d383"
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
