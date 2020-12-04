@@ -20,6 +20,7 @@
 * Create packages with uniform checksum (#261)
 * Update tests for compatibility with testthat 3e (#260)
 * Query results returned 'as=data.frame' now contain Solr multi-valued fields as R lists (#250)
+* URLs violating CRAN submission check for redirection (HTTP 301) have been fixed (#275)
 
 ## R CMD check results
 
