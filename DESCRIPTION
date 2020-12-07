@@ -1,5 +1,5 @@
 Package: dataone
-Version: 2.2.1
+Version: 2.2.1.9000
 Date: 2020-12-03
 Title: R Interface to the DataONE REST API
 Authors@R: c( person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-0077-4738")), 
