@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,13 +94,12 @@
 
       
 
-      </header><script src="v05-upload-data_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="v05-upload-data_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="v05-upload-data_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="v05-upload-data_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Uploading Datasets to DataONE</h1>
             
-            <h4 class="date">2020-12-04</h4>
+            <h4 class="date">2021-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v05-upload-data.Rmd"><code>vignettes/v05-upload-data.Rmd</code></a></small>
       <div class="hidden name"><code>v05-upload-data.Rmd</code></div>
@@ -121,7 +120,7 @@
 <a href="#uploading-a-package-using-uploaddatapackage" class="anchor"></a>Uploading A Package Using <code>uploadDataPackage</code>
 </h2>
 <p>Datasets and metadata can be uploaded individually or as a collection. Such a collection, whether contained in local R objects or existing on a DataONE repository, will be informally referred to as a <code>package</code> or ‘data package’. Figure 1. is a diagram of a typical DataONE package showing a metadata file that describes, or <code>documents</code> the data granules that the package contains.</p>
-<p><img src="https://raw.githubusercontent.com/DataONEorg/rdataone/master/vignettes/package-diagram.png"></p>
+<p><img src="https://raw.githubusercontent.com/DataONEorg/rdataone/main/vignettes/package-diagram.png"></p>
 <p>The steps necessary to to prepare and upload a package to DataONE using the <code>uploadDataPackage</code> method will be shown. A complete script that uses these steps is shown here, with detailed explanations of the steps following.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span>

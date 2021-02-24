@@ -31,7 +31,7 @@ R objects or existing on a DataONE repository, will be informally referred to as
 'data package'. Figure 1. is a diagram of a typical DataONE package showing a metadata file that
 describes, or `documents` the data granules that the package contains.
 
-![](https://raw.githubusercontent.com/DataONEorg/rdataone/master/vignettes/package-diagram.png)
+![](https://raw.githubusercontent.com/DataONEorg/rdataone/main/vignettes/package-diagram.png)
 
 The steps necessary to
 to prepare and upload a package to DataONE using the `uploadDataPackage` method 
