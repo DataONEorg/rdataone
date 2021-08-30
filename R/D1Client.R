@@ -611,7 +611,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
   # Download the resource map, parse it and load the relationships into the DataPackage
   # Currently we only use the first resource map
   if(!quiet) cat(sprintf("Getting resource map with id: %s\n", dpkg@resmapId))
-  resMapObj <- getDataObject(x, identifier=resmapId, lazyLoad=FALSE, checksumAlgorithm=checksumAlgorithm)
+  resMapObj <- getDataObject(x, identifier=resmapId, lazyLoad=FALSE, limit=limit, checksumAlgorithm=checksumAlgorithm)
   # The resource map is not a 'member' of the package, but the sysmeta for it must be retained so that 
   # the state and 'history' of the package can be inspected, so save the resmap sysmeta to the corresponding
   # DataPackage R slot. An example case for inspecting the sysmeta is to determine if the package was newly
