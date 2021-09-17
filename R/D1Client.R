@@ -594,7 +594,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
         if(!quiet) cat(sprintf("Skipping metadata object, already downloaded\n"))
         next
       }
-      obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit=limit, quiet=quiet, checksumAlgorithm)
+      obj <- getDataObject(x, identifier=thisPid, lazyLoad=lazyLoad, limit="1TB", quiet=quiet, checksumAlgorithm)
       # The metadata object will be added this first time addMember is called.
       # Note that the 'cito:documents' relationship should already be in the package
       # resource map, so don't add this relationship now.
