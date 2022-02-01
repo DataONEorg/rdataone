@@ -1013,7 +1013,8 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
         do <- getMember(dp, doId)
         submitter <- do@sysmeta@submitter
         if (public) {
-            do <- setPublicAccess(do)
+             do <- setPublicAccess(do)
+             do@updated[['sysmeta']] <- TRUE
         }
         
         if(!is.na(do@filename)) {
