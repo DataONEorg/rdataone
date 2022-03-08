@@ -285,7 +285,14 @@ setMethod("getSystemMetadata", signature("MNode"), function(x, pid) {
 setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm="SHA-256") {
   stopifnot(is.character(pid))
   url <- paste(x@endpoint, "checksum", URLencode(pid, reserved=T), sep="/")
-  response<-GET(url, query=list(checksumAlgorithm=checksumAlgorithm), user_agent(get_user_agent()))
+  url <- paste0(url, '?checksumAlgorithm=', checksumAlgorithm)
+  response <- auth_get(url, node=x)
+  
+  if(response$status_code != "200") {
+    warning(sprintf("Error getting checksum: %s\n", getErrorDescription(response)))
+    return(NULL)
+  }
+  
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,12 +94,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="v07-known-issues_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Known Issues</h1>
             
-            <h4 class="date">2020-06-24</h4>
+            <h4 class="date">2021-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v07-known-issues.Rmd"><code>vignettes/v07-known-issues.Rmd</code></a></small>
       <div class="hidden name"><code>v07-known-issues.Rmd</code></div>
@@ -119,7 +119,7 @@
 Problem with the local SSL certificate </code></pre>
 <p>(Note that it is recommended that you use DataONE authentication tokens instead of an X.509 certificate if possible.)</p>
 <p>Changes in the Mac OS X system libraries in OS X Mavericks have taken away support of these X.509 certificates. A workaround to make these certificates usable on Mac OS X with R is to install a version of the <em>curl</em> R package that supports these certificates.</p>
-<p>On Mac OS X, the libcurl library can be installed with either <a href="https://www.macports.org">Mac Ports</a> package manager or the <a href="http://brew.sh">HomeBrew</a> package manager. The HomeBrew package manager can be significantly faster to install but either one will work provided the directions shown below are followed.</p>
+<p>On Mac OS X, the libcurl library can be installed with either <a href="https://www.macports.org">Mac Ports</a> package manager or the <a href="https://brew.sh">HomeBrew</a> package manager. The HomeBrew package manager can be significantly faster to install but either one will work provided the directions shown below are followed.</p>
 <p>You can check if you have MacPorts installed by entering the following command in a terminal window:</p>
 <pre><code>port version</code></pre>
 <div id="create-new-curl-package-using-macports" class="section level4">
@@ -127,15 +127,16 @@ Problem with the local SSL certificate </code></pre>
 <a href="#create-new-curl-package-using-macports" class="anchor"></a>Create new <em>curl</em> package using MacPorts</h4>
 <p>If MacPorts is being used on your system, the following commands can be entered to install a <em>curl</em> package that can read the certificate and allow them to be used by the <em>dataone</em> package for authentication to a DataONE node. In a terminal window enter the commands:</p>
 <pre><code>sudo port install curl</code></pre>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">LIB_DIR</span><span class="kw">=</span><span class="st">"/opt/local/lib"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">INCLUDE_DIR</span><span class="kw">=</span><span class="st">"/opt/local/include"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"curl"</span>, <span class="kw">type</span><span class="kw">=</span><span class="st">"source"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">curl</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dataone</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>LIB_DIR<span class="op">=</span><span class="st">"/opt/local/lib"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>INCLUDE_DIR<span class="op">=</span><span class="st">"/opt/local/include"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"curl"</span>, type<span class="op">=</span><span class="st">"source"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.cran.dev/curl">curl</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span>
 
 <span class="co"># Remove the environment variables as they are no longer needed.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">LIB_DIR</span><span class="kw">=</span><span class="st">""</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">INCLUDE_DIR</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>LIB_DIR<span class="op">=</span><span class="st">""</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>INCLUDE_DIR<span class="op">=</span><span class="st">""</span><span class="op">)</span></code></pre></div>
 <p>At this point you should be able to use X.509 Certificates.</p>
 </div>
 <div id="create-new-curl-package-using-homebrew" class="section level4">
@@ -147,15 +148,16 @@ Problem with the local SSL certificate </code></pre>
 <pre><code>brew install curl --with-openssl
 brew link curl --force</code></pre>
 <p>In the R console enter the commands:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">LIB_DIR</span><span class="kw">=</span><span class="st">"/usr/local/opt/curl/lib"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">INCLUDE_DIR</span><span class="kw">=</span><span class="st">"/usr/local/opt/curl/include"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"curl"</span>, <span class="kw">type</span><span class="kw">=</span><span class="st">"source"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">curl</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dataone</span>)
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>LIB_DIR<span class="op">=</span><span class="st">"/usr/local/opt/curl/lib"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>INCLUDE_DIR<span class="op">=</span><span class="st">"/usr/local/opt/curl/include"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"curl"</span>, type<span class="op">=</span><span class="st">"source"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.cran.dev/curl">curl</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span>
 
 <span class="co"># Remove the environment variables as they are no longer needed.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">LIB_DIR</span><span class="kw">=</span><span class="st">""</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">INCLUDE_DIR</span><span class="kw">=</span><span class="st">""</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>LIB_DIR<span class="op">=</span><span class="st">""</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>INCLUDE_DIR<span class="op">=</span><span class="st">""</span><span class="op">)</span></code></pre></div>
 <p>At this point you should be able to use X.509 Certificates.</p>
 </div>
 </div>
@@ -173,11 +175,11 @@ brew link curl --force</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

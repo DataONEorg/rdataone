@@ -5,6 +5,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Downloading Data From DataONE}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
 
@@ -50,7 +51,7 @@ The *result* object, a data.frame, can be inspected to determine which matching 
 multiple matching dataset identifiers may be returned from the query.
 Each object in DataONE is uniquely identified by a Persistent Identifier (PID) that can be used to refer to the object and perform operations on it, such as downloading it to a local machine. 
 
-(As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at http://search.dataone.org to find the identifiers of data to download.)
+(As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at https://search.dataone.org to find the identifiers of data to download.)
 
 In the R example, after inspecting the *result* data, we will use the first matching dataset:
 ```{r,eval=FALSE, cache=F}

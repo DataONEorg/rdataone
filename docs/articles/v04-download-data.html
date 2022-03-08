@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,12 +94,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="v04-download-data_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Downloading Data From DataONE</h1>
             
-            <h4 class="date">2020-06-24</h4>
+            <h4 class="date">2021-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v04-download-data.Rmd"><code>vignettes/v04-download-data.Rmd</code></a></small>
       <div class="hidden name"><code>v04-download-data.Rmd</code></div>
@@ -122,46 +122,52 @@
 <a href="#search-all-of-dataone-for-datasets-of-interest" class="anchor"></a>Search all of DataONE For Datasets of Interest</h3>
 <p>The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network. Sending a query to the CN may find matching datasets located on potentially any Member Node in the network. The search may be limited to the data holdings of a particular MN by either specifying the “datasource” search term in the query sent to the CN, or by just sending the query to a specific MN.</p>
 <p>The following query shows how to query the entire DataONE network and locate and download data from any MN that has the desired data:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dataone</span>)
-<span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span>
+<span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
 <span class="co"># Ask for the id, title and abstract</span>
-<span class="no">queryParams</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"abstract:kelp"</span>, <span class="kw">fq</span><span class="kw">=</span><span class="st">"attribute:biomass"</span>, <span class="kw">fq</span><span class="kw">=</span><span class="st">"id:doi*"</span>,
-                    <span class="kw">fq</span><span class="kw">=</span><span class="st">"formatType:METADATA"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"id,title,abstract"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="kw">solrQuery</span><span class="kw">=</span><span class="no">queryParams</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)
-<span class="no">result</span>[<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"id"</span>, <span class="st">"title"</span>)]</pre></body></html></div>
+<span class="va">queryParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"abstract:kelp"</span>, fq<span class="op">=</span><span class="st">"attribute:biomass"</span>, fq<span class="op">=</span><span class="st">"id:doi*"</span>, 
+                    fq<span class="op">=</span><span class="st">"formatType:METADATA"</span>, fl<span class="op">=</span><span class="st">"id,title,abstract"</span><span class="op">)</span> 
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, solrQuery<span class="op">=</span><span class="va">queryParams</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"title"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 <p>The <em>result</em> object, a data.frame, can be inspected to determine which matching dataset to download, as multiple matching dataset identifiers may be returned from the query. Each object in DataONE is uniquely identified by a Persistent Identifier (PID) that can be used to refer to the object and perform operations on it, such as downloading it to a local machine.</p>
-<p>(As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at <a href="http://search.dataone.org" class="uri">http://search.dataone.org</a> to find the identifiers of data to download.)</p>
+<p>(As an alternative to retrieving dataset information from a query, it is of course possible to use the DataONE web browser search interface located at <a href="https://search.dataone.org" class="uri">https://search.dataone.org</a> to find the identifiers of data to download.)</p>
 <p>In the R example, after inspecting the <em>result</em> data, we will use the first matching dataset:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"> <span class="no">pid</span> <span class="kw">&lt;-</span> <span class="no">result</span>[<span class="fl">1</span>,<span class="st">'id'</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"> <span class="va">pid</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="st">'id'</span><span class="op">]</span></code></pre></div>
 <p>Now that the PID is determined, the MN that holds the data must be located. For this, the <em>resolve</em> method is used to find an MN that holds the data and that is currently available:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">locations</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/resolve.html">resolve</a></span>(<span class="no">cn</span>, <span class="no">pid</span>)
-<span class="no">mnId</span> <span class="kw">&lt;-</span> <span class="no">locations</span>$<span class="no">data</span>[<span class="fl">2</span>, <span class="st">"nodeIdentifier"</span>]
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="no">mnId</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">locations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resolve.html">resolve</a></span><span class="op">(</span><span class="va">cn</span>, <span class="va">pid</span><span class="op">)</span>
+<span class="va">mnId</span> <span class="op">&lt;-</span> <span class="va">locations</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"nodeIdentifier"</span><span class="op">]</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="va">mnId</span><span class="op">)</span></code></pre></div>
 <p>Multiple MNs may hold the data, depending on the DataONE replication policy that is in effect for the dataset and which member nodes are currently available. (DataONE copies or ‘replicates’ datasets from one MN to other MNs, depending on what was requested by the user when a dataset was first uploaded to DataONE). In this example the second location from the resolve list will be downloaded. Now the call can be made that downloads the object itself:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getObject.html">getObject</a></span>(<span class="no">mn</span>, <span class="no">pid</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getObject.html">getObject</a></span><span class="op">(</span><span class="va">mn</span>, <span class="va">pid</span><span class="op">)</span></code></pre></div>
 <p>If the search is limited to a particular MN, in this case the Knowledge Network for Biocomplexity (KNB), then the search and download are performed with the statements:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># Query the data holdings on a member node</span>
-<span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="st">"urn:node:KNB"</span>)
-<span class="no">queryParams</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"abstract:habitat"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"id,title,abstract"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">mn</span>, <span class="no">queryParams</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Query the data holdings on a member node</span>
+<span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
+<span class="va">queryParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"abstract:habitat"</span>, fl<span class="op">=</span><span class="st">"id,title,abstract"</span><span class="op">)</span> 
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">mn</span>, <span class="va">queryParams</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="co"># Choose the first matchin PID</span>
-<span class="no">pid</span> <span class="kw">&lt;-</span> <span class="no">result</span>[<span class="fl">1</span>,<span class="st">'id'</span>]
-<span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getObject.html">getObject</a></span>(<span class="no">mn</span>, <span class="no">pid</span>)</pre></body></html></div>
+<span class="va">pid</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="st">'id'</span><span class="op">]</span>
+<span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getObject.html">getObject</a></span><span class="op">(</span><span class="va">mn</span>, <span class="va">pid</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="alternate-approach-for-dataone-wide-search-and-download" class="section level3">
 <h3 class="hasAnchor">
 <a href="#alternate-approach-for-dataone-wide-search-and-download" class="anchor"></a>Alternate Approach for DataONE-wide search and download</h3>
 <p>This approach uses the <em>getDataObject</em> method from the R package. The <em>getDataObject</em> method determines which member node in DataONE holds the data item and downloads it into a datapack::DataObject. The DataObject R object is a wrapper that contains the data bytes for the DataONE dataset requested as well as the DataONE system metadata for the object.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">d1c</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span>(<span class="st">"PROD"</span>, <span class="st">"urn:node:KNB"</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d1c</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/D1Client.html">D1Client</a></span><span class="op">(</span><span class="st">"PROD"</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
 <span class="co"># Ask for the id, title and abstract</span>
-<span class="no">queryParams</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"abstract:\"biogenic hydrocarbon\""</span>, <span class="kw">fq</span><span class="kw">=</span><span class="st">"id:doi*"</span>,
-                    <span class="kw">fq</span><span class="kw">=</span><span class="st">"formatType:METADATA"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"id,title"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">d1c</span>@<span class="kw">mn</span>, <span class="kw">solrQuery</span><span class="kw">=</span><span class="no">queryParams</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)
-<span class="no">pid</span> <span class="kw">&lt;-</span> <span class="no">result</span>[<span class="fl">1</span>,<span class="st">'id'</span>]
-<span class="no">dataObj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getDataObject.html">getDataObject</a></span>(<span class="no">d1c</span>, <span class="no">pid</span>)
-<span class="no">bytes</span> <span class="kw">&lt;-</span> <span class="fu">getData</span>(<span class="no">dataObj</span>)
-<span class="no">metadataXML</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rawConversion.html">rawToChar</a></span>(<span class="no">bytes</span>)</pre></body></html></div>
+<span class="va">queryParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"abstract:\"biogenic hydrocarbon\""</span>, fq<span class="op">=</span><span class="st">"id:doi*"</span>, 
+                    fq<span class="op">=</span><span class="st">"formatType:METADATA"</span>, fl<span class="op">=</span><span class="st">"id,title"</span><span class="op">)</span> 
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">d1c</span><span class="op">@</span><span class="va">mn</span>, solrQuery<span class="op">=</span><span class="va">queryParams</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">pid</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="st">'id'</span><span class="op">]</span>
+<span class="va">dataObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getDataObject.html">getDataObject</a></span><span class="op">(</span><span class="va">d1c</span>, <span class="va">pid</span><span class="op">)</span>
+<span class="va">bytes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/getData.html">getData</a></span><span class="op">(</span><span class="va">dataObj</span><span class="op">)</span>
+<span class="va">metadataXML</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rawConversion.html">rawToChar</a></span><span class="op">(</span><span class="va">bytes</span><span class="op">)</span></code></pre></div>
 <p>The following functions are available to extract information from the DataObject:</p>
 <ul>
 <li>getIdentifier(obj) : Get the identifier (PID) of a DataObject</li>
@@ -169,24 +175,28 @@
 <li>getData(obj) : Get the data contents of the DataObject</li>
 </ul>
 <p>For example, to extract the data byes from the DataObject:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">dataBytes</span> <span class="kw">&lt;-</span> <span class="fu">getData</span>(<span class="no">dataObj</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataBytes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/datapack/reference/getData.html">getData</a></span><span class="op">(</span><span class="va">dataObj</span><span class="op">)</span></code></pre></div>
 <p>In addition to the DataObject functions, the complete set of information from the DataONE system metadata is available from the object’s slot:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">dataObj</span>@<span class="kw">sysmeta</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dataObj</span><span class="op">@</span><span class="va">sysmeta</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="download-a-data-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#download-a-data-package" class="anchor"></a>Download a data package</h3>
 <p>A DataONE data package is a collection of datasets that are documented by a metadata object that is also included in the package. For example, a data package might contain all source data, scripts and analysis products for an experiment or study. For example, the data package available from the Knowledge Network for Biocomplexity that is available <a href="https://knb.ecoinformatics.org/#view/corina_logan.20.3" class="uri">https://knb.ecoinformatics.org/#view/corina_logan.20.3</a> that contains data for an experiment related to Western scrub-jays food caching behaviors.</p>
 <p>Note: to use the <em>getPackage</em> method, the <em>id</em> parameter must be the package identifier associated with the ORE package description. If the pid of the metadata object or science data object is known, then the package identifier can be discovered using a query such as:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>()
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="st">"urn:node:KNB"</span>)
-<span class="no">queryParamList</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"id:Blandy.77.1"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"resourceMap"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="kw">solrQuery</span><span class="kw">=</span><span class="no">queryParamList</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>)
-<span class="no">packagePid</span> <span class="kw">&lt;-</span> <span class="no">result</span>[<span class="fl">1</span>,<span class="fl">1</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
+<span class="va">queryParamList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"id:Blandy.77.1"</span>, fl<span class="op">=</span><span class="st">"resourceMap"</span><span class="op">)</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, solrQuery<span class="op">=</span><span class="va">queryParamList</span>, as<span class="op">=</span><span class="st">"data.frame"</span><span class="op">)</span>
+<span class="va">packagePid</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span></code></pre></div>
 <p>Once the package identifier is determined, the entire data package can be downloaded using the <em>getPackage</em> method:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>()
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="st">"urn:node:KNB"</span>)
-<span class="no">bagitFileName</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getPackage.html">getPackage</a></span>(<span class="no">mn</span>, <span class="kw">id</span><span class="kw">=</span><span class="no">packagePid</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
+<span class="va">bagitFileName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getPackage.html">getPackage</a></span><span class="op">(</span><span class="va">mn</span>, id<span class="op">=</span><span class="va">packagePid</span><span class="op">)</span></code></pre></div>
 <p>Care must be taken, however, as these commands download the entire package.</p>
 <p>The package is downloaded to a single file that is structured according to the <a href="https://tools.ietf.org/html/draft-kunze-bagit-10">Bagit</a> packaging guidelines. The <em>getPackage</em> method returns the name this file that is created in a temporary directory.</p>
 <p>Because the <em>getPackage</em> method downloads the entire collection of files for a data package, the downloaded Bagit file can be quiet large and may take a significant amount of time to download, depending on the package contents.</p>
@@ -206,11 +216,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

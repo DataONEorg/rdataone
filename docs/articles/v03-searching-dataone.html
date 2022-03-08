@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,12 +94,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="v03-searching-dataone_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Searching DataONE Data Holdings</h1>
             
-            <h4 class="date">2020-06-24</h4>
+            <h4 class="date">2021-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DataONEorg/rdataone/blob/master/vignettes/v03-searching-dataone.Rmd"><code>vignettes/v03-searching-dataone.Rmd</code></a></small>
       <div class="hidden name"><code>v03-searching-dataone.Rmd</code></div>
@@ -111,7 +111,7 @@
 <p>The primary method to locate data in the DataONE network is to use the web based search tool located at <a href="https://search.dataone.org" class="uri">https://search.dataone.org</a>.</p>
 <p>Data can also be discovered programmatically from R using the <em>dataone</em> R package method <code>query</code>. Both the web page and the R method access the same underlying search mechanism, the Apache Foundation Solr search engine that runs on the <a href="https://www.dataone.org/coordinating-nodes">DataONE Coordinating Node</a>. The DataONE Solr index, similar to a catalog or database, contains information for every dataset that is available from the DataONE network.</p>
 <p>The same search mechanism is available on <a href="https://www.dataone.org/current-member-nodes">DataONE Member Nodes</a>. However, the search index on a member node only contains dataset information for datasets that are contained on that member node.</p>
-<p>Information about the Solr search engine can be obtained at <a href="http://lucene.apache.org/solr/resources.html">Solr Resources</a>.</p>
+<p>Information about the Solr search engine can be obtained at <a href="https://lucene.apache.org/solr/resources.html">Solr Resources</a>.</p>
 <p>Additional information about searching DataONE can be viewed at <a href="https://purl.dataone.org/architecture/design/SearchMetadata.html">Content Discovery</a>.</p>
 <div id="using-the-query-method" class="section level2">
 <h2 class="hasAnchor">
@@ -122,10 +122,11 @@
 <h3 class="hasAnchor">
 <a href="#query-and-return-an-r-list" class="anchor"></a>Query and return an R list</h3>
 <p>The following example queries DataONE and returns values in an R list, with each value converted from the Solr result to the appropriate R data type:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dataone</span>)
-<span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">queryParamList</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"id:doi*"</span>, <span class="kw">rows</span><span class="kw">=</span><span class="st">"5"</span>, <span class="kw">fq</span><span class="kw">=</span><span class="st">"abstract:carbon"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"id,title,dateUploaded,abstract,datasource,size"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="kw">solrQuery</span><span class="kw">=</span><span class="no">queryParamList</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"list"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DataONEorg/rdataone">dataone</a></span><span class="op">)</span>
+<span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">queryParamList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"id:doi*"</span>, rows<span class="op">=</span><span class="st">"5"</span>, fq<span class="op">=</span><span class="st">"abstract:carbon"</span>, fl<span class="op">=</span><span class="st">"id,title,dateUploaded,abstract,datasource,size"</span><span class="op">)</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, solrQuery<span class="op">=</span><span class="va">queryParamList</span>, as<span class="op">=</span><span class="st">"list"</span><span class="op">)</span></code></pre></div>
 <p>The ‘solrQuery’ argument takes a list of query parameters that are sent to the DataONE Solr search engine and control how the search is performed. The name of each list element is a Solr keyword which is combined with the list element value to create each Solr query term. All these terms are combined to create the complete Solr query. The <code>queryParamlist</code> in the example above will be used to construct this Solr query:</p>
 <pre><code>?q=id:doi*&amp;rows=5,&amp;fq=abstract:carbon&amp;fl=id,title,dateUploaded,abstract,datasource,size</code></pre>
 <p>The <code>q=id:doi*</code> is the main query term and specifies that all DataONE objects that have an <code>id</code> field value beginning with <code>doi*</code> should be returned.</p>
@@ -133,18 +134,21 @@
 <p>The <code>&amp;fl=id,title,dateUploaded,abstract,datasource,size</code> term is a <code>field</code> specifier, so only those fields in the list will be included in the result set.</p>
 <p>The <code>&amp;rows=5</code> term specifies that a maximum of five results will be returned.</p>
 <p>The <code>result</code> object contains all the data values found and returned from the query. Each element of the returned list contains information for one dataset. Each returned attribute for a dataset can be accessed with the appropriate element name, for example, to access the title information of the first dataset returned, use the R statement:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">result</span><span class="kw">[[</span><span class="fl">1</span>]]$<span class="no">title</span></pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">result</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">title</span></code></pre></div>
 <p>To print out selected information for all returned values, use:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">ids</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="no">result</span>, <span class="kw">function</span>(<span class="no">x</span>) {
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"id: %s"</span>, <span class="no">x</span>$<span class="no">id</span>))
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"origin member node: %s"</span>, <span class="no">x</span>$<span class="no">datasource</span>))
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"title: %s"</span>, <span class="no">x</span>$<span class="no">title</span>))
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"date uploaded: %s"</span>, <span class="no">x</span>$<span class="no">dateUploaded</span>))
-  <span class="no">x</span>$<span class="no">id</span>
-})</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">result</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"id: %s"</span>, <span class="va">x</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"origin member node: %s"</span>, <span class="va">x</span><span class="op">$</span><span class="va">datasource</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"title: %s"</span>, <span class="va">x</span><span class="op">$</span><span class="va">title</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"date uploaded: %s"</span>, <span class="va">x</span><span class="op">$</span><span class="va">dateUploaded</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">x</span><span class="op">$</span><span class="va">id</span>
+<span class="op">}</span><span class="op">)</span></code></pre></div>
 <p>The complete list of possible searchable values stored for a dataset can be viewed using <em>getQueryEngineDescription()</em>:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>()
-<span class="fu"><a href="../reference/getQueryEngineDescription.html">getQueryEngineDescription</a></span>(<span class="no">cn</span>, <span class="st">"solr"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/getQueryEngineDescription.html">getQueryEngineDescription</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"solr"</span><span class="op">)</span></code></pre></div>
 <p>However, the values available for a particular dataset may be a subset of these, depending on the metadata provided when the dataset is uploaded to DataONE.</p>
 <p>The DataONE Coordinating Node (CN) contains metadata about datasets from all Member Nodes (MN) in the network. As the above example shows, sending a query to the CN may find matching datasets located on potentially any Member Node in the network.</p>
 </div>
@@ -152,19 +156,22 @@
 <h3 class="hasAnchor">
 <a href="#return-values-as-a-data-frame" class="anchor"></a>Return values as a data frame</h3>
 <p>To return results as a data frame, use the <code>as</code> parameter as shown below. In addition all values will be stored as <code>character</code>, because <code>parse=FALSE</code> is specified:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="no">queryParamList</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, <span class="va">queryParamList</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>The <code>result</code> is a data frame with each row containing information for one dataset. To print all returned DataONE identifiers from the result:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">result</span>[,<span class="st">'id'</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">result</span><span class="op">[</span>,<span class="st">'id'</span><span class="op">]</span></code></pre></div>
 </div>
 <div id="using-a-simplified-search-" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-a-simplified-search-" class="anchor"></a>Using a Simplified Search.</h3>
 <p>A search may be performed by just specifying query fields and values using the <em>searchTerms</em> parameter. For example, to search for datasets that mention ‘kelp’ in the abstract and have an attribute description that contains the word ‘biomass’, the following query could be used:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="st">"urn:node:KNB"</span>)
-<span class="no">mySearchTerms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">abstract</span><span class="kw">=</span><span class="st">"kelp"</span>, <span class="kw">attribute</span><span class="kw">=</span><span class="st">"biomass"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="kw">searchTerms</span><span class="kw">=</span><span class="no">mySearchTerms</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
+<span class="va">mySearchTerms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>abstract<span class="op">=</span><span class="st">"kelp"</span>, attribute<span class="op">=</span><span class="st">"biomass"</span><span class="op">)</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, searchTerms<span class="op">=</span><span class="va">mySearchTerms</span>, as<span class="op">=</span><span class="st">"data.frame"</span><span class="op">)</span></code></pre></div>
 <p>Using the <em>searchTerms</em> parameter causes the <em>query</em> method to construct a Solr query based on the list, that is passed on to the DataONE node specified.</p>
 <p>The names in the <em>searchTerm</em> list are the query field names available from the Solr query engine being used. These names can be determined using the <em>getQueryEngineDescription</em> function.</p>
 </div>
@@ -172,22 +179,24 @@
 <h3 class="hasAnchor">
 <a href="#search-just-a-member-node" class="anchor"></a>Search just a member node</h3>
 <p>If it is known which Member Node holds the data of interest, then a search can be limited to just that MN by sending the search directly to that MN instead of the CN. For example, if the dataset of interest is on The Knowledge Network for Biocomplexity (KNB) Member Node, then the search is performed with the statements:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># Query the data holdings on a member node</span>
-<span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">mn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span>(<span class="no">cn</span>, <span class="st">"urn:node:KNB"</span>)
-<span class="no">queryParams</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">q</span><span class="kw">=</span><span class="st">"abstract:habitat"</span>, <span class="kw">fl</span><span class="kw">=</span><span class="st">"id,title,abstract"</span>)
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">mn</span>, <span class="no">queryParams</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Query the data holdings on a member node</span>
+<span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">mn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMNode.html">getMNode</a></span><span class="op">(</span><span class="va">cn</span>, <span class="st">"urn:node:KNB"</span><span class="op">)</span>
+<span class="va">queryParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>q<span class="op">=</span><span class="st">"abstract:habitat"</span>, fl<span class="op">=</span><span class="st">"id,title,abstract"</span><span class="op">)</span> 
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">mn</span>, <span class="va">queryParams</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="co"># Choose the first matchin PID</span>
-<span class="no">pid</span> <span class="kw">&lt;-</span> <span class="no">result</span>[<span class="fl">1</span>,<span class="st">'id'</span>]</pre></body></html></div>
+<span class="va">pid</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">[</span><span class="fl">1</span>,<span class="st">'id'</span><span class="op">]</span></code></pre></div>
 </div>
 <div id="filter-query-results-for-a-specific-member-node" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-query-results-for-a-specific-member-node" class="anchor"></a>Filter query results for a specific member node</h3>
 <p>An alternative way to locate datasets on a particular node is to send the query to the CN but limit the returned results to data holdings that originated from the specific member node by using Solr filter query parameter (<code>&amp;fq</code>) can be used for the <code>datasource</code> field:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">cn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span>(<span class="st">"PROD"</span>)
-<span class="no">queryParams</span> <span class="kw">&lt;-</span> <span class="st">'q=id:*&amp;fl=id,title&amp;fq=datasource:"urn:node:KNB"&amp;rows=5'</span>
-<span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span>(<span class="no">cn</span>, <span class="no">queryParams</span>, <span class="kw">as</span><span class="kw">=</span><span class="st">"data.frame"</span>, <span class="kw">parse</span><span class="kw">=</span><span class="fl">FALSE</span>)
-<span class="no">result</span>[,<span class="st">'id'</span>]</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CNode.html">CNode</a></span><span class="op">(</span><span class="st">"PROD"</span><span class="op">)</span>
+<span class="va">queryParams</span> <span class="op">&lt;-</span> <span class="st">'q=id:*&amp;fl=id,title&amp;fq=datasource:"urn:node:KNB"&amp;rows=5'</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query.html">query</a></span><span class="op">(</span><span class="va">cn</span>, <span class="va">queryParams</span>, as<span class="op">=</span><span class="st">"data.frame"</span>, parse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">result</span><span class="op">[</span>,<span class="st">'id'</span><span class="op">]</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -203,11 +212,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

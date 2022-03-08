@@ -79,7 +79,7 @@ trusted root certificate authorities are CILogon and DataONE itself." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@ trusted root certificate authorities are CILogon and DataONE itself." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@ trusted root certificate authorities are CILogon and DataONE itself." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -128,7 +128,7 @@ trusted root certificate authorities are CILogon and DataONE itself." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -188,7 +188,7 @@ the first time you interact with DataONE each day.</p>
 
     
 
-<dl'>
+<dl>
 <dt><code>location</code></dt><dd><p>value of type <code>"character"</code>, containing a path to a custom certificate location</p></dd>
 
 <dt><code>obscuredpath</code></dt><dd><p>value of type <code>"character"</code>, containing the path used to temporarily obscure a certificate</p></dd>
@@ -212,17 +212,21 @@ the first time you interact with DataONE each day.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='dataone.html'>dataone</a></code> package description.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Matthew Jones, Rob Nahf</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>cm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/warning.html'>suppressWarnings</a></span>(<span class='fu'><a href='CertificateManager.html'>CertificateManager</a></span>())
-<span class='no'>cert</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getCertLocation.html'>getCertLocation</a></span>(<span class='no'>cm</span>)
-<span class='no'>subject</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='showClientSubject.html'>showClientSubject</a></span>(<span class='no'>cm</span>)
-<span class='no'>expires</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getCertExpires.html'>getCertExpires</a></span>(<span class='no'>cm</span>)
-<span class='no'>isExpired</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='isCertExpired.html'>isCertExpired</a></span>(<span class='no'>cm</span>)
-<span class='no'>cm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='obscureCert.html'>obscureCert</a></span>(<span class='no'>cm</span>)
-<span class='no'>cm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='restoreCert.html'>restoreCert</a></span>(<span class='no'>cm</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/warning.html'>suppressWarnings</a></span><span class='op'>(</span><span class='fu'><a href='CertificateManager.html'>CertificateManager</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>cert</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getCertLocation.html'>getCertLocation</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>subject</span> <span class='op'>&lt;-</span> <span class='fu'><a href='showClientSubject.html'>showClientSubject</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>expires</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getCertExpires.html'>getCertExpires</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>isExpired</span> <span class='op'>&lt;-</span> <span class='fu'><a href='isCertExpired.html'>isCertExpired</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='obscureCert.html'>obscureCert</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='restoreCert.html'>restoreCert</a></span><span class='op'>(</span><span class='va'>cm</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -234,11 +238,11 @@ the first time you interact with DataONE each day.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

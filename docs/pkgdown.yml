@@ -1,5 +1,5 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
+pandoc: 2.10.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   v01-dataone-overview: v01-dataone-overview.html
@@ -9,5 +9,5 @@ articles:
   v05-upload-data: v05-upload-data.html
   v06-update-package: v06-update-package.html
   v07-known-issues: v07-known-issues.html
-last_built: 2020-06-24T21:02Z
+last_built: 2021-02-24T03:31Z
 

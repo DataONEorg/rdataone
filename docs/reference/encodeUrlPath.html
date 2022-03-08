@@ -73,7 +73,7 @@ characters in url strings.  Will also encode non-ASCII unicode characters." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dataone</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1.9000</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ characters in url strings.  Will also encode non-ASCII unicode characters." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -96,7 +96,7 @@ characters in url strings.  Will also encode non-ASCII unicode characters." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/v01-dataone-overview.html">R Package Overview</a>
+      <a href="../articles/v01-dataone-overview.html">dataone Package Overview</a>
     </li>
     <li>
       <a href="../articles/v02-dataone-federation.html">DataONE Federation</a>
@@ -122,7 +122,7 @@ characters in url strings.  Will also encode non-ASCII unicode characters." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/DataONEorg/rdataone/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -149,10 +149,10 @@ characters in url strings.  Will also encode non-ASCII unicode characters." />
 characters in url strings.  Will also encode non-ASCII unicode characters.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>encodeUrlPath</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>encodeUrlPath</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for D1Client</span>
-<span class='fu'>encodeUrlPath</span>(<span class='no'>x</span>, <span class='no'>pathSegment</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>encodeUrlPath</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pathSegment</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,11 +179,12 @@ characters in url strings.  Will also encode non-ASCII unicode characters.</p>
     <div class='dont-index'><p><code><a href='D1Client-class.html'>D1Client</a></code> class description.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>d1c</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='D1Client.html'>D1Client</a></span>(<span class='st'>"STAGING"</span>, <span class='st'>"urn:node:mnStageUCSB2"</span>)
-<span class='no'>fullyEncodedPath</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"cn/v1/object/"</span>,
-    <span class='fu'>encodeUrlPath</span>(<span class='no'>d1c</span>, <span class='st'>"doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"</span>))
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>d1c</span> <span class='op'>&lt;-</span> <span class='fu'><a href='D1Client.html'>D1Client</a></span><span class='op'>(</span><span class='st'>"STAGING"</span>, <span class='st'>"urn:node:mnStageUCSB2"</span><span class='op'>)</span>
+<span class='va'>fullyEncodedPath</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"cn/v1/object/"</span>, 
+    <span class='fu'>encodeUrlPath</span><span class='op'>(</span><span class='va'>d1c</span>, <span class='st'>"doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -195,11 +196,11 @@ characters in url strings.  Will also encode non-ASCII unicode characters.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain.</p>
+  <p>Developed by Matthew B. Jones, Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Bryce Mecum, Jeanette Clark, Lauren Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

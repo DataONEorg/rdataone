@@ -5,6 +5,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Known Issues}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
   %\usepackage[utf8]{inputenc}
 ---
 
@@ -25,7 +26,7 @@ A workaround to make these certificates usable on Mac OS X with R is to install 
 that supports these certificates. 
 
 On Mac OS X, the libcurl library can be installed with either [Mac Ports](https://www.macports.org) package manager
-or the [HomeBrew](http://brew.sh) package manager. The HomeBrew package manager can be significantly faster to install
+or the [HomeBrew](https://brew.sh) package manager. The HomeBrew package manager can be significantly faster to install
 but either one will work provided the directions shown below are followed.
 
 You can check if you have MacPorts installed by entering the following command in a terminal window:
