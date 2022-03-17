@@ -1248,6 +1248,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             # Make it appear that this object was downloaded and is now being updated. The resource map
             # is different than any other object in the package, because there is not a DataObject contained
             # in the DataPackage, instead the resource map info is stored in the package relationships.
+            resMapObj@sysmeta@seriesId <- dp@sysmeta@seriesId
             resMapObj@sysmeta@rightsHolder <- dp@sysmeta@rightsHolder
             resMapObj@sysmeta@dateUploaded <- format.POSIXct(Sys.time(), format="%FT%H:%M:%SZ", tz="GMT", usetz=FALSE)
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
