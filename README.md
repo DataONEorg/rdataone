@@ -1,6 +1,6 @@
 # dataone: R interface to the DataONE network of data repositories
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/dataone)](https://cran.r-project.org/package=dataone)
-[![Build Status](https://travis-ci.com/DataONEorg/rdataone.png?branch=main)](https://travis-ci.com/DataONEorg/rdataone)
+  [![R-CMD-check](https://github.com/DataONEorg/rdataone/workflows/R-CMD-check/badge.svg)](https://github.com/DataONEorg/rdataone/actions)
 
 - **Authors**: Matthew B. Jones ([NCEAS](https://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain
 - [doi:10.5063/F1M61H5X](https://doi.org/10.5063/F1M61H5X)
