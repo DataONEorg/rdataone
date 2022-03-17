@@ -8,7 +8,7 @@ test_that("CNode constructors", {
   expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
   expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
   # Skip unstable test environments.
-  expect_match(cnStaging2@endpoint, "https://cn-stage-2.test.dataone.org/cn")
+  expect_match(cnStaging2@endpoint, "https://cn-stage.test.dataone.org/cn")
   #cn <- CNode("DEV")
   #expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
 })

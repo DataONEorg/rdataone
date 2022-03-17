@@ -21,7 +21,7 @@ test_that("D1Client constructors", {
         cli <- new("D1Client", cn=cnStaging2, mn=getMNode(cnStaging2, "urn:node:mnTestKNB"))
         expect_false(is.null(cli))
         expect_match(class(cli), "D1Client")
-        expect_match(cli@cn@baseURL, "https://cn.stage-2.test.dataone.org/cn")
+        expect_match(cli@cn@baseURL, "https://cn-stage.test.dataone.org/cn")
         expect_match(cli@mn@baseURL, "https://dev.nceas.ucsb.edu/knb/d1/mn")
         
         cli <- D1Client()
@@ -62,10 +62,10 @@ test_that("D1Client methods", {
   cnUrl <- getEndpoint(cli)
   expect_match(cnUrl, "https://cn-stage.test.dataone.org/cn")
   # Test getMNodeId()
-  cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+  cli <- D1Client("STAGING", "urn:node:mnTestKNB")
   expect_match(getMNodeId(cli), "urn:node:mnTestKNB")
   # Test setMNodeId
-  cli <- new("D1Client", env="STAGING2")
+  cli <- new("D1Client", env="STAGING")
   cli <- setMNodeId(cli, "urn:node:mnTestKNB")
   expect_match(cli@mn@identifier, "urn:node:mnTestKNB")
 })
