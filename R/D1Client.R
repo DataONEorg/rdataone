@@ -1174,7 +1174,9 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             status <- serializePackage(dp, file=tf, id=newPid, resolveURI=resolveURI, creator=creator)
             # Recreate the old resource map, so that it can be updated with a new pid
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
+            
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+            
             returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
                                          quiet=quiet)
             
@@ -1246,6 +1248,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             # Make it appear that this object was downloaded and is now being updated. The resource map
             # is different than any other object in the package, because there is not a DataObject contained
             # in the DataPackage, instead the resource map info is stored in the package relationships.
+            resMapObj@sysmeta@rightsHolder <- dp@sysmeta@rightsHolder
             resMapObj@sysmeta@dateUploaded <- format.POSIXct(Sys.time(), format="%FT%H:%M:%SZ", tz="GMT", usetz=FALSE)
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
             resMapObj@updated[['sysmeta']] <- TRUE
