@@ -357,7 +357,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
     success <- FALSE
     dataURL <- as.character(NA)
     deferredDownload <- lazyLoad
-    currentMN = NULL
+    currentMN <- NULL
     if(nrow(mntable) > 0) {
       for (i in 1:nrow(mntable)) { 
         # Is this the current D1Client MN? If yes, then skip it because at this point, we
@@ -402,7 +402,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
         }
       } 
     }
-  }
+  } else currentMN <- x@mn
     
     if(!success) {
        message(sprintf("Unable to download object with identifier: %s\n", identifier))
@@ -423,8 +423,8 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
       if(tolower(sysmeta@checksumAlgorithm) != tolower(checksumAlgorithm)) {
         # Bytes were not downloaded into the DataObject
         if (deferredDownload) {
-          checksum = getChecksum(currentMN, pid=identifier, checksumAlgorithm=checksumAlgorithm)
-          sysmeta@checksum = checksum
+          checksum <- getChecksum(currentMN, pid=identifier, checksumAlgorithm=checksumAlgorithm)
+          sysmeta@checksum <- checksum
           sysmeta@checksumAlgorithm <- checksumAlgorithm
         }
         if(!quiet) {
