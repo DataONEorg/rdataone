@@ -429,8 +429,8 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTestKNB@mn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    sha256="SHA-256"
-    md5="MD5"
+    sha256 <- "SHA-256"
+    md5 <- "MD5"
     checksumAlgorithm <- sha256
     dp <- new("DataPackage")
     
@@ -476,7 +476,7 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
       }
       pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=TRUE, checksumAlgorithm=sha256)
       algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
-      expect_true(all(algorithms==sha256))
+      expect_true(all(algorithms == sha256))
     
       # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
       # new type.
