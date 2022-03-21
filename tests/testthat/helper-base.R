@@ -14,7 +14,7 @@ servicesDown <- FALSE
 # If a service is down, skip tests
 tryCatch({
     cnProd <- CNode()
-    cnStaging2 <- CNode("STAGING")
+    cnStaging <- CNode("STAGING")
     d1cKNB <- D1Client("PROD", "urn:node:KNB")
     mnKNB <- d1cKNB@mn
     d1cProd <- D1Client("PROD")
@@ -30,7 +30,7 @@ tryCatch({
 })
 
 if(is.null(cnProd)) servicesDown <- TRUE
-if(is.null(cnStaging2)) servicesDown <- TRUE
+if(is.null(cnStaging)) servicesDown <- TRUE
 if(is.null(d1cKNB)) servicesDown <- TRUE
 if(is.null(mnKNB)) servicesDown <- TRUE
 if(is.null(d1cProd)) servicesDown <- TRUE

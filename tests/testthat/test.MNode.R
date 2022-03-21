@@ -449,7 +449,7 @@ test_that("MNode updateObject() using dataobj argument", {
         
         # Update the object with a new version
         updateid <- generateIdentifier(mnTest, "UUID")
-        d1test <- D1Client(cnStaging2, mnTest)
+        d1test <- D1Client(cnStaging, mnTest)
         dataObject <- getDataObject(d1test, createdId)
         dataObject@sysmeta@identifier <- updateid
         

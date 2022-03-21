@@ -18,7 +18,7 @@ test_that("D1Client constructors", {
         # Skip the remainder of the tests because these test environments are 
         # often down due to upgrades, reconfiguring, testing new features.
         skip_on_cran()
-        cli <- new("D1Client", cn=cnStaging2, mn=getMNode(cnStaging2, "urn:node:mnTestKNB"))
+        cli <- new("D1Client", cn=cnStaging, mn=getMNode(cnStaging, "urn:node:mnTestKNB"))
         expect_false(is.null(cli))
         expect_match(class(cli), "D1Client")
         expect_match(cli@cn@baseURL, "https://cn-stage.test.dataone.org/cn")
