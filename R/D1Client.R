@@ -402,7 +402,9 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
         }
       } 
     }
-  } else currentMN <- x@mn
+  } else {
+      currentMN <- x@mn
+  }
     
     if(!success) {
        message(sprintf("Unable to download object with identifier: %s\n", identifier))
