@@ -17,7 +17,7 @@ evaluateAuth(.Object, ...)
 \item{node}{A D1Node object.}
 }
 \value{
-A hash containing authentication information.
+A table containing authentication information.
 }
 \description{
 A valid DataONE authentication method is looked for and all
