@@ -18,10 +18,10 @@ test_that("D1Client constructors", {
         # Skip the remainder of the tests because these test environments are 
         # often down due to upgrades, reconfiguring, testing new features.
         skip_on_cran()
-        cli <- new("D1Client", cn=cnStaging2, mn=getMNode(cnStaging2, "urn:node:mnTestKNB"))
+        cli <- new("D1Client", cn=cnStaging, mn=getMNode(cnStaging, "urn:node:mnTestKNB"))
         expect_false(is.null(cli))
         expect_match(class(cli), "D1Client")
-        expect_match(cli@cn@baseURL, "https://cn.stage-2.test.dataone.org/cn")
+        expect_match(cli@cn@baseURL, "https://cn-stage.test.dataone.org/cn")
         expect_match(cli@mn@baseURL, "https://dev.nceas.ucsb.edu/knb/d1/mn")
         
         cli <- D1Client()
@@ -62,10 +62,10 @@ test_that("D1Client methods", {
   cnUrl <- getEndpoint(cli)
   expect_match(cnUrl, "https://cn-stage.test.dataone.org/cn")
   # Test getMNodeId()
-  cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
+  cli <- D1Client("STAGING", "urn:node:mnTestKNB")
   expect_match(getMNodeId(cli), "urn:node:mnTestKNB")
   # Test setMNodeId
-  cli <- new("D1Client", env="STAGING2")
+  cli <- new("D1Client", env="STAGING")
   cli <- setMNodeId(cli, "urn:node:mnTestKNB")
   expect_match(cli@mn@identifier, "urn:node:mnTestKNB")
 })
@@ -429,8 +429,8 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
   suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTestKNB@mn))
   if (authValid) {
     if(dataone:::getAuthMethod(am, d1cTestKNB@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
-    sha256="SHA-256"
-    md5="MD5"
+    sha256 <- "SHA-256"
+    md5 <- "MD5"
     checksumAlgorithm <- sha256
     dp <- new("DataPackage")
     
@@ -476,7 +476,7 @@ test_that("D1Client getDataPackage with checksumAlgorithm specified works", {
       }
       pkg <- getDataPackage(d1cTestKNB, identifier=pkgId, lazyLoad=TRUE, limit="0MB", quiet=TRUE, checksumAlgorithm=sha256)
       algorithms <- getValue(pkg, name="sysmeta@checksumAlgorithm")
-      expect_true(all(algorithms==sha256))
+      expect_true(all(algorithms == sha256))
     
       # Download the package again, requesting a different checksum type, and ensure that the checksums are all the
       # new type.
@@ -592,6 +592,57 @@ test_that("D1Client downloadObject", {
   expect_match(class(file), "path")
   expect_true(file.exists(file))
   unlink(file)
+})
+
+test_that("D1Client uploadDataPackage public argument works", {
+    
+    # Test that a DataPackage with only one member (metadata in this case) and not
+    # user defined relationships is created and uploaded correctly.
+    skip_on_cran()
+    library(dataone)
+    library(datapack)
+    # Create a csv file for the science object
+    testdf <- data.frame(x=1:10,y=11:20)
+    csvfile <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".csv")
+    write.csv(testdf, csvfile, row.names=FALSE)
+
+    expect_false(is.null(d1cTest))
+    preferredNodes <- NA
+    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+    am <- AuthenticationManager()
+    suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTest@mn))
+    if (authValid) {
+        if(dataone:::getAuthMethod(am, d1cTest@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        dp <- new("DataPackage")
+        
+        # Create metadata object that describes science data
+        emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1cTest), filename=emlFile)
+        expect_match(metadataObj@sysmeta@identifier, "urn:uuid")
+        
+        # give metadata object an access policy without public read
+        metadataObj <- addAccessRule(metadataObj, "CN=arctic-data-admins,DC=dataone,DC=org", "read")
+        metadataObj <- addAccessRule(metadataObj, "CN=arctic-data-admins,DC=dataone,DC=org", "write")
+        metadataObj <- addAccessRule(metadataObj, "CN=arctic-data-admins,DC=dataone,DC=org", "changePermission")
+        dp <- addMember(dp, metadataObj)
+        
+        
+        expect_true(is.element(metadataObj@sysmeta@identifier, getIdentifiers(dp)))
+        
+        # Upload the data package to DataONE with public set to TRUE
+        resourceMapId <- uploadDataPackage(d1cTest, dp, replicate=TRUE, numberReplicas=1, preferredNodes=preferredNodes,  public=TRUE)
+        expect_true(!is.null(resourceMapId))
+        
+        # check that all members of the package have public read
+        sys_rm <- getSystemMetadata(d1cTest@mn, resourceMapId)
+        sys_mo <- getSystemMetadata(d1cTest@mn, metadataObj@sysmeta@identifier)
+        
+        expect_true("public" %in% sys_rm@accessPolicy$subject)
+        expect_true("public" %in% sys_mo@accessPolicy$subject)
+        
+    } else {
+        skip("This test requires valid authentication.")
+    }
 })
 
 

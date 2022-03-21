@@ -8,7 +8,7 @@ test_that("CNode constructors", {
   expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
   expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
   # Skip unstable test environments.
-  expect_match(cnStaging2@endpoint, "https://cn-stage-2.test.dataone.org/cn")
+  expect_match(cnStaging@endpoint, "https://cn-stage.test.dataone.org/cn")
   #cn <- CNode("DEV")
   #expect_match(cn@endpoint, "https://cn-dev.test.dataone.org/cn")
 })
@@ -97,17 +97,17 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
   # used by reserveIdentifier.  
   am <- AuthenticationManager()
   # Suppress openssl, cert missing warnings
-  suppressMessages(authValid <- dataone:::isAuthValid(am, cnStaging2))
+  suppressMessages(authValid <- dataone:::isAuthValid(am, cnStaging))
   # First check if authentication is available and if not, skip this test
   if (authValid) {
     # TODO: remove this check when Mac OS X can be used with certificates
-    if(dataone:::getAuthMethod(am, cnStaging2) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+    if(dataone:::getAuthMethod(am, cnStaging) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
     # Set 'subject' to authentication subject, if available, so this userId can check a reservation that it made
-    subject <- dataone:::getAuthSubject(am, cnStaging2)
+    subject <- dataone:::getAuthSubject(am, cnStaging)
     myId <- sprintf("urn:uuid:%s", UUIDgenerate())
     # researveIdentifier will create the reservation using only the client subject from
     # the current authentication method - either auth token or certificate. 
-    newId <- reserveIdentifier(cnStaging2, myId)
+    newId <- reserveIdentifier(cnStaging, myId)
     expect_match(myId, newId)
     # Have to specify the subject for hasReservation
     hasRes <- hasReservation(cnProd, newId, subject=subject)
