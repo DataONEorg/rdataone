@@ -33,7 +33,6 @@ Suggests:
     xml2
 Imports:
     XML (>= 3.95-0.1),
-    hash,
     httr,
     methods,
     stringi,

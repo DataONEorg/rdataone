@@ -64,7 +64,6 @@
 #'  
 #' }
 #' @seealso \code{\link{dataone}}{ package description.}
-#' @import hash
 #' @import base64enc
 #' @importFrom jsonlite fromJSON
 #' @include D1Node.R
@@ -325,14 +324,21 @@ parseAuthToken <- function(authToken) {
 #' @param .Object an Authentication Object.
 #' @param node A D1Node object.
 #' @param ... additional parameters
-#' @return A hash containing authentication information.
+#' @return A table containing authentication information.
 setGeneric("evaluateAuth", function(.Object, ...) { 
     standardGeneric("evaluateAuth")
 })
 
 #' @rdname evaluateAuth
 setMethod("evaluateAuth", signature("AuthenticationManager"), function(.Object, node) {
-    authInfo <- new("hash")
+    authInfo <- list(authMethod = NULL,
+                     token = NULL,
+                     cert = NULL,
+                     node = NULL,
+                     valid = NULL,
+                     expires = NULL,
+                     expired = NULL,
+                     subject = NULL)
     # First check if an authentication token is available. 
     # Authentication tokens were implemented in DatONE v2, so if this node is not 
     # v2 or greater, don't send the authToken but look for a x509 certificate instead.
