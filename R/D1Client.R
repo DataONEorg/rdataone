@@ -1326,7 +1326,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
     # Checks are made for a DataObject being "new" or "downloaded, not modified" or "downloaded,"
     
     # Object is new, as it has never been uploaded
-    if(is.na(do@sysmeta@dateUploaded)) {
+    if (is.na(do@sysmeta@dateUploaded)) {
         if (nchar(x@mn@identifier) == 0) {
             stop("Please set the DataONE Member Node to upload to using setMN()")
         }
@@ -1350,14 +1350,6 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         # addAccessRule will add all rules (rows) in accessRules in one call
         if(!all(is.na(accessRules))) {
             do@sysmeta <- addAccessRule(do@sysmeta, accessRules)
-        }
-        
-        if (!is.na(do@sysmeta@dateUploaded)) {
-            msg <- sprintf("SystemMetadata indicates that the object with pid: %s was already uploaded to DataONE on %s.\n", do@sysmeta@identifier, do@sysmeta@dateUploaded)
-            msg <- sprintf("%sThis object will not be uploaded.", msg)
-            warning(msg)
-            # options(warn) may be set to essentially ignore warnings, so return NA if this is the case.
-            return(as.character(NA))
         }
         
         # If the DataObject has both @filename and @data defined, filename takes precedence 
@@ -1384,6 +1376,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             return(createdId)
         }
     } else {
+        
         # This object has been downloaded from a repository and possibly updated.
         if(!is.na(do@sysmeta@obsoletedBy)) {
             msg <- sprintf("This DataObject with identifier %s has been obsoleted by identifier %s\nso will not be updated", 
@@ -1393,13 +1386,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
         }
         
         pid <- getIdentifier(do)
-        # Update the sysmeta with the necessary new values
-        # Set these values to NA so they won't be included in the serialized sysmeta,
-        # as DataONE will complain or get confused if they are set. DataONE will
-        # set these values on upload/update.
-        do@sysmeta@obsoletes <- as.character(NA)
-        do@sysmeta@obsoletedBy <- as.character(NA)
-        do@sysmeta@archived <- as.logical(NA)
+
         # Set sysmeta values if passed in and not already set in sysmeta for each data object
         if (!is.na(replicate)) {
             do@sysmeta@replicationAllowed <- as.logical(replicate)
@@ -1429,6 +1416,15 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
             if(!quiet) cat(sprintf("Updated sysmetadata for DataObject %s.", pid))
             updateId <- pid
         } else {
+            
+            # Update the sysmeta with the necessary new values
+            # Set these values to NA so they won't be included in the serialized sysmeta,
+            # as DataONE will complain or get confused if they are set. DataONE will
+            # set these values on upload/update.
+            do@sysmeta@obsoletes <- as.character(NA)
+            do@sysmeta@obsoletedBy <- as.character(NA)
+            do@sysmeta@archived <- as.logical(NA)
+            
             oldId <- do@oldId
             # The obsoleting object will always have serialVersion = 1, it's new!
             do@sysmeta@serialVersion <- 1
