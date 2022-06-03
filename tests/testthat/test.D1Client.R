@@ -646,3 +646,48 @@ test_that("D1Client uploadDataPackage public argument works", {
 })
 
 
+test_that("D1Client uploadDataPackage doesn't change the rightsHolder", {
+    
+    # Test that a DataPackage with only one member (metadata in this case) and not
+    # user defined relationships is created and uploaded correctly.
+    skip_on_cran()
+    library(dataone)
+    library(datapack)
+    # Create a csv file for the science object
+
+    # Set 'subject' to authentication subject, if available, so we will have permission to change this object
+    am <- AuthenticationManager()
+    suppressMessages(authValid <- dataone:::isAuthValid(am, d1cTest@mn))
+    if (authValid) {
+        if(dataone:::getAuthMethod(am, d1cTest@mn) == "cert" && grepl("apple-darwin", sessionInfo()$platform)) skip("Skip authentication w/cert on Mac OS X")
+        dp <- new("DataPackage")
+        
+        # Create metadata object that describes science data
+        emlFile <- system.file("extdata/sample-eml.xml", package="dataone")
+        metadataObj <- new("DataObject", format="eml://ecoinformatics.org/eml-2.1.1", mnNodeId=getMNodeId(d1cTest), filename=emlFile)
+        
+        # set rightsHolder on metadata to a test ORCID
+        metadataObj@sysmeta@rightsHolder <- "http://orcid.org/0000-0000-0000-0000"
+
+        dp <- addMember(dp, metadataObj)
+        
+        # set rightsHolder on resource map to a test ORCID
+        dp@sysmeta@rightsHolder <- "http://orcid.org/0000-0000-0000-0000"
+        
+        # Upload the data package to DataONE with public set to TRUE
+        resourceMapId <- uploadDataPackage(d1cTest, dp, replicate=TRUE, numberReplicas=1, public=TRUE)
+        
+        # check that all members of the package have public read
+        sys_rm <- getSystemMetadata(d1cTest@mn, resourceMapId)
+        sys_mo <- getSystemMetadata(d1cTest@mn, metadataObj@sysmeta@identifier)
+        
+        expect_equal("http://orcid.org/0000-0000-0000-0000", sys_rm@rightsHolder)
+        expect_equal("http://orcid.org/0000-0000-0000-0000", sys_rm@rightsHolder)
+        
+    } else {
+        skip("This test requires valid authentication.")
+    }
+})
+
+
+
