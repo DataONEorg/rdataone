@@ -1177,7 +1177,10 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
             # Recreate the old resource map, so that it can be updated with a new pid
             resMapObj <- new("DataObject", id=newPid, format="http://www.openarchives.org/ore/terms", filename=tf)
             
+            # preserve any changes the user made to the sysmeta for the data package in the resource map object
+            resMapObj@sysmeta@rightsHolder <- dp@sysmeta@rightsHolder
             resMapObj@sysmeta@accessPolicy <- unique(resMapAP)
+            
             
             returnId <- uploadDataObject(x, resMapObj, replicate, numberReplicas, preferredNodes, public, accessRules,
                                          quiet=quiet)
