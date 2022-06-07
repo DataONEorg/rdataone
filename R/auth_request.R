@@ -158,13 +158,10 @@ auth_head <- function(url, nconfig=config(), node) {
 #' @param node The D1Node object that the request will be made to.
 #' @return the response object from the method
 #' @import httr
-auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(NA), node) {
+auth_put_post_delete <- function(method, url, encode="multipart", body=NULL, node) {
   
   am <- AuthenticationManager()
   if(!missing(node) && isAuthValid(am, node)) {
-    if (is.na(body[1])) {
-      body = FALSE
-    }
     if(getAuthMethod(am, node) == "token") {
       # Authentication will use an authentication token.
       authToken <- getToken(am, node)
@@ -219,7 +216,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=as.list(N
 #' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
-auth_post <- function(url, encode="multipart", body=as.list(NA), node) {
+auth_post <- function(url, encode="multipart", body=NULL, node) {
     response <- auth_put_post_delete("post", url, encode, body, node)
     return(response)
 }
@@ -234,7 +231,7 @@ auth_post <- function(url, encode="multipart", body=as.list(NA), node) {
 #' @param node The D1Node object that the request will be made to.
 #' @return the HTTP response from the request
 #' @import httr
-auth_put <- function(url, encode="multipart", body=as.list(NA), node) {
+auth_put <- function(url, encode="multipart", body=NULL, node) {
     response <- auth_put_post_delete("put", url, encode, body, node)
     return(response)
 }

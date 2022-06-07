@@ -177,9 +177,9 @@ setGeneric("archive", function(x, ...) {
 #' @rdname archive
 setMethod("archive", signature("D1Node"), function(x, pid) {
     url <- paste(x@endpoint, "archive", URLencode(pid, reserved=TRUE), sep="/")
-    response <- auth_put(url, node=x)
+    response <- auth_put(url, node=x, body=NULL)
     if(response$status_code != "200") {
-        warning(sprintf("Error archiving %s\n", pid))
+        warning(sprintf("Error archiving %s\n", pid), getErrorDescription(response))
         return(NULL)
     } else {
         # Comment out body handling because httr::PUT is not returning a response body at all
