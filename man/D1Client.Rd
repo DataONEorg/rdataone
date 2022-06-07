@@ -6,6 +6,7 @@
 \alias{D1Client,character,ANY-method}
 \alias{D1Client,character,character-method}
 \alias{D1Client,CNode,MNode-method}
+\alias{D1Client,character,MNode-method}
 \title{The DataONE client class used to download, update and search for data in the DataONE network.}
 \usage{
 D1Client(x, y, ...)
@@ -17,6 +18,8 @@ D1Client(x, y, ...)
 \S4method{D1Client}{character,character}(x, y)
 
 \S4method{D1Client}{CNode,MNode}(x, y, ...)
+
+\S4method{D1Client}{character,MNode}(x, y, ...)
 }
 \arguments{
 \item{x}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV'). This parameter
