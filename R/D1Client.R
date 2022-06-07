@@ -107,6 +107,13 @@ setMethod("D1Client", signature("CNode", "MNode"), function(x, y, ...) {
     return(result)
 })
 
+#' @rdname D1Client
+#' @export
+setMethod("D1Client", signature("character", "MNode"), function(x, y, ...) {
+    result <- new("D1Client", env=x, mn=y)
+    return(result)
+})
+
 #' Initialize a D1Client object
 #' @param .Object A D1client object.
 #' @param cn The Member Node object to associate this D1Client with.
