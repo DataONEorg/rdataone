@@ -676,7 +676,7 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 #' Search DataONE for data and metadata objects
 #' @description The DataONE search index is searched for data that matches the specified query parameters. 
 #' @details The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search 
-#' engine \url{https://lucene.apache.org/solr/}. This same Solr search engine is the underlying mechanism used by the
+#' engine \url{https://solr.apache.org/}. This same Solr search engine is the underlying mechanism used by the
 #' DataONE online search tool available at \url{https://search.dataone.org/}.
 #' 
 #' The \code{"solrQuery"} argument is used to specify search terms that data of interest must match. This parameter uses
