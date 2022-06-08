@@ -1028,7 +1028,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
   
     # Define the creator that will appear in the ORE Resource Map for this package.
     creator <- "DataONE R Client"
-    stopifnot(class(dp) == "DataPackage")
+    stopifnot(inherits(dp, "DataPackage"))
     if (nchar(x@mn@identifier) == 0) {
       stop("Please set the DataONE Member Node to upload to using setMNodeId()")
     }
@@ -1328,7 +1328,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
                                                                preferredNodes=NA,  public=as.logical(FALSE),  accessRules=NA, 
                                                                quiet=TRUE, ...)  { 
     
-    stopifnot(class(do) == "DataObject")
+    stopifnot(inherits(do, "DataObject"))
     if (nchar(x@mn@identifier) == 0) {
         stop("Please set the DataONE Member Node using setMNodeId()")
     }

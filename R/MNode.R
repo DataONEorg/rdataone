@@ -228,7 +228,7 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
 setMethod("getObject", signature("MNode"), function(x, pid, check=as.logical(FALSE)) {
   
   stopifnot(is.character(pid))
-    if(!class(check) == "logical") {
+    if(!inherits(check, "logical")) {
       stop("Invalid argument: 'check' must be specified as a logical.")
     }
 
@@ -561,7 +561,7 @@ setGeneric("updateSystemMetadata", function(x, ...) {
 #' @export
 setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) {
   stopifnot(is.character(pid))
-  stopifnot(class(sysmeta) == "SystemMetadata")
+  stopifnot(inherits(sysmeta, "SystemMetadata"))
     url <- paste(x@endpoint, "meta", URLencode(pid, reserved=T), sep="/")
     
     # Check if the user has set the sysmeta submitter and rightsHolder, 
