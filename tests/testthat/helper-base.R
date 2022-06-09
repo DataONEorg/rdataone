@@ -1,7 +1,7 @@
 # Reduce redundant calls to the same service - this only needs to be made
 # once per test 
 cnProd <- NULL
-cnStaging2 <- NULL
+cnStaging <- NULL
 d1cKNB <- NULL
 mnKNB <- NULL
 d1cProd <- NULL

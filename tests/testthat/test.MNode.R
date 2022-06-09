@@ -237,6 +237,7 @@ test_that("MNode createObject(), updateObject(), archive()", {
 })
 
 test_that("MNode archive() return error response messages", {
+    skip_on_cran()
     am <- AuthenticationManager()
     suppressMessages({authValid <- dataone:::isAuthValid(am, mnTest)})
     
