@@ -1,14 +1,14 @@
 Package: dataone
-Version: 2.2.1.9000
-Date: 2020-12-03
+Version: 2.2.2
+Date: 2022-06-08
 Title: R Interface to the DataONE REST API
-Authors@R: c( person("Matthew B.", "Jones", role = c("aut", "cre"), email = "jones@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-0077-4738")), 
+Authors@R: c( person("Matthew B.", "Jones", role = c("aut","cre"), email = "jones@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-0077-4738")), 
   person("Peter", "Slaughter", role = "aut", email = "slaughter@nceas.ucsb.edu", comment=c(ORCID = "0000-0002-2192-403X")),
   person("Rob", "Nahf", role = "aut", email = "rnahf@unm.edu"), 
   person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com", comment=c(ORCID = "0000-0002-1642-628X")), 
   person("Chris", "Jones", role = "aut", email = "cjones@nceas.ucsb.edu", comment=c(ORCID = "0000-0002-8121-2341")), 
   person("Bryce", "Mecum", role = "aut", email = "mecum@nceas.ucsb.edu", comment=c(ORCID = "0000-0002-0381-3766")),
-  person("Jeanette", "Clark", role = "aut", email = "jeanetteclark@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-4703-1974")),
+  person("Jeanette", "Clark", role = "aut", email = "jclark@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-4703-1974")),
   person("Jordan", "Read", role = "ctb", email = "jread@usgs.gov", comment=c(ORCID = "0000-0002-3888-6631")),
   person("Lauren", "Walker", role = "aut", email = "walker@nceas.ucsb.edu", comment=c(ORCID = "0000-0003-2192-431X")), 
   person("Edmund", "Hart", role = "ctb", email = "edmund.m.hart@gmail.com", comment=c(ORCID = "0000-0001-7367-7969")), 
