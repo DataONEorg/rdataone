@@ -143,10 +143,11 @@ more information.
 ## Acknowledgments
 Work on this package was supported by:
 
-- NSF-ABI grant #1262458 to C. Gries, M. B. Jones, and S. Collins.
-- NSF-DATANET grants #0830944 and #1430508 to W. Michener, M. B. Jones, D. Vieglais, S. Allard and P. Cruse
-- NSF DIBBS grant #1443062 to T. Habermann and M. B. Jones
-- NSF-PLR grant #1546024 to M. B. Jones, S. Baker-Yeboah, J. Dozier, M. Schildhauer, and A. Budden
+- NSF-ABI grant #[1262458](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1262458) to C. Gries, M. B. Jones, and S. Collins.
+- NSF-DATANET grants #[0830944](https://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944) and #[1430508](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508) to W. Michener, M. B. Jones, D. Vieglais, S. Allard and P. Cruse
+- NSF DIBBS grant #[1443062](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1443062) to T. Habermann and M. B. Jones
+- NSF-PLR grant #[1546024](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1546024) to M. B. Jones, S. Baker-Yeboah, J. Dozier, M. Schildhauer, and A. Budden
+- NSF-PLR grant #[2042102](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2042102) to M. B. Jones, A. Budden, J. Dozier, and M. Schildhauer
 
 Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
