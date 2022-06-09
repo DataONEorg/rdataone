@@ -1,3 +1,16 @@
+# Version 2.2.2
+
+## New Features and functions
+
+* Remove hash dependency (#293)
+* Add support for new method signature for D1Client (#252)
+
+## Bug Fixes
+
+* Ensure rightsHolder persists when uploading a data package (#292)
+* Fix bug where 'publc = TRUE' argument did not set public read on all objects (#285)
+* Account for edge case errors in 'archive()'
+
 # Version 2.2.1
 
 ## New Features and functions

@@ -1,26 +1,25 @@
 ## Test environments
 
- * macOS 10.14: R 4.0.2
- * Ubuntu 18.04 R 3.4.4
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.0.3 (2020-10-10)
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2020-11-27 r79522) 
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 3.6.3 (2020-02-29)
+ * macOS 12.2: R 4.1.0
+ * Ubuntu 18.04 R 4.1.3
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2022-06-08 r82470 ucrt) 
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.2.0 (2022-04-22 ucrt)  
+ * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.1.3 (2022-03-10)
  * rhub::check_for_cran()
-   * Debian Linux, R-devel, GCC: debian-gcc-devel
-   * Fedora Linux, R-devel, GCC: fedora-gcc-devel
-   * Fedora Linux, R-devel, clang, gfortran: fedora-clang-devel
-   * macOS 10.13.6 High Sierra, R-release, CRAN's setup: macos-highsierra-release-cran
+   * Windows Server 2008 R2 SP1, R-release, 32/64 bit
+   * Windows Server 2022, R-devel, 64 bit
+   * Fedora Linux, R-devel, clang, gfortran
+   * Fedora Linux, R-devel, GCC
+   * macOS 10.13.6 High Sierra, R-release, CRAN's setup
+   * Apple Silicon (M1), macOS 11.6 Big Sur, R-release
 
 ## Changes since last release
 
-* The 'lazyLoad' behavior for 'getDataObject()', 'getDataPackage()' has changed (#258)
-* Use 'SHA-256' checksum for sysmeta/object uploads (#257)
-* Fixed bug where uploading modified 'metadata-only' package caused error (#256)
-* UploadDataPackage now supports 'common' objects (#251)
-* Create packages with uniform checksum (#261)
-* Update tests for compatibility with testthat 3e (#260)
-* Query results returned 'as=data.frame' now contain Solr multi-valued fields as R lists (#250)
-* URLs violating CRAN submission check for redirection (HTTP 301) have been fixed (#275)
+* Remove hash dependency (#293)
+* Add support for new method signature for D1Client (#252)
+* Ensure rightsHolder persists when uploading a data package (#292)
+* Fix bug where 'publc = TRUE' argument did not set public read on all objects (#285)
+* Account for edge case errors in 'archive()' (#236)
 
 ## R CMD check results
 
