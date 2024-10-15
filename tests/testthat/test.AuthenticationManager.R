@@ -67,14 +67,12 @@ test_that("isCertExpired() works", {
   suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
   if(authValid) {
     expDate <- dataone:::getAuthExpires(am, cn)
-    # TODO: check token exp date when JWT available.
-    #ct <- format(Sys.time(), format="%F %H:%M:%S GMT", tz="UTC")
-    ct <- as.POSIXct(Sys.time(), tz="GMT") 
+    ct <- as.POSIXct(Sys.time(), tz=format(expDate, "%Z"))
     if(!is.na(expDate) && !is.null(expDate)) {
       if(dataone:::isAuthExpired(am, cn)) {
         expect_true(expDate > ct) 
       } else {
-        expect_false(expDate < ct) 
+        expect_false(expDate < ct)
       }
     }
   }
