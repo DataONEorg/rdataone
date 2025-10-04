@@ -202,7 +202,7 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=NULL, nod
       )
     }
   } else {
-    stop("Unable to perform the operation as unauthenticated (public) user. See vignette(\"dataone-overview\") for more information")
+    stop("Unable to perform the operation as unauthenticated (public) user. See vignette(\"v01-dataone-overview\") for more information")
   }
 }
 

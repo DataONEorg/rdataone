@@ -25,7 +25,7 @@ to nodes in the DataONE network.
 }
 
 \seealso{
-A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
+A description of the \emph{dataone} R package is available with the command: \code{'vignette("v01-dataone-overview")'}.
 }
 \author{
 Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)

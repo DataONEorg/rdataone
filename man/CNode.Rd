@@ -25,7 +25,7 @@ Create a CNode object.
 }
 \details{
 For an explanation of DataONE Coordinating Nodes, see the 
-section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("dataone-overview")}.
+section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("v01-dataone-overview")}.
 }
 \examples{
 \dontrun{

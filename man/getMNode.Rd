@@ -25,7 +25,7 @@ Get a reference to a node based on its identifier
 \details{
 For an explanation of DataONE Coordinating Nodes and Member Node
 identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
-by entering the R command: \code{vignette("dataone-overview")}.
+by entering the R command: \code{vignette("v01-dataone-overview")}.
 }
 \examples{
 \dontrun{

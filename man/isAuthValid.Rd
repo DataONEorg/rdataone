@@ -25,5 +25,5 @@ is checked and verified for the specified node (either CN or MN). If an authenti
 via the R options facility, it will be used i.e. available via getOption("dataone_token").  However, 
 authentication tokens can only be used for DataONE v2 or higher nodes. X.509 certificates can be used 
 with DataONE v1 or higher nodes. 
-See the \emph{"dataone"} vignette \emph{"dataone-overview"} for more information on authentication.
+See the \emph{"dataone"} vignette \emph{"v01-dataone-overview"} for more information on authentication.
 }

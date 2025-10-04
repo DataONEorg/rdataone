@@ -37,13 +37,13 @@ used to reflect the fact that the new object replaces the old.  Both objects rem
 In the version 2.0 library and higher, this operation can utilize an 
 'dataone_token' option to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
-See the \code{vignette("dataone-overview")} for details.
+See the \code{vignette("v01-dataone-overview")} for details.
 Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
 system can also be used. This certificate provides authentication credentials from 
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
+CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("v01-dataone-overview")} for details.
 }
 \note{
-Please see the vignette *upload-data* for an example: \code{vignette("upload-data")}
+Please see the vignette *v05-upload-data* for an example: \code{vignette("v05-upload-data")}
 }
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.update}

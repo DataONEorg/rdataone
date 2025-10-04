@@ -34,7 +34,7 @@
 #'  \item{\code{\link[=D1Node-class]{D1Node}}}{: A base class for CNode and MNode.}
 #'  \item{\code{\link[=MNode-class]{MNode}}}{: MNode provides functions interacting with the a DataONE Member Node repository.}
 #' }
-#' @seealso A description of the \emph{dataone} R package is available with the command: \code{'vignette("dataone-overview")'}.
+#' @seealso A description of the \emph{dataone} R package is available with the command: \code{'vignette("v01-dataone-overview")'}.
 #' @keywords internal
 "_PACKAGE"
 

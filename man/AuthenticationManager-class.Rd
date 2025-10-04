@@ -23,7 +23,7 @@ that allows DataONE users to use existing trusted institutional and public accou
 DataONE version 2.0 provides an addition authentication mechanism known as
 authentication tokens. For information about tokens and instructions for generating
 a token for use with the dataone R package, view the overview document by
-entering the command: \code{'vignette("dataone-overview")'}. DataONE authentication
+entering the command: \code{'vignette("v01-dataone-overview")'}. DataONE authentication
 tokens can be obtained by signing in to your DataONE account at https://search.dataone.org.
 
 CILogon recognizes many identity providers, including many universities as well as
