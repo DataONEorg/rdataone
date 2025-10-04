@@ -41,7 +41,7 @@
 #' @import methods
 #' @importFrom utils URLencode
 #' @section Methods:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{MNode}}}{: Create a MNode object representing a DataONE Member Node repository.}
 #'  \item{\code{\link{createObject}}}{: Create an object on a Member Node.}
 #'  \item{\code{\link{getObject}}}{: Get the bytes associated with an object on the Member Node}
@@ -51,7 +51,7 @@
 #'  \item{\code{\link{updateObject}}}{: Update an object to a Member Node, by creating a new object that replaces an original.}
 #'  \item{\code{\link{updateSystemMetadata}}}{: Update the system metadata associated with an object.}
 #' }
-#' @seealso \code{\link{dataone}}{ package description.}
+#' @seealso \code{\link{dataone}} package description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -95,7 +95,7 @@ setClass("MNode", slots = c(endpoint = "character"), contains="D1Node")
 #' @param x a URI representing a  base URL (i.e. https://knb.ecoinformatics.org/knb/d1/mn/v2); or a reference to a dataone::Node instance
 #' @rdname MNode
 #' @return the MNode object-
-#' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
+#' @seealso \code{\link[=MNode-class]{MNode}} class description.
 #' @export
 #' @examples \dontrun{
 #' mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
@@ -661,7 +661,7 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
 #' @param x A MNode instance representing a DataONE Member Node repository.
 #' @param ... (not yet used)
 #' @return The location of the package file downloaded from the member node.
-#' @seealso \code{\link[=MNode-class]{MNode}}{ class description.}
+#' @seealso \code{\link[=MNode-class]{MNode}} class description.
 #' @import uuid
 #' @export
 #' @examples \dontrun{

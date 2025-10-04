@@ -4,9 +4,9 @@
 #' @name dataone-defunct
 #' @keywords internal
 #' @section These S4 methods are defunct:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{D1Object}}}{: A representation of a DataObject}
-#'  \itemize{
+#'  \describe{
 #'    \item{\code{\link{D1Object-initialize}}}{: Initialize a D1Object}
 #'    \item{\code{\link{getData}}}{: Get the data content of a specified D1Object.}
 #'    \item{\code{\link{getIdentifier}}}{: Get the identifier of the D1Object.}
@@ -17,7 +17,7 @@
 #'    \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid.}
 #'  } 
 #' \item{\code{\link{D1Client}}}{: The DataONE client class used to download, update and search for data in the DataONE network}
-#'  \itemize{
+#'  \describe{
 #'    \item{\code{\link{d1SolrQuery}}}{: A method to query the DataONE solr endpoint of the Coordinating Node.}
 #'    \item{\code{\link{d1IdentifierSearch}}}{: Query the DataONE Solr endpoint of the Coordinating Node.}
 #'    \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node}
@@ -28,13 +28,13 @@
 #'    \item{\code{\link{getD1Object}}}{: Download a data object from the DataONE Federation.}
 #'  }
 #' \item{\code{EMLParser}}{: A representation of a DataObject}
-#'  \itemize{
+#'  \describe{
 #'    \item{\code{\link{documented.entityNames}}}{: The entity names associated with each table are returned.}
 #'    \item{\code{\link{documented.d1Identifiers}}}{: Get the DataONE identifier associated with each table.}
 #'    \item{\code{\link{documented.sizes}}}{: Get the table size.}
 #'  }
 #' \item{\code{AbstractTableDescriber}}{: Base Class for Specific Metadata Parsers}
-#'  \itemize{
+#'  \describe{
 #'    \item{\code{\link{data.formatFamily}}}{: Get the table format family.}
 #'    \item{\code{\link{data.tableFieldDelimiter}}}{: Get the table field delimiter.}
 #'    \item{\code{\link{data.tableQuoteCharacter}}}{: Get the table quote character.}

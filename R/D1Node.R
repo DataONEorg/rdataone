@@ -38,7 +38,7 @@
 #' @slot APIversion A character string indicating version of the DataONE API for this node, e.g. "v2"
 #' @slot env A character string, either 'prod' if this node is in the production environment, otherwise 'test'
 #' @section Methods:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
 #'  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
 #'  \item{\code{\link{archive}}}{: Change the state of an object so that it is hidden from searches.}
@@ -138,7 +138,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' @return The pid that was archived if successful, otherwise NULL
 #' @rdname archive
 #' @aliases archive
-#' @seealso \code{\link[=D1Node-class]{D1Node}}{ class description.}
+#' @seealso \code{\link[=D1Node-class]{D1Node}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -203,7 +203,7 @@ setMethod("archive", signature("D1Node"), function(x, pid) {
 #' @rdname getObject
 #' @aliases getObject
 #' @return the bytes of the object
-#' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
+#' @seealso \code{\link{D1Node-class}{D1Node}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -227,7 +227,7 @@ setGeneric("getObject", function(x, ...) {
 #' @param pid The identifier of the object
 #' @param ... (Not yet used)
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
-#' @seealso \code{\link{D1Node-class}{D1Node}}{ class description.}
+#' @seealso \code{\link{D1Node-class}{D1Node}} class description.
 #' @export
 #' @examples \dontrun{ 
 #' library(dataone)
@@ -976,7 +976,7 @@ parseSolrField <- function(xNode, parse) {
 #' @param x The node to send the request to. This is either a \code{"CNode"} or \code{"MNode"} instance.
 #' @param ... (Not yet used)
 #' @return a logical, TRUE if the action is authorized, false if not.
-#' @seealso \code{\link[=CNode-class]{CNode}}{ class description.}
+#' @seealso \code{\link[=CNode-class]{CNode}} class description.
 #' @export
 #' @examples \dontrun{
 #' # Send an authorization check to the D1 production CN.

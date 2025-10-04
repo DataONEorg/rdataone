@@ -4,7 +4,7 @@
 #' @name dataone-deprecated
 #' @keywords internal
 #' @section These S4 methods are deprecated:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid.}
 #'  \item{\code{\link{CertificateManager}}}{: Create a CertificateManager object.}
 #'  \item{\code{\link{getCertLocation}}}{: Get the file path on disk of the client certificate file.}

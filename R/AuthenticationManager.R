@@ -47,7 +47,7 @@
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
 #' @section Methods:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
 #'  \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
 #'  \item{\code{\link{getToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
@@ -63,7 +63,7 @@
 #'  \item{\code{\link{getCertInfo}}}{: Display all X.509 certificate information.}
 #'  
 #' }
-#' @seealso \code{\link{dataone}}{ package description.}
+#' @seealso \code{\link{dataone}} package description.
 #' @import base64enc
 #' @importFrom jsonlite fromJSON
 #' @include D1Node.R

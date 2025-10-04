@@ -48,5 +48,5 @@ path <- downloadObject(d1c, pid)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
+\code{\link[=D1Client-class]{D1Client}} class description.
 }

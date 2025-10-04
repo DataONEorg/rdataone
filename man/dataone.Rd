@@ -2,6 +2,7 @@
 % Please edit documentation in R/dataone-package.R
 \docType{package}
 \name{dataone}
+\alias{dataone-package}
 \alias{dataone}
 \title{Search, download and upload data to the DataONE network.}
 \description{
@@ -14,7 +15,7 @@ to nodes in the DataONE network.
 }
 \section{Classes}{
 
-\itemize{
+\describe{
  \item{\code{\link[=AuthenticationManager-class]{AuthenticationManager}}}{: AuthenticationManager provides methods to validate DataONE authentication.}
  \item{\code{\link[=CNode-class]{CNode}}}{: A CNode represents a DataONE Coordinating Node and can be used to access its services.}
  \item{\code{\link[=D1Client-class]{D1Client}}}{: The D1Client class contains methods that perform high level dataone tasks.}
@@ -29,3 +30,4 @@ A description of the \emph{dataone} R package is available with the command: \co
 \author{
 Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
 }
+\keyword{internal}

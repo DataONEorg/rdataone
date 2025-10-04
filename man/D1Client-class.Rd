@@ -19,7 +19,7 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node.}
@@ -38,5 +38,5 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 }
 
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }

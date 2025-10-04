@@ -34,5 +34,5 @@ mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
 }
 }
 \seealso{
-\code{\link[=MNode-class]{MNode}}{ class description.}
+\code{\link[=MNode-class]{MNode}} class description.
 }

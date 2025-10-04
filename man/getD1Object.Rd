@@ -32,5 +32,5 @@ data <- getData(dataObj)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}}{ class description.}
+\code{\link[=D1Client-class]{D1Client}} class description.
 }

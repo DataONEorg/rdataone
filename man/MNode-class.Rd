@@ -29,7 +29,7 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{MNode}}}{: Create a MNode object representing a DataONE Member Node repository.}
  \item{\code{\link{createObject}}}{: Create an object on a Member Node.}
  \item{\code{\link{getObject}}}{: Get the bytes associated with an object on the Member Node}
@@ -70,5 +70,5 @@ response <- createObject(mn, newid, csvfile, sysmeta)
 }
 }
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }

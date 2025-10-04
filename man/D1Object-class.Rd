@@ -16,7 +16,7 @@ a wrapper for data and associated SystemMetadata.
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}
  \item{\code{\link[dataone]{getData}}}{: Get the data content of a specified D1Object.}
  \item{\code{\link[dataone]{getIdentifier}}}{: Get the identifier of the D1Object.}
@@ -28,6 +28,6 @@ a wrapper for data and associated SystemMetadata.
 }
 
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }
 \keyword{classes}

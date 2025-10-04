@@ -48,7 +48,7 @@ the first time you interact with DataONE each day.
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{CertificateManager}}}{: Create a CertificateManager object.}
  \item{\code{\link{getCertLocation}}}{: Get the file path on disk of the client certificate file.}
  \item{\code{\link{showClientSubject}}}{: Get DataONE Identity as Stored in the CILogon Certificate.}
@@ -72,7 +72,7 @@ cm <- restoreCert(cm)
 }
 }
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }
 \author{
 Matthew Jones, Rob Nahf

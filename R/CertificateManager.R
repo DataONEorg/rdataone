@@ -58,7 +58,7 @@
 #' @rdname CertificateManager-class
 #' @keywords classes
 #' @section Methods:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{CertificateManager}}}{: Create a CertificateManager object.}
 #'  \item{\code{\link{getCertLocation}}}{: Get the file path on disk of the client certificate file.}
 #'  \item{\code{\link{showClientSubject}}}{: Get DataONE Identity as Stored in the CILogon Certificate.}
@@ -68,7 +68,7 @@
 #'  \item{\code{\link{obscureCert}}}{: Obscure the CILogon Client Certificate.}
 #'  \item{\code{\link{restoreCert}}}{: Restore the CILogon client certificate by renaming it to its original location}
 #' }
-#' @seealso \code{\link{dataone}}{ package description.}
+#' @seealso \code{\link{dataone}} package description.
 #' @examples
 #' \dontrun{
 #' cm <- suppressWarnings(CertificateManager())

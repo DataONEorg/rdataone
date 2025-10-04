@@ -40,7 +40,7 @@ methods that are common between these two child classes.
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
  \item{\code{\link{archive}}}{: Change the state of an object so that it is hidden from searches.}

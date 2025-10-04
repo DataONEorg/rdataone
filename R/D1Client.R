@@ -33,7 +33,7 @@
 #' @importFrom stringr str_match str_replace
 #' @importFrom utils URLencode
 #' @section Methods:
-#' \itemize{
+#' \describe{
 #'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
 #'  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
 #'  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node.}
@@ -49,7 +49,7 @@
 #'  \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node.}
 #'  \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
 #' }
-#' @seealso \code{\link{dataone}}{ package description.}
+#' @seealso \code{\link{dataone}} package description.
 #' @export
 #' @import datapack
 setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
@@ -66,7 +66,7 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' parameter can alternatively be an \code{\link{MNode}} instance, with the `x` parameter specified as a \code{\link{CNode}} instance.
 #' @param ... (not yet used)
 #' @return the D1Client object representing the DataONE environment
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("PROD", "urn:node:KNB")
@@ -127,7 +127,7 @@ setMethod("D1Client", signature("character", "MNode"), function(x, y, ...) {
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' }
-#' @seealso \code{\link[=D1Client-class]{dataone}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{dataone}} class description.
 setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
     # defaults here
     if (missing(cn)) {
@@ -207,7 +207,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @rdname getD1Object
 #' @aliases getD1Object
 #' @return A datapack:DataObject
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{ 
 #' library(dataone)
@@ -266,7 +266,7 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' @rdname getDataObject
 #' @aliases getDataObject
 #' @return A DataObject or NULL if the object was not found in DataONE
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -483,7 +483,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' @rdname getDataPackage
 #' @aliases getDataPackage
 #' @return A DataPackage or NULL if the package was not found in DataONE
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -718,7 +718,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
 #'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- d1SolrQuery(d1c, queryParams)
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
   msg <- sprintf("'d1SolrQuewry' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
   .Defunct("query", "dataone", msg)
@@ -751,7 +751,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' client <- new("D1Client")
 #' result <- d1IdentifierSearch(client,solrQuery="species population diversity")
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 setGeneric("d1IdentifierSearch", function(x, ...) {
   msg <- sprintf("'d1IdentifierSearch' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
@@ -786,7 +786,7 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' @rdname createDataPackage
 #' @aliases createDataPackage
 #' @return The identifier of the uploaded package.
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -836,7 +836,7 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @return A character vector containing the URL of the Coordinating Node
 #' @rdname getEndpoint
 #' @aliases getEndpoint
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -858,7 +858,7 @@ setMethod("getEndpoint", "D1Client", function(x) {
 #' @return The Member Node identifier  as a character vector
 #' @rdname getMNodeId
 #' @aliases getMNodeId
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -889,7 +889,7 @@ setMethod("getMNodeId", signature("D1Client"), function(x) {
 #' @param id A DataONE member node identifier.
 #' @rdname setMNodeId
 #' @author setMNodeId
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 setGeneric("setMNodeId", function(x, id) { 
     standardGeneric("setMNodeId")
@@ -916,7 +916,7 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 #' @rdname getMN
 #' @aliases getMN
 #' @note This method has been superceded by \code{\link{getMNodeId}}
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -952,7 +952,7 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 #' @rdname getCN
 #' @aliases getCN
 #' @note The method getCN has been deprecated.
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -1003,7 +1003,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' # Upload all members of the DataPackage to DataONE (requires authentication)
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 setGeneric("uploadDataPackage", function(x, ...) {
   standardGeneric("uploadDataPackage")
 })
@@ -1297,7 +1297,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' @return id The id of the DataObject that was uploaded
 #' @rdname uploadDataObject
 #' @aliases uploadDataObject
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @import datapack
 #' @export
 #' @examples \dontrun{
@@ -1482,7 +1482,7 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
 #' @param x A D1Client object.
 #' @rdname listMemberNodes
 #' @aliases listMemberNodes
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' d1c <- D1Client("PROD")
@@ -1509,7 +1509,7 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @rdname convert.csv
 #' @aliases convert.csv
 #' @return the dataframe serialized as a .csv
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @importFrom utils write.csv
 #' @examples \dontrun{ 
@@ -1542,7 +1542,7 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' @rdname encodeUrlQuery
 #' @aliases encodeUrlQuery
 #' @return the encoded form of the input
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @examples \dontrun{
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' fullyEncodedQuery <- paste0("q=id:",
@@ -1583,7 +1583,7 @@ setMethod("encodeUrlQuery", signature(x="D1Client"), function(x, querySegment, .
 #' fullyEncodedPath <- paste0("cn/v1/object/", 
 #'     encodeUrlPath(d1c, "doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 setGeneric("encodeUrlPath", function(x, ...) {
     standardGeneric("encodeUrlPath")
@@ -1699,7 +1699,7 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
 #' @rdname downloadObject
 #' @aliases downloadObject
 #' @return A path where the ouput file is written to.
-#' @seealso \code{\link[=D1Client-class]{D1Client}}{ class description.}
+#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)

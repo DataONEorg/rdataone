@@ -66,5 +66,5 @@ archivedId <- archive(mn, newid)
 }
 }
 \seealso{
-\code{\link[=D1Node-class]{D1Node}}{ class description.}
+\code{\link[=D1Node-class]{D1Node}} class description.
 }

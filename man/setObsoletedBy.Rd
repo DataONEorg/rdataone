@@ -30,5 +30,5 @@ CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateMan
 In DataONE version 2.0, authentication tokens can also be used.
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}}{ class description.}
+\code{\link[=CNode-class]{CNode}} class description.
 }

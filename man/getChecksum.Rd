@@ -45,5 +45,5 @@ chksum <- getChecksum(cn, pid)
 }
 }
 \seealso{
-\code{\link{D1Node-class}{D1Node}}{ class description.}
+\code{\link{D1Node-class}{D1Node}} class description.
 }

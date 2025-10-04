@@ -54,5 +54,5 @@ sysmeta <- getSystemMetadata(cn, pid)
 }
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}}{ class description.}
+\code{\link[=CNode-class]{CNode}} class description.
 }

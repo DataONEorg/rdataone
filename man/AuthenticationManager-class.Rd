@@ -39,7 +39,7 @@ of their existing accounts. For more information about the CILogon service, see
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
  \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
  \item{\code{\link{getToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
@@ -58,5 +58,5 @@ of their existing accounts. For more information about the CILogon service, see
 }
 
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }

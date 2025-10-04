@@ -49,5 +49,5 @@ packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")
 }
 }
 \seealso{
-\code{\link[=MNode-class]{MNode}}{ class description.}
+\code{\link[=MNode-class]{MNode}} class description.
 }

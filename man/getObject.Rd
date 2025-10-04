@@ -42,5 +42,5 @@ df <- read.csv(text=rawToChar(obj))
 }
 }
 \seealso{
-\code{\link{D1Node-class}{D1Node}}{ class description.}
+\code{\link{D1Node-class}{D1Node}} class description.
 }

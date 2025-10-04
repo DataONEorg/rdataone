@@ -19,7 +19,7 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
 
 \section{Methods}{
 
-\itemize{
+\describe{
  \item{\code{\link{CNode}}}{: Construct a CNode object.}
  \item{\code{\link{listFormats}}}{: List all object formats registered in DataONE.}
  \item{\code{\link{getFormat}}}{: Get information for a single DataONE object format } 
@@ -39,5 +39,5 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
 }
 
 \seealso{
-\code{\link{dataone}}{ package description.}
+\code{\link{dataone}} package description.
 }
