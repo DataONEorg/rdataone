@@ -17,9 +17,6 @@ require authentication. For MNs that have implemented the DataONE API version 2.
 authentication token to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your account profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.
-Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-system can also be used. This certificate provides authentication credentials from 
-CILogon \url{https://cilogon.org/?skin=DataONE}.
 }
 \section{Slots}{
 

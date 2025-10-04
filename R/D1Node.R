@@ -127,10 +127,11 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' for objects that should not be used by current researchers, but for which there is a desire to maintain
 #' a historical record, such as when journal articles might cite the object.  Users can still obtain the
 #' contents of archived objects if they have the identifier, but will not discover it through searches.
-#' @details This operation requires an X.509 certificate to be present in the default location of the file 
-#' system. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-#' For DataONE Version 2.0, an authentication token can also be used for authentication. 
+#' @details Methods that perform write operations (such as createObject and updateObject) on the MN generally 
+#' require authentication. For MNs that have implemented the DataONE API version 2.0 and higher, these operations can utilize an 
+#' authentication token to provide credentials for write operations in DataONE.
+#' The authentication token is obtained from DataONE (see your account profile on https://search.dataone.org).
+#' See the \code{vignette("v01-dataone-overview")} for details.
 #' Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 #' @param x The MNode or CNode instance on which the object will be created
 #' @param pid The identifier of the object to be created

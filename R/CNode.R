@@ -430,8 +430,6 @@ setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.char
 #' Set a pid as being obsoleted by another pid
 #' @description Updates the SystemMetadata 'obsoletedBy' property for an object, indicating that the object 
 #' specified by pid has been obsoleted by the identifier in obsoletedByPid.
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{\link{CertificateManager}} for details.
-#' In DataONE version 2.0, authentication tokens can also be used.
 #' @rdname setObsoletedBy
 #' @aliases setObsoletedBy
 #' @param x The CNode instance on which the object will be created

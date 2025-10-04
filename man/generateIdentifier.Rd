@@ -34,9 +34,6 @@ In the version 2.0 library and higher, this operation can utilize an
 'dataone_token' option to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.
-Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-system can also be used. This certificate provides authentication credentials from 
-CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("v01-dataone-overview")} for details.
 }
 \examples{
 \dontrun{

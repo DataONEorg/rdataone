@@ -30,9 +30,6 @@
 #' authentication token to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your account profile on https://search.dataone.org).
 #' See the \code{vignette("v01-dataone-overview")} for details.
-#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-#' system can also be used. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.
 #' @slot endpoint The url to access node services, which is the baseURL plus the version string
 #' @rdname MNode-class
 #' @aliases MNode-class
@@ -322,9 +319,6 @@ setMethod("getChecksum", signature("MNode"), function(x, pid, checksumAlgorithm=
 #' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("v01-dataone-overview")} for details.
-#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-#' system can also be used. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("dataone-overview")} for details.
 #' @rdname createObject
 #' @aliases createObject
 #' @param x The MNode instance on which the object will be created
@@ -448,9 +442,6 @@ setMethod("createObject", signature("MNode"), function(x, pid, file=as.character
 #' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("v01-dataone-overview")} for details.
-#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-#' system can also be used. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("v01-dataone-overview")} for details.
 #' @param x The MNode instance on which the object will be created
 #' @param pid The identifier of the object to be updated
 #' @param ... (Not yet used.)
@@ -541,9 +532,6 @@ setMethod("updateObject", signature("MNode"), function(x, pid, file=as.character
 #' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("v01-dataone-overview")} for details.
-#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-#' system can also be used. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("v01-dataone-overview")} for details.
 #' @param x The MNode instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @return A logical value, TRUE if the operation was successful, FALSE if there was an error.
@@ -602,9 +590,6 @@ setMethod("updateSystemMetadata", signature("MNode"), function(x, pid, sysmeta) 
 #' 'dataone_token' option to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 #' See the \code{vignette("v01-dataone-overview")} for details.
-#' Alternatively, the version 1.0 approach of using an X.509 certificate in a default location of the file 
-#' system can also be used. This certificate provides authentication credentials from 
-#' CILogon \url{https://cilogon.org/?skin=DataONE}.  See \code{vignette("v01-dataone-overview")} for details.
 #' @param x The MNode instance on which the object will be created
 #' @param ... (Not yet used.)
 #' @rdname generateIdentifier

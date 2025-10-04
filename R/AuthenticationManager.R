@@ -29,20 +29,18 @@
 #' updating objects on DataONE nodes and reserving identifiers might fail if your 
 #' authorization credentials are missing or expired.
 #' 
-#' DataONE version 1.0 identifies you using CILogon-provided x509 certificates. DataONE has 
-#' partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
-#' that allows DataONE users to use existing trusted institutional and public accounts.
-#' 
-#' DataONE version 2.0 provides an addition authentication mechanism known as
-#' authentication tokens. For information about tokens and instructions for generating
+#' DataONE version 2.0 provides an authentication mechanism known using JWT
+#' Bearer tokens. For information about tokens and instructions for generating
 #' a token for use with the dataone R package, view the overview document by
 #' entering the command: \code{'vignette("v01-dataone-overview")'}. DataONE authentication
-#' tokens can be obtained by signing in to your DataONE account at https://search.dataone.org.
+#' tokens can be obtained by signing in to your DataONE account at https://search.dataone.org
+#' and copying the token from your profile settings.
 #' 
-#' CILogon recognizes many identity providers, including many universities as well as
-#' Google, so most times users new to DataONE can get certificates using one
-#' of their existing accounts. For more information about the CILogon service, see 
-#' \url{https://cilogon.org/?skin=DataONE} .
+#' Additionally, DataONE API version 1.0 identifies you using CILogon-provided x509 certificates. 
+#' DataONE partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
+#' that allows DataONE users to use existing trusted institutional and public accounts, but this method
+#' is deprecated and generally users should use JWT Bearer tokens as described above.
+#' 
 #' @slot obscured Value of type \code{"character"} Is authentication disabled (obscured)?
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
