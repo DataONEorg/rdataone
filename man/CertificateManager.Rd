@@ -16,11 +16,11 @@ CertificateManager(...)
 the CertificateManager object
 }
 \description{
-Construct an instance of CertficateManager to provide mechanisms to obtain, load, verify, and 
+Construct an instance of CertficateManager to provide mechanisms to obtain, load, verify, and
 display X509 certificates.  If the \code{'location'} field is provided, then that location is interpreted
 as the fully qualified path to a certificate on the local filesystem, and the default locations will not be
-searched.  If \code{'location'} is missing, then the default Globus Grid Security Infrastructure (GSI) 
-location is searched, which is \code{'/tmp/x509up_u${UID}'} on Unix 
-or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} if \code{'${UID}'} 
+searched.  If \code{'location'} is missing, then the default Globus Grid Security Infrastructure (GSI)
+location is searched, which is \code{'/tmp/x509up_u${UID}'} on Unix
+or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} if \code{'${UID}'}
 is not defined.
 }

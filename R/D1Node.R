@@ -39,20 +39,20 @@
 #' @slot env A character string, either 'prod' if this node is in the production environment, otherwise 'test'
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
-#'  \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
-#'  \item{\code{\link{archive}}}{: Change the state of an object so that it is hidden from searches.}
-#'  \item{\code{\link{describeObject}}}{: Get header information for a given pid.} 
-#'  \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
-#'  \item{\code{\link{getObject}}}{: Get the bytes associated with an object on a node.}
-#'  \item{\code{\link{getQueryEngineDescription}}}{: Query a node for the list of query engines available on the node.}
-#'  \item{\code{\link{getSystemMetadata}}}{: Get the metadata describing system properties associated with an object on the Node.}
-#'  \item{\code{\link{listObjects}}}{: Retrieve the list of objects that match the search parameters.}
-#'  \item{\code{\link{listQueryEngines}}}{: Query a node for the list of query engines available on the node.}
-#'  \item{\code{\link{ping}}}{: Test if a node is online and accepting DataONE requests.}
-#'  \item{\code{\link{encodeSolr}}}{: Encode the input for Solr Queries.}
-#'  \item{\code{\link{query}}}{: Search DataONE for data and metadata objects.}
-#'  \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
+#'  \item{\code{[D1Node-initialize]{initialize}}}{: Initialize a D1Node}
+#'  \item{[D1Node()]}{: Create a MNode object representing a DataONE Member Node repository.}
+#'  \item{[archive()]}{: Change the state of an object so that it is hidden from searches.}
+#'  \item{[describeObject()]}{: Get header information for a given pid.} 
+#'  \item{[getChecksum()]}{: Get the checksum for the data object associated with the specified pid.}
+#'  \item{[getObject()]}{: Get the bytes associated with an object on a node.}
+#'  \item{[getQueryEngineDescription()]}{: Query a node for the list of query engines available on the node.}
+#'  \item{[getSystemMetadata()]}{: Get the metadata describing system properties associated with an object on the Node.}
+#'  \item{[listObjects()]}{: Retrieve the list of objects that match the search parameters.}
+#'  \item{[listQueryEngines()]}{: Query a node for the list of query engines available on the node.}
+#'  \item{[ping()]}{: Test if a node is online and accepting DataONE requests.}
+#'  \item{[encodeSolr()]}{: Encode the input for Solr Queries.}
+#'  \item{[query()]}{: Search DataONE for data and metadata objects.}
+#'  \item{[isAuthorized()]}{: Check if an action is authorized for the specified identifier.} 
 #' }
 #' @import methods
 #' @importFrom utils URLencode
@@ -83,7 +83,7 @@ setClass("D1Node",
 #########################
 
 #' Create a D1Node object.
-#' @param xml An XML object that describes the node to be initialized (see \link{listNodes}).
+#' @param xml An XML object that describes the node to be initialized (see [listNodes]).
 #' @param ... (not yet used)
 #' @rdname D1Node
 #' @return the Node object representing the DataONE environment
@@ -122,7 +122,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 
 #' Archive an object on a Member Node or Coordinating Node, which hides it from casual searches.
 #' @description This method provides the ability to archive a data or metadata object on the Member Node
-#' provided in the \code{'mnode'} parameter.  Archiving removes the object from DataONE search functions,
+#' provided in the `'mnode'` parameter.  Archiving removes the object from DataONE search functions,
 #' thereby making it more difficult to find without completely removing the object.  Archive is intended
 #' for objects that should not be used by current researchers, but for which there is a desire to maintain
 #' a historical record, such as when journal articles might cite the object.  Users can still obtain the
@@ -131,7 +131,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' require authentication. For MNs that have implemented the DataONE API version 2.0 and higher, these operations can utilize an 
 #' authentication token to provide credentials for write operations in DataONE.
 #' The authentication token is obtained from DataONE (see your account profile on https://search.dataone.org).
-#' See the \code{vignette("v01-dataone-overview")} for details.
+#' See the `vignette("v01-dataone-overview")` for details.
 #' Also, administrator privilege is required to run archive() on a DataONE Coordinating Node.
 #' @param x The MNode or CNode instance on which the object will be created
 #' @param pid The identifier of the object to be created
@@ -139,7 +139,7 @@ setMethod("D1Node", signature("XMLInternalElementNode"), function(xml) {
 #' @return The pid that was archived if successful, otherwise NULL
 #' @rdname archive
 #' @aliases archive
-#' @seealso \code{\link[=D1Node-class]{D1Node}} class description.
+#' @seealso [`D1Node()`][D1Node-class] class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -204,7 +204,7 @@ setMethod("archive", signature("D1Node"), function(x, pid) {
 #' @rdname getObject
 #' @aliases getObject
 #' @return the bytes of the object
-#' @seealso \code{\link{D1Node-class}{D1Node}} class description.
+#' @seealso \code{[D1Node-class]{D1Node}} class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -220,7 +220,7 @@ setGeneric("getObject", function(x, ...) {
 
 #' Get the checksum for the data object associated with the specified pid.
 #' @description A checksum is calculated for an object when it is uploaded to DataONE and
-#' is submitted with the object's system metadata. The \code{'getChecksum'} method retrieves
+#' is submitted with the object's system metadata. The `'getChecksum'` method retrieves
 #' the checksum from the specified coordinating node
 #' @rdname getChecksum
 #' @aliases getChecksum
@@ -228,7 +228,7 @@ setGeneric("getObject", function(x, ...) {
 #' @param pid The identifier of the object
 #' @param ... (Not yet used)
 #' @return character the checksum value, with the checksum algorithm as the attribute "algorithm"
-#' @seealso \code{\link{D1Node-class}{D1Node}} class description.
+#' @seealso \code{[D1Node-class]{D1Node}} class description.
 #' @export
 #' @examples \dontrun{ 
 #' library(dataone)
@@ -338,7 +338,7 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' Efficiently get systemmetadata for an object.
 #' @description This method provides a lighter weight mechanism than getSystemMetadata() for a client to
 #' determine basic properties of the referenced object. This operation requires read privileges for the
-#' object specified by \code{'pid'}, as is granted with a DataONE authentication token or X.509 certificate.
+#' object specified by `'pid'`, as is granted with a DataONE authentication token or X.509 certificate.
 #' @param x The MNode or CNode instance to send request to.
 #' @param pid Identifier for the object in question. May be either a PID or a SID. Transmitted as
 #' part of the URL path and must be escaped accordingly.
@@ -346,7 +346,7 @@ setGeneric("getSystemMetadata", function(x, ...) {
 #' @rdname describeObject
 #' @aliases describeObject
 #' @return A list of header elements
-#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe}
+#' @seealso <https://purl.dataone.org/architecture/apis/MN_APIs.html#MNRead.describe>
 #' @examples \dontrun{
 #' library(dataone)
 #' mn_uri <- "https://knb.ecoinformatics.org/knb/d1/mn/v1"
@@ -374,8 +374,8 @@ setMethod("describeObject", signature("D1Node"), function(x, pid) {
 })
 
 #' Retrieve the list of objects that match the search parameters
-#' @details The list of objects that is returned is paged according to the \code{'start'} and
-#' \code{'count'} values, so that large result sets can be returned over multiple calls.
+#' @details The list of objects that is returned is paged according to the `'start'` and
+#' `'count'` values, so that large result sets can be returned over multiple calls.
 #' @param x The Node instance from which the SystemMetadata will be downloaded
 #' @param ... (Not yet used.)
 #' @rdname listObjects
@@ -399,16 +399,16 @@ setGeneric("listObjects", function(x, ...) {
   standardGeneric("listObjects")
 })
 
-#' @param fromDate Entries with a modified date greater than \code{'fromDate'} will be returned.
+#' @param fromDate Entries with a modified date greater than `'fromDate'` will be returned.
 #' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
-#' @param toDate Entries with a modified date less than \code{'toDate'} will be returned.
+#' @param toDate Entries with a modified date less than `'toDate'` will be returned.
 #' This value must be specified in ISO 8601 format, i.e. "YYYY-MM-DDTHH:MM:SS.mmm+00:00"
 #' @param formatId The format to match, for example "eml://ecoinformatics.org/eml-2.1.1"
 #' @param replicaStatus A logical value that determines if replica (object not on it's origin node) should be returned. Default is TRUE.
 #' @param start An integer that specifies the first element of the result set that will be returned
 #' @param count An integer that specifies how many results will be returned
 #' @return list Objects that met the search criteria
-#' @seealso \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_read.listObjects}
+#' @seealso <https://purl.dataone.org/architecture/apis/MN_APIs.html#MN_read.listObjects>
 #' @import parsedate
 #' @export
 #' @rdname listObjects
@@ -676,26 +676,26 @@ setMethod("encodeSolr", signature(x="character"), function(x, ...) {
 
 #' Search DataONE for data and metadata objects
 #' @description The DataONE search index is searched for data that matches the specified query parameters. 
-#' @details The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search 
-#' engine \url{https://solr.apache.org/}. This same Solr search engine is the underlying mechanism used by the
-#' DataONE online search tool available at \url{https://search.dataone.org/}.
+#' @details The `"query"` method sends a query to a DataONE search index that uses the Apache Solr search 
+#' engine <https://solr.apache.org/>. This same Solr search engine is the underlying mechanism used by the
+#' DataONE online search tool available at <https://search.dataone.org/>.
 #' 
-#' The \code{"solrQuery"} argument is used to specify search terms that data of interest must match. This parameter uses
+#' The `"solrQuery"` argument is used to specify search terms that data of interest must match. This parameter uses
 #' Solr query terms, so some familiarity with Solr is helpful, however, fairly simple queries can be effective. This
-#' argument can be created as either a single character string containing the Solr query, for example: \code{solrQuery = "q=id:doi*&rows=2&wt=json"},
-#' or as a list of key value pairs: \code{solrQuery = list(q = "id:doi*", rows = "2", wt = "json")}. These two queries produce the same result.
+#' argument can be created as either a single character string containing the Solr query, for example: `solrQuery = "q=id:doi*&rows=2&wt=json"`,
+#' or as a list of key value pairs: `solrQuery = list(q = "id:doi*", rows = "2", wt = "json")`. These two queries produce the same result.
 #' 
-#' As an alternative to specifying the Solr query terms using the \code{"solrquery"} argument, the \code{"searchTerms"} argument
+#' As an alternative to specifying the Solr query terms using the `"solrquery"` argument, the `"searchTerms"` argument
 #' can be specified, which does not require any Solr syntax. This parameter is a list with query field / value pairs, i.e. 
-#' \code{searchTerms=list(abstract=kelp, attribute=biomass)}.
-#' The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}}.
-#' Either \code{"searchTerms"} or \code{"solrQuery"} must be specified.
+#' `searchTerms=list(abstract=kelp, attribute=biomass)`.
+#' The query fields can be listed for a DataONE node using [getQueryEngineDescription()].
+#' Either `"searchTerms"` or `"solrQuery"` must be specified.
 #' 
-#' The \code{"as"} argument is used to specify the query result to be returned as: "json", xml", "list", "data.frame".
+#' The `"as"` argument is used to specify the query result to be returned as: "json", xml", "list", "data.frame".
 #' 
-#' The \code{"parsed"} argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
-#' For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or 
-#' If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have 
+#' The `"parsed"` argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
+#' For example, if `ar = "xml"` and `parsed = TRUE`, then the query result is returned as an R XMLInternalDocument, or 
+#' If `'parsed = FALSE'` then a character variable with the XML string is returned. Specify `as = "list"` to have 
 #' the result parsed to an R list, with each list element containing one Solr query result of the total result set.
 #' @param x The CNode or MNode instance to send the query to.
 #' @param ... (Not yet used.)
@@ -742,11 +742,11 @@ setGeneric("query", function(x, ...) {
 
 #' @rdname query
 #' @param solrQuery The query search terms, either as a string or as list with named members.
-#' @param encode A logical, if \code{TRUE} then the query is URL encoded. The default is \code{TRUE}.
+#' @param encode A logical, if `TRUE` then the query is URL encoded. The default is `TRUE`.
 #' @param as The return type. Possible values: "json", "xml", "list" or "data.frame" with "list" as the default.
 #' @param parse A logical value. If TRUE, then the result is parsed and converted to appropriate R data types. If FALSE, character values are returned.
-#' @param searchTerms A list of name / value pairs (an alternative to \code{solrQuery}). 
-#' @param encodeReserved A logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See \code{URLencode} for details.
+#' @param searchTerms A list of name / value pairs (an alternative to `solrQuery`). 
+#' @param encodeReserved A logical, if TRUE then reserved characters in the query are URL encoded (FALSE is default). See `URLencode` for details.
 #' @export
 setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), encode=TRUE, as="list", parse=TRUE, 
                                                  searchTerms=as.character(NA), 
@@ -888,7 +888,7 @@ setMethod("query", signature("D1Node"), function(x, solrQuery=as.character(NA), 
 })
 
 #' Parse Solr output into an R list
-#' @description Solr output that is specified with a writer type of XML \code{'&wt="xml"'}
+#' @description Solr output that is specified with a writer type of XML `'&wt="xml"'`
 #' @param doc The Solr result to parse, in XML format
 #' @param parse A logical value, if TRUE the result is parsed to appropriate R types.
 #' @param ... (Not yet used.)
@@ -974,10 +974,10 @@ parseSolrField <- function(xNode, parse) {
 #' or series identifier (sid).
 #' @rdname isAuthorized
 #' @aliases isAuthorized
-#' @param x The node to send the request to. This is either a \code{"CNode"} or \code{"MNode"} instance.
+#' @param x The node to send the request to. This is either a `"CNode"` or `"MNode"` instance.
 #' @param ... (Not yet used)
 #' @return a logical, TRUE if the action is authorized, false if not.
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples \dontrun{
 #' # Send an authorization check to the D1 production CN.

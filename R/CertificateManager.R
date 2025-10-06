@@ -52,23 +52,23 @@
 #' from the time of issuing.  Typically you will want to download a fresh certificate
 #' the first time you interact with DataONE each day.
 #' 
-#' @slot location value of type \code{"character"}, containing a path to a custom certificate location
-#' @slot obscuredpath value of type \code{"character"}, containing the path used to temporarily obscure a certificate
+#' @slot location value of type `"character"`, containing a path to a custom certificate location
+#' @slot obscuredpath value of type `"character"`, containing the path used to temporarily obscure a certificate
 #' @author Matthew Jones, Rob Nahf
 #' @rdname CertificateManager-class
 #' @keywords classes
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link{CertificateManager}}}{: Create a CertificateManager object.}
-#'  \item{\code{\link{getCertLocation}}}{: Get the file path on disk of the client certificate file.}
-#'  \item{\code{\link{showClientSubject}}}{: Get DataONE Identity as Stored in the CILogon Certificate.}
-#'  \item{\code{\link{isCertExpired}}}{: Determine if an X.509 certificate has expired.}
-#'  \item{\code{\link{getCertExpires}}}{: Show the date and time when an X.509 certificate expires.}
-#'  \item{\code{\link{downloadCert}}}{: Open the CILogon Certificate download page in the default browser.}
-#'  \item{\code{\link{obscureCert}}}{: Obscure the CILogon Client Certificate.}
-#'  \item{\code{\link{restoreCert}}}{: Restore the CILogon client certificate by renaming it to its original location}
+#'  \item{[CertificateManager()]}{: Create a CertificateManager object.}
+#'  \item{[getCertLocation()]}{: Get the file path on disk of the client certificate file.}
+#'  \item{[showClientSubject()]}{: Get DataONE Identity as Stored in the CILogon Certificate.}
+#'  \item{[isCertExpired()]}{: Determine if an X.509 certificate has expired.}
+#'  \item{[getCertExpires()]}{: Show the date and time when an X.509 certificate expires.}
+#'  \item{[downloadCert()]}{: Open the CILogon Certificate download page in the default browser.}
+#'  \item{[obscureCert()]}{: Obscure the CILogon Client Certificate.}
+#'  \item{[restoreCert()]}{: Restore the CILogon client certificate by renaming it to its original location}
 #' }
-#' @seealso \code{\link{dataone}} package description.
+#' @seealso [dataone()] package description.
 #' @examples
 #' \dontrun{
 #' cm <- suppressWarnings(CertificateManager())
@@ -87,9 +87,9 @@ setClass("CertificateManager", slots = c(
 
 #' Create a CertificateManager object
 #' @description Construct an instance of CertficateManager to provide mechanisms to obtain, load, verify, and 
-#' display X509 certificates.  If the \code{'location'} field is provided, then that location is interpreted
+#' display X509 certificates.  If the `'location'` field is provided, then that location is interpreted
 #' as the fully qualified path to a certificate on the local filesystem, and the default locations will not be
-#' searched.  If \code{'location'} is missing, then the default Globus Grid Security Infrastructure (GSI) 
+#' searched.  If `'location'` is missing, then the default Globus Grid Security Infrastructure (GSI) 
 #' location is searched, which is \code{'/tmp/x509up_u${UID}'} on Unix 
 #' or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} if \code{'${UID}'} 
 #' is not defined.
@@ -146,7 +146,7 @@ setMethod("showClientSubject", signature("CertificateManager"), function(x) {
 })
 
 #' Determine if an X.509 certificate has expired.
-#' @description Returns \code{'TRUE'} if the certificate associated with a CertificateManager instance is expired.
+#' @description Returns `'TRUE'` if the certificate associated with a CertificateManager instance is expired.
 #' A certificate is expired if any of the following conditions hold: 1) the current time is before or after the 
 #' certificate validity dates, 2) the certificate is not valid according to a trusted Certificate Authority, or
 #' 3) no certificate can be found.
@@ -178,7 +178,7 @@ setMethod("isCertExpired", signature("CertificateManager"), function(x) {
 
 #' Show the date and time when an X.509 certificate expires.
 #' @description Each X.509 has a range of certificate validity times.  This method returns the X.509 
-#' \code{'notAfter'} field formatted as a \code{'POSIXct'} date value.
+#' `'notAfter'` field formatted as a `'POSIXct'` date value.
 #' @param x a CertificateManager instance
 #' @param ... (Not yet used)
 #' @rdname getCertExpires
@@ -207,7 +207,7 @@ setMethod("getCertExpires", signature("CertificateManager"), function(x) {
 #' "https://cilogon.org/?skin=DataONE. Logging into CILogon will allow
 #' you to download your X.509 certificate to your local computer.  Typically,
 #' the certificate is saved in the default Globus location for certificates 
-#' (\code{\link{getCertLocation}}) and once it is there, the \code{'dataone'} 
+#' ([getCertLocation()]) and once it is there, the `'dataone'` 
 #' package will use the certificate for all authenticated operations.  Deleting 
 #' the certificate file is the equivalent of logging out.
 #' @param x a CertificateManager instance
@@ -237,7 +237,7 @@ setMethod("downloadCert", signature("CertificateManager"), function(x) {
 #' @rdname obscureCert
 #' @aliases obscureCert
 #' @return the modified CertificateManager instance
-#' @seealso \code{\link{restoreCert}} is this method's inverse operation   
+#' @seealso [restoreCert()] is this method's inverse operation   
 #' @export
 setGeneric("obscureCert", function(x, ...) { 
     .Deprecated("obscureAuth", "dataone")
@@ -264,7 +264,7 @@ setMethod("obscureCert", signature("CertificateManager"), function(x) {
 #' @rdname restoreCert
 #' @aliases restoreCert
 #' @return the modified CertificateManager instance
-#' @seealso \code{\link{obscureCert}} is this method's inverse operation
+#' @seealso [obscureCert()] is this method's inverse operation
 #' @import stringr
 #' @export
 setGeneric("restoreCert", function(x, ...) { 
@@ -297,7 +297,7 @@ setMethod("restoreCert", signature("CertificateManager"), function(x) {
 
 #' Get the file path on disk of the client certificate file.
 #' @description Find the location of the client certificate, which is typically in a default
-#' location on disk, unless the \code{'location'} slot has been set with a custom location for
+#' location on disk, unless the `'location'` slot has been set with a custom location for
 #' the certificate.
 #' @details The default  Globus Grid Security Infrastructure (GSI) location is \code{'/tmp/x509up_u${UID}'} 
 #' on Unix or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} 

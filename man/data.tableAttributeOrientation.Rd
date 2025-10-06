@@ -10,9 +10,13 @@ data.tableAttributeOrientation(x, index, ...)
 \S4method{data.tableAttributeOrientation}{EMLParser,numeric}(x, index)
 }
 \arguments{
-\item{x}{- the TableDescriber}
+\item{x}{\itemize{
+\item the TableDescriber
+}}
 
-\item{index}{- the index of the table within the document}
+\item{index}{\itemize{
+\item the index of the table within the document
+}}
 
 \item{...}{Additional parameters}
 }
@@ -21,7 +25,7 @@ legal values  are "columns" | "rows"
 }
 \description{
 Which way to the attribute headers run?  Most data has a header row
-where the attribute names go across "columns", in row in which case, the 
+where the attribute names go across "columns", in row in which case, the
 return value for this method should be "columns."
 }
 \note{

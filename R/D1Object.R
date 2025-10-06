@@ -29,15 +29,15 @@
 #' @importFrom utils read.csv
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}
-#'  \item{\code{\link[dataone]{getData}}}{: Get the data content of a specified D1Object.}
-#'  \item{\code{\link[dataone]{getIdentifier}}}{: Get the identifier of the D1Object.}
-#'  \item{\code{\link[dataone]{getFormatId}}}{: Get the formatId of the D1Object}
-#'  \item{\code{\link[dataone]{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
-#'  \item{\code{\link[dataone]{canRead}}}{: Test whether the provided subject can read an object.}
-#'  \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
+#'  \item{[dataone::D1Object-initialize()]}{: Initialize a D1Object}
+#'  \item{[dataone::getData()]}{: Get the data content of a specified D1Object.}
+#'  \item{[dataone::getIdentifier()]}{: Get the identifier of the D1Object.}
+#'  \item{[dataone::getFormatId()]}{: Get the formatId of the D1Object}
+#'  \item{[dataone::setPublicAccess()]}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
+#'  \item{[dataone::canRead()]}{: Test whether the provided subject can read an object.}
+#'  \item{[asDataFrame()]}{: Return the D1Object as a data.frame.}
 #' }
-#' @seealso \code{\link{dataone}} package description.
+#' @seealso [dataone()] package description.
 #' @export
 setClass("D1Object", slots = c(dataObject="DataObject") )
 
@@ -51,7 +51,7 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 #' @rdname D1Object
 #' @aliases D1Object
 #' @return the D1Object instance
-#' @seealso \code{\link[=D1Object-class]{D1Object}} class description.
+#' @seealso [`D1Object()`][D1Object-class] class description.
 #' @export
 setGeneric("D1Object", function(...) { 
   msg <- sprintf("'D1Object' is defunct.\nUse 'datapack:DataPackage' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
@@ -66,7 +66,7 @@ setGeneric("D1Object", function(...) {
 #' @param format The Object format.
 #' @param mnNodeId The DataONE node identifier associated with this object, i.e. "urn:node:KNB"
 #' @rdname D1Object-initialize
-#' @seealso \code{\link[=D1Object-class]{D1Object}} class description.
+#' @seealso [`D1Object()`][D1Object-class] class description.
 #' @aliases D1Object-initialize
 setMethod("initialize", "D1Object", function(.Object, id, data, format, mnNodeId=as.character(NA)) {
   return(.Object)
@@ -123,7 +123,7 @@ setMethod("getFormatId", signature("D1Object"), function(x) {
 #' the D1Object. 
 #' @param x D1Object
 #' @return D1Object with modified access rules
-#' @seealso \code{\link[=DataObject-class]{DataObject}} class description.
+#' @seealso [`DataObject()`][DataObject-class] class description.
 #' @rdname setPublicAccess
 #' @export
 setMethod("setPublicAccess", signature("D1Object"), function(x) {
@@ -138,7 +138,7 @@ setMethod("setPublicAccess", signature("D1Object"), function(x) {
 #' Currently it only uses the AccessPolicy to determine who can read (and not the rightsHolder field,
 #' which always can read an object).  If an object has been granted read access by the
 #' special "public" subject, then all subjects have read access.
-#' @details The subject name used in both the AccessPolicy and in the \code{'subject'}
+#' @details The subject name used in both the AccessPolicy and in the `'subject'`
 #' argument to this method is a string value, but is generally formatted as an X.509
 #' name formatted according to RFC 2253.
 #' @param x D1Object

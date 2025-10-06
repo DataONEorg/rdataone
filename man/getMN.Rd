@@ -23,7 +23,7 @@ getMN(x, nodeid, ...)
 Get a member node client based on its node identifier.
 }
 \note{
-This method has been superceded by \code{\link{getMNodeId}}
+This method has been superceded by \code{\link[=getMNodeId]{getMNodeId()}}
 }
 \examples{
 \dontrun{
@@ -32,5 +32,5 @@ testMN <- getMN(cli)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

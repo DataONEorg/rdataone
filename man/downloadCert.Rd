@@ -15,11 +15,11 @@ downloadCert(x, ...)
 \item{...}{(Not yet used)}
 }
 \description{
-A convenience method to take you to the CILogon download page:  
+A convenience method to take you to the CILogon download page:
 "https://cilogon.org/?skin=DataONE. Logging into CILogon will allow
 you to download your X.509 certificate to your local computer.  Typically,
-the certificate is saved in the default Globus location for certificates 
-(\code{\link{getCertLocation}}) and once it is there, the \code{'dataone'} 
-package will use the certificate for all authenticated operations.  Deleting 
+the certificate is saved in the default Globus location for certificates
+(\code{\link[=getCertLocation]{getCertLocation()}}) and once it is there, the \code{'dataone'}
+package will use the certificate for all authenticated operations.  Deleting
 the certificate file is the equivalent of logging out.
 }

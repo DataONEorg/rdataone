@@ -19,7 +19,7 @@ auth_get(url, nconfig = config(), node, path = NULL)
 the response object from the method
 }
 \description{
-Retrieve the data at a URL using an HTTP GET request using authentication credentials 
+Retrieve the data at a URL using an HTTP GET request using authentication credentials
 provided in a client certificate.  Authenticated access depends on the suggested
 openssl package. If the openssl package is not installed, then the request falls back
 to an unauthenticated request, which may fail due to insufficient permissions.

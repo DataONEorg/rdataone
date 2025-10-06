@@ -19,7 +19,7 @@ TRUE if the certificate is expired
 }
 \description{
 Returns \code{'TRUE'} if the certificate associated with a CertificateManager instance is expired.
-A certificate is expired if any of the following conditions hold: 1) the current time is before or after the 
+A certificate is expired if any of the following conditions hold: 1) the current time is before or after the
 certificate validity dates, 2) the certificate is not valid according to a trusted Certificate Authority, or
 3) no certificate can be found.
 }

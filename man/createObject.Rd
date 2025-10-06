@@ -30,7 +30,7 @@ This method provides the ability to upload a data or metadata object to the Memb
 provided in the \code{'mnode'} parameter.
 }
 \details{
-In the version 2.0 library and higher, this operation can utilize an 
+In the version 2.0 library and higher, this operation can utilize an
 'dataone_token' option to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.

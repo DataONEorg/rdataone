@@ -19,7 +19,7 @@ auth_put(url, encode = "multipart", body = NULL, node)
 the HTTP response from the request
 }
 \description{
-PUT data to a URL using an HTTP PUT request using authentication credentials 
+PUT data to a URL using an HTTP PUT request using authentication credentials
 provided in a client certificate.  Authenticated access depends on the suggested
 openssl package. If the openssl package is not installed, then the request fails.
 }

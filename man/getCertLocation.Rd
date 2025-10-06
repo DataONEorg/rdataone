@@ -23,7 +23,7 @@ location on disk, unless the \code{'location'} slot has been set with a custom l
 the certificate.
 }
 \details{
-The default  Globus Grid Security Infrastructure (GSI) location is \code{'/tmp/x509up_u${UID}'} 
-on Unix or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'} 
+The default  Globus Grid Security Infrastructure (GSI) location is \code{'/tmp/x509up_u${UID}'}
+on Unix or \code{'${tmpdir}/x509up_u${UID}'} on Windows or \code{'${tmpdir}/x509up_u${user.name}'}
 if \code{'${UID}'} is not defined.
 }

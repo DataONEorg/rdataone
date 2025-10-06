@@ -14,7 +14,7 @@ hasReservation(x, ...)
 
 \item{...}{Additional parameters.}
 
-\item{pid}{The identifier that is being checked for existing as a reserved identifier or is in use as 
+\item{pid}{The identifier that is being checked for existing as a reserved identifier or is in use as
 an identifier for an existing object}
 
 \item{subject}{The subject of the principal (user) that made the reservation.}
@@ -43,5 +43,5 @@ hasRes <- hasReservation(cn, pid, subject=subject)
 }
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}} class description.
+\code{\link[=CNode-class]{CNode()}} class description.
 }

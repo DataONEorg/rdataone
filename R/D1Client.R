@@ -20,7 +20,7 @@
 #' @title The D1Client class contains methods that perform high level DataONE tasks
 #' @description The methods in the D1Client class call the low level DataONE API to
 #' perform involved tasks such as uploading all the packages in a DataPackage (i.e
-#' \code{\link{uploadDataPackage}})
+#' [uploadDataPackage()])
 #' @include CNode.R
 #' @include MNode.R
 #' @include D1Object.R
@@ -34,22 +34,22 @@
 #' @importFrom utils URLencode
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link{D1Client}}}{: Construct a D1Client object.}
-#'  \item{\code{\link{convert.csv}}}{: Convert a DataFrame to Standard CSV.}
-#'  \item{\code{\link{createDataPackage}}}{: Create a DataPackage on a DataONE Member Node.}
-#'  \item{\code{\link{encodeUrlPath}}}{: Encode the Input for a URL Path Segment.}
-#'  \item{\code{\link{encodeUrlQuery}}}{: Encode the Input for a URL Query Segment.}
-#'  \item{\code{\link{getDataObject}}}{: Download a single data object from a DataONE Federation member node.}
-#'  \item{\code{\link{getDataPackage}}}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
-#'  \item{\code{\link{getEndpoint}}}{: Return the URL endpoint for the DataONE Coordinating Node.}
-#'  \item{\code{\link{getMetadataMember}}}{: Get the DataObject containing package metadata.}
-#'  \item{\code{\link{getMNodeId}}}{: Get the member node identifier associated with this D1Client object.}
-#'  \item{\code{\link{listMemberNodes}}}{: List DataONE Member Nodes.}
-#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a unique identifier in the DataONE Network.}
-#'  \item{\code{\link{uploadDataObject}}}{: Upload a DataObject to a DataONE member node.}
-#'  \item{\code{\link{uploadDataPackage}}}{: Upload a DataPackage to a DataONE member node.}
+#'  \item{[D1Client()]}{: Construct a D1Client object.}
+#'  \item{[convert.csv()]}{: Convert a DataFrame to Standard CSV.}
+#'  \item{[createDataPackage()]}{: Create a DataPackage on a DataONE Member Node.}
+#'  \item{[encodeUrlPath()]}{: Encode the Input for a URL Path Segment.}
+#'  \item{[encodeUrlQuery()]}{: Encode the Input for a URL Query Segment.}
+#'  \item{[getDataObject()]}{: Download a single data object from a DataONE Federation member node.}
+#'  \item{[getDataPackage()]}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
+#'  \item{[getEndpoint()]}{: Return the URL endpoint for the DataONE Coordinating Node.}
+#'  \item{[getMetadataMember()]}{: Get the DataObject containing package metadata.}
+#'  \item{[getMNodeId()]}{: Get the member node identifier associated with this D1Client object.}
+#'  \item{[listMemberNodes()]}{: List DataONE Member Nodes.}
+#'  \item{[reserveIdentifier()]}{: Reserve a unique identifier in the DataONE Network.}
+#'  \item{[uploadDataObject()]}{: Upload a DataObject to a DataONE member node.}
+#'  \item{[uploadDataPackage()]}{: Upload a DataPackage to a DataONE member node.}
 #' }
-#' @seealso \code{\link{dataone}} package description.
+#' @seealso [dataone()] package description.
 #' @export
 #' @import datapack
 setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
@@ -61,12 +61,12 @@ setClass("D1Client", slots = c(cn = "CNode", mn="MNode"))
 #' The DataONE client class used to download, update and search for data in the DataONE network.
 #' @rdname D1Client
 #' @param x The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV'). This parameter
-#' can alternatively be a \code{\link{CNode}} instance, with the `y` parameter specified as an \code{\link{MNode}} instance.
+#' can alternatively be a [CNode()] instance, with the `y` parameter specified as an [MNode()] instance.
 #' @param y The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'. This
-#' parameter can alternatively be an \code{\link{MNode}} instance, with the `x` parameter specified as a \code{\link{CNode}} instance.
+#' parameter can alternatively be an [MNode()] instance, with the `x` parameter specified as a [CNode()] instance.
 #' @param ... (not yet used)
 #' @return the D1Client object representing the DataONE environment
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("PROD", "urn:node:KNB")
@@ -127,7 +127,7 @@ setMethod("D1Client", signature("character", "MNode"), function(x, y, ...) {
 #' library(dataone)
 #' d1c <- D1Client("PROD", "urn:node:KNB")
 #' }
-#' @seealso \code{\link[=D1Client-class]{dataone}} class description.
+#' @seealso [`dataone()`][D1Client-class] class description.
 setMethod("initialize", signature = "D1Client", definition = function(.Object, cn=NA, mn=NA, env=as.character(NA), mNodeid=as.character(NA)) {
     # defaults here
     if (missing(cn)) {
@@ -207,7 +207,7 @@ setMethod("createD1Object", signature("D1Client", "D1Object"), function(x, d1Obj
 #' @rdname getD1Object
 #' @aliases getD1Object
 #' @return A datapack:DataObject
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{ 
 #' library(dataone)
@@ -237,10 +237,10 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' data is then used to construct the returned DataObject. This function replaces the previous 
 #' getD1Object() method in the version 1
 #' dataone library. \cr\cr
-#' The \code{lazyLoad} parameter controls whether the data byes for a DataONE item are downloaded (the system
-#' metadata is always downloaded). When \code{lazyLoad}=FALSE,the \code{limit} parameter can be used to specify
-#' the maximum size of a data file that will be downloaded. If \code{lazyLoad} is TRUE, then \code{limit}
-#' is ignored. The \code{lazyLoad} and \code{limit} can be used together in the following ways:
+#' The `lazyLoad` parameter controls whether the data byes for a DataONE item are downloaded (the system
+#' metadata is always downloaded). When `lazyLoad`=FALSE,the `limit` parameter can be used to specify
+#' the maximum size of a data file that will be downloaded. If `lazyLoad` is TRUE, then `limit`
+#' is ignored. The `lazyLoad` and `limit` can be used together in the following ways:
 #' 
 #' \tabular{lllll}{
 #' \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
@@ -255,18 +255,18 @@ setMethod("getD1Object", "D1Client", function(x, identifier) {
 #' 
 #' @param x A D1Client object.
 #' @param identifier The identifier of the object to get.
-#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
-#' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
+#' @param lazyLoad A `logical` value. If TRUE, then only package member system metadata is downloaded and not data.
+#' @param limit A `character` value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
-#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+#' @param quiet A `'logical'`. If TRUE (the default) then informational messages will not be printed.
+#' @param checksumAlgorithm A `character` value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
 #'              for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this 
 #'              re-calculation will not be performed.
 #' @param ... (not yet used)
 #' @rdname getDataObject
 #' @aliases getDataObject
 #' @return A DataObject or NULL if the object was not found in DataONE
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -467,10 +467,10 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' member.
 #' @details A 'data package' that resides on a DataONE member node is defined as a collection of
 #' digital objects that are described by a metadata document. \cr\cr
-#' The \code{lazyLoad} parameter controls whether the data bytes for a DataONE package member are downloaded (the system
-#' metadata is always downloaded). When \code{lazyLoad}=FALSE, the \code{limit} parameter can be used to specify
-#' the maximum size of a data file that will be downloaded. If \code{lazyLoad} is TRUE, then \code{limit}
-#' is ignored. The \code{lazyLoad} and \code{limit} parameters can be used together in the following ways:
+#' The `lazyLoad` parameter controls whether the data bytes for a DataONE package member are downloaded (the system
+#' metadata is always downloaded). When `lazyLoad`=FALSE, the `limit` parameter can be used to specify
+#' the maximum size of a data file that will be downloaded. If `lazyLoad` is TRUE, then `limit`
+#' is ignored. The `lazyLoad` and `limit` parameters can be used together in the following ways:
 #' 
 #' \tabular{lllll}{
 #' \tab 'lazyLoad' \tab 'limit' \tab result \tab comments \cr
@@ -483,7 +483,7 @@ setMethod("getDataObject", "D1Client", function(x, identifier, lazyLoad=FALSE, l
 #' @rdname getDataPackage
 #' @aliases getDataPackage
 #' @return A DataPackage or NULL if the package was not found in DataONE
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -497,12 +497,12 @@ setGeneric("getDataPackage", function(x, identifier, ...) {
 
 #' @rdname getDataPackage
 #' @param identifier The identifier of a package, package metadata or other package member
-#' @param lazyLoad A \code{logical} value. If TRUE, then only package member system metadata is downloaded and not data.
-#' The default is \code{FALSE}.
-#' @param limit A \code{character} value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
+#' @param lazyLoad A `logical` value. If TRUE, then only package member system metadata is downloaded and not data.
+#' The default is `FALSE`.
+#' @param limit A `character` value specifying maximum package member size to download. Specified with "KB", "MB" or "TB"
 #'              for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes effect if 'lazyLoad=FALSE'.
-#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param checksumAlgorithm A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+#' @param quiet A `'logical'`. If TRUE (the default) then informational messages will not be printed.
+#' @param checksumAlgorithm A `character` value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
 #'              for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this re-calculation will not be performed.
 #' @param ... (not yet used)
 #' @export
@@ -718,7 +718,7 @@ setMethod("getDataPackage", "D1Client", function(x, identifier, lazyLoad=FALSE, 
 #'     fl="title,id,abstract,size,dateUploaded,attributeName")
 #' result <- d1SolrQuery(d1c, queryParams)
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 setGeneric("d1SolrQuery", function(x, solrQuery) { 
   msg <- sprintf("'d1SolrQuewry' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
   .Defunct("query", "dataone", msg)
@@ -751,7 +751,7 @@ setMethod("d1SolrQuery", signature("D1Client", "character"), function(x, solrQue
 #' client <- new("D1Client")
 #' result <- d1IdentifierSearch(client,solrQuery="species population diversity")
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 setGeneric("d1IdentifierSearch", function(x, ...) {
   msg <- sprintf("'d1IdentifierSearch' is defunct.\nUse 'dataone:query' instead.\nSee help(\"Defunct\") and help(\"dataone-defunct\").")
@@ -786,7 +786,7 @@ setMethod("reserveIdentifier", signature("D1Client"), function(x, id) {
 #' @rdname createDataPackage
 #' @aliases createDataPackage
 #' @return The identifier of the uploaded package.
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -836,7 +836,7 @@ setMethod("createDataPackage", signature("D1Client", "DataPackage"), function(x,
 #' @return A character vector containing the URL of the Coordinating Node
 #' @rdname getEndpoint
 #' @aliases getEndpoint
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -858,7 +858,7 @@ setMethod("getEndpoint", "D1Client", function(x) {
 #' @return The Member Node identifier  as a character vector
 #' @rdname getMNodeId
 #' @aliases getMNodeId
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -889,7 +889,7 @@ setMethod("getMNodeId", signature("D1Client"), function(x) {
 #' @param id A DataONE member node identifier.
 #' @rdname setMNodeId
 #' @author setMNodeId
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 setGeneric("setMNodeId", function(x, id) { 
     standardGeneric("setMNodeId")
@@ -915,8 +915,8 @@ setMethod("setMNodeId", signature("D1Client", "character"), function(x, id) {
 #' @param ... (Not yet used)
 #' @rdname getMN
 #' @aliases getMN
-#' @note This method has been superceded by \code{\link{getMNodeId}}
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @note This method has been superceded by [getMNodeId()]
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -952,7 +952,7 @@ setMethod("getMN", signature("D1Client", "character"), function(x, nodeid) {
 #' @rdname getCN
 #' @aliases getCN
 #' @note The method getCN has been deprecated.
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cli <- D1Client("STAGING2", "urn:node:mnTestKNB")
@@ -969,7 +969,7 @@ setMethod("getCN", signature("D1Client"), function(x) {
 })
 
 #' Upload a DataPackage to a DataONE member node.
-#' @description Upload all DataObjects contained in the DataPackage by calling \code{\link{uploadDataObject}}
+#' @description Upload all DataObjects contained in the DataPackage by calling [uploadDataObject()]
 #' on each of the members. Also a resourceMap object is created from the
 #' recorded relationships between DataObjects, and this is uploaded as well.
 #' @details The DataPackage describes the collection of data object and their associated 
@@ -1003,22 +1003,22 @@ setMethod("getCN", signature("D1Client"), function(x) {
 #' # Upload all members of the DataPackage to DataONE (requires authentication)
 #' packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberReplicas=2)
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 setGeneric("uploadDataPackage", function(x, ...) {
   standardGeneric("uploadDataPackage")
 })
 
 #' @rdname uploadDataPackage
 #' @param dp The DataPackage instance to be submitted to DataONE for creation.
-#' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
-#' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
-#' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
-#' @param public A \code{'logical'}, if TRUE then all objects in this package will be accessible by any user
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy of each object in the datapackage.
-#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
-#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}
-#' @param packageId A value of type \code{"character"} specifying a unique identifier to use for the uploaded package (resource map pid)
-#' @param as A value of type \code{"character"} that specifies the return value. Possible values are \code{"character"} (the default) or \code{"DataPackage"}.
+#' @param replicate A value of type `"logical"`, if TRUE then DataONE will replicate this object to other member nodes
+#' @param numberReplicas A value of type `"numeric"`, for number of supported replicas.
+#' @param preferredNodes A list of `"character"`, each of which is the node identifier for a node to which a replica should be sent.
+#' @param public A `'logical'`, if TRUE then all objects in this package will be accessible by any user
+#' @param accessRules Access rules of `'data.frame'` that will be added to the access policy of each object in the datapackage.
+#' @param quiet A `'logical'`. If TRUE (the default) then informational messages will not be printed.
+#' @param resolveURI A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See [serializePackage][datapack::serializePackage]
+#' @param packageId A value of type `"character"` specifying a unique identifier to use for the uploaded package (resource map pid)
+#' @param as A value of type `"character"` that specifies the return value. Possible values are `"character"` (the default) or `"DataPackage"`.
 #' @importFrom utils flush.console
 #' @export
 setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=NA, numberReplicas=NA, preferredNodes=NA,  public=as.logical(FALSE), 
@@ -1297,7 +1297,7 @@ setMethod("uploadDataPackage", signature("D1Client"), function(x, dp, replicate=
 #' @return id The id of the DataObject that was uploaded
 #' @rdname uploadDataObject
 #' @aliases uploadDataObject
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @import datapack
 #' @export
 #' @examples \dontrun{
@@ -1317,12 +1317,12 @@ setGeneric("uploadDataObject", function(x, ...) {
 
 #' @rdname uploadDataObject
 #' @param do The DataObject instance to be uploaded to DataONE.
-#' @param replicate A value of type \code{"logical"}, if TRUE then DataONE will replicate this object to other member nodes
-#' @param numberReplicas A value of type \code{"numeric"}, for number of supported replicas.
-#' @param preferredNodes A list of \code{"character"}, each of which is the node identifier for a node to which a replica should be sent.
-#' @param public A \code{"logical"} value - if TRUE then the uploaded object will be publicly readable.
-#' @param accessRules Access rules of \code{'data.frame'} that will be added to the access policy
-#' @param quiet A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.
+#' @param replicate A value of type `"logical"`, if TRUE then DataONE will replicate this object to other member nodes
+#' @param numberReplicas A value of type `"numeric"`, for number of supported replicas.
+#' @param preferredNodes A list of `"character"`, each of which is the node identifier for a node to which a replica should be sent.
+#' @param public A `"logical"` value - if TRUE then the uploaded object will be publicly readable.
+#' @param accessRules Access rules of `'data.frame'` that will be added to the access policy
+#' @param quiet A `'logical'`. If TRUE (the default) then informational messages will not be printed.
 #' @export
 setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=as.logical(FALSE),  numberReplicas=NA,  
                                                                preferredNodes=NA,  public=as.logical(FALSE),  accessRules=NA, 
@@ -1478,11 +1478,11 @@ setMethod("uploadDataObject", signature("D1Client"),  function(x, do, replicate=
 
 #' List DataONE Member Nodes.
 #' @description A D1Client object is associated with a DataONE Coordinating Node. The
-#' \code{listMemberNodes} method lists all member nodes associated with a CN.
+#' `listMemberNodes` method lists all member nodes associated with a CN.
 #' @param x A D1Client object.
 #' @rdname listMemberNodes
 #' @aliases listMemberNodes
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' d1c <- D1Client("PROD")
@@ -1509,7 +1509,7 @@ setMethod("listMemberNodes", signature("D1Client"), function(x) {
 #' @rdname convert.csv
 #' @aliases convert.csv
 #' @return the dataframe serialized as a .csv
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @importFrom utils write.csv
 #' @examples \dontrun{ 
@@ -1542,7 +1542,7 @@ setMethod("convert.csv", signature(x="D1Client"), function(x, df, ...) {
 #' @rdname encodeUrlQuery
 #' @aliases encodeUrlQuery
 #' @return the encoded form of the input
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @examples \dontrun{
 #' d1c <- D1Client("STAGING", "urn:node:mnStageUCSB2")
 #' fullyEncodedQuery <- paste0("q=id:",
@@ -1583,7 +1583,7 @@ setMethod("encodeUrlQuery", signature(x="D1Client"), function(x, querySegment, .
 #' fullyEncodedPath <- paste0("cn/v1/object/", 
 #'     encodeUrlPath(d1c, "doi:10.6085/AA/YBHX00_XXXITBDXMMR01_20040720.50.5"))
 #' }
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 setGeneric("encodeUrlPath", function(x, ...) {
     standardGeneric("encodeUrlPath")
@@ -1598,15 +1598,15 @@ setMethod("encodeUrlPath", signature(x="D1Client"), function(x, pathSegment, ...
 
 #' Add a D1Object containing a data object to a DataPackage
 #' @rdname addData
-#' @description The D1Object \code{do} is added to the data package \code{x}.
-#' @details If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
-#' object that describes the data object that is being added. The DataObject specified in the \code{mo} parameter will
-#' also be added to the DataPackage, if it has not already been added. Then the \code{addData} function will add a relationship
+#' @description The D1Object `do` is added to the data package `x`.
+#' @details If the optional `mo` parameter is specified, then it is assumed that this DataObject is a metadata
+#' object that describes the data object that is being added. The DataObject specified in the `mo` parameter will
+#' also be added to the DataPackage, if it has not already been added. Then the `addData` function will add a relationship
 #' to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
-#' \code{documents} and \code{isDocumentedBy} relationships.
-#' @param x The \code{"DataPackage"} to which the data object should be added.
+#' `documents` and `isDocumentedBy` relationships.
+#' @param x The `"DataPackage"` to which the data object should be added.
 #' @param do A D1Object to add to the DataPackage
-#' @param mo A D1Object (containing metadata describing \code{"do"} ) to associate with the data object.
+#' @param mo A D1Object (containing metadata describing `"do"` ) to associate with the data object.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)
@@ -1647,7 +1647,7 @@ setGeneric("getMetadataMember", function(x, dp, ...) {
 
 #' @export
 #' @rdname getMetadataMember
-#' @param as A value of type \code{"character"} that specifies the return value. Possible values are \code{"character"} (the default) or \code{"DataPackage"}.
+#' @param as A value of type `"character"` that specifies the return value. Possible values are `"character"` (the default) or `"DataPackage"`.
 setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x, dp, as="character", ...) {
     formats <- listFormats(x@cn)
     if(is.null(formats) || length(formats) == 0) {
@@ -1699,7 +1699,7 @@ setMethod("getMetadataMember", signature("D1Client", "DataPackage"), function(x,
 #' @rdname downloadObject
 #' @aliases downloadObject
 #' @return A path where the ouput file is written to.
-#' @seealso \code{\link[=D1Client-class]{D1Client}} class description.
+#' @seealso [`D1Client()`][D1Client-class] class description.
 #' @export
 #' @examples \dontrun{
 #' library(dataone)

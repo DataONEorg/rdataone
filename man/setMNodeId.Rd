@@ -24,7 +24,7 @@ One Member Node can be associated with the client as the default to which
 data and metadata are written.
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }
 \author{
 setMNodeId

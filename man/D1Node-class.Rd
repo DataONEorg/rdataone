@@ -41,20 +41,20 @@ methods that are common between these two child classes.
 \section{Methods}{
 
 \describe{
- \item{\code{\link{D1Node-initialize}{initialize}}}{: Initialize a D1Node}
- \item{\code{\link{D1Node}}}{: Create a MNode object representing a DataONE Member Node repository.}
- \item{\code{\link{archive}}}{: Change the state of an object so that it is hidden from searches.}
- \item{\code{\link{describeObject}}}{: Get header information for a given pid.} 
- \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
- \item{\code{\link{getObject}}}{: Get the bytes associated with an object on a node.}
- \item{\code{\link{getQueryEngineDescription}}}{: Query a node for the list of query engines available on the node.}
- \item{\code{\link{getSystemMetadata}}}{: Get the metadata describing system properties associated with an object on the Node.}
- \item{\code{\link{listObjects}}}{: Retrieve the list of objects that match the search parameters.}
- \item{\code{\link{listQueryEngines}}}{: Query a node for the list of query engines available on the node.}
- \item{\code{\link{ping}}}{: Test if a node is online and accepting DataONE requests.}
- \item{\code{\link{encodeSolr}}}{: Encode the input for Solr Queries.}
- \item{\code{\link{query}}}{: Search DataONE for data and metadata objects.}
- \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
+\item{\code{[D1Node-initialize]{initialize}}}{: Initialize a D1Node}
+\item{\code{\link[=D1Node]{D1Node()}}}{: Create a MNode object representing a DataONE Member Node repository.}
+\item{\code{\link[=archive]{archive()}}}{: Change the state of an object so that it is hidden from searches.}
+\item{\code{\link[=describeObject]{describeObject()}}}{: Get header information for a given pid.}
+\item{\code{\link[=getChecksum]{getChecksum()}}}{: Get the checksum for the data object associated with the specified pid.}
+\item{\code{\link[=getObject]{getObject()}}}{: Get the bytes associated with an object on a node.}
+\item{\code{\link[=getQueryEngineDescription]{getQueryEngineDescription()}}}{: Query a node for the list of query engines available on the node.}
+\item{\code{\link[=getSystemMetadata]{getSystemMetadata()}}}{: Get the metadata describing system properties associated with an object on the Node.}
+\item{\code{\link[=listObjects]{listObjects()}}}{: Retrieve the list of objects that match the search parameters.}
+\item{\code{\link[=listQueryEngines]{listQueryEngines()}}}{: Query a node for the list of query engines available on the node.}
+\item{\code{\link[=ping]{ping()}}}{: Test if a node is online and accepting DataONE requests.}
+\item{\code{\link[=encodeSolr]{encodeSolr()}}}{: Encode the input for Solr Queries.}
+\item{\code{\link[=query]{query()}}}{: Search DataONE for data and metadata objects.}
+\item{\code{\link[=isAuthorized]{isAuthorized()}}}{: Check if an action is authorized for the specified identifier.}
 }
 }
 

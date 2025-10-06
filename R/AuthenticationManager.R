@@ -32,7 +32,7 @@
 #' DataONE version 2.0 provides an authentication mechanism known using JWT
 #' Bearer tokens. For information about tokens and instructions for generating
 #' a token for use with the dataone R package, view the overview document by
-#' entering the command: \code{'vignette("v01-dataone-overview")'}. DataONE authentication
+#' entering the command: `'vignette("v01-dataone-overview")'`. DataONE authentication
 #' tokens can be obtained by signing in to your DataONE account at https://search.dataone.org
 #' and copying the token from your profile settings.
 #' 
@@ -41,27 +41,27 @@
 #' that allows DataONE users to use existing trusted institutional and public accounts, but this method
 #' is deprecated and generally users should use JWT Bearer tokens as described above.
 #' 
-#' @slot obscured Value of type \code{"character"} Is authentication disabled (obscured)?
+#' @slot obscured Value of type `"character"` Is authentication disabled (obscured)?
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
-#'  \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
-#'  \item{\code{\link{getToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
-#'  \item{\code{\link{getCert}}}{: Get the DataONE X.509 Certificate location.}
-#'  \item{\code{\link{getAuthMethod}}}{: Get the current valid authentication mechanism.}
-#'  \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
-#'  \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
-#'  \item{\code{\link{isAuthExpired}}}{: Check if the currently valid authentication method has reached the expiration time.}
-#'  \item{\code{\link{obscureAuth}}}{: Temporarily disable DataONE authentication.}
-#'  \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
-#'  \item{\code{\link{showAuth}}}{: Display all authentication information.}
-#'  \item{\code{\link{getTokenInfo}}}{: Display all authentication token information.}
-#'  \item{\code{\link{getCertInfo}}}{: Display all X.509 certificate information.}
+#'  \item{[AuthenticationManager()]}{: Create an AuthenticationManager object.}
+#'  \item{[isAuthValid()]}{: Verify authentication for a member node.}
+#'  \item{[getToken()]}{: Get the value of the DataONE Authentication Token, if one exists.}
+#'  \item{[getCert()]}{: Get the DataONE X.509 Certificate location.}
+#'  \item{[getAuthMethod()]}{: Get the current valid authentication mechanism.}
+#'  \item{[getAuthSubject()]}{: Get the authentication subject.}
+#'  \item{[getAuthExpires()]}{: Get the expiration date of the current authentication method.}
+#'  \item{[isAuthExpired()]}{: Check if the currently valid authentication method has reached the expiration time.}
+#'  \item{[obscureAuth()]}{: Temporarily disable DataONE authentication.}
+#'  \item{[restoreAuth()]}{: Restore authentication (after being disabled with `obscureAuth`).}
+#'  \item{[showAuth()]}{: Display all authentication information.}
+#'  \item{[getTokenInfo()]}{: Display all authentication token information.}
+#'  \item{[getCertInfo()]}{: Display all X.509 certificate information.}
 #'  
 #' }
-#' @seealso \code{\link{dataone}} package description.
+#' @seealso [dataone()] package description.
 #' @import base64enc
 #' @importFrom jsonlite fromJSON
 #' @include D1Node.R
@@ -97,7 +97,7 @@ setMethod("AuthenticationManager", signature=character(), function() {
 #' via the R options facility, it will be used i.e. available via getOption("dataone_token").  However, 
 #' authentication tokens can only be used for DataONE v2 or higher nodes. X.509 certificates can be used 
 #' with DataONE v1 or higher nodes. 
-#' See the \emph{"dataone"} vignette \emph{"v01-dataone-overview"} for more information on authentication.
+#' See the *"dataone"* vignette *"v01-dataone-overview"* for more information on authentication.
 #' @param .Object An AuthenticationManager instance
 #' @param node The node object (MNode or CNode) that authentication is being checked for.
 #' @param ... additional parameters
@@ -179,8 +179,8 @@ setGeneric("getAuthMethod", function(.Object, ...) {
 })
 
 #' @rdname getAuthMethod
-#' @details The current authentication method being used, either an authentication token or an X.509 certificate. The \code{'node'}
-#' argument is used to determine the authentication mechanism that is appropriate for the specified \code{'node'}.
+#' @details The current authentication method being used, either an authentication token or an X.509 certificate. The `'node'`
+#' argument is used to determine the authentication mechanism that is appropriate for the specified `'node'`.
 #' For example, authentication tokens are supported on DataONE nodes that use the DataONE V2.0 API or higher, so if the 
 #' node uses the V1 API, then only an X.509 certificate can be used.
 #' @param node A D1Node instance to determine the authentication method for.
@@ -201,8 +201,8 @@ setGeneric("getAuthSubject", function(.Object, ...) {
 
 #' @rdname getAuthSubject
 #' @details The authenticated user, aka 'subject' is retrieved from the authentication mechanism
-#' currently being used, either an authentication token or an X.509 certificate. The \code{'node'}
-#' argument is used to determine the authentication mechanism that is appropriate for the specified \code{'node'}.
+#' currently being used, either an authentication token or an X.509 certificate. The `'node'`
+#' argument is used to determine the authentication mechanism that is appropriate for the specified `'node'`.
 #' For example, authentication tokens are supported on DataONE nodes that use the DataONE V2.0 API or higher, so if the 
 #' node uses the V1 API, then only an X.509 certificate can be used.
 #' @param node A D1Node instance
@@ -246,10 +246,10 @@ setMethod("isAuthExpired", signature("AuthenticationManager"), function(.Object,
 })
 
 #' Temporarily disable DataONE authentication.
-#' @description Calling \code{obscureAuth} temporarily disables authentication so that
+#' @description Calling `obscureAuth` temporarily disables authentication so that
 #' @details This method is intended to be used for authentication testing.
-#' \code{isAuthValid} will return FALSE. Authentication can be re-enabled by calling
-#' \code{restoreAuth}.
+#' `isAuthValid` will return FALSE. Authentication can be re-enabled by calling
+#' `restoreAuth`.
 #' @rdname obscureAuth
 #' @aliases obscureAuth
 #' @param .Object An AuthenticationManager instance
@@ -264,7 +264,7 @@ setMethod("obscureAuth", signature("AuthenticationManager"), function(.Object) {
     return(.Object)
 })
 
-#' Restore authentication (after being disabled with \code{obscureAuth}).
+#' Restore authentication (after being disabled with `obscureAuth`).
 #' @rdname restoreAuth
 #' @aliases restoreAuth
 #' @param .Object An AuthenticationManager instance
@@ -313,7 +313,7 @@ parseAuthToken <- function(authToken) {
 #' Evaluate DataONE authentication.
 #' @description A valid DataONE authentication method is looked for and all
 #' authentication information is retrieved from it.
-#' @details If the node specified in the \code{'node'} parameter is a DataONE v2 node
+#' @details If the node specified in the `'node'` parameter is a DataONE v2 node
 #' or higher, then an authentication token is checked if one exists. If it is readable
 #' and not expired, then information for the token is returned. If a valid token does
 #' not exist, then the X.509 certificate is checked, if it exists. If it is valid

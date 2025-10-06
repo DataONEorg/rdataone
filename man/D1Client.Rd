@@ -23,10 +23,10 @@ D1Client(x, y, ...)
 }
 \arguments{
 \item{x}{The label for the DataONE environment to be using ('PROD','STAGING','SANDBOX','DEV'). This parameter
-can alternatively be a \code{\link{CNode}} instance, with the `y` parameter specified as an \code{\link{MNode}} instance.}
+can alternatively be a \code{\link[=CNode]{CNode()}} instance, with the \code{y} parameter specified as an \code{\link[=MNode]{MNode()}} instance.}
 
 \item{y}{The node Id of the application's 'home' node.  Should be already registered to the corresponding 'env'. This
-parameter can alternatively be an \code{\link{MNode}} instance, with the `x` parameter specified as a \code{\link{CNode}} instance.}
+parameter can alternatively be an \code{\link[=MNode]{MNode()}} instance, with the \code{x} parameter specified as a \code{\link[=CNode]{CNode()}} instance.}
 
 \item{...}{(not yet used)}
 }
@@ -45,5 +45,5 @@ cli <- D1Client(cn,mn)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

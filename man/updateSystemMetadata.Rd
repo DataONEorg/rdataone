@@ -28,13 +28,13 @@ updating the object that it describes, so that mutable attributes such as access
 can be updated easily.
 }
 \details{
-In the version 2.0 library and higher, this operation can utilize an 
+In the version 2.0 library and higher, this operation can utilize an
 'dataone_token' option to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.
 }
 \note{
-Please see the vignette *v05-upload-data* for an example: \code{vignette("v05-upload-data")}
+Please see the vignette \emph{v05-upload-data} for an example: \code{vignette("v05-upload-data")}
 }
 \seealso{
 \url{https://purl.dataone.org/architecture/apis/MN_APIs.html#MNStorage.updateSystemMetadata}

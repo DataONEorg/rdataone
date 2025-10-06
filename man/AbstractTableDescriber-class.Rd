@@ -11,26 +11,22 @@ provide read.csv with parsing instructions.
 \details{
 This class defines the generic methods metadata parser classes need to implement
 to allow proper parsing of tabular data objects.  Subclasses should:
-1. provide method implementations for all generics
-2. register the class to the tableDescriber.registry for the formats they claim to parse.
-3. provide a 'constructor' method that accepts a D1Object as the first argument - the 
+\enumerate{
+\item provide method implementations for all generics
+\item register the class to the tableDescriber.registry for the formats they claim to parse.
+\item provide a 'constructor' method that accepts a D1Object as the first argument - the
 D1Object will be the metadata object to be parsed
+}
 
 For example, the EMLParser registers itself as a handler for eml v2.0.0 - v2.1.1
 with the following.
 
-\code{
-if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
-tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
-tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser"
-tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
-tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
-}
+\verb{if (!exists("tableDescriber.registry")) tableDescriber.registry <- list() tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser" tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser" tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser" tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"}
 
-Note that the key in the list is the DataONE formatIdentifier that can be 
+Note that the key in the list is the DataONE formatIdentifier that can be
 found at "https://cn.dataone.org/cn/v2/formats".
 
-Subclass implementers should conform their methods to the behavior defined 
+Subclass implementers should conform their methods to the behavior defined
 in the generic.
 }
 \author{

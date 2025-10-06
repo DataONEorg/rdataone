@@ -18,7 +18,7 @@ listFormats(x, ...)
 Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 }
 \description{
-The \link{listFormats} method queries a DataONE Coordinating Node for a 
+The \link{listFormats} method queries a DataONE Coordinating Node for a
 list of all entries in the Object Format Vocabulary.
 }
 \examples{
@@ -29,5 +29,5 @@ formats <- listFormats(cn)
 }
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}} class description.
+\code{\link[=CNode-class]{CNode()}} class description.
 }

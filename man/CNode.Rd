@@ -24,7 +24,7 @@ the CNode object representing the DataONE environment
 Create a CNode object.
 }
 \details{
-For an explanation of DataONE Coordinating Nodes, see the 
+For an explanation of DataONE Coordinating Nodes, see the
 section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("v01-dataone-overview")}.
 }
 \examples{
@@ -33,5 +33,5 @@ cn <- CNode("PROD")
 }
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}} class description.
+\code{\link[=CNode-class]{CNode()}} class description.
 }

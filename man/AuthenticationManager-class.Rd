@@ -9,11 +9,11 @@ AuthenticationManager provides mechanisms to validate DataONE authentication,
 when either a DataONE authentication token or X.509 Certificate is used.
 }
 \details{
-Understanding how your identity is managed is important for working with DataONE, especially to 
+Understanding how your identity is managed is important for working with DataONE, especially to
 avoid unexpected results. For example, depending your authorization status, searches may
-return only public records, or the full set of public and private records. Object and package 
-retrievals might fail if some or all of the objects being retrieved are private.  Creating or 
-updating objects on DataONE nodes and reserving identifiers might fail if your 
+return only public records, or the full set of public and private records. Object and package
+retrievals might fail if some or all of the objects being retrieved are private.  Creating or
+updating objects on DataONE nodes and reserving identifiers might fail if your
 authorization credentials are missing or expired.
 
 DataONE version 2.0 provides an authentication mechanism known using JWT
@@ -23,8 +23,8 @@ entering the command: \code{'vignette("v01-dataone-overview")'}. DataONE authent
 tokens can be obtained by signing in to your DataONE account at https://search.dataone.org
 and copying the token from your profile settings.
 
-Additionally, DataONE API version 1.0 identifies you using CILogon-provided x509 certificates. 
-DataONE partnered with CILogon to provide a widely-accessible certificate issuing mechanism 
+Additionally, DataONE API version 1.0 identifies you using CILogon-provided x509 certificates.
+DataONE partnered with CILogon to provide a widely-accessible certificate issuing mechanism
 that allows DataONE users to use existing trusted institutional and public accounts, but this method
 is deprecated and generally users should use JWT Bearer tokens as described above.
 }
@@ -37,23 +37,23 @@ is deprecated and generally users should use JWT Bearer tokens as described abov
 \section{Methods}{
 
 \describe{
- \item{\code{\link{AuthenticationManager}}}{: Create an AuthenticationManager object.}
- \item{\code{\link{isAuthValid}}}{: Verify authentication for a member node.}
- \item{\code{\link{getToken}}}{: Get the value of the DataONE Authentication Token, if one exists.}
- \item{\code{\link{getCert}}}{: Get the DataONE X.509 Certificate location.}
- \item{\code{\link{getAuthMethod}}}{: Get the current valid authentication mechanism.}
- \item{\code{\link{getAuthSubject}}}{: Get the authentication subject.}
- \item{\code{\link{getAuthExpires}}}{: Get the expiration date of the current authentication method.}
- \item{\code{\link{isAuthExpired}}}{: Check if the currently valid authentication method has reached the expiration time.}
- \item{\code{\link{obscureAuth}}}{: Temporarily disable DataONE authentication.}
- \item{\code{\link{restoreAuth}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
- \item{\code{\link{showAuth}}}{: Display all authentication information.}
- \item{\code{\link{getTokenInfo}}}{: Display all authentication token information.}
- \item{\code{\link{getCertInfo}}}{: Display all X.509 certificate information.}
- 
+\item{\code{\link[=AuthenticationManager]{AuthenticationManager()}}}{: Create an AuthenticationManager object.}
+\item{\code{\link[=isAuthValid]{isAuthValid()}}}{: Verify authentication for a member node.}
+\item{\code{\link[=getToken]{getToken()}}}{: Get the value of the DataONE Authentication Token, if one exists.}
+\item{\code{\link[=getCert]{getCert()}}}{: Get the DataONE X.509 Certificate location.}
+\item{\code{\link[=getAuthMethod]{getAuthMethod()}}}{: Get the current valid authentication mechanism.}
+\item{\code{\link[=getAuthSubject]{getAuthSubject()}}}{: Get the authentication subject.}
+\item{\code{\link[=getAuthExpires]{getAuthExpires()}}}{: Get the expiration date of the current authentication method.}
+\item{\code{\link[=isAuthExpired]{isAuthExpired()}}}{: Check if the currently valid authentication method has reached the expiration time.}
+\item{\code{\link[=obscureAuth]{obscureAuth()}}}{: Temporarily disable DataONE authentication.}
+\item{\code{\link[=restoreAuth]{restoreAuth()}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
+\item{\code{\link[=showAuth]{showAuth()}}}{: Display all authentication information.}
+\item{\code{\link[=getTokenInfo]{getTokenInfo()}}}{: Display all authentication token information.}
+\item{\code{\link[=getCertInfo]{getCertInfo()}}}{: Display all X.509 certificate information.}
+
 }
 }
 
 \seealso{
-\code{\link{dataone}} package description.
+\code{\link[=dataone]{dataone()}} package description.
 }

@@ -10,9 +10,13 @@ data.tableSkipLinesHeader(x, index, ...)
 \S4method{data.tableSkipLinesHeader}{EMLParser,numeric}(x, index)
 }
 \arguments{
-\item{x}{- the TableDescriber}
+\item{x}{\itemize{
+\item the TableDescriber
+}}
 
-\item{index}{- the index of the table within the document}
+\item{index}{\itemize{
+\item the index of the table within the document
+}}
 
 \item{...}{Additional parameters}
 }

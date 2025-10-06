@@ -22,7 +22,7 @@ isAuthorized(x, ...)
 a logical, TRUE if the action is authorized, false if not.
 }
 \description{
-Test if the user identified by the provided token has 
+Test if the user identified by the provided token has
 authorization for operation on the specified object.
 }
 \details{
@@ -47,5 +47,5 @@ canChange <- isAuthorized(mn, pid, "changePermission")
 }
 }
 \seealso{
-\code{\link[=CNode-class]{CNode}} class description.
+\code{\link[=CNode-class]{CNode()}} class description.
 }

@@ -16,5 +16,5 @@ the D1Object instance
 Create a D1Object instance.
 }
 \seealso{
-\code{\link[=D1Object-class]{D1Object}} class description.
+\code{\link[=D1Object-class]{D1Object()}} class description.
 }

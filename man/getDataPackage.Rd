@@ -31,14 +31,14 @@ for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes ef
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
+\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum
 for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this re-calculation will not be performed.}
 }
 \value{
 A DataPackage or NULL if the package was not found in DataONE
 }
 \description{
-This is convenience method that will download all the members in a DataONE data package 
+This is convenience method that will download all the members in a DataONE data package
 and insert them into a DataPackage, including associated SystemMetadata for each package
 member.
 }
@@ -67,5 +67,5 @@ pkg <- getDataPackage(d1c, pid)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

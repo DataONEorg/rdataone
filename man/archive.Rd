@@ -28,8 +28,8 @@ a historical record, such as when journal articles might cite the object.  Users
 contents of archived objects if they have the identifier, but will not discover it through searches.
 }
 \details{
-Methods that perform write operations (such as createObject and updateObject) on the MN generally 
-require authentication. For MNs that have implemented the DataONE API version 2.0 and higher, these operations can utilize an 
+Methods that perform write operations (such as createObject and updateObject) on the MN generally
+require authentication. For MNs that have implemented the DataONE API version 2.0 and higher, these operations can utilize an
 authentication token to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your account profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.
@@ -67,5 +67,5 @@ archivedId <- archive(mn, newid)
 }
 }
 \seealso{
-\code{\link[=D1Node-class]{D1Node}} class description.
+\code{\link[=D1Node-class]{D1Node()}} class description.
 }

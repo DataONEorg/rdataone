@@ -10,9 +10,13 @@ data.tableAttributeNames(x, index, ...)
 \S4method{data.tableAttributeNames}{EMLParser,numeric}(x, index)
 }
 \arguments{
-\item{x}{- the TableDescriber instance}
+\item{x}{\itemize{
+\item the TableDescriber instance
+}}
 
-\item{index}{- the index of the table to get results for}
+\item{index}{\itemize{
+\item the index of the table to get results for
+}}
 
 \item{...}{(not yet used)}
 }
@@ -20,7 +24,7 @@ data.tableAttributeNames(x, index, ...)
 the attribute (column) names of the data
 }
 \description{
-THe attribute names are defined in the metadata document for 
+THe attribute names are defined in the metadata document for
 the specified data table
 }
 \author{

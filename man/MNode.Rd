@@ -19,7 +19,7 @@ MNode(x)
 the MNode object-
 }
 \description{
-Construct an instance of MNode to provide mechanisms to access, create, and update data and 
+Construct an instance of MNode to provide mechanisms to access, create, and update data and
 metadata objects on the associated Member Node.
 }
 \details{
@@ -34,5 +34,5 @@ mn <- MNode("https://knb.ecoinformatics.org/knb/d1/mn/v2")
 }
 }
 \seealso{
-\code{\link[=MNode-class]{MNode}} class description.
+\code{\link[=MNode-class]{MNode()}} class description.
 }

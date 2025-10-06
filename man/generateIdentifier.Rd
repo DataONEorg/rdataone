@@ -24,13 +24,13 @@ the character string of the generated unique identifier
 }
 \description{
 Creating objects requires use of a unique persistent identifier (pid) when calling the create
-function.  Member Nodes may optionally provide the generateIdentifier service to issue such identifiers, 
+function.  Member Nodes may optionally provide the generateIdentifier service to issue such identifiers,
 ensuring that they are unique. Each identifier conforms to an identifier scheme, which determines the syntax and
-rules for how the identifier that is generated is formatted.  All Member Nodes that implement this method must 
+rules for how the identifier that is generated is formatted.  All Member Nodes that implement this method must
 support the UUID scheme, but may also support other schemes such as DOI and others.
 }
 \details{
-In the version 2.0 library and higher, this operation can utilize an 
+In the version 2.0 library and higher, this operation can utilize an
 'dataone_token' option to provide credentials for write operations in DataONE.
 The authentication token is obtained from DataONE (see your profile on https://search.dataone.org).
 See the \code{vignette("v01-dataone-overview")} for details.

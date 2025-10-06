@@ -31,5 +31,5 @@ result <- d1IdentifierSearch(client,solrQuery="species population diversity")
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

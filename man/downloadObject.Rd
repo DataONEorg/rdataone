@@ -29,11 +29,11 @@ A path where the ouput file is written to.
 A convenience method to download an object to disk.
 }
 \details{
-This method performs multiple underlying calls to the DataONE repository network. 
+This method performs multiple underlying calls to the DataONE repository network.
 CN.resolve() is called to locate the object on one or more repositories, and then each of these
-is accessed until success at downloading the associated SystemMetadata for the object. 
+is accessed until success at downloading the associated SystemMetadata for the object.
 The SystemMetadata is used to assign a name to the file that is output to disk. If a fileName is specified in
-the SystemMetadata, then the file output to disk will be named according to the SystemMetadata fileName. 
+the SystemMetadata, then the file output to disk will be named according to the SystemMetadata fileName.
 If there is not a specified SystemMetadata fileName, the identifier will be used as the file name output to disk.
 If the identifier is used as the file name, a file name extension will be determined using the SystemMetadata
 formatID along with information from CNCore.listFormats(). If the SystemMetadata formatID is
@@ -48,5 +48,5 @@ path <- downloadObject(d1c, pid)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

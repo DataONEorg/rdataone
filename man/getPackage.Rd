@@ -33,7 +33,7 @@ resource map, metadata file, data file, or any other package member.}
 The location of the package file downloaded from the member node.
 }
 \description{
-Given a valid identifier, download a file containing all of the package 
+Given a valid identifier, download a file containing all of the package
 members of the corresponding DataONE data package.
 }
 \details{
@@ -49,5 +49,5 @@ packageFileName <- getPackage(mn, id="resourceMap_Blandy.76.2")
 }
 }
 \seealso{
-\code{\link[=MNode-class]{MNode}} class description.
+\code{\link[=MNode-class]{MNode()}} class description.
 }

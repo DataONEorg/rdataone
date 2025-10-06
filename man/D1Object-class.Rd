@@ -17,17 +17,17 @@ a wrapper for data and associated SystemMetadata.
 \section{Methods}{
 
 \describe{
- \item{\code{\link[dataone]{D1Object-initialize}}}{: Initialize a D1Object}
- \item{\code{\link[dataone]{getData}}}{: Get the data content of a specified D1Object.}
- \item{\code{\link[dataone]{getIdentifier}}}{: Get the identifier of the D1Object.}
- \item{\code{\link[dataone]{getFormatId}}}{: Get the formatId of the D1Object}
- \item{\code{\link[dataone]{setPublicAccess}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
- \item{\code{\link[dataone]{canRead}}}{: Test whether the provided subject can read an object.}
- \item{\code{\link{asDataFrame}}}{: Return the D1Object as a data.frame.}
+\item{\code{\link[=D1Object-initialize]{D1Object-initialize()}}}{: Initialize a D1Object}
+\item{\code{\link[=getData]{getData()}}}{: Get the data content of a specified D1Object.}
+\item{\code{\link[=getIdentifier]{getIdentifier()}}}{: Get the identifier of the D1Object.}
+\item{\code{\link[=getFormatId]{getFormatId()}}}{: Get the formatId of the D1Object}
+\item{\code{\link[=setPublicAccess]{setPublicAccess()}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
+\item{\code{\link[=canRead]{canRead()}}}{: Test whether the provided subject can read an object.}
+\item{\code{\link[=asDataFrame]{asDataFrame()}}}{: Return the D1Object as a data.frame.}
 }
 }
 
 \seealso{
-\code{\link{dataone}} package description.
+\code{\link[=dataone]{dataone()}} package description.
 }
 \keyword{classes}

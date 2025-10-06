@@ -19,7 +19,7 @@ auth_delete(url, encode = "multipart", body = as.list(NA), node)
 the HTTP response from the request
 }
 \description{
-DELETE data at a URL using an HTTP DELETE request using authentication credentials 
+DELETE data at a URL using an HTTP DELETE request using authentication credentials
 provided in a client certificate.  Authenticated access depends on the suggested
 openssl package. If the openssl package is not installed, then the request fails.
 }

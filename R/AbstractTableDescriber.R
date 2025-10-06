@@ -30,13 +30,13 @@
 #' For example, the EMLParser registers itself as a handler for eml v2.0.0 - v2.1.1
 #' with the following.
 #' 
-#' \code{
+#' `
 #' if (!exists("tableDescriber.registry")) tableDescriber.registry <- list()
 #' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.0" ]] <- "EMLParser"
 #' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.0.1" ]] <- "EMLParser"
 #' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.0" ]] <- "EMLParser"
 #' tableDescriber.registry[[ "eml://ecoinformatics.org/eml-2.1.1" ]] <- "EMLParser"
-#' }
+#' `
 #' 
 #' Note that the key in the list is the DataONE formatIdentifier that can be 
 #' found at "https://cn.dataone.org/cn/v2/formats".
@@ -195,7 +195,7 @@ setGeneric("data.tableAttributeOrientation", function(x, index, ...) {
 #' @param index - the index of the table within the document
 #' @param ... Additional parameters
 #' @return the number of lines to skip
-#' @seealso \code{help(read.table)}
+#' @seealso `help(read.table)`
 #' @author rnahf
 #' @export
 setGeneric("data.tableSkipLinesHeader", function(x, index, ...) {

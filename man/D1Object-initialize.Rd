@@ -22,5 +22,5 @@
 Initialize a D1Object
 }
 \seealso{
-\code{\link[=D1Object-class]{D1Object}} class description.
+\code{\link[=D1Object-class]{D1Object()}} class description.
 }

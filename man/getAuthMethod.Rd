@@ -25,6 +25,6 @@ Get the current valid authentication mechanism.
 \details{
 The current authentication method being used, either an authentication token or an X.509 certificate. The \code{'node'}
 argument is used to determine the authentication mechanism that is appropriate for the specified \code{'node'}.
-For example, authentication tokens are supported on DataONE nodes that use the DataONE V2.0 API or higher, so if the 
+For example, authentication tokens are supported on DataONE nodes that use the DataONE V2.0 API or higher, so if the
 node uses the V1 API, then only an X.509 certificate can be used.
 }

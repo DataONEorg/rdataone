@@ -10,9 +10,13 @@ data.tableAttributeTypes(x, index, ...)
 \S4method{data.tableAttributeTypes}{EMLParser,numeric}(x, index)
 }
 \arguments{
-\item{x}{- the TableDescriber instance}
+\item{x}{\itemize{
+\item the TableDescriber instance
+}}
 
-\item{index}{- the index of the table to get results for}
+\item{index}{\itemize{
+\item the index of the table to get results for
+}}
 
 \item{...}{(not yet used)}
 }
@@ -20,7 +24,7 @@ data.tableAttributeTypes(x, index, ...)
 the data types of the attributes
 }
 \description{
-The attributes' data types are defined in the metadata document for 
+The attributes' data types are defined in the metadata document for
 the specified data table
 }
 \author{

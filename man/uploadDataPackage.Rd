@@ -41,7 +41,7 @@ uploadDataPackage(x, ...)
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack]{serializePackage}}
+\item{resolveURI}{A URI to prepend to identifiers (i.e. for use when creating the ResourceMap). See \link[datapack:serializePackage]{serializePackage}}
 
 \item{packageId}{A value of type \code{"character"} specifying a unique identifier to use for the uploaded package (resource map pid)}
 
@@ -51,20 +51,20 @@ uploadDataPackage(x, ...)
 id The identifier of the resource map for this data package
 }
 \description{
-Upload all DataObjects contained in the DataPackage by calling \code{\link{uploadDataObject}}
+Upload all DataObjects contained in the DataPackage by calling \code{\link[=uploadDataObject]{uploadDataObject()}}
 on each of the members. Also a resourceMap object is created from the
 recorded relationships between DataObjects, and this is uploaded as well.
 }
 \details{
-The DataPackage describes the collection of data object and their associated 
+The DataPackage describes the collection of data object and their associated
 metadata object, with the relationships and members serialized into a document
 stored under, and retrievable with, the packageId as it's own distinct object.
-Any objects in the data map that have a dateUploaded value are assumed to be 
+Any objects in the data map that have a dateUploaded value are assumed to be
 pre-existing in the system, and skipped.
 }
 \note{
-Member objects are created serially, and most errors in creating one object will 
-interrupt the create process for the whole, with the result that some members will 
+Member objects are created serially, and most errors in creating one object will
+interrupt the create process for the whole, with the result that some members will
 be created, and the remainder not.
 }
 \examples{
@@ -85,5 +85,5 @@ packageId <- uploadDataPackage(d1c, dp, replicate=TRUE, public=TRUE, numberRepli
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

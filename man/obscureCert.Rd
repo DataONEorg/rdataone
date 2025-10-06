@@ -20,10 +20,10 @@ the modified CertificateManager instance
 \description{
 Obscures the x509 certificate that CILogon installs, effectively making future
 interactions with the DataONE services public/anonymous.  This function simple renames an
-existing certificate file to a known location, allowing 'public' operations.  Note, when the 
-client certificate is obscured via the renaming, you will not be able to create objects in 
+existing certificate file to a known location, allowing 'public' operations.  Note, when the
+client certificate is obscured via the renaming, you will not be able to create objects in
 DataONE, or utilize any other methods that require authentication.
 }
 \seealso{
-\code{\link{restoreCert}} is this method's inverse operation
+\code{\link[=restoreCert]{restoreCert()}} is this method's inverse operation
 }

@@ -17,13 +17,13 @@ auth_head(url, nconfig = config(), node)
 the response object from the method
 }
 \description{
-Retrieve http header information for a URL using an HTTP HEAD request 
-using authentication credentials provided in a client certificate or token.  
-Authenticated access depends on the suggested openssl package. If the openssl 
-package is not installed, then the request falls back to an unauthenticated request, 
+Retrieve http header information for a URL using an HTTP HEAD request
+using authentication credentials provided in a client certificate or token.
+Authenticated access depends on the suggested openssl package. If the openssl
+package is not installed, then the request falls back to an unauthenticated request,
 which may fail due to insufficient permissions.
 Configuration options for httr/RCurl can be passed using the normal config()
 mechanisms to generate a config option. Use httr_options() to see a complete list
-of available options. Note: The HEAD method is identical to GET except that the server MUST 
+of available options. Note: The HEAD method is identical to GET except that the server MUST
 NOT return a message-body in the response.
 }

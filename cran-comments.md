@@ -1,6 +1,7 @@
 ## Test environments
 
- * macOS 12.2: R 4.1.0
+ * macOS 13.7.6: R 4.5.1
+ 
  * Ubuntu 18.04 R 4.1.3
  * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2022-06-08 r82470 ucrt) 
  * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.2.0 (2022-04-22 ucrt)  

@@ -19,10 +19,10 @@ the modified CertificateManager instance
 }
 \description{
 Restores the x509 certificate that CILogon installs, which allows future
-interactions with nodes to be authenticated with the certificate.  This function simply 
-renames an obscured certificate file to its original location, allowing authenticated 
+interactions with nodes to be authenticated with the certificate.  This function simply
+renames an obscured certificate file to its original location, allowing authenticated
 operations.
 }
 \seealso{
-\code{\link{obscureCert}} is this method's inverse operation
+\code{\link[=obscureCert]{obscureCert()}} is this method's inverse operation
 }

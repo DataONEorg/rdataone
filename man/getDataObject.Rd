@@ -30,8 +30,8 @@ for example: "100KB", "10MB", "20GB", "1TB". The default is "1MB". Only takes ef
 
 \item{quiet}{A \code{'logical'}. If TRUE (the default) then informational messages will not be printed.}
 
-\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum 
-for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this 
+\item{checksumAlgorithm}{A \code{character} value specifying the algorithm to use to re-calculate (after download) the system metadata checksum
+for the object's data bytes for example: "SHA-256". The default is "NA", which specifies that this
 re-calculation will not be performed.}
 }
 \value{
@@ -42,10 +42,10 @@ A convenience method to download a data object and its associated SystemMetadata
 in a DataObject class.
 }
 \details{
-This method performs multiple underlying calls to the DataONE repository network. 
+This method performs multiple underlying calls to the DataONE repository network.
 CN.resolve() is called to locate the object on one or more repositories, and then each of these
-is accessed until the associated SystemMetadata and data bytes are successfully downloaded. This 
-data is then used to construct the returned DataObject. This function replaces the previous 
+is accessed until the associated SystemMetadata and data bytes are successfully downloaded. This
+data is then used to construct the returned DataObject. This function replaces the previous
 getD1Object() method in the version 1
 dataone library. \cr\cr
 The \code{lazyLoad} parameter controls whether the data byes for a DataONE item are downloaded (the system
@@ -74,5 +74,5 @@ data <- getData(obj)
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{D1Client}} class description.
+\code{\link[=D1Client-class]{D1Client()}} class description.
 }

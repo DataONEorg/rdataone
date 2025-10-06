@@ -20,7 +20,7 @@ The D1Object \code{do} is added to the data package \code{x}.
 If the optional \code{mo} parameter is specified, then it is assumed that this DataObject is a metadata
 object that describes the data object that is being added. The DataObject specified in the \code{mo} parameter will
 also be added to the DataPackage, if it has not already been added. Then the \code{addData} function will add a relationship
-to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology, 
+to the resource map that indicates that the metadata object describes the science object, using CiTO, the Citation Typing Ontology,
 \code{documents} and \code{isDocumentedBy} relationships.
 }
 \examples{

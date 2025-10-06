@@ -42,7 +42,7 @@ search results as a list, data.frame or XML document
 The DataONE search index is searched for data that matches the specified query parameters.
 }
 \details{
-The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search 
+The \code{"query"} method sends a query to a DataONE search index that uses the Apache Solr search
 engine \url{https://solr.apache.org/}. This same Solr search engine is the underlying mechanism used by the
 DataONE online search tool available at \url{https://search.dataone.org/}.
 
@@ -52,16 +52,16 @@ argument can be created as either a single character string containing the Solr 
 or as a list of key value pairs: \code{solrQuery = list(q = "id:doi*", rows = "2", wt = "json")}. These two queries produce the same result.
 
 As an alternative to specifying the Solr query terms using the \code{"solrquery"} argument, the \code{"searchTerms"} argument
-can be specified, which does not require any Solr syntax. This parameter is a list with query field / value pairs, i.e. 
+can be specified, which does not require any Solr syntax. This parameter is a list with query field / value pairs, i.e.
 \code{searchTerms=list(abstract=kelp, attribute=biomass)}.
-The query fields can be listed for a DataONE node using \code{\link{getQueryEngineDescription}}.
+The query fields can be listed for a DataONE node using \code{\link[=getQueryEngineDescription]{getQueryEngineDescription()}}.
 Either \code{"searchTerms"} or \code{"solrQuery"} must be specified.
 
 The \code{"as"} argument is used to specify the query result to be returned as: "json", xml", "list", "data.frame".
 
 The \code{"parsed"} argument, if specified as TRUE, causes the query result to be converted to appropriate R data types.
-For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or 
-If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have 
+For example, if \code{ar = "xml"} and \code{parsed = TRUE}, then the query result is returned as an R XMLInternalDocument, or
+If \code{'parsed = FALSE'} then a character variable with the XML string is returned. Specify \code{as = "list"} to have
 the result parsed to an R list, with each list element containing one Solr query result of the total result set.
 }
 \examples{

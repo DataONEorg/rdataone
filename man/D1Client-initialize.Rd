@@ -34,5 +34,5 @@ d1c <- D1Client("PROD", "urn:node:KNB")
 }
 }
 \seealso{
-\code{\link[=D1Client-class]{dataone}} class description.
+\code{\link[=D1Client-class]{dataone()}} class description.
 }

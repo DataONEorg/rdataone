@@ -10,9 +10,13 @@ data.tableMissingValueCodes(x, index, ...)
 \S4method{data.tableMissingValueCodes}{EMLParser,numeric}(x, index)
 }
 \arguments{
-\item{x}{- the TableDescriber instance}
+\item{x}{\itemize{
+\item the TableDescriber instance
+}}
 
-\item{index}{- the index of the table to get results for}
+\item{index}{\itemize{
+\item the index of the table to get results for
+}}
 
 \item{...}{(not yet used)}
 }
@@ -20,7 +24,7 @@ data.tableMissingValueCodes(x, index, ...)
 vector of missing value codes
 }
 \description{
-the missing value codes are defined in the metadata document for 
+the missing value codes are defined in the metadata document for
 the specified data table
 }
 \author{

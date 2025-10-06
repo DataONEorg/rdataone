@@ -18,7 +18,7 @@ echoCredentials(x, ...)
 A list containing authentication info.
 }
 \description{
-This method can be used to verify the client certificate is valid 
+This method can be used to verify the client certificate is valid
 and contains the expected information.
 }
 \details{

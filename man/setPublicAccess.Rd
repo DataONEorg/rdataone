@@ -13,13 +13,13 @@
 D1Object with modified access rules
 }
 \description{
-This method should be called prior to creating the object in DataONE.  
-When called before 
+This method should be called prior to creating the object in DataONE.
+When called before
 creating the object, adds a rule to the access policy that makes this object
 publicly readable.  If called after creation, it will only change the system
 metadata locally, and will not have any effect on remotely uploaded copies of
 the D1Object.
 }
 \seealso{
-\code{\link[=DataObject-class]{DataObject}} class description.
+\code{\link[datapack:DataObject-class]{DataObject()}} class description.
 }

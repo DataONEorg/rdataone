@@ -29,23 +29,23 @@
 #' @slot serviceUrls A data.frame contains URL endpoints for certain services
 #' @section Methods:
 #' \describe{
-#'  \item{\code{\link{CNode}}}{: Construct a CNode object.}
-#'  \item{\code{\link{listFormats}}}{: List all object formats registered in DataONE.}
-#'  \item{\code{\link{getFormat}}}{: Get information for a single DataONE object format } 
-#'  \item{\code{\link{getChecksum}}}{: Get the checksum for the data object associated with the specified pid.}
-#'  \item{\code{\link{listNodes}}}{: Get the list of nodes associated with a CN.} 
-#'  \item{\code{\link{reserveIdentifier}}}{: Reserve a identifier that is unique in the DataONE network.}
-#'  \item{\code{\link{hasReservation}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
-#'  \item{\code{\link{setObsoletedBy}}}{: Set a pid as being obsoleted by another pid}
-#'  \item{\code{\link{getObject}}}{: Get the bytes associated with an object on this Coordinating Node.} 
-#'  \item{\code{\link{getSystemMetadata}}}{: Get the bytes associated with an object on this Coordinating Node.}
-#'  \item{\code{\link{describeObject}}}{: Get a list of coordinating nodes holding a given pid.} 
-#'  \item{\code{\link{resolve}}}{: Get a list of coordinating nodes holding a given pid.}
-#'  \item{\code{\link{getMNode}}}{: Get a reference to a node based on its identifier.} 
-#'  \item{\code{\link{echoCredentials}}}{: Echo the credentials used to make the call.} 
-#'  \item{\code{\link{isAuthorized}}}{: Check if an action is authorized for the specified identifier.} 
+#'  \item{[CNode()]}{: Construct a CNode object.}
+#'  \item{[listFormats()]}{: List all object formats registered in DataONE.}
+#'  \item{[getFormat()]}{: Get information for a single DataONE object format } 
+#'  \item{[getChecksum()]}{: Get the checksum for the data object associated with the specified pid.}
+#'  \item{[listNodes()]}{: Get the list of nodes associated with a CN.} 
+#'  \item{[reserveIdentifier()]}{: Reserve a identifier that is unique in the DataONE network.}
+#'  \item{[hasReservation()]}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
+#'  \item{[setObsoletedBy()]}{: Set a pid as being obsoleted by another pid}
+#'  \item{[getObject()]}{: Get the bytes associated with an object on this Coordinating Node.} 
+#'  \item{[getSystemMetadata()]}{: Get the bytes associated with an object on this Coordinating Node.}
+#'  \item{[describeObject()]}{: Get a list of coordinating nodes holding a given pid.} 
+#'  \item{[resolve()]}{: Get a list of coordinating nodes holding a given pid.}
+#'  \item{[getMNode()]}{: Get a reference to a node based on its identifier.} 
+#'  \item{[echoCredentials()]}{: Echo the credentials used to make the call.} 
+#'  \item{[isAuthorized()]}{: Check if an action is authorized for the specified identifier.} 
 #' }
-#' @seealso \code{\link{dataone}} package description.
+#' @seealso [dataone()] package description.
 #' @import methods
 #' @importFrom utils URLencode
 #' @export
@@ -57,13 +57,13 @@ setClass("CNode", slots = c(endpoint = "character"), contains="D1Node")
 
 #' Create a CNode object.
 #' @details For an explanation of DataONE Coordinating Nodes, see the 
-#' section \emph{"DataONE Environments"} in the overview vignette by entering the R command: \code{vignette("v01-dataone-overview")}.
+#' section *"DataONE Environments"* in the overview vignette by entering the R command: `vignette("v01-dataone-overview")`.
 #' @param x The label for the DataONE environment to be using ('PROD','STAGING', 'STAGING2,'SANDBOX', 'SANDBOX2','DEV', 'DEV2')
 #' @param ... (not yet used)
 #' @rdname CNode
 #' @aliases CNode
 #' @return the CNode object representing the DataONE environment
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cn <- CNode("PROD")
@@ -138,14 +138,14 @@ setMethod("CNode", signature("character"), function(x) {
 ##########################
 
 #' List all object formats registered in DataONE.
-#' @description The \link{listFormats} method queries a DataONE Coordinating Node for a 
+#' @description The [listFormats] method queries a DataONE Coordinating Node for a 
 #' list of all entries in the Object Format Vocabulary.
 #' @param x a valid CNode object
 #' @param ... (Not yet used)
 #' @import httr
 #' @rdname listFormats
 #' @aliases listFormats 
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @return Returns a dataframe of all object formats registered in the DataONE Object Format Vocabulary.
 #' @examples \dontrun{
 #' library(dataone)
@@ -207,7 +207,7 @@ setMethod("listFormats", signature("CNode"), function(x) {
 #' @param x A CNode object instance
 #' @param ... (Not yet used)
 #' @return A dataframe of all object formats registered in the DataONE Object Format Vocabulary.
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @examples \dontrun{
 #' library(dataone)
 #' cn <- CNode()
@@ -275,7 +275,7 @@ setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
 #' @param x The coordinating node to query for its registered Member Nodes
 #' @param ... (Not yet used)
 #' @return the list of nodes in the DataONE CN environment
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cn <- CNode()
@@ -327,7 +327,7 @@ setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...
 #' @aliases reserveIdentifier
 #' @param x The coordinating node to query for its registered Member Nodes
 #' @param ... Additional parameters.
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples
 #' \dontrun{
@@ -365,13 +365,13 @@ setMethod("reserveIdentifier", signature("CNode"), function(x, id) {
 
 #' Checks to determine if the supplied subject is the owner of the reservation of id.
 #' @description The hasReservation method checks the reservation of an identifier that has
-#' previously been reserved with the \code{reserveIdentifier} method. The identifier must have
-#' been reserved by the specified DataONE user identity (\code{subject}).
+#' previously been reserved with the `reserveIdentifier` method. The identifier must have
+#' been reserved by the specified DataONE user identity (`subject`).
 #' @details To determine the DataONE identity that is currently being used for DataONE
-#' authentication, use the \code{echoCredentials} method.
+#' authentication, use the `echoCredentials` method.
 #' @param x A CNode instance.
 #' @param ... Additional parameters.
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples
 #' \dontrun{
@@ -437,7 +437,7 @@ setMethod("hasReservation", signature("CNode"), function(x, pid, subject=as.char
 #' @param obsoletedByPid The identifier of the object that obsoletes the object identified by pid.
 #' @param serialVersion The serial version of the system metadata of the pid being obsoleted. 
 #' @param ... (Not yet used)
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 setGeneric("setObsoletedBy", function(x, pid, obsoletedByPid, ...) {
   .Defunct("updateObject", "dataone")
@@ -477,7 +477,7 @@ setMethod("getObject", signature("CNode"), function(x, pid) {
 #' @details This operation acts as the 'public' anonymous user unless an X.509 certificate is
 #' present in the default location of the file system, in which case the access will be authenticated.
 #' @return SystemMetadata for the object
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @import datapack
 #' @export
 #' @rdname getSystemMetadata
@@ -575,13 +575,13 @@ setMethod("resolve", signature("CNode"), function(x, pid){
 #' @rdname getMNode
 #' @aliases getMNode
 #' @details For an explanation of DataONE Coordinating Nodes and Member Node
-#' identifiers, see the section \emph{"DataONE Environments"} in the overview vignette 
-#' by entering the R command: \code{vignette("v01-dataone-overview")}.
+#' identifiers, see the section *"DataONE Environments"* in the overview vignette 
+#' by entering the R command: `vignette("v01-dataone-overview")`.
 #' @param x The coordinating node to query for its registered Member Nodes
 #' @param nodeid The standard identifier string for this node
 #' @param ... (Not yet used)
 #' @return the Member Node as an MNode reference, or NULL if not found
-#' @seealso \code{\link[=CNode-class]{CNode}} class description.
+#' @seealso [`CNode()`][CNode-class] class description.
 #' @export
 #' @examples \dontrun{
 #' cn <- CNode()

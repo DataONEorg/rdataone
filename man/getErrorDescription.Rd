@@ -16,10 +16,10 @@ determine what type of response was sent.
 }
 \details{
 The return types handled by this function are:
-  o An incorrect url is sent to DataONE and an error is returned by
-    the web server, not a specified DataONE service url. In this case,
-    a generic error message may be returned, e.g. status=404, URL not found
-  o A DataONE service was called, and returned an error message. In this
-    case the DataONE response is parsed in an attempt to retrieve a
-    meaningful error message.
+o An incorrect url is sent to DataONE and an error is returned by
+the web server, not a specified DataONE service url. In this case,
+a generic error message may be returned, e.g. status=404, URL not found
+o A DataONE service was called, and returned an error message. In this
+case the DataONE response is parsed in an attempt to retrieve a
+meaningful error message.
 }
