@@ -45,22 +45,20 @@
 #' @rdname AuthenticationManager-class
 #' @aliases AuthenticationManager-class
 #' @section Methods:
-#' \describe{
-#'  \item{[AuthenticationManager()]}{: Create an AuthenticationManager object.}
-#'  \item{[isAuthValid()]}{: Verify authentication for a member node.}
-#'  \item{[getToken()]}{: Get the value of the DataONE Authentication Token, if one exists.}
-#'  \item{[getCert()]}{: Get the DataONE X.509 Certificate location.}
-#'  \item{[getAuthMethod()]}{: Get the current valid authentication mechanism.}
-#'  \item{[getAuthSubject()]}{: Get the authentication subject.}
-#'  \item{[getAuthExpires()]}{: Get the expiration date of the current authentication method.}
-#'  \item{[isAuthExpired()]}{: Check if the currently valid authentication method has reached the expiration time.}
-#'  \item{[obscureAuth()]}{: Temporarily disable DataONE authentication.}
-#'  \item{[restoreAuth()]}{: Restore authentication (after being disabled with `obscureAuth`).}
-#'  \item{[showAuth()]}{: Display all authentication information.}
-#'  \item{[getTokenInfo()]}{: Display all authentication token information.}
-#'  \item{[getCertInfo()]}{: Display all X.509 certificate information.}
+#' * [AuthenticationManager()]: Create an AuthenticationManager object
+#' * [isAuthValid()]: Verify authentication for a member node
+#' * [getToken()]: Get the value of the DataONE Authentication Token, if one exists
+#' * [getCert()]: Get the DataONE X.509 Certificate location
+#' * [getAuthMethod()]: Get the current valid authentication mechanism
+#' * [getAuthSubject()]: Get the authentication subject
+#' * [getAuthExpires()]: Get the expiration date of the current authentication method
+#' * [isAuthExpired()]: Check if the currently valid authentication method has reached the expiration time
+#' * [obscureAuth()]: Temporarily disable DataONE authentication
+#' * [restoreAuth()]: Restore authentication (after being disabled with `obscureAuth`)
+#' * [showAuth()]: Display all authentication information
+#' * [getTokenInfo()]: Display all authentication token information
+#' * [getCertInfo()]: Display all X.509 certificate information
 #'  
-#' }
 #' @seealso [dataone()] package description.
 #' @import base64enc
 #' @importFrom jsonlite fromJSON

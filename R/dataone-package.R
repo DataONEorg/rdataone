@@ -27,13 +27,12 @@
 #' @name dataone
 #' @author Matthew B. Jones (NCEAS) and Peter Slaughter (NCEAS)
 #' @section Classes:
-#' \describe{
-#'  \item{[`AuthenticationManager()`][AuthenticationManager-class]}{: AuthenticationManager provides methods to validate DataONE authentication.}
-#'  \item{[`CNode()`][CNode-class]}{: A CNode represents a DataONE Coordinating Node and can be used to access its services.}
-#'  \item{[`D1Client()`][D1Client-class]}{: The D1Client class contains methods that perform high level dataone tasks.}
-#'  \item{[`D1Node()`][D1Node-class]}{: A base class for CNode and MNode.}
-#'  \item{[`MNode()`][MNode-class]}{: MNode provides functions interacting with the a DataONE Member Node repository.}
-#' }
+#' * [`AuthenticationManager()`][AuthenticationManager-class]: AuthenticationManager provides methods to validate DataONE authentication
+#' * [`CNode()`][CNode-class]: A CNode represents a DataONE Coordinating Node and can be used to access its services
+#' * [`D1Client()`][D1Client-class]: The D1Client class contains methods that perform high level dataone tasks
+#' * [`D1Node()`][D1Node-class]: A base class for CNode and MNode
+#' * [`MNode()`][MNode-class]: MNode provides functions interacting with the a DataONE Member Node repository
+#'
 #' @seealso A description of the *dataone* R package is available with the command: `'vignette("v01-dataone-overview")'`.
 #' @keywords internal
 "_PACKAGE"

@@ -33,22 +33,21 @@
 #' @importFrom stringr str_match str_replace
 #' @importFrom utils URLencode
 #' @section Methods:
-#' \describe{
-#'  \item{[D1Client()]}{: Construct a D1Client object.}
-#'  \item{[convert.csv()]}{: Convert a DataFrame to Standard CSV.}
-#'  \item{[createDataPackage()]}{: Create a DataPackage on a DataONE Member Node.}
-#'  \item{[encodeUrlPath()]}{: Encode the Input for a URL Path Segment.}
-#'  \item{[encodeUrlQuery()]}{: Encode the Input for a URL Query Segment.}
-#'  \item{[getDataObject()]}{: Download a single data object from a DataONE Federation member node.}
-#'  \item{[getDataPackage()]}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
-#'  \item{[getEndpoint()]}{: Return the URL endpoint for the DataONE Coordinating Node.}
-#'  \item{[getMetadataMember()]}{: Get the DataObject containing package metadata.}
-#'  \item{[getMNodeId()]}{: Get the member node identifier associated with this D1Client object.}
-#'  \item{[listMemberNodes()]}{: List DataONE Member Nodes.}
-#'  \item{[reserveIdentifier()]}{: Reserve a unique identifier in the DataONE Network.}
-#'  \item{[uploadDataObject()]}{: Upload a DataObject to a DataONE member node.}
-#'  \item{[uploadDataPackage()]}{: Upload a DataPackage to a DataONE member node.}
-#' }
+#' * [D1Client()]: Construct a D1Client object
+#' * [convert.csv()]: Convert a DataFrame to Standard CSV
+#' * [createDataPackage()]: Create a DataPackage on a DataONE Member Node
+#' * [encodeUrlPath()]: Encode the Input for a URL Path Segment
+#' * [encodeUrlQuery()]: Encode the Input for a URL Query Segment
+#' * [getDataObject()]: Download a single data object from a DataONE Federation member node
+#' * [getDataPackage()]: Download a collection of data object from the DataONE Federation member node as a DataPackage
+#' * [getEndpoint()]: Return the URL endpoint for the DataONE Coordinating Node
+#' * [getMetadataMember()]: Get the DataObject containing package metadata
+#' * [getMNodeId()]: Get the member node identifier associated with this D1Client object
+#' * [listMemberNodes()]: List DataONE Member Nodes
+#' * [reserveIdentifier()]: Reserve a unique identifier in the DataONE Network
+#' * [uploadDataObject()]: Upload a DataObject to a DataONE member node
+#' * [uploadDataPackage()]: Upload a DataPackage to a DataONE member node
+#'
 #' @seealso [dataone()] package description.
 #' @export
 #' @import datapack

@@ -28,23 +28,22 @@
 #' @slot services A data.frame containing the supported service tiers for a CN
 #' @slot serviceUrls A data.frame contains URL endpoints for certain services
 #' @section Methods:
-#' \describe{
-#'  \item{[CNode()]}{: Construct a CNode object.}
-#'  \item{[listFormats()]}{: List all object formats registered in DataONE.}
-#'  \item{[getFormat()]}{: Get information for a single DataONE object format } 
-#'  \item{[getChecksum()]}{: Get the checksum for the data object associated with the specified pid.}
-#'  \item{[listNodes()]}{: Get the list of nodes associated with a CN.} 
-#'  \item{[reserveIdentifier()]}{: Reserve a identifier that is unique in the DataONE network.}
-#'  \item{[hasReservation()]}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
-#'  \item{[setObsoletedBy()]}{: Set a pid as being obsoleted by another pid}
-#'  \item{[getObject()]}{: Get the bytes associated with an object on this Coordinating Node.} 
-#'  \item{[getSystemMetadata()]}{: Get the bytes associated with an object on this Coordinating Node.}
-#'  \item{[describeObject()]}{: Get a list of coordinating nodes holding a given pid.} 
-#'  \item{[resolve()]}{: Get a list of coordinating nodes holding a given pid.}
-#'  \item{[getMNode()]}{: Get a reference to a node based on its identifier.} 
-#'  \item{[echoCredentials()]}{: Echo the credentials used to make the call.} 
-#'  \item{[isAuthorized()]}{: Check if an action is authorized for the specified identifier.} 
-#' }
+#' * [CNode()]: Construct a CNode object
+#' * [listFormats()]: List all object formats registered in DataONE
+#' * [getFormat()]: Get information for a single DataONE object format
+#' * [getChecksum()]: Get the checksum for the data object associated with the specified pid
+#' * [listNodes()]: Get the list of nodes associated with a CN
+#' * [reserveIdentifier()]: Reserve a identifier that is unique in the DataONE network
+#' * [hasReservation()]: Checks to determine if the supplied subject is the owner of the reservation of id
+#' * [setObsoletedBy()]: Set a pid as being obsoleted by another pid
+#' * [getObject()]: Get the bytes associated with an object on this Coordinating Node
+#' * [getSystemMetadata()]: Get the bytes associated with an object on this Coordinating Node
+#' * [describeObject()]: Get a list of coordinating nodes holding a given pid
+#' * [resolve()]: Get a list of coordinating nodes holding a given pid
+#' * [getMNode()]: Get a reference to a node based on its identifier
+#' * [echoCredentials()]: Echo the credentials used to make the call
+#' * [isAuthorized()]: Check if an action is authorized for the specified identifier
+#' 
 #' @seealso [dataone()] package description.
 #' @import methods
 #' @importFrom utils URLencode

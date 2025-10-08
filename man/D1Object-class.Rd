@@ -16,18 +16,18 @@ a wrapper for data and associated SystemMetadata.
 
 \section{Methods}{
 
-\describe{
-\item{\code{\link[=D1Object-initialize]{D1Object-initialize()}}}{: Initialize a D1Object}
-\item{\code{\link[=getData]{getData()}}}{: Get the data content of a specified D1Object.}
-\item{\code{\link[=getIdentifier]{getIdentifier()}}}{: Get the identifier of the D1Object.}
-\item{\code{\link[=getFormatId]{getFormatId()}}}{: Get the formatId of the D1Object}
-\item{\code{\link[=setPublicAccess]{setPublicAccess()}}}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
-\item{\code{\link[=canRead]{canRead()}}}{: Test whether the provided subject can read an object.}
-\item{\code{\link[=asDataFrame]{asDataFrame()}}}{: Return the D1Object as a data.frame.}
+\itemize{
+\item \code{dataone::D1Object-initialize()}: Initialize a D1Object
+\item \code{dataone::getData()}: Get the data content of a specified D1Object
+\item \code{dataone::getIdentifier()}: Get the identifier of the D1Object
+\item \code{dataone::getFormatId()}: Get the formatId of the D1Object
+\item \code{dataone::setPublicAccess()}: Add a Rule to the AccessPolicy to make the object publicly readable
+\item \code{dataone::canRead()}: Test whether the provided subject can read an object
+\item \code{asDataFrame()}: Return the D1Object as a data.frame
 }
 }
 
 \seealso{
-\code{\link[=dataone]{dataone()}} package description.
+\code{\link[=dataone]{dataone()}} package description
 }
 \keyword{classes}

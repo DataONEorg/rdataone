@@ -19,22 +19,22 @@ The CNode class provides methods that interact with a DataONE Coordinating Node.
 
 \section{Methods}{
 
-\describe{
-\item{\code{\link[=CNode]{CNode()}}}{: Construct a CNode object.}
-\item{\code{\link[=listFormats]{listFormats()}}}{: List all object formats registered in DataONE.}
-\item{\code{\link[=getFormat]{getFormat()}}}{: Get information for a single DataONE object format }
-\item{\code{\link[=getChecksum]{getChecksum()}}}{: Get the checksum for the data object associated with the specified pid.}
-\item{\code{\link[=listNodes]{listNodes()}}}{: Get the list of nodes associated with a CN.}
-\item{\code{\link[=reserveIdentifier]{reserveIdentifier()}}}{: Reserve a identifier that is unique in the DataONE network.}
-\item{\code{\link[=hasReservation]{hasReservation()}}}{: Checks to determine if the supplied subject is the owner of the reservation of id.}
-\item{\code{\link[=setObsoletedBy]{setObsoletedBy()}}}{: Set a pid as being obsoleted by another pid}
-\item{\code{\link[=getObject]{getObject()}}}{: Get the bytes associated with an object on this Coordinating Node.}
-\item{\code{\link[=getSystemMetadata]{getSystemMetadata()}}}{: Get the bytes associated with an object on this Coordinating Node.}
-\item{\code{\link[=describeObject]{describeObject()}}}{: Get a list of coordinating nodes holding a given pid.}
-\item{\code{\link[=resolve]{resolve()}}}{: Get a list of coordinating nodes holding a given pid.}
-\item{\code{\link[=getMNode]{getMNode()}}}{: Get a reference to a node based on its identifier.}
-\item{\code{\link[=echoCredentials]{echoCredentials()}}}{: Echo the credentials used to make the call.}
-\item{\code{\link[=isAuthorized]{isAuthorized()}}}{: Check if an action is authorized for the specified identifier.}
+\itemize{
+\item \code{\link[=CNode]{CNode()}}: Construct a CNode object
+\item \code{\link[=listFormats]{listFormats()}}: List all object formats registered in DataONE
+\item \code{\link[=getFormat]{getFormat()}}: Get information for a single DataONE object format
+\item \code{\link[=getChecksum]{getChecksum()}}: Get the checksum for the data object associated with the specified pid
+\item \code{\link[=listNodes]{listNodes()}}: Get the list of nodes associated with a CN
+\item \code{\link[=reserveIdentifier]{reserveIdentifier()}}: Reserve a identifier that is unique in the DataONE network
+\item \code{\link[=hasReservation]{hasReservation()}}: Checks to determine if the supplied subject is the owner of the reservation of id
+\item \code{\link[=setObsoletedBy]{setObsoletedBy()}}: Set a pid as being obsoleted by another pid
+\item \code{\link[=getObject]{getObject()}}: Get the bytes associated with an object on this Coordinating Node
+\item \code{\link[=getSystemMetadata]{getSystemMetadata()}}: Get the bytes associated with an object on this Coordinating Node
+\item \code{\link[=describeObject]{describeObject()}}: Get a list of coordinating nodes holding a given pid
+\item \code{\link[=resolve]{resolve()}}: Get a list of coordinating nodes holding a given pid
+\item \code{\link[=getMNode]{getMNode()}}: Get a reference to a node based on its identifier
+\item \code{\link[=echoCredentials]{echoCredentials()}}: Echo the credentials used to make the call
+\item \code{\link[=isAuthorized]{isAuthorized()}}: Check if an action is authorized for the specified identifier
 }
 }
 

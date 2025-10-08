@@ -38,22 +38,21 @@
 #' @slot APIversion A character string indicating version of the DataONE API for this node, e.g. "v2"
 #' @slot env A character string, either 'prod' if this node is in the production environment, otherwise 'test'
 #' @section Methods:
-#' \describe{
-#'  \item{\code{[D1Node-initialize]{initialize}}}{: Initialize a D1Node}
-#'  \item{[D1Node()]}{: Create a MNode object representing a DataONE Member Node repository.}
-#'  \item{[archive()]}{: Change the state of an object so that it is hidden from searches.}
-#'  \item{[describeObject()]}{: Get header information for a given pid.} 
-#'  \item{[getChecksum()]}{: Get the checksum for the data object associated with the specified pid.}
-#'  \item{[getObject()]}{: Get the bytes associated with an object on a node.}
-#'  \item{[getQueryEngineDescription()]}{: Query a node for the list of query engines available on the node.}
-#'  \item{[getSystemMetadata()]}{: Get the metadata describing system properties associated with an object on the Node.}
-#'  \item{[listObjects()]}{: Retrieve the list of objects that match the search parameters.}
-#'  \item{[listQueryEngines()]}{: Query a node for the list of query engines available on the node.}
-#'  \item{[ping()]}{: Test if a node is online and accepting DataONE requests.}
-#'  \item{[encodeSolr()]}{: Encode the input for Solr Queries.}
-#'  \item{[query()]}{: Search DataONE for data and metadata objects.}
-#'  \item{[isAuthorized()]}{: Check if an action is authorized for the specified identifier.} 
-#' }
+#' * [D1Node-initialize]: Initialize a D1Node
+#' * [D1Node()]: Create a MNode object representing a DataONE Member Node repository
+#' * [archive()]: Change the state of an object so that it is hidden from searches
+#' * [describeObject()]: Get header information for a given pid 
+#' * [getChecksum()]: Get the checksum for the data object associated with the specified pid
+#' * [getObject()]: Get the bytes associated with an object on a node
+#' * [getQueryEngineDescription()]: Query a node for the list of query engines available on the node
+#' * [getSystemMetadata()]: Get the metadata describing system properties associated with an object on the Node
+#' * [listObjects()]: Retrieve the list of objects that match the search parameters
+#' * [listQueryEngines()]: Query a node for the list of query engines available on the node
+#' * [ping()]: Test if a node is online and accepting DataONE requests
+#' * [encodeSolr()]: Encode the input for Solr Queries
+#' * [query()]: Search DataONE for data and metadata objects
+#' * [isAuthorized()]: Check if an action is authorized for the specified identifier 
+#'
 #' @import methods
 #' @importFrom utils URLencode
 #' @export

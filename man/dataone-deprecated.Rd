@@ -9,16 +9,16 @@ removed in a future release
 }
 \section{These S4 methods are deprecated}{
 
-\describe{
-\item{\code{\link[=setObsoletedBy]{setObsoletedBy()}}}{: Set a pid as being obsoleted by another pid.}
-\item{\code{\link[=CertificateManager]{CertificateManager()}}}{: Create a CertificateManager object.}
-\item{\code{\link[=getCertLocation]{getCertLocation()}}}{: Get the file path on disk of the client certificate file.}
-\item{\code{\link[=showClientSubject]{showClientSubject()}}}{: Get DataONE Identity as Stored in the CILogon Certificate.}
-\item{\code{\link[=isCertExpired]{isCertExpired()}}}{: Determine if an X.509 certificate has expired.}
-\item{\code{\link[=getCertExpires]{getCertExpires()}}}{: Show the date and time when an X.509 certificate expires.}
-\item{\code{\link[=downloadCert]{downloadCert()}}}{: Open the CILogon Certificate download page in the default browser.}
-\item{\code{\link[=obscureCert]{obscureCert()}}}{: Obscure the CILogon Client Certificate.}
-\item{\code{\link[=restoreCert]{restoreCert()}}}{: Restore the CILogon client certificate by renaming it to its original location}
+\itemize{
+\item \code{\link[=setObsoletedBy]{setObsoletedBy()}}: Set a pid as being obsoleted by another pid
+\item \code{\link[=CertificateManager]{CertificateManager()}}: Create a CertificateManager object
+\item \code{\link[=getCertLocation]{getCertLocation()}}: Get the file path on disk of the client certificate file
+\item \code{\link[=showClientSubject]{showClientSubject()}}: Get DataONE Identity as Stored in the CILogon Certificate
+\item \code{\link[=isCertExpired]{isCertExpired()}}: Determine if an X.509 certificate has expired
+\item \code{\link[=getCertExpires]{getCertExpires()}}: Show the date and time when an X.509 certificate expires
+\item \code{\link[=downloadCert]{downloadCert()}}: Open the CILogon Certificate download page in the default browser
+\item \code{\link[=obscureCert]{obscureCert()}}: Obscure the CILogon Client Certificate
+\item \code{\link[=restoreCert]{restoreCert()}}: Restore the CILogon client certificate by renaming it to its original location
 }
 }
 

@@ -27,17 +27,16 @@
 #' @keywords classes
 #' @import datapack
 #' @importFrom utils read.csv
+#' @seealso [dataone()] package description
 #' @section Methods:
-#' \describe{
-#'  \item{[dataone::D1Object-initialize()]}{: Initialize a D1Object}
-#'  \item{[dataone::getData()]}{: Get the data content of a specified D1Object.}
-#'  \item{[dataone::getIdentifier()]}{: Get the identifier of the D1Object.}
-#'  \item{[dataone::getFormatId()]}{: Get the formatId of the D1Object}
-#'  \item{[dataone::setPublicAccess()]}{: Add a Rule to the AccessPolicy to make the object publicly readable.}
-#'  \item{[dataone::canRead()]}{: Test whether the provided subject can read an object.}
-#'  \item{[asDataFrame()]}{: Return the D1Object as a data.frame.}
-#' }
-#' @seealso [dataone()] package description.
+#' * `dataone::D1Object-initialize()`: Initialize a D1Object
+#' * `dataone::getData()`: Get the data content of a specified D1Object
+#' * `dataone::getIdentifier()`: Get the identifier of the D1Object
+#' * `dataone::getFormatId()`: Get the formatId of the D1Object
+#' * `dataone::setPublicAccess()`: Add a Rule to the AccessPolicy to make the object publicly readable
+#' * `dataone::canRead()`: Test whether the provided subject can read an object
+#' * `asDataFrame()`: Return the D1Object as a data.frame
+#' 
 #' @export
 setClass("D1Object", slots = c(dataObject="DataObject") )
 
@@ -45,7 +44,6 @@ setClass("D1Object", slots = c(dataObject="DataObject") )
 ## D1Object constructors
 ########################
 
-#
 #' Create a D1Object instance.
 #' @param ... (additional arguments)
 #' @rdname D1Object

@@ -19,21 +19,21 @@ perform involved tasks such as uploading all the packages in a DataPackage (i.e
 
 \section{Methods}{
 
-\describe{
-\item{\code{\link[=D1Client]{D1Client()}}}{: Construct a D1Client object.}
-\item{\code{\link[=convert.csv]{convert.csv()}}}{: Convert a DataFrame to Standard CSV.}
-\item{\code{\link[=createDataPackage]{createDataPackage()}}}{: Create a DataPackage on a DataONE Member Node.}
-\item{\code{\link[=encodeUrlPath]{encodeUrlPath()}}}{: Encode the Input for a URL Path Segment.}
-\item{\code{\link[=encodeUrlQuery]{encodeUrlQuery()}}}{: Encode the Input for a URL Query Segment.}
-\item{\code{\link[=getDataObject]{getDataObject()}}}{: Download a single data object from a DataONE Federation member node.}
-\item{\code{\link[=getDataPackage]{getDataPackage()}}}{: Download a collection of data object from the DataONE Federation member node as a DataPackage.}
-\item{\code{\link[=getEndpoint]{getEndpoint()}}}{: Return the URL endpoint for the DataONE Coordinating Node.}
-\item{\code{\link[=getMetadataMember]{getMetadataMember()}}}{: Get the DataObject containing package metadata.}
-\item{\code{\link[=getMNodeId]{getMNodeId()}}}{: Get the member node identifier associated with this D1Client object.}
-\item{\code{\link[=listMemberNodes]{listMemberNodes()}}}{: List DataONE Member Nodes.}
-\item{\code{\link[=reserveIdentifier]{reserveIdentifier()}}}{: Reserve a unique identifier in the DataONE Network.}
-\item{\code{\link[=uploadDataObject]{uploadDataObject()}}}{: Upload a DataObject to a DataONE member node.}
-\item{\code{\link[=uploadDataPackage]{uploadDataPackage()}}}{: Upload a DataPackage to a DataONE member node.}
+\itemize{
+\item \code{\link[=D1Client]{D1Client()}}: Construct a D1Client object
+\item \code{\link[=convert.csv]{convert.csv()}}: Convert a DataFrame to Standard CSV
+\item \code{\link[=createDataPackage]{createDataPackage()}}: Create a DataPackage on a DataONE Member Node
+\item \code{\link[=encodeUrlPath]{encodeUrlPath()}}: Encode the Input for a URL Path Segment
+\item \code{\link[=encodeUrlQuery]{encodeUrlQuery()}}: Encode the Input for a URL Query Segment
+\item \code{\link[=getDataObject]{getDataObject()}}: Download a single data object from a DataONE Federation member node
+\item \code{\link[=getDataPackage]{getDataPackage()}}: Download a collection of data object from the DataONE Federation member node as a DataPackage
+\item \code{\link[=getEndpoint]{getEndpoint()}}: Return the URL endpoint for the DataONE Coordinating Node
+\item \code{\link[=getMetadataMember]{getMetadataMember()}}: Get the DataObject containing package metadata
+\item \code{\link[=getMNodeId]{getMNodeId()}}: Get the member node identifier associated with this D1Client object
+\item \code{\link[=listMemberNodes]{listMemberNodes()}}: List DataONE Member Nodes
+\item \code{\link[=reserveIdentifier]{reserveIdentifier()}}: Reserve a unique identifier in the DataONE Network
+\item \code{\link[=uploadDataObject]{uploadDataObject()}}: Upload a DataObject to a DataONE member node
+\item \code{\link[=uploadDataPackage]{uploadDataPackage()}}: Upload a DataPackage to a DataONE member node
 }
 }
 

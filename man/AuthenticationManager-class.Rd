@@ -36,21 +36,20 @@ is deprecated and generally users should use JWT Bearer tokens as described abov
 
 \section{Methods}{
 
-\describe{
-\item{\code{\link[=AuthenticationManager]{AuthenticationManager()}}}{: Create an AuthenticationManager object.}
-\item{\code{\link[=isAuthValid]{isAuthValid()}}}{: Verify authentication for a member node.}
-\item{\code{\link[=getToken]{getToken()}}}{: Get the value of the DataONE Authentication Token, if one exists.}
-\item{\code{\link[=getCert]{getCert()}}}{: Get the DataONE X.509 Certificate location.}
-\item{\code{\link[=getAuthMethod]{getAuthMethod()}}}{: Get the current valid authentication mechanism.}
-\item{\code{\link[=getAuthSubject]{getAuthSubject()}}}{: Get the authentication subject.}
-\item{\code{\link[=getAuthExpires]{getAuthExpires()}}}{: Get the expiration date of the current authentication method.}
-\item{\code{\link[=isAuthExpired]{isAuthExpired()}}}{: Check if the currently valid authentication method has reached the expiration time.}
-\item{\code{\link[=obscureAuth]{obscureAuth()}}}{: Temporarily disable DataONE authentication.}
-\item{\code{\link[=restoreAuth]{restoreAuth()}}}{: Restore authentication (after being disabled with \code{obscureAuth}).}
-\item{\code{\link[=showAuth]{showAuth()}}}{: Display all authentication information.}
-\item{\code{\link[=getTokenInfo]{getTokenInfo()}}}{: Display all authentication token information.}
-\item{\code{\link[=getCertInfo]{getCertInfo()}}}{: Display all X.509 certificate information.}
-
+\itemize{
+\item \code{\link[=AuthenticationManager]{AuthenticationManager()}}: Create an AuthenticationManager object
+\item \code{\link[=isAuthValid]{isAuthValid()}}: Verify authentication for a member node
+\item \code{\link[=getToken]{getToken()}}: Get the value of the DataONE Authentication Token, if one exists
+\item \code{\link[=getCert]{getCert()}}: Get the DataONE X.509 Certificate location
+\item \code{\link[=getAuthMethod]{getAuthMethod()}}: Get the current valid authentication mechanism
+\item \code{\link[=getAuthSubject]{getAuthSubject()}}: Get the authentication subject
+\item \code{\link[=getAuthExpires]{getAuthExpires()}}: Get the expiration date of the current authentication method
+\item \code{\link[=isAuthExpired]{isAuthExpired()}}: Check if the currently valid authentication method has reached the expiration time
+\item \code{\link[=obscureAuth]{obscureAuth()}}: Temporarily disable DataONE authentication
+\item \code{\link[=restoreAuth]{restoreAuth()}}: Restore authentication (after being disabled with \code{obscureAuth})
+\item \code{\link[=showAuth]{showAuth()}}: Display all authentication information
+\item \code{\link[=getTokenInfo]{getTokenInfo()}}: Display all authentication token information
+\item \code{\link[=getCertInfo]{getCertInfo()}}: Display all X.509 certificate information
 }
 }
 
