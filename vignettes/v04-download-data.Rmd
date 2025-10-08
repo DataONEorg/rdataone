@@ -151,7 +151,7 @@ bagitFileName <- getPackage(mn, id=packagePid)
 Care must be taken, however, as these commands download the entire package. 
 
 The package is downloaded to a single file that is structured according
-to the [Bagit](https://tools.ietf.org/html/draft-kunze-bagit-10) packaging guidelines. The *getPackage*
+to the [Bagit](https://datatracker.ietf.org/doc/html/draft-kunze-bagit-10) packaging guidelines. The *getPackage*
 method returns the name this file that is created in a temporary directory.
 
 Because the *getPackage* method downloads the entire collection of files for a data package, the

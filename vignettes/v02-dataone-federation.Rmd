@@ -15,12 +15,9 @@ DataONE comprises a distributed network of data centers, science networks or org
 
 ## DataONE Service Interface
 
-Access to DataONE data is provided by the DataONE service interface (aka REST API). DataONE maintains a set of 
-user oriented tools called the [Investigator Toolkit](https://www.dataone.org/investigator-toolkit) (ITK) that 
-use this service interface to search, download and 
-upload data to DataONE Member Nodes. 
-
-The `dataone` R package is one of the tools in the ITK.
+Access to DataONE data is provided by the [DataONE REST API](https://search.dataone.org/api/). DataONE maintains a set of 
+user oriented client tools that use this service interface to search, download and upload data to DataONE Member repositories. These include 
+web clients (like [MetacatUI](https://nceas.github.io/metacatui/)), and clients in python and R. The `dataone` R package implements the DataONE API for R.
 
 If more detailed information about the DataONE Federation services is required than is provided by the *dataone* R package help, then in-depth documentation for the DataONE web services can be found at:
 

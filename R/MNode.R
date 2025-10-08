@@ -639,7 +639,7 @@ setMethod("generateIdentifier", signature("MNode"), function(x, scheme="UUID", f
 #' Download a data package from a member node.
 #' @description Given a valid identifier, download a file containing all of the package 
 #' members of the corresponding DataONE data package. 
-#' @details The default data package file format is a Bagit file (<https://tools.ietf.org/html/draft-kunze-bagit-09>).
+#' @details The default data package file format is a Bagit file (https://datatracker.ietf.org/doc/html/draft-kunze-bagit-10).
 #' The downloaded package file is compressed using the ZIP format and will be located in an R session temporary
 #' file. Other packaging formats can be requested if they have been implemented by the requested member node.
 #' @param x A MNode instance representing a DataONE Member Node repository.

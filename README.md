@@ -4,14 +4,15 @@
 
 - **Authors**: Matthew B. Jones ([NCEAS](https://www.nceas.ucsb.edu)), Peter Slaughter, Rob Nahf, Carl Boettiger, Chris Jones, Jordan Read, Lauren Walker, Edmund Hart, Scott Chamberlain
 - [doi:10.5063/F1M61H5X](https://doi.org/10.5063/F1M61H5X)
-- **License**: [Apache 2](https://opensource.org/licenses/Apache-2.0)
+- **License**: [Apache 2](https://opensource.org/license/apache-2-0)
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
 
 Provides read and write access to data and metadata from the [DataONE network 
-    of data repositories](https://www.dataone.org/current-member-nodes), including the
-    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org/stash),
-    and the NSF [Arctic Data Center](https://arcticdata.io).
+    of data repositories](https://www.dataone.org/network/), including the
+    [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org/),
+    and the NSF [Arctic Data Center](https://arcticdata.io) and dozens of other 
+    data repositories from federal and state agencies and non-profit organizations.
     Each DataONE repository implements a consistent repository application 
     programming interface. Users call methods in R to access these remote 
     repository functions, such as methods to query the metadata catalog, get 

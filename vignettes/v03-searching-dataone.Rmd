@@ -12,12 +12,11 @@ vignette: >
 The primary method to locate data in the DataONE network is to use the web based search tool located at https://search.dataone.org.
 
 Data can also be discovered programmatically from R using the *dataone* R package method `query`. Both the web page and the R method
-access the same
-underlying search mechanism, the Apache Foundation Solr search engine that runs on the 
-[DataONE Coordinating Node](https://www.dataone.org/coordinating-nodes). The DataONE Solr index, similar to a catalog or database, contains 
+access the same underlying search mechanism, an Apache Foundation Solr search engine that runs on the 
+DataONE Coordinating Nodes to implement the search API. The DataONE Solr index, similar to a catalog or database, contains 
 information for every dataset that is available from the DataONE network. 
 
-The same search mechanism is available on [DataONE Member Nodes](https://www.dataone.org/current-member-nodes). However, the search
+The same search mechanism is available on [DataONE Member Nodes](https://www.dataone.org/network/). However, the search
 index on a member node only contains dataset information for datasets that are contained 
 on that member node.
 
