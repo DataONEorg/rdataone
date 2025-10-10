@@ -132,7 +132,7 @@ auth_head <- function(url, nconfig=config(), node) {
       authToken <- getToken(am, node)
       response <- HEAD(url, config = nconfig, user_agent(get_user_agent()), add_headers(Authorization = sprintf("Bearer %s", authToken)))
     } else {
-      # Authenticatin will use a certificate.
+      # Authentication will use a certificate.
       cert <- getCert(am)
       new_config <- c(nconfig, config(sslcert = cert))
       response <- HEAD(url, config = new_config, user_agent(get_user_agent()))
