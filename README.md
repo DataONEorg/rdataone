@@ -156,5 +156,4 @@ Additional support was provided for working group collaboration by the National 
 
 [![dataone_footer](https://www.dataone.org/sites/all/images/DataONE_LOGO.jpg)](https://www.dataone.org)
 
-
 [![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
