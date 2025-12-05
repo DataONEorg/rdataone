@@ -201,7 +201,12 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
   url <- paste(x@endpoint, "node", sep="/")
   # Don't need privileged access, so call GET directly vs auth_get
   
-  response <- GET(url, user_agent(get_user_agent()))
+  nconfig <- user_agent(get_user_agent())
+  if (is_windwows()) {
+    # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+    nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+  }
+  response <- GET(url, config = nconfig)
   # Use charset 'utf-8' if not specified in response headers
   charset <- "utf-8"
   if(response$status_code != "200") {

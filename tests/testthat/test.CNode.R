@@ -3,6 +3,7 @@ test_that("dataone library loads", {
 })
 test_that("CNode constructors", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   # If not specified, "PROD" environment is used.
   expect_match(cnProd@endpoint, "https://cn.dataone.org/cn")
@@ -14,6 +15,7 @@ test_that("CNode constructors", {
 })
 test_that("CNode listNodes()", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   nodelist <- listNodes(cnProd)
   expect_true(length(nodelist) > 0)

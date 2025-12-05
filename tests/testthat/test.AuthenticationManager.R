@@ -1,5 +1,6 @@
 test_that("AuthenticationManager isAuthValid() for v2 node works", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   am <- AuthenticationManager()
   expect_false(is.null(am))
@@ -18,6 +19,7 @@ test_that("AuthenticationManager isAuthValid() for v2 node works", {
 
 test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
   skip_on_cran()
+  skip_if_down()
   am <- AuthenticationManager()
   expect_false(is.null(cm))
   expect_false(is.null(am))
@@ -39,6 +41,7 @@ test_that("AuthenticationManager getAuthMethod(), getToken(), getCert() work", {
 
 test_that("getAuthExpires() works", {
   skip_on_cran()
+  skip_if_down()
   am <- AuthenticationManager()
   expect_false(is.null(cm))
   expect_false(is.null(am))
@@ -61,10 +64,11 @@ test_that("getAuthExpires() works", {
 
 test_that("isCertExpired() works", {
   skip_on_cran()
+  skip_if_down()
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Suppress openssl, cert missing warnings
-  suppressMessages(authValid <- dataone:::isAuthValid(am, cn))
+  authValid <- dataone:::isAuthValid(am, cn)
   if(authValid) {
     expDate <- dataone:::getAuthExpires(am, cn)
     ct <- as.POSIXct(Sys.time(), tz=format(expDate, "%Z"))
@@ -80,6 +84,7 @@ test_that("isCertExpired() works", {
 
 test_that("getAuthSubject() works", {
   skip_on_cran()
+  skip_if_down()
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Suppress openssl, cert missing warnings
@@ -96,6 +101,7 @@ test_that("getAuthSubject() works", {
 
 test_that("obscureAuth(), restoreAuth() work", {
   skip_on_cran()
+  skip_if_down()
   am <- AuthenticationManager()
   cn <- CNode("STAGING")
   # Disable authentication

@@ -37,3 +37,11 @@ if(is.null(d1cProd)) servicesDown <- TRUE
 if(is.null(d1cTestKNB)) servicesDown <- TRUE
 if(is.null(d1cTest)) servicesDown <- TRUE
 if(is.null(mnTest)) servicesDown <- TRUE
+
+skip_if_down <- function() {
+    if (servicesDown) {
+        skip("Not run when services are down.")
+    } else {
+        invisible()
+    }
+}

@@ -267,7 +267,7 @@ setMethod("getQueryEngineDescription", signature("D1Node"), function(x, queryEng
   
   url <- paste(x@endpoint, "query", queryEngineName, sep="/")
   # Send the request
-  response<-GET(url)
+  response <- auth_get(url, node=x)
   if(response$status_code != "200") {
     warning(sprintf("Error getting query engine description %s\n", getErrorDescription(response)))
     return(list())
@@ -439,7 +439,12 @@ setMethod("listObjects", signature("D1Node"), function(x,
   
   url <- paste(x@endpoint, "object", sep="/")
   # Send the request
-  response<-GET(url, query=params)
+  nconfig <- httr::config()
+  if (is_windwows()) {
+    # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+    nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+  }
+  response<-GET(url, config = nconfig, query=params)
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
@@ -480,7 +485,7 @@ setMethod("listQueryEngines", signature("D1Node"), function(x) {
   
   url <- paste(x@endpoint, "query", sep="/")
   # Send the request
-  response<-GET(url)
+  response <- auth_get(url, node=x)
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
@@ -582,7 +587,7 @@ setMethod("ping", signature("D1Node"), function(x) {
   
   url <- paste(x@endpoint, "monitor/ping", sep="/")
   # Send the request
-  response<-GET(url)
+  response <- auth_get(url, node=x)
 
   if (response$status_code == 200) {
     return(TRUE)

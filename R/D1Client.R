@@ -223,7 +223,6 @@ setGeneric("getD1Object", function(x, identifier, ...) {
 
 #' @rdname getD1Object
 setMethod("getD1Object", "D1Client", function(x, identifier) {
-  #d1o <- get(x@cn, identifier)    # Resolve the object location
   return(getDataObject(x, identifier))
 })
 

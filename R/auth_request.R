@@ -43,6 +43,10 @@ auth_get <- function(url, nconfig=config(), node, path = NULL) {
     if (missing(url) || missing(node)) {
       stop("Error: url or node is missing. Please report this error.")
     }
+    if (is_windwows()) {
+      # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+      nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+    }
     am <- AuthenticationManager()
     if(isAuthValid(am, node)) {
       if(getAuthMethod(am, node) == "token") {
@@ -125,6 +129,10 @@ auth_head <- function(url, nconfig=config(), node) {
   if (missing(url) || missing(node)) {
       stop("Error: url or node is missing. Please report this error.")
   }
+  if (is_windwows()) {
+    # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+    nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+  }
   am <- AuthenticationManager()
   if(isAuthValid(am, node)) {
     if(getAuthMethod(am, node) == "token") {
@@ -159,7 +167,11 @@ auth_head <- function(url, nconfig=config(), node) {
 #' @return the response object from the method
 #' @import httr
 auth_put_post_delete <- function(method, url, encode="multipart", body=NULL, node) {
-  
+  nconfig <- httr::config(user_agent(get_user_agent()))
+  if (is_windwows()) {
+    # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+    nconfig <- c(config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+  }
   am <- AuthenticationManager()
   if(!missing(node) && isAuthValid(am, node)) {
     if(getAuthMethod(am, node) == "token") {
@@ -167,15 +179,15 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=NULL, nod
       authToken <- getToken(am, node)
       switch(method,
              post={
-               response=POST(url, encode=encode, body=body, config(tcp_keepalive = as.numeric(1)), add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               response=POST(url, encode=encode, body=body, nconfig, config(tcp_keepalive = as.numeric(1)), add_headers(Authorization = sprintf("Bearer %s", authToken)))
                return(response)
              },
              put={
-               response=PUT(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               response=PUT(url, encode=encode, body=body, nconfig, add_headers(Authorization = sprintf("Bearer %s", authToken)))
                return(response)
              },
              delete={
-               response=DELETE(url, encode=encode, body=body, add_headers(Authorization = sprintf("Bearer %s", authToken)), user_agent(get_user_agent()))
+               response=DELETE(url, encode=encode, body=body, nconfig, add_headers(Authorization = sprintf("Bearer %s", authToken)))
                return(response)},
              {
                stop('Method not supported.')
@@ -186,15 +198,15 @@ auth_put_post_delete <- function(method, url, encode="multipart", body=NULL, nod
       cert <- getCert(am)
       switch(method,
              post={
-               response=POST(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent()))
+               response=POST(url, encode=encode, body=body, nconfig, config=config(sslcert = cert))
                return(response)
              },
              put={
-               response=PUT(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent()))
+               response=PUT(url, encode=encode, body=body, nconfig, config=config(sslcert = cert))
                return(response)
              },
              delete={
-               response=DELETE(url, encode=encode, body=body, config=config(sslcert = cert), user_agent(get_user_agent()))
+               response=DELETE(url, encode=encode, body=body, nconfig, config=config(sslcert = cert))
                return(response)},
              {
                stop('Method not supported.')
@@ -277,4 +289,13 @@ get_user_agent <- function() {
                              paste(info$R.version$major, info$R.version$minor, sep="."),
                              httrVersion)
     return(local_agent)
+}
+
+#' Is the OS Windows?
+#' @description Check if the current operating system is Windows.
+#' @return TRUE if the OS is Windows, FALSE otherwise.
+#' @examples
+#' is_windwows()
+is_windwows <- function() {
+  return(.Platform$OS.type == "windows")
 }

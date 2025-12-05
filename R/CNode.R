@@ -107,11 +107,16 @@ setMethod("CNode", signature("character"), function(x) {
     else stop(sprintf("Unknown DataONE environment: %s", x))
   }
 
-  ## create new D1Client object and insert uri endpoint
+  ## create new CNode object and insert uri endpoint
   result <- new("CNode")
   # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
   # yet that is needed to construct the service URL.
-  response <- GET(CN_URI)   
+  nconfig <- httr::config()
+  if (is_windwows()) {
+    # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
+    nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
+  }
+  response <- GET(CN_URI, config = nconfig)
   if(response$status_code != "200") {
     stop(sprintf("Error accessing %s: %s\n", CN_URI, getErrorDescription(response)))
   }
@@ -161,7 +166,7 @@ setGeneric("listFormats", function(x, ...) {
 #' @export
 setMethod("listFormats", signature("CNode"), function(x) {
   url <- paste(x@endpoint,"formats",sep="/")
-  response <- GET(url, user_agent(get_user_agent()))
+  response <- auth_get(url, nconfig = user_agent(get_user_agent()), node=x)
   # Use charset 'utf-8' if not specified in response headers
   charset <- "utf-8"
   if("content-type" %in% names(response$headers)) {
@@ -225,7 +230,7 @@ setGeneric("getFormat", function(x, ...) {
 #' @export
 setMethod("getFormat", signature("CNode"), function(x, formatId) {
   url <- paste(x@endpoint,"formats", URLencode(formatId, reserved=T), sep="/")
-  response <- GET(url, user_agent(get_user_agent()))
+  response <- auth_get(url, nconfig = user_agent(get_user_agent()), node=x)
   
   if(response$status_code != "200") {
     return(NULL)
@@ -250,7 +255,7 @@ setMethod("getFormat", signature("CNode"), function(x, formatId) {
 #' }
 setMethod("getChecksum", signature("CNode"), function(x, pid, ...) {
   url <- paste(x@endpoint, "checksum", URLencode(pid, reserved=T), sep="/")
-  response <- GET(url, user_agent(get_user_agent()))
+  response <- auth_get(url, nconfig = user_agent(get_user_agent()), node=x)
   if (is.raw(response$content)) {
     tmpres <- content(response, as="raw")
     resultText <- rawToChar(tmpres)
@@ -295,8 +300,7 @@ setMethod("listNodes", signature("CNode"), function(x, url=as.character(NA), ...
     if(is.na(url)) {
       url <- paste(x@endpoint, "node", sep="/")
     }
-    # Don't need authorized access, so call GET directly vs auth_get
-    response <- GET(url)
+    response <- auth_get(url, nconfig = user_agent(get_user_agent()), node=x)
     if(response$status_code != "200") {
         return(NULL)
     }
