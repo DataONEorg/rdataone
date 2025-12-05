@@ -11,3 +11,5 @@ docs
 ^docs$
 ^pkgdown$
 ^\.github$
+^.*\.code-workspace$
+^revdep$

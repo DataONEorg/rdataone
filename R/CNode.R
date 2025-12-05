@@ -112,7 +112,7 @@ setMethod("CNode", signature("character"), function(x) {
   # Get the node listing for just this CN using just the baseURL, as we don't know the API version number
   # yet that is needed to construct the service URL.
   nconfig <- httr::config()
-  if (is_windwows()) {
+  if (is_windows()) {
     # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
     nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
   }

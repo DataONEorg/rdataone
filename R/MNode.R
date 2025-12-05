@@ -202,7 +202,7 @@ setMethod("getCapabilities", signature("MNode"), function(x) {
   # Don't need privileged access, so call GET directly vs auth_get
   
   nconfig <- user_agent(get_user_agent())
-  if (is_windwows()) {
+  if (is_windows()) {
     # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
     nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
   }

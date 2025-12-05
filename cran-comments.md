@@ -1,31 +1,17 @@
+Dear CRAN maintainers,
+
+Please find a new release of the R package 'dataone' for your consideration. This package was recently archived because I had been unable to fix issues with TLS 1.3 support on Windows clients. I have temporarily disabled TLS 1.3 support and fallback to TLS 1.2 in the underlying 'curl' package on windows clients, which has resolved the issue. I will continue to investigate a more permanent solution for future releases, but it seems that Windows clients are not yet fully compatible with TLS 1.3 (see https://windowsforum.com/threads/tls-1-3-iis-express-on-windows-11-mtls-breakage-workarounds-and-outlook.379408/).
+
 ## Test environments
 
- * macOS 13.7.6: R 4.5.1
- 
- * Ubuntu 18.04 R 4.1.3
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2022-06-08 r82470 ucrt) 
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.2.0 (2022-04-22 ucrt)  
- * Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R 4.1.3 (2022-03-10)
- * rhub::check_for_cran()
-   * Windows Server 2008 R2 SP1, R-release, 32/64 bit
-   * Windows Server 2022, R-devel, 64 bit
-   * Fedora Linux, R-devel, clang, gfortran
-   * Fedora Linux, R-devel, GCC
-   * macOS 10.13.6 High Sierra, R-release, CRAN's setup
-   * Apple Silicon (M1), macOS 11.6 Big Sur, R-release
-
-## Changes since last release
-
-* Remove hash dependency (#293)
-* Add support for new method signature for D1Client (#252)
-* Ensure rightsHolder persists when uploading a data package (#292)
-* Fix bug where 'publc = TRUE' argument did not set public read on all objects (#285)
-* Account for edge case errors in 'archive()' (#236)
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R version 4.5.2 (2025-10-31 ucrt) 
+* Windows (via win-builder): x86_64-w64-mingw32 (64-bit) R Under development (unstable) (2025-12-04 r89100 ucrt)
+* macOS Sequoia 15.7.2: aarch64-apple-darwin20 R version 4.5.2 (2025-10-31)
+* macOS Ventura 13.7.6: aarch64-apple-darwin20 R version 4.5.2 (2025-10-31)
+* Ubuntu 24.04.3 LTS: x86_64-pc-linux-gnu R version 4.5.2 (2025-10-31)
+* Ubuntu 24.04.3 LTS: x86_64-pc-linux-gnu R version 4.4.3 (2025-02-28)
+* Ubuntu 24.04.3 LTS: x86_64-pc-linux-gnu R Under development (unstable) (2025-12-02 r89085)
 
 ## R CMD check results
 
-* There were no NOTEs, ERRORs, or WARNINGs.
-
-## Downstream dependencies
-
-* The downstream dependencies have been checked with revdepcheck::revdep_check(), without any problems being reported.
+* There were no NOTEs, ERRORs, or WARNINGs except for those related to this being a new package submission after archive, and a false positive on a spelling check for a proper noun.

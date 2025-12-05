@@ -8,7 +8,7 @@
 - [Package source code on Github](https://github.com/DataONEorg/rdataone)
 - [**Submit Bugs and feature requests**](https://github.com/DataONEorg/rdataone/issues)
 
-Provides read and write access to data and metadata from the [DataONE network 
+Provides read and write access to data and metadata from the global [DataONE network 
     of data repositories](https://www.dataone.org/network/), including the
     [KNB Data Repository](https://knb.ecoinformatics.org), [Dryad](https://datadryad.org/),
     and the NSF [Arctic Data Center](https://arcticdata.io) and dozens of other 

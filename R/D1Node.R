@@ -440,7 +440,7 @@ setMethod("listObjects", signature("D1Node"), function(x,
   url <- paste(x@endpoint, "object", sep="/")
   # Send the request
   nconfig <- httr::config()
-  if (is_windwows()) {
+  if (is_windows()) {
     # On windows, TLS 1.3 is not supported, so we need to force TLS 1.2
     nconfig <- c(nconfig, config(sslversion = 6L) ) # 6L corresponds to CURL_SSLVERSION_TLSv1_2
   }
