@@ -31,6 +31,7 @@ test_that("CNode listNodes()", {
 
 test_that("CNode getObject()", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   library(XML)
   pid <- "aceasdata.3.2"
@@ -49,6 +50,7 @@ test_that("CNode getObject()", {
 
 test_that("CNode getSystemMetadata()", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   pid <- "aceasdata.3.2"
   sysmeta <- getSystemMetadata(cnProd, pid)
@@ -57,6 +59,7 @@ test_that("CNode getSystemMetadata()", {
 
 test_that("CNode describeObject()", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   pid <- "aceasdata.3.2"
   res <- dataone::describeObject(cnProd, pid)
@@ -66,6 +69,7 @@ test_that("CNode describeObject()", {
 
 test_that("CNode getMNode()", {
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   nodelist <- listNodes(cnProd)
   nodeid <- nodelist[[length(nodelist)]]@identifier
@@ -81,6 +85,7 @@ test_that("CNode getMNode()", {
 
 test_that("CNode resolve()",{
   skip_on_cran()
+  skip_if_down()
   library(dataone) 
   id <- "0d7d8e0e-93f5-40ab-9916-501d7cf93e15"
   res <- resolve(cnProd,id)
@@ -91,6 +96,7 @@ test_that("CNode resolve()",{
 test_that("CNode reserveIdentifier(), hasReservation() works",{
   # Skip this test that is dependant on unstable test environments
   skip_on_cran()
+  skip_if_down()
   library(dataone)
   library(uuid)
    
@@ -121,6 +127,7 @@ test_that("CNode reserveIdentifier(), hasReservation() works",{
 
 test_that("CNode listFormats, getFormat",{
   skip_on_cran()
+  skip_if_down()
   library(dataone) 
   #cn <- CNode("PROD")
   fmts <- listFormats(cnProd)
