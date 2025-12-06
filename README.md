@@ -73,6 +73,38 @@ library(dataone)
 
 The *dataone* R package should be available for use at this point.
 
+### Windows issues with TLS 1.3
+
+Some users report problems with curl on Windows recently failing to connect when using TLS 1.3 connections, with the following error:
+
+```
+> library(dataone)
+> cn <- CNode("PROD")
+Error in curl::curl_fetch_memory(url, handle = handle) : 
+  Failure when receiving data from the peer [cn.dataone.org]:
+schannel: failed to read data from server: SEC_E_CONTEXT_EXPIRED (0x80090317) - The context has expired and can no longer be used.
+```
+
+This seems to be associated with changes to the Schannel SSL backend on Windows in how it handles requests for client-side x509 certificates under TLS1.3, which no longer functions properly under Windows. Switching to using the OpenSSL backend (as described in [issue #308](https://github.com/DataONEorg/rdataone/issues/308#issue-3471229735)) seems to fix the problem but is probably not a great long-term solution. Here's a workaround by setting an environment variable to tell curl to use the OpenSSL backend:
+
+```
+write('CURL_SSL_BACKEND=openssl', file = "~/.Renviron", append = TRUE)
+```
+Restart the R session and verify that OpenSSL is now active (no longer in parenthesis):
+
+```
+> curl::curl_version()$ssl_version
+Initiating curl with CURL_SSL_BACKEND: openssl
+[1] "OpenSSL/3.5.0 (Schannel)"
+```
+
+Now, try the code again and it should work:
+
+```
+> library(dataone)
+> cn <- CNode("PROD")
+```
+
 ## Quick Start
 
 See the full manual (`help(dataone)`) for documentation.
