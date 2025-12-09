@@ -1,6 +1,6 @@
 Dear CRAN maintainers,
 
-Please find a new release of the R package 'dataone' for your consideration. This package was recently archived because I had been unable to fix issues with TLS 1.3 support on Windows clients. I have temporarily disabled TLS 1.3 support and fallback to TLS 1.2 in the underlying 'curl' package on windows clients, which has resolved the issue. I will continue to investigate a more permanent solution for future releases, but it seems that Windows clients are not yet fully compatible with TLS 1.3 (see https://windowsforum.com/threads/tls-1-3-iis-express-on-windows-11-mtls-breakage-workarounds-and-outlook.379408/).
+A revised submission for dataone-2.3.0 with a fix for the test failure on Debian forky R-devel. I can't seem to find a straightforward way to replicate this environment through winbuilder or rhub, but the problem was minor and I think this will fix it. So resubmitting to test again under Debian foky R-devel. It passes on all of the other platforms below still. 
 
 ## Test environments
 
@@ -14,4 +14,4 @@ Please find a new release of the R package 'dataone' for your consideration. Thi
 
 ## R CMD check results
 
-* There were no NOTEs, ERRORs, or WARNINGs except for those related to this being a new package submission after archive, and a false positive on a spelling check for a proper noun.
+* There were no NOTEs, ERRORs, or WARNINGs except for those related to this being a new package submission after archive, and a false positive on a spelling check for a proper noun (DataONE).
