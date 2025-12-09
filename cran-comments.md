@@ -1,6 +1,8 @@
 Dear CRAN maintainers,
 
-A revised submission for dataone-2.3.0 with a fix for the test failure on Debian forky R-devel. I can't seem to find a straightforward way to replicate this environment through winbuilder or rhub, but the problem was minor and I think this will fix it. So resubmitting to test again under Debian foky R-devel. It passes on all of the other platforms below still. 
+Hopefully a final submission of dataone-2.3.0 with the word 'DataONE' quoted in the description, as per your request.
+
+Matt
 
 ## Test environments
 
