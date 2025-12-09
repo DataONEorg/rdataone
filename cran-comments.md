@@ -1,6 +1,6 @@
 Dear CRAN maintainers,
 
-Hopefully a final submission of dataone-2.3.0 with the word 'DataONE' quoted in the description, as per your request.
+Hopefully a final submission of dataone-2.3.0 with the word 'DataONE' quoted in the description, as per your request. Maybe CRAN could support the standard 'spelling' package WORDLIST which makes this stuff so much smoother?
 
 Matt
 
