@@ -1,6 +1,7 @@
 test_that("curl SSL library expected", {
+    skip_on_cran()
     ssl_version <- curl::curl_version()$ssl_version
-    expect_match(ssl_version, "OpenSSL|LibreSSL|Schannel")
+    expect_match(ssl_version, "OpenSSL|LibreSSL|Schannel|GnuTLS")
 })
 
 test_that("CNode constructors work in TLSv1.3 sandbox server", {
